@@ -69,7 +69,7 @@ readFolder(ROOT, (file, level, dir, stat) => {
   const relName = path.relative(ROOT, dir)
   if (UNTRACKED.includes(relName)) return
   md += '  '.repeat(level) + `- <a href="${encodeURI(relName)}">${titlize(file)}</a>` +
-  `<span style="padding-left:2em;color:${LATEST[relName] === 'A' ? 'green' : 'yellow'}">${LATEST[relName] || ''}</span>` +
+  `<span style="padding-left:2em;color:${LATEST[relName] === 'A' ? 'green' : 'orange'}">${LATEST[relName] || ''}</span>` +
   `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>\n`
 })
 
