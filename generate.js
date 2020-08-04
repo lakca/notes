@@ -5,10 +5,11 @@ const path = require('path')
 const { execSync } = require('child_process')
 const ROOT = execSync('git rev-parse --show-toplevel').toString().trim()
 const UNTRACKED = gitlist('git ls-files --others --exclude-standard')
+const GITHUB = process.argv.reduce((p, c) => p && c !== 'normal', true)
 const LATEST = lastCommit()
 const FILENAME = 'README.md'
 
-// console.log(LATEST)
+// console.log(LATEST, GITHUB)
 
 // ignore if only commit README.
 if (Object.keys(LATEST).length === 1 && LATEST[FILENAME]) process.exit(0)
@@ -45,6 +46,10 @@ function date(d = new Date()) {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
 }
 
+function noext(str, flag) {
+  return flag && str.lastIndexOf('.') ? str.replace(/\.[^\.]+$/, '') : str
+}
+
 function readFolder(folder, cb, level = 0) {
   fs.readdirSync(folder).forEach(file => {
     if (!level && file === FILENAME) return
@@ -70,7 +75,7 @@ readFolder(ROOT, (file, level, dir, stat) => {
   if (stat.isDirectory()) dir = path.join(dir, FILENAME)
   const relName = path.relative(ROOT, dir)
   if (UNTRACKED.includes(relName)) return
-  md += '  '.repeat(level) + `- <a href="${encodeURI(relName)}">${titlize(file)}</a>` +
+  md += '  '.repeat(level) + `- <a href="${noext(encodeURI(relName), GITHUB)}">${titlize(file)}</a>` +
   `<span style="padding-left:2em;color:${LATEST[relName] === 'A' ? 'green' : 'orange'}">${LATEST[relName] || ''}</span>` +
   `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>\n`
 })
@@ -96,4 +101,6 @@ No need to generate or commit \`README.md\` manually.
 
 fs.writeFileSync(path.join(ROOT, FILENAME), md)
 
-execSync(`git add -f ${ROOT}/${FILENAME} && git commit -m 'update index.'`)
+if (GITHUB) {
+  execSync(`git add -f ${ROOT}/${FILENAME} && git commit -m 'update index.'`)
+}
