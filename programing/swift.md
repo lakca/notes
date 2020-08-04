@@ -77,6 +77,8 @@
 
 > Test on v4.2.1
 
+[Swift Guide](SwiftGuide)
+
 ## Basic Types
 
 ### String
@@ -899,3 +901,5 @@ let ret = try? vend() // "Success" or nil.
   document.body.appendChild(sc)
 })();
 ```
+
+[SwiftGuide]: https://docs.swift.org/swift-book/LanguageGuide/TheBasics.html
