@@ -62,6 +62,8 @@ function readFolder(folder, cb, level = 0) {
 let md = `
 # Notes
 
+## Index
+
 `
 
 readFolder(ROOT, (file, level, dir, stat) => {
@@ -73,6 +75,25 @@ readFolder(ROOT, (file, level, dir, stat) => {
   `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>\n`
 })
 
+md += `
+## Contribute
+
+### Add Hook
+
+> Adding a \`post-commit\` hook to generate and commit newest notes index automatically.
+
+> The hook will detect files change by comparing \`HEAD^\` with \`HEAD\`, only files more than \`README.md\` will take effect.
+
+\`\`\`bash
+./prepare
+\`\`\`
+
+### Commit
+
+No need to generate or commit \`README.md\` manually.
+
+`
+
 fs.writeFileSync(path.join(ROOT, FILENAME), md)
 
-execSync(`git add ${ROOT}/${FILENAME} && git commit -m 'update index.'`)
+execSync(`git add -f ${ROOT}/${FILENAME} && git commit -m 'update index.'`)
