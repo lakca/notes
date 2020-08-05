@@ -1,3 +1,8 @@
+---
+layout: post
+title:  "Welcome to Jekyll!"
+---
+
 | Phrase                 | Meaning or Symbol |
 | ---------------------- | ----------------- |
 | parentheses            | ()                |
