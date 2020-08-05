@@ -1,27 +1,34 @@
+---
+layout: default
+title: My Blog
+---
 
-# Notes
+<!-- This loops through the paginated posts -->
+{% for post in paginator.posts %}
+  <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
+  <p class="author">
+    <span class="date">{{ post.date }}</span>
+  </p>
+  <div class="content">
+    {{ post.content }}
+  </div>
+{% endfor %}
 
-## Index
-
-- <a href="programing/README">Programing</a><span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2020-08-04 17:26</span>
-  - <a href="programing/c">C</a><span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2020-08-04 17:26</span>
-  - <a href="programing/glossary">Glossary</a><span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2020-08-04 17:26</span>
-  - <a href="programing/swift">Swift</a><span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2020-08-04 17:26</span>
-  - <a href="programing/vscode">Vscode</a><span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2020-08-04 17:26</span>
-
-## Contribute
-
-### Add Hook
-
-> Adding a `post-commit` hook to generate and commit newest notes index automatically.
-
-> The hook will detect files change by comparing `HEAD^` with `HEAD`, only files more than `README.md` will take effect.
-
-```bash
-./prepare
-```
-
-### Commit
-
-No need to generate or commit `README.md` manually.
-
+<!-- Pagination links -->
+<div class="pagination">
+  {% if paginator.previous_page %}
+    <a href="{{ paginator.previous_page_path }}" class="previous">
+      Previous
+    </a>
+  {% else %}
+    <span class="previous">Previous</span>
+  {% endif %}
+  <span class="page_number ">
+    Page: {{ paginator.page }} of {{ paginator.total_pages }}
+  </span>
+  {% if paginator.next_page %}
+    <a href="{{ paginator.next_page_path }}" class="next">Next</a>
+  {% else %}
+    <span class="next ">Next</span>
+  {% endif %}
+</div>
