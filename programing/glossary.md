@@ -2,7 +2,7 @@
 food: Pizza
 ---
 
-<h1>{{ page.food }}</h1>
+<h1>Pizza</h1>
 
 | Phrase                 | Meaning or Symbol |
 | ---------------------- | ----------------- |
