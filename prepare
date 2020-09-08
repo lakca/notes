@@ -1,4 +1,4 @@
 #!/bin/bash
 # Prepare for contribution.
 
-cp generate.js .git/hooks/post-commit
+echo 'npm run generate -- github commit' > .git/hooks/post-commit

@@ -1,0 +1,25 @@
+{
+  "name": "notes",
+  "version": "1.0.0",
+  "dependencies": {},
+  "devDependencies": {
+    "chalk": "^4.1.0",
+    "highlight.js": "^10.1.2",
+    "marked": "^1.1.1"
+  },
+  "scripts": {
+    "generate": "node script/generate.js",
+    "html": "node script/html.js",
+    "view": "node script/view.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lakca/notes.git"
+  },
+  "author": "lakca",
+  "license": "CC-BY-SA-4.0",
+  "bugs": {
+    "url": "https://github.com/lakca/notes/issues"
+  },
+  "homepage": "https://github.com/lakca/notes#readme"
+}
