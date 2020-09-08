@@ -12,12 +12,13 @@ help(`parameters:
 const fs = require('fs')
 const path = require('path')
 const { execSync } = require('child_process')
+const SRC_REL = path.relative(ROOT, SRC_ROOT)
+const INDEX_FILE = 'README.md' // folder index file name.
 const UNTRACKED = gitlist('git ls-files --others --exclude-standard')
 const IS_GITHUB = process.argv.includes('github') // github page, no extension name,
 const IS_COMMIT = process.argv.includes('commit') // commit index.
 const IS_FORCE = process.argv.includes('force') // force generation.
 const LATEST_COMMITTED = getLatestCommit()
-const INDEX_FILE = 'README.md' // folder index file name.
 
 if (!IS_FORCE) {
   // no .md committed
@@ -28,11 +29,13 @@ if (!IS_FORCE) {
 
 function getLatestCommit() {
   const status = {}
+  const reg = new RegExp(`\\W${SRC_REL}\/`)
   gitlist(`git show HEAD --name-status --pretty=''`)
-    .filter(e => /^src\//.test(e))
     .forEach(e => {
-      const r = e.split(/\t+/)
-      status[r[r.length - 1]] = r[0][0]
+      if (reg.test(e)) {
+        const r = e.split(/\t+/)
+        status[r[r.length - 1]] = r[0]
+      }
     })
   return status
 }
