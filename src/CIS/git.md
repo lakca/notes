@@ -33,27 +33,34 @@
     - [`branch`](#branch)
       - [`git checkout -b <branch> <remote>/<branch>`](#git-checkout--b-branch-remotebranch)
       - [`git branch —set-upstream-to=<remote>/<branch> <branch>`](#git-branch-set-upstream-toremotebranch-branch)
+      - [`git branch -vv`](#git-branch--vv)
     - [`blame`](#blame)
       - [`git blame -L 1,10 README.md`](#git-blame--l-110-readmemd)
     - [`rm`](#rm)
       - [`git rm —cached`](#git-rm-cached)
       - [`git rm -f`](#git-rm--f)
       - [`git rm -r`](#git-rm--r)
+    - [`ls-files`](#ls-files)
+      - [`git ls-files --others --exclude-standard`](#git-ls-files---others---exclude-standard)
+      - [`git ls-files --ignored --exclude-standard`](#git-ls-files---ignored---exclude-standard)
+    - [`update-index`](#update-index)
+      - [`git update-index --assume-unchanged/--no-assume-unchanged <file>`](#git-update-index---assume-unchanged--no-assume-unchanged-file)
+      - [`git update-index --skip-worktree/--no-skip-worktree <file>`](#git-update-index---skip-worktree--no-skip-worktree-file)
     - [`config`](#config)
       - [`git config --list --show-origin`](#git-config---list---show-origin)
-      - [`git config --global core.editor 'code --wait'`](#git-config---global-coreeditor-code---wait)
       - [`core.editor`](#coreeditor)
       - [`credential.helper`](#credentialhelper)
       - [`credential.username`](#credentialusername)
       - [`credential.<url>.*`](#credentialurl)
     - [More](#more)
       - [`git rev-parse --show-toplevel`](#git-rev-parse---show-toplevel)
-      - [`git ls-files --others --exclude-standard`](#git-ls-files---others---exclude-standard)
+      - [`git update-index --assume-unchanged <file>`](#git-update-index---assume-unchanged-file)
+      - [`git update-index --skip-worktree <file>`](#git-update-index---skip-worktree-file)
   - [Advanced](#advanced)
     - [`cat-file`](#cat-file)
     - [`archive`](#archive)
     - [`instaweb`](#instaweb)
-    - [* git gc](#ulligit-gcliul)
+    - [`gc`](#gc)
   - [Startup](#startup)
   - [Workflow](#workflow)
   - [Inspection](#inspection)
@@ -163,7 +170,10 @@
 > 创建远程分支对应的本地分支
 
 #### `git branch —set-upstream-to=<remote>/<branch> <branch>`
-> 追踪远程分支
+> 设置追踪远程分支
+
+#### `git branch -vv`
+> 查看追踪远程分支
 
 
 ### `blame`
@@ -180,13 +190,31 @@
 
 #### `git rm -r`
 
+### `ls-files`
+
+#### `git ls-files --others --exclude-standard`
+> 列出未跟踪的（untracked）文件
+
+#### `git ls-files --ignored --exclude-standard`
+> 列出忽略的（ignored）文件
+
+### `update-index`
+> Register file contents in the working tree to the index.
+
+#### `git update-index --assume-unchanged/--no-assume-unchanged <file>`
+> mark/unmark files as "not changing".
+
+> `Assume-unchanged bit`: the user promises not to change the file and allows Git to assume that the working tree file matches what is recorded in the index.
+
+#### `git update-index --skip-worktree/--no-skip-worktree <file>`
+> mark/unmark files as "index-only".
+
+> `Skip-worktree bit`: When reading an entry, if it is marked as skip-worktree, then Git pretends its working directory version is up to date and read the index version instead.
 
 ### `config`
 
 #### `git config --list --show-origin`
-
-#### `git config --global core.editor 'code --wait'`
-> 将编辑器配置成vscode
+> 显示配置项，且显示配置项的来源（如所在的文件的位置）
 
 #### `core.editor`
 > 配置编辑器，比如`code.editor 'code --wait'`配置成 vscode
@@ -206,18 +234,22 @@
 #### `git rev-parse --show-toplevel`
 > 获取git项目根目录
 
-#### `git ls-files --others --exclude-standard`
-> 列出未跟踪(untracked)的文件
+#### `git update-index --assume-unchanged <file>`
+> 使git忽略某些文件的更改
+> [REF](https://stackoverflow.com/questions/1274057/how-to-make-git-forget-about-a-file-that-was-tracked-but-is-now-in-gitignore#answer-20241145)
 
+#### `git update-index --skip-worktree <file>`
 
 ## Advanced
 
 ### `cat-file`
 > Provide content or type and size information for repository objects(`blob`, `tree`, `commit`, `tag`), files are located in `.git/objects`
 
-`-p`: 获取内容
-`-s`: 获取文件大小
-`-t`: 获取文件类型(blob,tree,commit,tag)
+`-p`: print content.
+
+`-s`: object size.
+
+`-t`: object type (`blob`,`tree`,`commit`,`tag`)
 
 ### `archive`
 > Create an archive of files from a named tree.
@@ -225,7 +257,7 @@
 ### `instaweb`
 > Instantly browse your working repository in gitweb, `git instaweb --httpd=python`.
 
-### * git gc
+### `gc`
 > Clean up unnecessary files and optimize the local repository.
 
 

@@ -19,6 +19,12 @@ module.exports = {
     }
     return root
   },
-  get SRC_ROOT() { return path.join(this.ROOT, 'src') },
-  get HTML_ROOT() { return path.join(this.ROOT, 'html') }
+  get SRC() {
+    return 'src'
+  },
+  get HTML() {
+    return 'html'
+  },
+  get SRC_ROOT() { return path.join(this.ROOT, this.SRC) },
+  get HTML_ROOT() { return path.join(this.ROOT, this.HTML) }
 }

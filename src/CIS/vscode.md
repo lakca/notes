@@ -77,6 +77,7 @@
 | fold all block comments                          | `⌘ + K, ⌘ + /`         |
 | fold recursively                                 | `⌘ + K, ⌘ + [`         |
 | toggle fold                                      | `⌘ + K, ⌘ + L`         |
+| select all occurrences of Find Match（Find All） | `⇧ + ⌘ + L`            |
 
 ## 常用命令
 

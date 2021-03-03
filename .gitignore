@@ -1,4 +1,5 @@
 README.md
+src/**/README.md
 package-lock.json
 html
 index.html

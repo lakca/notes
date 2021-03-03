@@ -30,6 +30,7 @@
       - [`Operator Mono`](#operator-mono)
   - [MacOS](#macos)
     - [`brew`: Package Manager](#brew-package-manager)
+    - [更改源](#更改源)
     - [`Dash`: API Documentation Browser and Code Snippet Manager](#dash-api-documentation-browser-and-code-snippet-manager)
   - [SaaS](#saas)
     - [`Analyse your HTTP response headers`](#analyse-your-http-response-headers)
@@ -134,6 +135,39 @@
 - `brew options`
 - `brew shellenv`
 - `brew --repo`
+
+### 更改源
+
+1. [Homebrew](http://mirrors.ustc.edu.cn/help/brew.git.html):
+
+```sh
+cd "$(brew --repo)"
+git remote set-url origin https://mirrors.ustc.edu.cn/brew.git
+```
+
+2. [Homebrew-Core](http://mirrors.ustc.edu.cn/help/homebrew-core.git.html):
+
+```sh
+cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
+git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git
+```
+
+3. [Homebrew-Cask](http://mirrors.ustc.edu.cn/help/homebrew-cask.git.html):
+
+```sh
+cd "$(brew --repo)"/Library/Taps/homebrew/homebrew-cask
+git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
+```
+
+4. [Homebrew-Bottles](http://mirrors.ustc.edu.cn/help/homebrew-bottles.html)
+
+设置环境变量`HOMEBREW_BOTTLE_DOMAIN`为`https://mirrors.ustc.edu.cn/homebrew-bottles`
+
+例如:
+```sh
+echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles' >> ~/.bash_profile
+source ~/.bash_profile
+```
 
 ### `Dash`: API Documentation Browser and Code Snippet Manager
 

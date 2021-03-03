@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { help, ROOT, SRC_ROOT } = require('./help')
+const { help, ROOT, SRC, SRC_ROOT } = require('./help')
 
 help(`parameters:
 
@@ -22,7 +22,9 @@ const LATEST_COMMITTED = getLatestCommit()
 
 if (!IS_FORCE) {
   // no .md committed
-  if (!Object.keys(LATEST_COMMITTED).some(e => /\.md$/.test(e))) {
+  if (!Object.keys(LATEST_COMMITTED)
+    .filter(e => !new RegExp(`(^|${SRC}\/(.*\/)*)${INDEX_FILE}$`).test(e))
+    .some(e => /\.md$/.test(e))) {
     process.exit(0)
   }
 }
@@ -80,23 +82,75 @@ function readFolder(folder, cb, level = 0) {
   })
 }
 
-let md = `
+function renderTocItem(name, level, relName, stat) {
+  return '  '.repeat(level) +
+    `- [${titlize(name)}](${encodeURI(noext(relName, IS_GITHUB))})` +
+    `<span style="padding-left:2em;color:${LATEST_COMMITTED[relName] === 'A' ? 'green' : 'orange'}">${LATEST_COMMITTED[relName] || ''}</span>` +
+    `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>` +
+    '\n'
+}
+
+const structures = []
+const homeToc = []
+
+readFolder(SRC_ROOT, (name, level, filepath, stat) => {
+  const relName = path.relative(ROOT, filepath)
+  if (!IS_FORCE && UNTRACKED.includes(relName)) return
+  const isDir = stat.isDirectory()
+  homeToc[homeToc.length] = renderTocItem(name, level, relName, stat)
+  structures[structures.length] = { name, level, filepath, stat, isDir }
+})
+
+// generate index of subdirectories.
+;(function generateSubTocs(branches) {
+  const levelArr = []
+  const tocArr = []
+
+  function saveToc(e) {
+    for (let lv = e.level; lv--;) {
+      if (levelArr[lv]) {
+        if (!tocArr[lv]) tocArr[lv] = []
+        tocArr[lv].push(renderTocItem(
+          e.name,
+          e.level - lv,
+          path.relative(levelArr[lv].filepath, e.filepath),
+          e.stat))
+      }
+    }
+  }
+
+  function tryRenderToc(level) {
+    if (level == null) {
+      return levelArr.forEach((e, lv) => tryRenderToc(lv))
+    }
+    if (levelArr[level]) {
+      if (tocArr[level] && tocArr[level].length) {
+        fs.writeFileSync(path.join(levelArr[level].filepath, INDEX_FILE),
+          tocArr[level].join(''))
+      }
+      levelArr[level] = null
+      tocArr[level] = null
+    }
+  }
+
+  for (const e of branches) {
+    tryRenderToc(e.level)
+    if (e.isDir) {
+      levelArr[e.level] = e
+    }
+    saveToc(e)
+  }
+
+  tryRenderToc()
+}(structures))
+
+fs.writeFileSync(path.join(ROOT, INDEX_FILE), `
 # Notes
 
 ## Index
 
-`
+${homeToc.map(e => e.toc).join('')}
 
-readFolder(SRC_ROOT, (name, level, filepath, stat) => {
-  if (stat.isDirectory()) filepath = path.join(filepath, INDEX_FILE)
-  const relName = path.relative(ROOT, filepath)
-  if (!IS_FORCE && UNTRACKED.includes(relName)) return
-  md += '  '.repeat(level) + `- <a href="${noext(encodeURI(relName), IS_GITHUB)}">${titlize(name)}</a>` +
-  `<span style="padding-left:2em;color:${LATEST_COMMITTED[relName] === 'A' ? 'green' : 'orange'}">${LATEST_COMMITTED[relName] || ''}</span>` +
-  `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>\n`
-})
-
-md += `
 ## Contribute
 
 ### Add Hook
@@ -113,10 +167,8 @@ md += `
 
 No need to generate or commit \`README.md\` manually.
 
-`
-
-fs.writeFileSync(path.join(ROOT, INDEX_FILE), md)
+`)
 
 if (IS_COMMIT) {
-  execSync(`git add -f ${ROOT}/${INDEX_FILE} && git commit -m 'update index.'`)
+  execSync(`git add -f ${ROOT}/${INDEX_FILE} ${SRC_ROOT}/**/${INDEX_FILE} && git commit -m 'update index.'`)
 }
