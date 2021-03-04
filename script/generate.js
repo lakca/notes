@@ -11,7 +11,7 @@ help(`parameters:
 
 const fs = require('fs')
 const path = require('path')
-const { execSync } = require('child_process')
+const { execSync, spawnSync } = require('child_process')
 const SRC_REL = path.relative(ROOT, SRC_ROOT)
 const INDEX_FILE = 'README.md' // folder index file name.
 const UNTRACKED = gitlist('git ls-files --others --exclude-standard')
@@ -83,8 +83,9 @@ function readFolder(folder, cb, level = 0) {
 }
 
 function renderTocItem(name, level, relName, stat) {
+  const relUrl = IS_GITHUB ? noext(relName, true).replace(/README$/, '') : relName
   return '  '.repeat(level) +
-    `- [${titlize(name)}](${encodeURI(noext(relName, IS_GITHUB))})` +
+    `- [${titlize(name)}](${encodeURI(relUrl)})` +
     `<span style="padding-left:2em;color:${LATEST_COMMITTED[relName] === 'A' ? 'green' : 'orange'}">${LATEST_COMMITTED[relName] || ''}</span>` +
     `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>` +
     '\n'
@@ -149,7 +150,7 @@ fs.writeFileSync(path.join(ROOT, INDEX_FILE), `
 
 ## Index
 
-${homeToc.map(e => e.toc).join('')}
+${homeToc.join('')}
 
 ## Contribute
 
@@ -170,5 +171,7 @@ No need to generate or commit \`README.md\` manually.
 `)
 
 if (IS_COMMIT) {
-  execSync(`git add -f ${ROOT}/${INDEX_FILE} ${SRC_ROOT}/**/${INDEX_FILE} && git commit -m 'update index.'`)
+  spawnSync('git', ['add', '-f', `${ROOT}/${INDEX_FILE}`])
+  spawnSync('git', ['add', '-f', `${SRC_ROOT}/**/${INDEX_FILE}`])
+  spawnSync('git', ['commit', '-m', 'update index'])
 }
