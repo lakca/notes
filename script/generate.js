@@ -52,7 +52,7 @@ function capitalize(str) {
 }
 
 function titlize(str) {
-  return capitalize(str.trim()).replace(/( +[a-z])/g, e => ' ' + e.trim().toUpperCase())
+  return str.split(/\s+|-/).map(capitalize).join(' ')
 }
 
 function pad(n) {
