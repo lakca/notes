@@ -5,19 +5,15 @@
   - [建议](#建议)
   - [操作符](#操作符)
 - [类型](#类型)
-  - [原始类型（Primitive Types）](#原始类型primitive-types)
+  - [原始类型（`Primitive Types`）](#原始类型primitive-types)
+    - [数字](#数字)
   - [数组（`Arrays`）](#数组arrays)
-    - [声明](#声明)
-    - [操作](#操作)
-    - [多维数组（`Multidimensional Arrays`）](#多维数组multidimensional-arrays)
-    - [固定大小数组（`Fixed Size Arrays`）](#固定大小数组fixed-size-arrays)
-  - [映射（Maps）](#映射maps)
-    - [声明](#声明-1)
-    - [操作](#操作-1)
-    - [键（Keys）类型](#键keys类型)
-  - [混合类型（`Sum`）](#混合类型sum)
-  - [* 零值](#-零值)
-  - [类型推断](#类型推断)
+    - [基础用法](#基础用法)
+  - [映射（`Maps`）](#映射maps)
+    - [基础用法](#基础用法-1)
+  - [联合类型（`Sum`）](#联合类型sum)
+  - [零值（`Zero Value`）](#零值zero-value)
+  - [类型推断（`Type Infer`）](#类型推断type-infer)
   - [接口（`Interface`）](#接口interface)
 - [模块（`Module`）](#模块module)
   - [引入（`import`）](#引入import)
@@ -88,159 +84,128 @@
 
 # 类型
 
-## 原始类型（Primitive Types）
+## 原始类型（`Primitive Types`）
 
-```v
-bool
+- 布尔：`bool`
+- 字符串：`string`，实际上是只读的 UTF-8 字节数组，由单双引号包裹
+- 数字：
+  - 整型：`i8`, `i16`, `int`, `i64`, `i128`, `bytes`, `u16`, `u32`, `u64`, `u128`
+    - `int` 始终是32位；
+  - 字符：`rune`，unicode code point，可以理解为unicode单个字符，由反引号包裹，如 `🚀`；
+  - 浮点：`f32`, `f64`
+- `C`类型：
+  - `byteptr`：`byte*`
+  - `voidptr`：`void*`
+  - `charptr`：`char*`
+  - `size_t`
+- 任意：`any`，类似C的`void*`
 
-string /* 只读的 UTF-8 字节数组，由单双引号包裹 */
+### 数字
 
-i8 i16 int i64 i128 /* int 始终是32位 */
-bytes u16 u32 u64 u128
-
-rune /* unicode code point，可以理解为unicode单个字符，由反引号包裹，如 `🚀` */
-
-f32 f64
-
-byteptr voidptr charptr size_t
-
-any /* 类似C的 void* */
-```
+- 变量声明时，未明确指定类型时，整型默认为 `int`，浮点型默认为 `f64`；
+- 字面量支持二进制 `0b01111011`、八进制 `0o173`、十进制 `12`、十六进制 `0x3F`；
+- 支持使用分隔符`-`，如 `1_000_000`, `0b0_11`, `3_122.55`, `0xF_F`, `0o17_3`；
+- 支持类型互相转换：如，`i64(10)`, `byte(42)`, `f32(3.14)`；
+  - \* 当转换到的类型长度较小时，若溢出长度范围，将会产生不确定的结果；
+  - \* 整型和浮点之间也可以相互转换，但要注意长度范围：
+    - 浮点转换成整型时，表示的长度将会减半，即浮点数整数部分必须小于整型最大值的一半才可以正确转换（切掉小数部分）；
 
 ## 数组（`Arrays`）
 
-> 1. 数组元素必须类型相同；
-> 3. 数组字面量的类型由第一个元素决定；
+- 数组元素类型相同；
 
-### 声明
-```v
-/* len: 只读，设置初始长度，默认为零值（即 0） */
+### 基础用法
 
-/* init: 设置初始默认值，默认为零值 */
-
-/* cap: 设置数组容量，可以提高性能：设置该值后在容量范围内插入新值（Insertions）不会重新分配内存（Reallocation）。 */
-
-arr := []int{ len: 2, init: 0, cap: 10 }
-
-/* 以上属性均可省略： */
-arr1 := []int{}
-
-/* 也可以使用字面量定义，类型由第一个元素决定： */
-arr2 := [1, 2, 4]
-```
-
-### 操作
-```v
-mut arr := ['a', 'b', 'c']
-
-/* push */
-arr << 'd'
-arr << ['x', 'z']
-
-/* slice */
-
-println(arr[1..2])
-println(arr[1..])
-println(arr[..2])
-
-/* it 是builtin变量 */
-arr.map(it.to_upper())
-/* OR 匿名函数 */
-arr.map(fn (e string) string {
-  return e.to_upper()
-})
-
-arr.filter(it > 'a')
-
-/* a，b 是builtin变量，不支持函数 */
-arr.sort(a > b)
-
-arr.clone()
-
-arr.str()
-
-is_true := 'a' in arr
-```
-
-### 多维数组（`Multidimensional Arrays`）
-
-```v
-mut arr := [][]int{}
+- 声明（普通数组，相对于固定大小数组）：
+  - 完整声明：`a := []int{ len: 2, init: 0, cap: 10 }`
+    - `len`: 只读，设置初始长度，默认为零值（即 0）；
+    - `init`: 设置初始默认值，默认为零值；
+    - `cap`: 设置数组容量，可以提高性能：设置该值后在容量范围内插入新值（Insertions）不会重新分配内存（Reallocation）；
+  - 简略声明：`a := []int`
+  - 字面量：`a := [1, 2, 3]`，类型由第一个元素确定；
+  - 多维数组（Multidimensional Arrays）：如二维数组：
+    - 简略声明：`arr_2d := [][]int{}`
+    - 完整声明：`arr_2d := [][]int{len: 2, init: []int{init: 1, len: 3}}`
+- push：
+  - 一个元素：`a << 1`
+  - 数组：`a << [1, 2]`
+- slice：
+  - `a[1..2]`
+  - `a[1..]`
+  - `a[..2]`
+- 检测值是否存在：`1 in arr`
+- 实例函数：
+  - `fn map`：映射函数
+    - 表达式写法：`a.map(it.to_upper())`，其中`it`是builtin变量；
+    - 回调函数写法：`arr.map(fn (e string) string { return e.to_upper() })`
+  - `fn filter`：过滤函数，与`fn map`写法相同；
+  - `fn sort`：排序函数
+    - 只能使用表达式写法：`arr.sort(a > b)`，其中`a`, `b`是builtin变量；
+  - `fn clone`：复制数组
+  - `fn str`：转换成字符串，`println`自动调用；
 ```
 
 ### 固定大小数组（`Fixed Size Arrays`）
 
-> 固定大小数组存在栈（`Stack`）中，访问更高效，占用内存空间更小，但无法使用普通数组的方法和属性（.cap），若要使用则需转换成普通数组。
+- 固定大小数组存在栈（`Stack`）中，访问更高效，占用内存空间更小；
+- 固定大小数组无法使用大多数普通数组的方法，若要使用需转换成普通数组；
 
 ```v
 mut arr := [3]int{}
 ```
 
-## 映射（Maps）
+## 映射（`Maps`）
 
-> 映射（Map）的键（Keys）顺序为插入的先后顺序，可以理解为**关联数组（Associate Arrays）**。
+- 可以将映射理解为“关联数组（Associate Arrays）”：
+  - 键顺序为插入的先后顺序；
+  - 键和值都有同一类型（homogenous type）；
+  - 键的类型可以为：`string`, `rune`, `integer`, `float`, `voidptr`；
+  - 复杂结构应该使用结构（`struct`）；
 
-### 声明
-```v
-m := map[string]int{} /* 键类型为 string, 值类型为 int */
+### 基础用法
 
-/* 字面量 */
-m2 := map{ 'a': 1, 'b': 2 }
-
-/* 多行可以省略逗号（,）: */
-m3 := map{
+- 声明：
+  - 属性定义：`m := map[string]int{}`
+  - 字面量：`m := map{ 'a': 1, 'b': 2 }`
+  - \* 未用引号包裹的键名为标识符：`m := map{ a: 1, b: 2 }`
+  - 多行可以省略逗号：
+```
+m := map{
   'a': 1
   'b': 2
 }
 ```
 
-注意，字符串需要用引号包裹：
-```v
-/* a, b 均为标识符 */
-m := map{ a: 1, b: 2 }
-```
+- 访问成员：`m['x']`
+  - 若访问的成员不存在，返回零值：`m['y'] == 0`
+  - 若访问的成员不存在，也可以抛出错误：`mz := m['z'] or { panic('z not found')) }`
+- 赋值：`m['y'] = 1`
+- 检查键名是否存在：`'x' in m`
 
-### 操作
-```v
-mut m := map{ 'x': 1 }
+## 联合类型（`Sum`）
 
-/* 赋值成员 */
-m['y'] = 1
+- 声明：`s := Int | f32`
 
-/* 访问存在的成员 */
-println(m['x'])
+## 零值（`Zero Value`）
 
-/* 访问不存在的成员，返回零值 */
-println(m['z'])
+- 可以简单理解为各种类型的值不存在时的值。
+- 零值与类型有关，而不是字面量0，各类型的零值各不相同；
 
-/* 访问不存在成员，抛出错误 */
-mz := m['z'] or { panic('z not found')) }
+零值的作用：
 
-is_true := 'x' in m
-```
+1. 语言内部可以给各种类型定义默认值，如：`a := []int{} println(a[0] == 0)`；
+2. 可以快速地安全访问未赋值（在声明时确定的范围之内）的属性，如：`m :=map[string]int{} println(m['x'] == 0)`；
 
-### 键（Keys）类型
+各种类型的零值：
 
-> `string`, `rune`, `integer`, `float`, `voidptr`。
+- `integer`: `0`
+- `float`: `0e+00`（浮点类型0）
+- `string`: `''`
+- `rune`: ` `` `
+- `array`: `[]`
+- `map`: `{}`
 
-## 混合类型（`Sum`）
-
-## * 零值
-
-> 零值与类型有关，而不是字面量0，各类型的零值各不相同：
-
-```v
-zero_values := map{
- integer: 0
- float: 0e+00 /* 浮点类型0 */
- string: ''
- rune: ``
- array: []
- map: {}
-}
-```
-
-## 类型推断
+## 类型推断（`Type Infer`）
 
 - 整数默认是`int`
 - 浮点数默认是`f64`

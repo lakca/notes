@@ -5,26 +5,23 @@
   - [工作区（working directory / working tree）](#工作区working-directory--working-tree)
   - [索引区 (index / staging area)](#索引区-index--staging-area)
   - [本地仓库 (repository)](#本地仓库-repository)
-  - [* HEAD](#-head)
+  - [引用（`refs`）](#引用refs)
+  - [头（`HEAD`）](#头head)
 - [常用子命令](#常用子命令)
   - [`add`](#add)
-    - [（`add`）列出会被添加的文件：`-n`, `--dry-run`](#add列出会被添加的文件-n---dry-run)
-    - [（`add`）添加未被忽略（not ignored）的文件：`-A`, `--all`, `--no-ignore-removal`](#add添加未被忽略not-ignored的文件-a---all---no-ignore-removal)
-    - [（`add`）添加新增和修改（untracked and modified）的文件：`--no-all`, `--ignore-removal`](#add添加新增和修改untracked-and-modified的文件--no-all---ignore-removal)
-    - [（`add`）添加跟踪过（tracked）的文件：`-u`，`--update`](#add添加跟踪过tracked的文件-u--update)
-    - [（`add`）添加被忽略（ignored）的文件：`-f`，`--force`](#add添加被忽略ignored的文件-f--force)
-    - [（`add`）交互式添加文件：`-i`，`--interactive`](#add交互式添加文件-i--interactive)
-    - [（`add`）交互式添加布丁块（patch chunk）：`-p`，`--patch`](#add交互式添加布丁块patch-chunk-p--patch)
-    - [（`add`）* 修改staging area中文件的可执行（executable）属性：`--chmod=(+|-)x`](#add-修改staging-area中文件的可执行executable属性--chmod-x)
+    - [基础用法：](#基础用法)
+    - [过滤（Filter）](#过滤filter)
+    - [其他：](#其他)
   - [`commit`](#commit)
     - [常见用法：](#常见用法)
   - [`amend`](#amend)
     - [常见用法：](#常见用法-1)
   - [`push`](#push)
   - [`log`](#log)
+    - [基础用法：](#基础用法-1)
     - [指定范围（Scope/Filter）](#指定范围scopefilter)
     - [格式化（Format）](#格式化format)
-    - [显示提交的具体内容（Commit Content）](#显示提交的具体内容commit-content)
+    - [筛选内容（Commit Content Filter）](#筛选内容commit-content-filter)
   - [* `shortlog`（根据提交人分组统计提交）](#-shortlog根据提交人分组统计提交)
   - [* `rev-list`（列出某个提交中的对象）](#-rev-list列出某个提交中的对象)
   - [`diff`](#diff)
@@ -34,13 +31,8 @@
   - [`tag`](#tag)
     - [常见用法](#常见用法-3)
     - [标签签名（Sign）](#标签签名sign)
-    - [（`tag`）删除标签并推送：`git tag -d <tagname>, git push origin :refs/tags/<tagname>`](#tag删除标签并推送git-tag--d-tagname-git-push-origin-refstagstagname)
   - [`branch`](#branch)
     - [常见用法](#常见用法-4)
-    - [（`branch`）列出分支时显示upstream名称：`git branch -vv`](#branch列出分支时显示upstream名称git-branch--vv)
-    - [（`branch`）基于远程分支创建本地分支并track：`git checkout -b <branch> <remote>/<branch>`](#branch基于远程分支创建本地分支并trackgit-checkout--b-branch-remotebranch)
-    - [（`branch`）设置分支追踪的远程分支：`git branch —u <remote>/<branch>`](#branch设置分支追踪的远程分支git-branch-u-remotebranch)
-    - [（`branch`）查看包括远程分支在内的所有分支：`git branch -vv`](#branch查看包括远程分支在内的所有分支git-branch--vv)
   - [`blame`](#blame)
     - [（`blame`）blame指定的文件行：`git blame -L <start>,<end> <filename>`](#blameblame指定的文件行git-blame--l-startend-filename)
   - [`rm`](#rm)
@@ -55,7 +47,7 @@
     - [`git update-index --assume-unchanged/--no-assume-unchanged <file>`](#git-update-index---assume-unchanged--no-assume-unchanged-file)
     - [`git update-index --skip-worktree/--no-skip-worktree <file>`](#git-update-index---skip-worktree--no-skip-worktree-file)
   - [`config`](#config)
-    - [基础用法](#基础用法)
+    - [基础用法](#基础用法-2)
     - [列出配置项及其来源文件：`git config -l --show-origin`](#列出配置项及其来源文件git-config--l---show-origin)
     - [配置编辑器：`core.editor`](#配置编辑器coreeditor)
     - [配置认证信息存储的其他位置：`credential.helper`](#配置认证信息存储的其他位置credentialhelper)
@@ -112,11 +104,14 @@
 
 > 对应的是`.git/objects`文件夹，存储了本地的所有提交。
 
-## * HEAD
+## 引用（`refs`）
 
-> `HEAD`，即当前在`repository/commit tree`中所处的位置。
-> `git`支持对项目建立不同的分支（`branch`，`commit tree`），包括`branch`、`tag`等，可以通过`checkout`进行切换；
-> `HEAD`即指向分支中的某个节点（`point to a commit`）；
+> 引用，相当于是给特定的`commit`对象取的别名，引用指向该`commit`。
+> 引用实例存储在`.git/refs`文件夹下面，包括`heads`、`tags`、`remotes`，分别对应着本地分支、标签和远程分支。
+
+## 头（`HEAD`）
+
+> `HEAD`即当前所在的引用（各个引用可以通过`git checkout`来切换）。
 
 # 常用子命令
 
@@ -125,32 +120,40 @@
 ## `add`
 
 > Add file contents to the index.
-> 更新`staging area`中`working directory`的`snapshot`；
 
-常见用法
-```git
-git add <filename>...
+### 基础用法：
+
+```sh
+git add <files>
+
+# 交互式添加文件：
+-i，--interactive
+# 交互式添加补丁块（patching chunk）：
+-p，--patch
+
+# 列出（list, no adding）会被添加的文件：
+-n, --dry-run
 ```
 
-### （`add`）列出会被添加的文件：`-n`, `--dry-run`
-> Don’t actually add the file(s), just show if they exist and/or will be ignored.
+### 过滤（Filter）
+```sh
 
-### （`add`）添加未被忽略（not ignored）的文件：`-A`, `--all`, `--no-ignore-removal`
-> Update the index not only where the working tree has a file matching <pathspec> but also where the index already has an entry.
-### （`add`）添加新增和修改（untracked and modified）的文件：`--no-all`, `--ignore-removal`
-> Update the index by adding new files that are *unknown* to the index and files *modified* in the working tree, but ignore files that have been removed from the working tree.
+# excluding ignored：
+-A, --all, --no-ignore-removal
+# excluding ignored and removed：
+--no-all, --ignore-removal
+# only tracked（added earlier）:
+-u，--update
+# ignored:
+-f，--force
+```
 
-### （`add`）添加跟踪过（tracked）的文件：`-u`，`--update`
-> Update the index just where it already has an entry matching <pathspec>.
+### 其他：
 
-### （`add`）添加被忽略（ignored）的文件：`-f`，`--force`
-### （`add`）交互式添加文件：`-i`，`--interactive`
-> 进入交互模式，手动对文件进行操作。
-### （`add`）交互式添加布丁块（patch chunk）：`-p`，`--patch`
-> 进入交互模式，手动对补丁块进行操作，详情可见官方文档。
-
-### （`add`）* 修改staging area中文件的可执行（executable）属性：`--chmod=(+|-)x`
-> Override the executable bit of the added files. The executable bit is only changed in the index, the files on disk are left unchanged.
+```sh
+# 修改 staging area 中文件的可执行（executable）属性，本地属性不会变：
+--chmod=(+|-)x
+```
 
 ## `commit`
 
@@ -183,15 +186,34 @@ git add <filename>...
 
 ## `log`
 
-> `git log`不带参数的基础命令默认显示所有`refs`的提交，包括所有分支、标签和远程仓库，可以通过指定`refs`做筛选。
+> list all commit logs.
 
-1. 下列所涉及的 `pattern` 均指 `glob pattern`；
+> 下列所涉及的 `pattern` 均指 `glob pattern`；
+
+### 基础用法：
+
+```sh
+# all commit logs：
+git log
+
+# show diff；
+-p, -u, --patch
+
+# specify path：
+git log <path>
+
+# specify lines of file：
+-L <start>,<end>:<filename>
+
+# specify refs, commit：
+git log <A>..<B> # 包括 A，不包括 B
+git log <A>...<B> # 包括 A 和 B
+git log ^<A> # 不包括 A
+```
 
 ### 指定范围（Scope/Filter）
 
 ```sh
-# 指定文件（file）：
-git log <pattern>
 
 # 指定文件行（lines）：
 -L <start>,<end>:<filename>
@@ -294,9 +316,7 @@ git log ^commit
 
 ```
 
-### 显示提交的具体内容（Commit Content）
-
-> 通过`-p`或`-u`或`--patch`指示在日志中显示提交的内容；
+### 筛选内容（Commit Content Filter）
 
 ```sh
 # 筛选提交内容的变动类型：
@@ -349,7 +369,6 @@ git log ^commit
 
 ## `tag`
 
-> 与标签相关的命令。
 > Create, list, delete or verify a tag object signed with GPG.
 
 1. * 使用GPG签名创建的tag，若没有该签名私钥，其他用户是不能修改的；对于正式版本，使用签名可以相对保持版本安全；关于GPG签名及密钥生成，自行搜索了解即可；
@@ -357,38 +376,31 @@ git log ^commit
 ### 常见用法
 
 ```sh
-# 创建tag（不使用GPG签名）：
--a <tagname>
-# 替代已存在的tag：
--f, --force
-# 添加tag注释，可以使用多次该选项，每个message都会被当成单独的段落：
--m <msg>, --message=<msg>
-# 从文件读取tag注释：
--F <file>, --file=<file>
-# 编辑tag注释：
--e, --edit
-# 指向某个commit或者object，默认是HEAD：
-<commitId>
-<objectId>
-# * 创建/不创建tag的reflog：
---create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for tag；
---no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
-
-# 列出tag：
--l, --list
-# 可以筛选匹配：
--l <pattern>..., -list <pattern>...
-# 如：
--l 'v1.*'
-# 列出包含/不包含某个commit的tag，默认为HEAD：
+# list:
+git tag
+git tag -l|--list
+git tag -l <pattern>...
 --contains [<commit>]
 --no-contains [<commit>]
 
-# 获取tag详情：
-show <tagname>
+# create:
+git tag <tagname>
+git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
+## annotate with editor:
+-a, --annotate
+## annotate with message directly，可以使用多次该选项，每个message都会被当成单独的段落：
+-m <msg>, --message=<msg>
+## annotate with message from file：
+-F <file>, --file=<file>
+## edit annotation message with editor：
+-e, --edit
 
-# 删除tag：
--d <tagname>
+# force：
+-f, --force
+
+# * 创建/不创建tag的reflog：
+--create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for tag；
+--no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
 ```
 
 ### 标签签名（Sign）
@@ -404,12 +416,17 @@ show <tagname>
 -v, --verify
 ```
 
-### （`tag`）删除标签并推送：`git tag -d <tagname>, git push origin :refs/tags/<tagname>`
-
 ## `branch`
 
 ### 常见用法
 ```sh
+# 创建
+git branch <name> # = git branch <name> HEAD
+git branch <name> <start-point: a commit|tag|branch>
+
+# 创建分支时同时设置upstream
+-t, --track
+
 # 删除
 -d <name>, --delete
 -D <name>, -delete --force
@@ -423,12 +440,9 @@ show <tagname>
 -m, --move
 -M, -move --force
 
-# 复制分支
+# 复制分支（包括reflog）
 -c, --copy
 -C, --copy --force
-
-# 创建分支时同时设置upstream
--t, --track
 
 # 设置upstream
 -u <upstream>, --set-upstream-to=<upstream>
@@ -441,13 +455,6 @@ show <tagname>
 --create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for branch；
 --no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
 ```
-### （`branch`）列出分支时显示upstream名称：`git branch -vv`
-
-### （`branch`）基于远程分支创建本地分支并track：`git checkout -b <branch> <remote>/<branch>`
-
-### （`branch`）设置分支追踪的远程分支：`git branch —u <remote>/<branch>`
-
-### （`branch`）查看包括远程分支在内的所有分支：`git branch -vv`
 
 ## `blame`
 
