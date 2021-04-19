@@ -10,21 +10,19 @@
   '.page-header .breadcrumb span {' +
     'text-decoration: overline;' +
   '}' +
-  '.main-content.has-menu {' +
-    'position: relative;' +
-    'padding-left: 29rem;' +
-    'max-width: 93rem;' +
-  '}' +
   '.main-content.has-menu > .fixed-menu {' +
-    'position: absolute;' +
+    'position: fixed;' +
     'left: 0;' +
-    'top: 0;' +
+    'top: 3rem;' +
     'width: 28rem;' +
+    'max-width: 80%;' +
     'padding: 0 1rem;' +
     'box-sizing: border-box;' +
     'overflow-y: scroll;' +
     'border: solid transparent 20px;' +
-    'height: 95vh;' +
+    'border-right: none;' +
+    'height: 100%;' +
+    'background: white;' +
   '}' +
   '.fixed-menu::-webkit-scrollbar {' +
     'width: 5px;' +
@@ -37,6 +35,32 @@
     'background-color: darkgrey;' +
     'outline: 1px solid slategrey;' +
     'background-color: #159957;' +
+  '}' +
+  '.menu-anchor {' +
+    'position: fixed;' +
+    'left: 0;' +
+    'top: 0;' +
+    'width: 28rem;' +
+    'max-width: 80%;' +
+    'color: white;' +
+    'text-align: center;' +
+    'font-size: 2rem;' +
+    'line-height: 3rem;' +
+    'height: 3rem;' +
+    'background: #157c74;' +
+    'text-transform: uppercase;' +
+  '}' +
+  '.menu-anchor:before {' +
+    'content: "close";' +
+  '}' +
+  '.main-content.menu-closed .menu-anchor {' +
+    'max-width: 100px;' +
+  '}' +
+  '.main-content.menu-closed .menu-anchor:before {' +
+    'content: "open";' +
+  '}' +
+  '.main-content.menu-closed .fixed-menu {' +
+    'left: -100%;' +
   '}' +
   ''; return style}()))
   function getMenu() {
@@ -51,18 +75,11 @@
   function getContent() {
     return document.querySelector('.main-content')
   }
-  function onScroll() {
-    var menu = getMenu()
-    if (!menu) return
-    var rect = document.querySelector('.main-content').getBoundingClientRect()
-    if (rect.y < 0) {
-      menu.setAttribute('style', 'top: ' + -rect.y + 'px')
-    } else {
-      menu.setAttribute('style', '')
-    }
+  function getAnchor() {
+    return document.querySelector('.menu-anchor')
   }
   var isIndex = window.location.pathname.slice(-1) === '/'
-  function breadcrumb() {
+  ;(function genBreadcrumb() {
     var arr = location.pathname.split('/').slice(1)
     var last = arr.pop()
     if (isIndex) last = arr.pop()
@@ -74,12 +91,26 @@
     items.push('<span>' + last + '</span>')
     div.innerHTML = items.join(' / ').toUpperCase()
     getHeader().appendChild(div)
+  }())
+  ;(function genAnchor() {
+    const div = document.createElement('div')
+    div.classList.add('menu-anchor')
+    div.onclick = function() { getContent() && getContent().classList.toggle('menu-closed') }
+    getContent() && getContent().appendChild(div)
+  }())
+  function onScroll() {
+    var anchor = getAnchor()
+    if (!anchor) return
+    var rect = document.querySelector('.main-content').getBoundingClientRect()
+    if (rect.y < 0) {
+      anchor.setAttribute('style', '')
+    } else {
+      anchor.setAttribute('style', 'background: transparent')
+    }
   }
-  breadcrumb()
   if (!isIndex) {
     getContent() && getContent().classList.add('has-menu')
     getMenu() && getMenu().classList.add('fixed-menu')
     document.addEventListener('scroll', onScroll)
-    onScroll()
   }
 }())
