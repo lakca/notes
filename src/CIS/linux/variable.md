@@ -8,6 +8,10 @@
     - [`$-`](#-)
     - [`$?`](#-5)
   - [Dynamic Variable](#dynamic-variable)
+    - [`${!}`](#-6)
+    - [`declare`](#declare)
+    - [`eval`](#eval)
+    - [`read`](#read)
 
 # Variable
 
@@ -36,7 +40,7 @@
 
 ## Dynamic Variable
 
-- `${!}`
+### `${!}`
 
 ```bash
 ver='v1.0'
@@ -44,7 +48,7 @@ var='ver'
 echo ${!var}
 ```
 
-- `declare`
+### `declare`
 
 ```bash
 var='ver'
@@ -52,7 +56,7 @@ declare $var='v1.0'
 echo $ver
 ```
 
-- `eval`
+### `eval`
 
 ```bash
 var='ver'
@@ -60,7 +64,7 @@ eval $var='v1.0'
 echo $ver
 ```
 
-- `read`
+### `read`
 
 ```bash
 var='ver'

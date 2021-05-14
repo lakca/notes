@@ -29,7 +29,7 @@
   - [单元（unit）](#单元unit)
   - [动长数组（Vector）](#动长数组vector)
   - [字符串（String）](#字符串string)
-  - [（Hash map）](#hash-map)
+  - [字典（Hash map）](#字典hash-map)
   - [指针（Pointer）](#指针pointer)
   - [* Never](#-never)
 - [结构（*Struct*）](#结构struct)
@@ -52,6 +52,7 @@
     - [（`super`）相对路径](#super相对路径)
     - [（`self`）相对路径](#self相对路径)
     - [引入路径（`use`）](#引入路径use)
+- [Others](#others)
 
 ## 准备
 
@@ -673,6 +674,8 @@ let s = "hello".to_string();
 
 > * Vectors allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
 
+- *homogenous*
+
 ```rust
 /// 创建空数组
 let mut v: Vec<i32> = Vec::new();
@@ -685,16 +688,21 @@ let mut v = vec![1; 3]; /// 容量为3，元素为1
 ```
 ```rust
 let mut v = vec![0, 1, 2];
-&v.len();
-&v.capacity();
 
-&v.get(0);
-&v[0];
-&v.get(10); // None
-&v[10]; // 报错
+assert_eq!(&3, &v.len());
+assert_eq!(&3, &v.capacity());
 
-&v.push(1);
-&v.pop();
+assert_eq!(&0, &v[0]);
+assert!(std::panic::catch_unwind(|| { &v[10] }).is_err()); // * 这里用到了匿名函数
+
+assert_eq!(&Some(&0), &v.get(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&Some(&mut 0), &v.get_mut(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&(), &v.push(1));
+assert_eq!(&Some(1), &v.pop());
 ```
 
 ### 字符串（String）
@@ -712,12 +720,40 @@ let s = String::from("hello");
 ```
 ```rust
 let mut s = String::from("hello");
-s.push_str(" world");
-s.push('!');
+s.push_str(" world"); // string
+s.push('!'); // char
 s += "!";
 ```
 
-### （Hash map）
+### 字典（Hash map）
+
+- *homogenous*
+
+`HashMap` 没有预先引入（*prelude*）：
+```rust
+use std::collections::HashMap;
+```
+```rust
+// 标准创建
+let mut scores: HashMap<String, i32> = HashMap::new();
+
+// 推断创建
+let mut scores = HashMap::new();
+
+// 通过 key 和 value 集合间接创建
+let teams = vec![String::from("Blue")];
+let initial_scores = vec![10];
+// collect() 可以返回不同的数据结构，使用 HashMap<_, _> 后可以指定为 HashMap
+// 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
+let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
+```
+```rust
+scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
+scores.insert(String::from("Blue"), 20);
+scores.entry(String::from("Blue")).or_insert(30); // only add
+assert_eq!(Some(&20), scores.get("Blue"));
+assert_eq!(None, scores.get("Yellow"));
+```
 
 ### 指针（Pointer）
 
@@ -1099,6 +1135,7 @@ a::b::test();
 ```
 
 3. 加载的同时暴露：
+
 ```rust
 // 加载，并在当前文件中暴露该模块
 pub mod demo;
@@ -1251,4 +1288,12 @@ use std::io::{self as io, stdout as io_stdout};
 ```rust
 pub use B::demo;
 demo();
+```
+
+## Others
+```rust
+// 获取数据的类型名称
+fn get_type(_: &T) -> &'static str {
+  std::any::type_name::<T>()
+}
 ```

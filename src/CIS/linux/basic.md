@@ -1,4 +1,10 @@
-
+- [Basic](#basic)
+  - [Parse command line arguments](#parse-command-line-arguments)
+    - [Space-Separated](#space-separated)
+    - [Equals-Separated](#equals-separated)
+    - [`getopt`](#getopt)
+  - [`read`](#read)
+  - [`try ... catch ...`](#try--catch-)
 # Basic
 
 ## Parse command line arguments
@@ -48,4 +54,14 @@ read -p $'\e[31mFoobar\e[0m: ' foo
 
 ```sh
 read -p '^[[31mFoobar^[[0m: ' foo
+```
+
+## `try ... catch ...`
+
+```sh
+{
+  # try
+} || {
+  # catch
+}
 ```
