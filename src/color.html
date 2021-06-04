@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Color</title>
+  <meta charset="utf-8" />
+  <style type="text/css">
+  h3 {
+    text-transform: uppercase;
+  }
+
+  p {
+    padding-left: 2em;
+  }
+
+  label {
+    display: inline-block;
+    width: 100px;
+    text-transform: capitalize;
+  }
+
+  input[type='text'] {
+    width: 200px;
+    height: 20px;
+    font-size: 16px;
+    letter-spacing: 2px;
+  }
+
+  .text {
+    display: inline-block;
+  }
+
+  .color {
+    display: inline-block;
+    width: 200px;
+    height: 30px;
+  }
+
+  .input {
+  	display: flex;
+  	justify-content: space-around;
+  }
+
+  .hsl {
+  	display: flex;
+  	padding: 20px;
+  	height: 500px;
+  }
+  .hsl .pane {
+  	position: relative;
+  	margin: 0 20px;
+  	width: 20px;
+  	display: flex;
+  	flex-direction: column;
+  }
+  .hsl .pane:nth-child(2) {
+  	display: flex;
+  	flex-direction: column;
+  	flex: 1;
+  }
+  .hsl [class$=-cursor] {
+  	position: absolute;
+  	z-index: -1;
+  	transform: translate3d(0, 0, 0);
+  }
+  .hsl .h-cursor {
+  	left: 0;
+  	bottom: 0;
+  	margin-bottom: -20px;
+  	text-indent: 10px;
+  	height: 20px;
+  }
+  .hsl .s-cursor{
+  	left: 0;
+  	top: 0;
+  	margin-left: -20px;
+  	text-indent: 10px;
+  	width: 20px;
+  	writing-mode: tb-rl;
+  	transform: rotate(180deg) translateY(100%);
+  	transform-origin: center center;
+  }
+  .hsl .a-cursor {
+  	right: -20px;
+  	top: 0;
+  	width: 20px;
+  	margin-top: 10px;
+  	writing-mode: tb-rl;
+  }
+  .hsl .l-cursor {
+  	top: 0;
+  	width: 20px;
+  	margin-top: 10px;
+  	writing-mode: tb-rl;
+  	left: -20px;
+  }
+  .hsl [class$=-cursor]:before {
+  	content: '';
+  	position: absolute;
+  	border: solid 20px transparent;
+  	transform: translate3d(0, 0, 0);
+  }
+  .hsl .a-cursor:before {
+  	right: 20px;
+  	top: -10px;
+  	margin-right: -20px;
+  	margin-top: -4px;
+  	border-top-width: 5px;
+  	border-bottom-width: 5px;
+  	border-right-color: black;
+  }
+  .hsl .l-cursor:before {
+  	top: -10px;
+  	margin-top: -4px;
+  	border-top-width: 5px;
+  	border-bottom-width: 5px;
+  	border-right-color: black;
+  	left: 20px;
+  	margin-left: -20px;
+  	border-right-color: transparent;
+  	border-left-color: black;
+  }
+  .hsl .h-cursor:before {
+  	left: 0;
+  	margin-left: -5px;
+  	margin-top: -20px;
+  	border-left-width: 5px;
+  	border-right-width: 5px;
+  	border-bottom-color: black;
+  }
+  .hsl .s-cursor:before {
+  	border-top-width: 5px;
+  	border-bottom-width: 5px;
+  	border-right-color: black;
+  	top: -5px;
+  }
+  .hsl .h-cursor:after,
+  .hsl .s-cursor:after {
+  	content: '';
+  	position: absolute;
+  	background: white;
+  }
+  .hsl .h-cursor:after {
+  	width: 1px;
+  	height: 100%;
+  }
+  .hsl .s-cursor:after {
+  	width: 100%;
+  	height: 1px;
+  }
+  .hsl .saturations,
+  .hsl .lightnesses,
+  .hsl .alphas {
+  	display: flex;
+  	flex-direction: column;
+  	transform: translate3d(0, 0, 0);
+  	background: transparent;
+  	width: 100%;
+  	height: 100%;
+  }
+  .hsl .saturations .hue,
+  .hsl .lightnesses .lightness,
+  .hsl .alphas .alpha {
+  	flex: 1;
+  }
+  .hsl .saturations {
+  	background-color: hsl(0, 0%, 0%, 0);
+  }
+  .hsl .saturations .saturation {
+  	flex: 1;
+  	display: flex;
+  	flex-direction: row;
+  }
+  .hsl .saturations .mask {
+  	position: absolute;
+  	left: 0;
+  	top: 0;
+  	width: 100%;
+  	height: 100%;
+  	z-index: 99;
+  	pointer-events: none;
+  	mix-blend-mode: luminosity;
+  	background-color: hsl(0, 0%, 0%, 0);
+  }
+  canvas {
+  	width: 100%;
+  	height: auto;
+  }
+  </style>
+	<script>
+
+	function narrowTo(v, range, defaultValue) {
+	  if (isNaN(v)) return defaultValue
+	  if (v === void 0) return defaultValue
+	  return v > range[1] ? range[1] : Math.max(v, range[0])
+	}
+
+	function parseRgb(color) {
+	  if (typeof color === 'string') {
+	    const m = /^rgba?\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*(,\s*(\d?\.\d+)\s*)?\)$/.exec(color)
+	    if (m) {
+	      color = [m[1], m[2], m[3], m[5]]
+	    } else {
+	      return
+	    }
+	  }
+	  const r = narrowTo(color[0], [0, 255])
+	  const g = narrowTo(color[1], [0, 255])
+	  const b = narrowTo(color[2], [0, 255])
+	  const a = narrowTo(color[3], [0, 1], 1)
+	  return [r, g, b, a]
+	}
+
+	function parseHsl(color) {
+	  if (typeof color === 'string') {
+	    const m = /^hsla?\(\s*(\d+)(deg)?\s*,\s*(\d+)%\s*,\s*(\d+)%\s*(,\s*(\d*\.?\d+)\s*)?\)$/.exec(color)
+	    if (m) {
+	      color = [m[1], m[3], m[4], m[6]]
+	    } else {
+	      return
+	    }
+	  }
+	  let h = (360 + color[0] % 360) % 360
+	  let s = narrowTo(color[1], [0, 100])
+	  let l = narrowTo(color[2], [0, 100])
+	  let a = narrowTo(color[3], [0, 1], 1)
+	  // if (s == 0) {
+	  //   h = 0
+	  // }
+	  // if (l == 0 || l == 100) {
+	  //   h = 0
+	  //   s = 0
+	  // }
+	  return [h, s, l, a]
+	}
+
+	function parseHex(color) {
+	  if (typeof color === 'string') {
+	    let m = /^#([\da-f]{2})([\da-f]{2})([\da-f]{2})([\da-f]{2})?$/.exec(color)
+	    if (m) {
+	      color = [m[1], m[2], m[3], m[4]]
+	    } else {
+	      m = /^#([\da-f])([\da-f])([\da-f])([\da-f])?$/.exec(color)
+	      if (m) {
+	        color = [m[1] + m[1], m[2] + m[2], m[3] + m[3], m[4] + m[4]]
+	      } else {
+	        return
+	      }
+	    }
+	  }
+	  const r = padLeft(narrowTo(parseInt(color[0], 16), [0, 255]).toString(16), 2, 0)
+	  const g = padLeft(narrowTo(parseInt(color[1], 16), [0, 255]).toString(16), 2, 0)
+	  const b = padLeft(narrowTo(parseInt(color[2], 16), [0, 255]).toString(16), 2, 0)
+	  const a = padLeft(narrowTo(parseInt(color[3], 16), [0, 255], 255).toString(16), 2, 0)
+	  return [r, g, b, a]
+	}
+
+	function hsl2rgb(color) {
+		const hsl = parseHsl(color)
+		if (hsl) {
+			const [ h, s, l, a ] = hsl
+	    const [sh, ss, sl] = [h / 360, s / 100, l / 100]
+		  let r, g, b
+		  if (ss == 0) {
+		    r = g = b = sl // achromatic
+		  } else {
+		    const hue2rgb = function hue2rgb(p, q, t) {
+		      if (t < 0) t += 1
+		      if (t > 1) t -= 1
+		      if (t < 1 / 6) return p + (q - p) * 6 * t
+		      if (t < 1 / 2) return q
+		      if (t < 2 / 3) return p + (q - p) * (2 / 3 - t) * 6
+		      return p
+		    }
+		    const q = sl < 0.5 ? sl * (1 + ss) : sl + ss - sl * ss
+		    const p = 2 * sl - q
+		    r = hue2rgb(p, q, sh + 1 / 3)
+		    g = hue2rgb(p, q, sh)
+		    b = hue2rgb(p, q, sh - 1 / 3)
+		  }
+		  return [Math.round(r * 255), Math.round(g * 255), Math.round(b * 255), a]
+		}
+	}
+
+	function rgb2hsl(color) {
+	  const rgb = parseRgb(color)
+	  if (rgb) {
+	    const [r, g, b, a] = rgb
+	    const [sr, sg, sb] = [r / 255, g / 255, b / 255]
+	    const max = Math.max(sr, sg, sb)
+	    const min = Math.min(sr, sg, sb)
+	    const diff = max - min
+	    const l = (max + min) / 2
+	    const s = diff == 0 ? 0 : diff / (1 - Math.abs(2 * l - 1))
+	    let h
+	    if (s == 0) {
+	      h = 0
+	    } else if (sr == max) {
+	      h = (sg - sb) / diff % 6
+	    } else if (sg == max) {
+	      h = (sb - sr) / diff + 2
+	    } else {
+	      h = (sr - sg) / diff + 4
+	    }
+	    h *= 60
+	    if (h < 0) h += 360
+	    return [Math.round(h), +(s * 100).toFixed(1), +(l * 100).toFixed(1), a]
+	  }
+	}
+
+	function rgb2hex(color) {
+		const [ r, g, b, a ] = parseRgb(color)
+		return [
+			r.toString(16),
+			g.toString(16),
+			b.toString(16),
+			Math.round(255 * a).toString(16)
+		].map(e => padLeft(e, 2, 0))
+	}
+
+	function hex2rgb(color) {
+		const [ r, g, b, a ] = parseHex(color)
+		return [ parseInt(r, 16), parseInt(g, 16), parseInt(b, 16), parseInt(a, 16) / 255, ]
+	}
+
+	function padLeft(s, l, f) {
+	  while (s.length < l) s = f + s
+	  return s
+	}
+
+	function frgba(es) {
+	  return 'rgba(' + es + ')'
+	}
+
+	function fhsla(es) {
+	  return 'hsla(' + es[0] + 'deg,' + es[1] + '%,' + es[2] + '%,' + es[3] + ')'
+	}
+
+	function fhexa(es) {
+	  return '#' + es.join('')
+	}
+
+	function animate(fromColor, toColor) {}
+
+	const colors = {
+		update(type) {
+			const el = document.querySelector('#' + type)
+			const key = this.key(type)
+			const color = window['f' + type + 'a'](this[key])
+			el.querySelector('.text').innerText = color
+			el.querySelector('.color').style.backgroundColor = color
+			Array.prototype.forEach.call(el.querySelectorAll('input'), (e, i) => {
+				if (this[key] && this[key][i]) {
+					e.value = this[key][i]
+				}
+			})
+		},
+		key(type) {
+			return '_' + type
+		},
+		set(type, v) {
+			const key = this.key(type)
+			if (v === this[key]) return
+			this[key] = v
+			this.update(type)
+		},
+		get rgb() { return this._rgb },
+		get hex() { return this._hex },
+		get hsl() { return this._hsl },
+		set rgb(v) { this.set('rgb', v) },
+		set hex(v) { this.set('hex', v) },
+		set hsl(v) { this.set('hsl', v) },
+	}
+
+	function onChange(e) {
+    if (e.target.tagName === 'INPUT') {
+      const type = e.target.parentNode.parentNode.getAttribute('id')
+	    const index = [].slice.call(e.target.parentNode.parentNode.children).indexOf(e.target.parentNode) - 3
+	    colors[type] = colors[type] || []
+	    const es = colors[type]
+	    es[index] = e.target.value.trim()
+	    let color = 'transparent'
+	    let raw = ''
+	    switch (type) {
+	      case 'rgb':
+		      const rgb = parseRgb(es)
+	        color = frgba(rgb)
+	        raw = frgba(es)
+	        colors.hex = rgb2hex(rgb)
+	        colors.hsl = rgb2hsl(rgb)
+	        break
+	      case 'hsl':
+		      const hsl = parseHsl(es)
+	        color = fhsla(hsl)
+	        raw = fhsla(es)
+	        colors.rgb = hsl2rgb(hsl)
+	        colors.hex = rgb2hex(colors.rgb)
+	        break
+	      case 'hex':
+		      const hex = parseHex(es)
+	        color = fhexa(hex)
+	        raw = fhexa(es)
+	        colors.rgb = hex2rgb(hex)
+	        colors.hsl = rgb2hsl(colors.rgb)
+	        break
+	      default:
+	    }
+	    e.target.parentNode.parentNode.querySelector('.color').style.backgroundColor = color
+	    e.target.parentNode.parentNode.querySelector('.text').innerHTML = 'In: ' + raw + '<br/>Out: ' + color
+	  }
+	}
+
+	class HSLPanel {
+		constructor() {
+			this._hue = 0
+			this._saturation = 50
+			this._lightness = 50
+			this._alpha = 1
+			this.updates = []
+		}
+		get container() {
+			return this._container
+		}
+		get hcursor() {
+			this._hcursor = this._hcursor || this.container.querySelector('.h-cursor')
+			return this._hcursor
+		}
+		get scursor() {
+			this._scursor = this._scursor || this.container.querySelector('.s-cursor')
+			return this._scursor
+		}
+		get lcursor() {
+			this._lcursor = this._lcursor || this.container.querySelector('.l-cursor')
+			return this._lcursor
+		}
+		get acursor() {
+			this._acursor = this._acursor || this.container.querySelector('.a-cursor')
+			return this._acursor
+		}
+		get alphaContainer() {
+			this._alphaContainer = this._alphaContainer || this.container.querySelector('.alphas')
+			return this._alphaContainer
+		}
+		get saturationContainer() {
+			this._saturationContainer = this._saturationContainer || this.container.querySelector('.saturations')
+			return this._saturationContainer
+		}
+		get saturationMask() {
+			this._saturationMask = this._saturationMask || this.container.querySelector('.saturations .mask')
+			return this._saturationMask
+		}
+		get lightnessContainer() {
+			this._lightnesssContainer = this._lightnesssContainer || this.container.querySelector('.lightnesses')
+			return this._lightnesssContainer
+		}
+		get origin() {
+			this._origin = this._origin || this.getCoord(this.container)
+			return this._origin
+		}
+		get hue() {
+			return this._hue
+		}
+		set hue(v) {
+			this._hue = v
+			const { hcursor } = this
+			this.setStyle(hcursor, { left: 100 * v / 360 + '%' })
+  		hcursor.textContent = 'H' + this.hue
+  		this.update()
+		}
+		get saturation() {
+			return this._saturation
+		}
+		set saturation(v) {
+			this._saturation = v
+			const { scursor } = this
+			this.setStyle(scursor, { top: v + '%' })
+  		scursor.textContent = 'S' + this.saturation
+  		this.update()
+		}
+		get lightness() {
+			return this._lightness
+		}
+		set lightness(v) {
+			this._lightness = v
+			const { lcursor } = this
+			this.setStyle(this.lcursor, { top: v + '%' })
+  		lcursor.textContent = 'L' + this.lightness
+			this.setStyle(this.saturationMask, { backgroundColor: `hsl(0, 0%, ${this.lightness}%, 1)` })
+  		this.update()
+		}
+		get alpha() {
+			return this._alpha
+		}
+		set alpha(v) {
+			this._alpha = v
+			const { acursor } = this
+			this.setStyle(this.acursor, { top: (100 - v * 100) + '%' })
+  		acursor.textContent = 'A' + this.alpha
+			this.setStyle(this.saturationContainer, { opacity: `${this.alpha}` })
+  		this.update()
+		}
+		mount(dom) {
+			this.dom = dom
+			this.draw()
+			this.initEvents()
+			this.createAlphaBackground()
+			this.random()
+		}
+		random() {
+			this.hue = ~~(Math.random() * 360)
+			this.saturation = ~~(Math.random() * 100)
+			this.lightness = 50
+			this.alpha = 1
+		}
+		update() {
+			const color = { h: this.hue, s: this.saturation, l: this.lightness, a: this.alpha }
+			this.updates.forEach(update => update(color))
+		}
+		setStyle(el, attrs) {
+			Object.assign(el.style, attrs)
+		}
+		getCoord(el) {
+			return el.getBoundingClientRect()
+		}
+		initEvents() {
+		  this.container.addEventListener('mouseover', e => {
+		  	if (e.target.tagName === 'DIV' && e.target.classList.contains('hue')) {
+		  		if (!this.clickedHue) {
+		  			this.hue = +e.target.dataset.hue
+		  			this.saturation = +e.target.parentNode.dataset.saturation
+		  		}
+		  	}
+		  	if (e.target.tagName === 'DIV' && e.target.classList.contains('lightness')) {
+		  		if (!this.clickedHue) {
+		  			this.lightness = +e.target.dataset.lightness
+		  		}
+		  	}
+		  	if (e.target.tagName === 'DIV' && e.target.classList.contains('alpha')) {
+		  		if (!this.clickedHue) {
+		  			this.alpha = +e.target.dataset.alpha
+		  		}
+		  	}
+		  })
+		  this.container.addEventListener('click', e => {
+		  	if (e.target.tagName === 'DIV' && (e.target.classList.contains('hue') ||
+		  			  		e.target.classList.contains('lightness') ||
+		  			  		e.target.classList.contains('alpha'))) {
+		  		this.clickedHue = !this.clickedHue
+		  	}
+		  })
+		}
+		drawSaturation() {
+			const saturations = []
+			while (saturations.length < 101) {
+				const hues = []
+				const saturation = saturations.length
+				while (hues.length < 360) {
+					hues.push(`<div class="hue" data-hue="${hues.length}"
+						style="background-color: hsl(${hues.length}, ${saturation}%, ${this.lightness}%)"></div>`)
+				}
+				saturations[saturations.length] = `<div class="saturation" data-saturation="${saturation}">${hues.join('')}</div>`
+			}
+			return saturations.join('')
+		}
+		drawAlpha() {
+			const alphas = []
+			while (alphas.length < 101) {
+				const alpha = (100 - alphas.length) / 100
+				alphas.push(`<div class="alpha" data-alpha="${alpha}" style="background: hsl(0, 0%, 0%);opacity: ${alpha}"></div>`)
+			}
+			return alphas.join('')
+		}
+		drawLightness() {
+			const lightnesses = []
+			while (lightnesses.length < 100) {
+				lightnesses.push(`<div class="lightness" data-lightness="${lightnesses.length}" style="background: hsl(0, 0%, ${lightnesses.length}%)"></div>`)
+			}
+			return lightnesses.join('')
+		}
+		draw() {
+			this._container = document.createElement('div')
+			this.container.classList.add('hsl')
+			this.container.innerHTML = `
+			<div class="pane">
+				<div class="alphas">${this.drawAlpha()}</div>
+				<div class="a-cursor" style="top: ${100 - this.alpha * 100}%"></div>
+			</div>
+			<div class="pane">
+				<div class="saturations">${this.drawSaturation()}<div class="mask"></div></div>
+				<div class="h-cursor" style="left: ${100 * this.hue / 360}%"></div>
+				<div class="s-cursor" style="top: ${this.saturation}%"></div>
+			</div>
+			<div class="pane">
+				<div class="lightnesses">${this.drawLightness()}</div>
+				<div class="l-cursor" style="top: ${this.lightness}%"></div>
+			</div>`
+			this.dom.insertBefore(this.container, this.dom.firstElementChild)
+		}
+		createAlphaBackground(size = 4, color = 'lightgrey') {
+			const canvas = document.createElement('canvas')
+			canvas.width = size * 2
+			canvas.height = size * 2
+			const ctx = canvas.getContext('2d')
+			ctx.fillStyle = 'white'
+			ctx.fillRect(0, 0, size, size)
+			ctx.fillStyle = color
+			ctx.fillRect(0, 0, size, size)
+			ctx.fillRect(size, size, size, size)
+			const url = canvas.toDataURL()
+			for (const pane of this.container.querySelectorAll('.pane')) {
+				pane.style.backgroundSize = `${size*2}px`
+				pane.style.backgroundImage = `url(${url})`
+				pane.style.backgroundRepeat = `repeat`
+			}
+		}
+	}
+
+	class Cursor {
+		constructor(x, y) {
+			this.x = x
+			this.y = y
+			this.stack = []
+		}
+		mv(dx = 0, dy = 0) {
+			this.stack.push({ x: this.x, y: this.y })
+			this.x += dx
+			this.y += dy
+			return this
+		}
+		dx(dx = 0) {
+			this.stack.push({ x: this.x, y: this.y })
+			this.x += dx
+			return this
+		}
+		dy(dy = 0) {
+			this.stack.push({ x: this.x, y: this.y })
+			this.y += dy
+			return this
+		}
+		rdx(dx = 0) {
+			this.dx(dx)
+			return dx
+		}
+		rdy(dy = 0) {
+			this.dy(dy)
+			return dy
+		}
+		gdx(dx = 0) {
+			this.dx(dx)
+			return this.x
+		}
+		gdy(dy = 0) {
+			this.dy(dy)
+			return this.y
+		}
+	}
+
+	class HSLCanvas {
+		constructor(container, width, height) {
+			this.container = container
+			this._w = width
+			this._h = height
+
+			this.canvas = document.createElement('canvas')
+			this.ctx = this.canvas.getContext('2d')
+			this.container.appendChild(this.canvas)
+
+			this.margin = 20
+			this.bar = 10
+			this.gap = 20
+
+			this.hue = 180
+			this.saturation = 50
+			this.lightness = 50
+			this.alpha = 1
+
+			this.resize(width, height)
+			this.render()
+		}
+
+		get scale() {
+			return [this.w / this.initialWidth, this.h / this.initialHeight]
+		}
+
+		get w() {
+			return this._w || this.initialWidth
+		}
+		set w(v) {
+			this.resize(v, this.h)
+		}
+		get h() {
+			return this._h || this.initialHeight
+		}
+		set h(v) {
+			this.resize(this.w, v)
+		}
+
+		get initialWidth() {
+			return this.margin + this.bar + this.gap + 360 + this.gap + this.bar + this.margin
+		}
+		get initialHeight() {
+			return this.margin + 101 + this.margin
+		}
+
+		createAlphaBackground(size = 2, color = 'lightgrey') {
+			const canvas = document.createElement('canvas')
+			canvas.width = size * 2
+			canvas.height = size * 2
+			const ctx = canvas.getContext('2d')
+			ctx.fillStyle = 'white'
+			ctx.fillRect(0, 0, size, size)
+			ctx.fillStyle = color
+			ctx.fillRect(0, 0, size, size)
+			ctx.fillRect(size, size, size, size)
+			return canvas.toDataURL()
+		}
+
+		resize(w, h) {
+			this.ctx.clearRect(0, 0, this.w, this.h)
+			this._w = w
+			this._h = h
+			this.render()
+		}
+
+		fix(type) {
+			if (type === 'w') {
+				this.h = this.scale[0] * this.initialHeight
+			} else if (type === 'h') {
+				this.w = this.scale[1] * this.initialWidth
+			}
+		}
+
+		render() {
+			this.canvas.width = this.w
+			this.canvas.height = this.h
+			this.ctx.scale(...this.scale)
+			this.preload(() => {
+				this.draw()
+			})
+		}
+
+		preload(cb) {
+			const img = document.createElement('img')
+			img.src = this.createAlphaBackground()
+			img.onload = () => {
+				this.alphaImagePattern = this.ctx.createPattern(img, 'repeat')
+				cb()
+			}
+		}
+
+		draw() {
+			// draw background
+			const { ctx, margin, bar, gap, } = this
+			const cur = new Cursor(margin, margin)
+			ctx.fillStyle = this.alphaImagePattern
+			ctx.fillRect(cur.x, cur.y, cur.rdx(bar), 100)
+			ctx.fillRect(cur.gdx(gap), cur.y, cur.rdx(360), 100)
+			ctx.fillRect(cur.gdx(gap), cur.y, bar, 100)
+
+			this.drawHue()
+			this.drawAlpha()
+			this.drawLightness()
+		}
+
+		drawHue() {
+			const { ctx, margin, bar, gap, lightness } = this
+			const cur = new Cursor(margin + bar + gap, margin)
+			const saturationCount = 101
+			const hueCount = 360
+			let saturation = 0
+			while (saturation < saturationCount) {
+				let hue = 0
+				while (hue < hueCount) {
+					ctx.fillStyle = `hsl(${hue}deg, ${saturation}%, ${lightness}%)`
+					ctx.fillRect(cur.x, cur.y, 1.5, 1.5)
+					cur.dx(1)
+					hue++
+				}
+				cur.dx(-hue)
+				cur.dy(1)
+				saturation++
+			}
+		}
+		drawAlpha() {
+			const { ctx, margin, bar, gap } = this
+			const cur = new Cursor(margin, margin)
+			let alpha = 0
+			while (alpha < 101) {
+				ctx.fillStyle = `rgba(0, 0, 0, ${alpha/100})`
+				ctx.fillRect(cur.x, cur.y, bar, 1.5)
+				cur.dy(1)
+				alpha++
+			}
+		}
+		drawLightness() {
+			const { ctx, margin, bar, gap } = this
+			const cur = new Cursor(margin + bar + gap + 360 + gap, margin)
+			let lightness = 0
+			while (lightness < 101) {
+				ctx.fillStyle = `hsl(0, 0%, ${lightness}%)`
+				ctx.fillRect(cur.x, cur.y, bar, 1.5)
+				cur.dy(1)
+				lightness++
+			}
+		}
+	}
+
+	document.addEventListener('DOMContentLoaded', function() {
+		const hsl = window.hsl = new HSLPanel()
+		hsl.updates.push(color => {
+			colors.hsl = [color.h, color.s, color.l, color.a]
+      colors.rgb = hsl2rgb(colors.hsl)
+      colors.hex = rgb2hex(colors.rgb)
+		})
+		hsl.mount(document.body)
+	  document.body.addEventListener('change', onChange)
+	  document.body.addEventListener('keydown', onChange)
+	})
+
+	function handleFile(files) {
+		const file = files[0]
+		const reader = new FileReader()
+    reader.onload = function(e) {
+    	const img = document.createElement('img')
+    	img.src = e.target.result
+    	img.onload = function() {
+    		const w = img.width
+    		const h = img.height
+    		const tar = document.querySelector('.saturations')
+    		const ow = tar.offsetWidth
+    		const oh = tar.offsetHeight
+	    	const pane = tar.parentNode
+	    	tarWidth = tar.offsetWidth > w ? w : tar.offsetWidth
+	    	pane.style.flex = `0 0 ${tarWidth}px`
+	    	pane.parentNode.style.height = tarWidth * h / w + 'px'
+	    	pane.style.backgroundImage = `url(${e.target.result})`
+	    	pane.style.backgroundSize = `cover`
+    	}
+    }
+    reader.readAsDataURL(file)
+	}
+
+	</script>
+</head>
+
+<body>
+	<div class="file" style="text-align: center; margin: 20px">
+		Select Background:
+		<input type="file" accept="image/*"
+			onchange="handleFile(this.files)">
+	</div>
+	<div class="input">
+	  <div id="rgb">
+	    <h3>rgb</h3>
+	    <p><span class="text"></span></p>
+	    <p><span class="color"></span></p>
+	    <p><label>red</label> <input type="number"></p>
+	    <p><label>green</label> <input type="number"></p>
+	    <p><label>blue</label> <input type="number"></p>
+	    <p><label>alpha</label> <input type="number"></p>
+	  </div>
+	  <div id="hsl">
+	    <h3>hsl</h3>
+	    <p><span class="text"></span></p>
+	    <p><span class="color"></span></p>
+	    <p><label>hue</label> <input type="number"></p>
+	    <p><label>saturation</label> <input type="number"></p>
+	    <p><label>lightness</label> <input type="number"></p>
+	    <p><label>alpha</label> <input type="number"></p>
+	  </div>
+	  <div id="hex">
+	    <h3>hex</h3>
+	    <p><span class="text"></span></p>
+	    <p><span class="color"></span></p>
+	    <p><label>red</label> <input type="text"></p>
+	    <p><label>green</label> <input type="text"></p>
+	    <p><label>blue</label> <input type="text"></p>
+	    <p><label>alpha</label> <input type="text"></p>
+	  </div>
+	</div>
+</body>
+
+</html>
