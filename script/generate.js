@@ -24,7 +24,7 @@ if (!IS_FORCE) {
   // no .md committed
   if (!Object.keys(LATEST_COMMITTED)
     .filter(e => !new RegExp(`(^|${SRC}\/(.*\/)*)${INDEX_FILE}$`).test(e))
-    .some(e => /\.md$/.test(e))) {
+    .some(e => /\.(md|html)$/.test(e))) {
     process.exit(0)
   }
 }
@@ -73,8 +73,9 @@ function readFolder(folder, cb, level = 0) {
     if (!level && file === INDEX_FILE) return
     const filepath = path.join(folder, file)
     const stat = fs.statSync(filepath)
-    if (stat.isFile() && path.extname(file) === '.md') {
-      cb(file.slice(0, -3), level, filepath, stat)
+    const ext = path.extname(file)
+    if (stat.isFile() && ['.md', '.html'].includes(ext)) {
+      cb(path.basename(file, ext), level, filepath, stat)
     } else if (stat.isDirectory() && file[0] !== '.') {
       cb(file, level, filepath, stat)
       readFolder(filepath, cb, level + 1)
