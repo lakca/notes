@@ -1,5 +1,11 @@
+---
+title: Productivity
+date: 2020-09-08T08:54:35.938Z
+---
+
 - [Productivity](#productivity)
   - [CLI](#cli)
+    - [`z`: 跨平台](#z-跨平台)
     - [`autojump`](#autojump)
     - [`zsh`](#zsh)
       - [`zsh-autosuggestions`](#zsh-autosuggestions)
@@ -30,7 +36,7 @@
       - [`Operator Mono`](#operator-mono)
   - [MacOS](#macos)
     - [`brew`: Package Manager](#brew-package-manager)
-    - [更改源](#更改源)
+      - [更改源](#更改源)
     - [`Dash`: API Documentation Browser and Code Snippet Manager](#dash-api-documentation-browser-and-code-snippet-manager)
   - [SaaS](#saas)
     - [`Analyse your HTTP response headers`](#analyse-your-http-response-headers)
@@ -43,6 +49,10 @@
 # Productivity
 
 ## CLI
+
+### `z`: 跨平台
+
+> https://github.com/rupa/z
 
 ### `autojump`
 
@@ -136,7 +146,7 @@
 - `brew shellenv`
 - `brew --repo`
 
-### 更改源
+#### 更改源
 
 1. [Homebrew](http://mirrors.ustc.edu.cn/help/brew.git.html):
 

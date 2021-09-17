@@ -1,3 +1,8 @@
+---
+title: Vscode
+date: 2020-08-04T09:26:34.574Z
+---
+
 - [View](#view)
 - [Shortcut](#shortcut)
 - [常用命令](#常用命令)

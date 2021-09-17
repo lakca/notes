@@ -1,3 +1,8 @@
+---
+title: 通过SV G等创建logo文件（ico文件）
+date: 2021-04-14T07:51:27.822Z
+---
+
 - [生成Icon文件（.svg, .png, .ico, .icns）](#生成icon文件svg-png-ico-icns)
   - [`SVG` 转 `.ico`/`.icns`](#svg-转-icoicns)
     - [NodeJS:](#nodejs)

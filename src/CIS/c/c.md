@@ -1,3 +1,8 @@
+---
+title: C
+date: 2020-09-08T08:54:35.922Z
+---
+
 - [Abbreviation](#abbreviation)
 - [Basic Concept](#basic-concept)
   - [Identifier](#identifier)

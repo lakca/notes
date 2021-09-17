@@ -1,3 +1,8 @@
+---
+title: Open Source
+date: 2020-09-08T02:55:39.886Z
+---
+
 # Open Source Relative
 
 ## `SPDX`

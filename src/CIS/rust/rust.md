@@ -1,5 +1,13 @@
+---
+title: Rust
+date: 2021-04-19T11:13:31.973Z
+---
+
 - [准备](#准备)
   - [工具](#工具)
+    - [rustup：管理 *Rust* 版本和工具链的命令行工具](#rustup管理-rust-版本和工具链的命令行工具)
+    - [Cargo：*Rust* 代码构建和包管理工具](#cargorust-代码构建和包管理工具)
+    - [其他](#其他)
   - [约定（Conventions）](#约定conventions)
 - [变量（Variables）](#变量variables)
   - [* 常量（Constants）](#-常量constants)
@@ -58,9 +66,9 @@
 
 ### 工具
 
-*rustup* ：*Rust* 版本和工具链管理工具。（*a command line tool for managing Rust versions and associated tools.*）
+#### [rustup](https://rustup.rs/)：管理 *Rust* 版本和工具链的命令行工具
 
-- `rustc` 编译 *Rust* 文件；
+> *a command line tool for managing Rust versions and associated tools.*
 
 - `rustup doc` 查看离线文档；
   - `rustup doc --book`：语言教程（*the book*）
@@ -73,27 +81,54 @@
 
 - `rustup update` 更新版本；
 
-*Cargo* ：*Rust* 包/项目管理工具。（*Cargo is Rust’s build system and package manager.*）
+- `rustc` 编译 *Rust* 文件；
 
-类似 *nodejs* 的 *npm* 一样，*Cargo* 和 *Rust* 也是在一起安装的。
+#### [Cargo](https://doc.rust-lang.org/cargo)：*Rust* 代码构建和包管理工具
+
+> *Cargo is Rust’s build system and package manager.*
 
 - `cargo new`/`cargo init` 创建项目/初始化项目；
 
-- `cargo run` 编译并生成可执行文件并运行；
+- `cargo run` 直接运行代码（编译代码、生成可执行文件、运行可执行文件）；
 
-- `cargo check` 编译但不生成可执行文件，用于语法检查；
+- `cargo check` 检查语法（编译代码但不生成可执行文件）；
 
-- `cargo build` 编译并生成可执行文件（*target/debug*），一般用于开发调试，代码未经编译器优化；
+- `cargo clippy` 检查代码风格和质量（类似 *eslint*）；
+  - 需要安装 [*rust-clippy*](https://github.com/rust-lang/rust-clippy) (`rustup component add clippy`)。
 
-- `cargo build --release` 优化编译并生成可执行文件（*target/release*），编译器会进行代码优化，一般用于正式发布、性能测试等；
+- `cargo fmt` 格式化代码；
+  - 需要安装 [*rustfmt*](https://github.com/rust-lang/rustfmt) (`rustup component add rustfmt`)。
+
+- `cargo build` 编译并生成可执行文件（位于 *target/debug*），一般用于开发调试，代码未经编译器优化；
+
+- `cargo build --release` 优化编译并生成可执行文件（位于 *target/release*），编译器会进行代码优化，一般用于正式发布、性能测试等；
 
 - `cargo doc` 生成项目文档；
+  - 通过 [*rustdoc*](https://doc.rust-lang.org/rustdoc/) 实现，Rust 发行版自带。
 
 - `cargo test` 执行测试代码；
 
 - `cargo bench` 执行性能测试；
 
 - `cargo publish` 发布项目；
+
+#### 其他
+
+- Rust 文档性教程：[The Rust Programming Language](https://doc.rust-lang.org/book/)
+- Rust 引导式教程：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)
+- Rust 范例式教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
+- Rust 语言参考文档：[The Rust Reference](https://doc.rust-lang.org/rustc/)
+- * Rust 编译器介绍：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
+- * Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- * Rust 宏：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
+- 社区公共仓库：[The Rust community’s crate registry](https://crates.io/)
+- 查询 仓库文档：[documentation host for crates](https://docs.rs/)
+- 速查 Rust 语言：[Rust Language Cheat Sheet](https://cheats.rs/)
+- 查询 Rust 标准库文档：[The Rust Standard Library](https://doc.rust-lang.org/std/)
+- 查询 Rust 编译错误：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
+- 如何用 Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
+- 如何用 Rust 编译 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
+- 如何用 Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
 
 ### 约定（Conventions）
 
@@ -141,7 +176,7 @@ let mut mutable = 2; // Mutable, 可变变量
 
 - 条件的类型必须为 `bool` ；
 
-- 条件不要求必须完整（*may incomprehensive*）；
+- 条件不要求必须有 `else`（*may incomprehensive*）；
 
 ```rust
 // 圆括号可以省略
@@ -155,7 +190,17 @@ let x = if true { 1 } else { 2 }; // 注意返回值必须类型相同，因为 
 
 ### `while`
 
+- 条件的类型必须为 `bool` ；
+
+```rs
+while x {}
+```
+
 ### `for`
+
+```rs
+for x in iter {}
+```
 
 ### `loop`
 
@@ -163,10 +208,9 @@ let x = if true { 1 } else { 2 }; // 注意返回值必须类型相同，因为 
 
 无限循环：
 ```rust
-loop {
-  println!("hello")
-}
+loop {}
 ```
+
 中断循环：
 ```rust
 loop {
@@ -174,6 +218,7 @@ loop {
   break // 实际上返回了空元组：()
 }
 ```
+
 返回值：
 ```rust
 let a = loop { break 1 }
@@ -877,6 +922,10 @@ fn main() {
 
 ### 单元结构（*unit struct*）：
 
+```rs
+struct A;
+```
+
 ### 自动引用和解引用（*automatic referencing and dereferencing*）：
 
 > *when you call a method with object.something(), Rust automatically adds in &, &mut, or * so object matches the signature of the method.*
@@ -1154,6 +1203,27 @@ pub mod a {
   pub fn demo() {}
 }
 ```
+> 还可以在导出模块时自定义模块的可见性。
+
+仅模块自己可见，相当于 `pub`
+```rs
+pub(self) a
+```
+
+最远到父模块可见
+```rs
+pub(super) a
+```
+
+最远到项目可见
+```rs
+pub(crate) a
+```
+
+最远到指定祖先模块可见
+```rs
+pub(in a::b) a
+```
 
 #### （`crate`）绝对路径
 
@@ -1208,7 +1278,7 @@ B::demo();
 ```rust
 mod back_of_house {
   /// 1. struct类型：struct 需要声明 pub, 被访问的属性也需要声明 pub；
-  /// 若结构本身及其属性有未声明 pub 的，则结构无法在外部使用
+  /// 若结构本身及其属性有未声明 pub 的，则结构无法直接在外部使用（初始化结构）
   pub struct Breakfast {
     pub toast: String,
     seasonal_fruit: String,

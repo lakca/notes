@@ -1,0 +1,63 @@
+
+graph TB
+
+  subgraph mounting ["Mounting"]
+
+    new(Constructor):::phase
+      ---> getDerivedStateFromProps1(getDerivedStateFromProps):::phase
+      ---> render1(render):::phase
+      ---> updateDOM1("Update DOM and refs"):::success
+      --> componentDidUnmount(componentDidUnmount):::phase
+
+  end
+
+  subgraph updating ["Updating"]
+
+    getDerivedStateFromProps2(getDerivedStateFromProps):::phase
+      --> shouldComponentUpdate(shouldComponentUpdate):::phase
+
+    shouldComponentUpdate
+      -- True --> render2(render):::phase
+      --> getSnapshotBeforeUpdate(getSnapshotBeforeUpdate):::phase
+      --> updateDOM2("Update DOM and refs"):::success
+      --> componentDidUpdate(componentDidUpdate):::phase
+
+    shouldComponentUpdate
+      -- False ----> break(Break):::error
+
+    newprop(New props)
+      --> getDerivedStateFromProps2
+
+    newstate("New State")
+      --> getDerivedStateFromProps2
+
+    forceupdate("Force Update")
+      --> getDerivedStateFromProps3(getDerivedStateFromProps):::phase
+      ---> render2
+
+    parentRender("Parent render()")
+      --> newprop
+
+    setState("setState()")
+      --> newstate
+
+    forceUpdate("forceUpdate()")
+      --> forceupdate
+
+  end
+
+  subgraph unmounting ["Unmounting"]
+
+    componentwillunmount(ComponentWillUnmount):::phase
+      -------> unmountdom("Unmount DOM and refs"):::success
+
+  end
+
+  classDef default stroke:none;
+  classDef success fill:#0d02,color:#0d0,stroke:#0d0,stroke-dasharray: 5 5;
+  classDef error fill:#f552,color:#f55,stroke:#f55,stroke-dasharray: 5 5;
+  classDef phase fill:#08f2,color:#08f,stroke:#08f,font-weight:lighter;
+  classDef container fill:none,stroke:black,stroke-dasharray: 5 5;
+  class mounting,updating,unmounting container
+  linkStyle 5 color:#0f2,stroke:#0f2,stroke-dasharray: 5 5;
+  linkStyle 9 color:#f55,stroke:#f55,stroke-dasharray: 5 5;

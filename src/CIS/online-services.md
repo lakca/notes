@@ -1,0 +1,17 @@
+---
+title: 一些有用的在线服务
+---
+
+## 免费CDN服务
+
+> 建议作为开发测试使用或自用。
+
+### [jsdelivr](https://www.jsdelivr.com/): 为 *npm*, *github* 文件提供CDN服务
+
+链接格式为：`https://cdn.jsdelivr.net/:service/:package@:version/:file`
+
+其中 `service` 为`npm` (*npm*) 或者`gh` (*github*) ，`version` (@version) 和`file`都可以省略。
+
+### [unpkg](https://unpkg.com/): 为 *npm* 文件提供CDN服务
+
+链接格式为：`unpkg.com/:package@:version/:file`

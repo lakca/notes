@@ -1,3 +1,8 @@
+---
+title: Set
+date: 2020-10-10T06:57:14.375Z
+---
+
 # Set
 
 [Reference](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)

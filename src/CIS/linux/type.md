@@ -1,3 +1,8 @@
+---
+title: Type
+date: 2020-09-14T07:20:33.458Z
+---
+
 ## Array
 
 ### Iteration

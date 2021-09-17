@@ -1,3 +1,8 @@
+---
+title: Python
+date: 2021-05-08T09:01:36.275Z
+---
+
 - [cookbooks](#cookbooks)
 - [FAQ](#faq)
   - [根据文件绝对路径引入模块](#根据文件绝对路径引入模块)

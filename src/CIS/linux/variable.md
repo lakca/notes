@@ -1,3 +1,8 @@
+---
+title: Variable
+date: 2020-09-16T03:04:17.021Z
+---
+
 - [Variable](#variable)
   - [特殊变量](#特殊变量)
     - [`$#`](#)

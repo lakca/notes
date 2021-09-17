@@ -1,3 +1,8 @@
+---
+title: Glossary
+date: 2020-08-04T09:26:34.573Z
+---
+
 | Phrase                 | Meaning or Symbol |
 | ---------------------- | ----------------- |
 | parentheses            | ()                |

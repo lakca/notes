@@ -1,3 +1,8 @@
+---
+title: Basic
+date: 2020-11-02T09:07:16.580Z
+---
+
 - [Basic](#basic)
   - [Parse command line arguments](#parse-command-line-arguments)
     - [Space-Separated](#space-separated)

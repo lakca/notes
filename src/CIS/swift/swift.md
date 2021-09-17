@@ -1,3 +1,7 @@
+---
+title: Swift
+date: 2020-09-08T08:54:35.929Z
+---
 
 - [Basic Types](#basic-types)
   - [String](#string)
