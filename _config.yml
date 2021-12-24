@@ -1,2 +1,13 @@
-theme: jekyll-theme-cayman
 title: 'NOTES'
+
+theme: jekyll-theme-cayman
+
+plugins:
+  - jekyll-github-metadata
+  - jekyll-mermaid
+  - jekyll-seo-tag
+
+mermaid:
+  src: '/assets/script/mermaid.min.js'
+
+timezone: Asia/Shanghai

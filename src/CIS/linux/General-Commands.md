@@ -21,6 +21,9 @@ date: 2021-06-26T09:06:35.429Z
   - [`xargs`](#xargs)
 - [文本处理](#文本处理)
   - [`wc`: word, line, character, and byte count](#wc-word-line-character-and-byte-count)
+  - [`head`](#head)
+  - [`tail`](#tail)
+  - [`cut`](#cut)
   - [`awk`](#awk)
   - [`sed`](#sed)
   - [`ed`](#ed)
@@ -129,6 +132,12 @@ date: 2021-06-26T09:06:35.429Z
 
 ## `wc`: word, line, character, and byte count
 
+## `head`
+
+## `tail`
+
+## `cut`
+
 ## `awk`
 
 > Pattern-directed scanning and processing language. `awk` scans each input file for lines that match any of a set of patterns specified literally in prog or in one or more files specified as -f progfile.  With each pattern there can be an associated action that will be performed when a line of a  file  matches the  pattern.
@@ -211,10 +220,11 @@ date: 2021-06-26T09:06:35.429Z
 - `-H`, `--span-hosts`: 扩展到（获取）域外资源，比如cdn，可以结合 `--domains` 使用。
 - `-m`, `--mirror`: 镜像模式。会自动递归、并且打上时间戳（用于后续再次执行时更新本地文件）
 - `-L`, `--relative`: 只追踪相对路径的链接
+- `-P <prefix>`, `--directory-prefix=<prefix>`: 本地根目录，默认为 `.`
 - `-I <list>`, `--include-directories=<list>`: 指定需要追踪的网站目录
 - `-X <list>`, `--exclude-directories=<list>`: 指定不要追踪的网站目录
 - `-D <domains>`, `--domains=<domains>`: 指定需要追踪的域名，多个以逗号隔开
-- `--exclude=domains=<domains>`: 指定不要追踪的域名，多个以逗号隔开
+- `--exclude-domains <domains>`: 指定不要追踪的域名，多个以逗号隔开。（注意，选项与参数之间没有等号）
 - `--follow-tags=<tags>`: 指定需要追踪的html标签，多个以逗号隔开
 - `--ignore-tags=<tags>`: 指定不要追踪的html标签，多个以逗号隔开
 - `-A <list>`, `--accpet <list>`: 通过通配符或者扩展名过滤文件，多个模式以逗号隔开。如 `-A png,jpg`
@@ -229,7 +239,7 @@ date: 2021-06-26T09:06:35.429Z
 使用：
 
 - 下载文件并解压缩：`wget -qO- https://xxx | tar xvf - -C dist`
-- 下载网站：`wget --mirror --convert-links --adjust-extension --page-requisites --no-parent -e robots=off https://nodejs.org/en/docs`
+- 下载网站：`wget --mirror --convert-links --adjust-extension --page-requisites --no-parent -e robots=off --reject 'zip,gz,xz,msi,exe,pkg,iso,mp4,mp3,mov' https://nodejs.org/en/docs`
 
 ## `curl`
 

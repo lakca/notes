@@ -1,0 +1,25 @@
+---
+layout: default
+---
+{{site.pages[0]}}
+<ul class="catalog">
+  {% for post in site.pages %}
+    <li>
+      <a href="{{ post.url }}">
+        <span>{{ post.title }}</span>
+        {% include date.html date=post.date%}
+        <span>{{ post.gitStatus }}</span>
+      </a>
+    </li>
+  {% endfor %}
+  <!-- {{ site.CISs }}
+  {% for post in site.ciss %}
+    <li>
+      <a href="{{ post.url }}">
+        <span>{{ post.title }}</span>
+        {% include date.html date=post.date%}
+        <span>{{ post.gitStatus }}</span>
+      </a>
+    </li>
+  {% endfor %} -->
+</ul>
