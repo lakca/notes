@@ -41,7 +41,11 @@ date: 2021-06-26T14:11:24.429Z
 - *update real dom*
 - `componentDidUpdate`
 
-{% mermaid %} {% include_relative ReactJS.mmd %} {% endmermaid %}
+<!--
+```mermaid
+{% include_relative ReactJS.mmd %}
+```
+-->
 
 ![ReactJS lifecycle v16.4](./ReactJS-Lifecycle-v16.4.png)
 [ReactJS lifecycle v16.4](https://hackernoon.com/reactjs-component-lifecycle-methods-a-deep-dive-38275d9d13c0)

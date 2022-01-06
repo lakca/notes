@@ -95,8 +95,7 @@
     }
     ele.setAttribute('style', style)
   }
-  const isIndex = window.location.pathname[window.location.pathname.length-1] === '/'
-  ;(function genBreadcrumb() {
+  function genBreadcrumb() {
     const div = document.createElement('div')
     div.classList.add('breadcrumb')
     const items = []
@@ -112,13 +111,13 @@
     items.splice(1, 1) // delete root src
     div.innerHTML = items.join(' / ')
     getHeader().appendChild(div)
-  }())
-  ;(function genAnchor() {
+  }
+  function genAnchor() {
     const div = document.createElement('div')
     div.classList.add('menu-anchor')
     div.onclick = function() { getContent() && getContent().classList.toggle('menu-closed') }
     getContent() && getContent().appendChild(div)
-  }())
+  }
   function onScroll() {
     var anchor = getAnchor()
     if (!anchor) return
@@ -134,19 +133,11 @@
       get offset() {
         const [x, y] = this.move
         const [sx, sy] = this.start
-        return [x - sx, y - sy]
+        return { x: x - sx, y: y - sy }
       },
-      get offsetX() {
-        const [x, y] = this.move
-        const [sx, sy] = this.start
-        const [ox, oy] = [x-sx, y-sy]
-        return Math.atan(oy/ox)/Math.PI*180
-      },
-      get offsetY() {
-        const [x, y] = this.move
-        const [sx, sy] = this.start
-        const [ox, oy] = [x-sx, y-sy]
-        return Math.atan(ox/oy)/Math.PI*180
+      get rotate() {
+        const offset = this.offset
+        return Math.atan(offset.y / offset.x) / Math.PI * 180
       },
       reset() {
         this.start = null
@@ -155,15 +146,16 @@
     }
     ele.addEventListener('touchstart', function(e) {
       e.stopPropagation()
+      if (touch.start) return
       touch.start = [e.touches[0].screenX, e.touches[0].screenY]
-      if (cb.onstart) cb.onstart.call(this, touch)
+      if (cb.onstart) cb.onstart.call(this, touch, e)
     })
     if (cb.onmove) {
       ele.addEventListener('touchmove', function(e) {
         e.stopPropagation()
         if (touch.start) {
           touch.move = [e.touches[0].screenX, e.touches[0].screenY]
-          cb.onmove.call(this, touch)
+          cb.onmove.call(this, touch, e)
         }
       })
     }
@@ -171,29 +163,31 @@
       e.stopPropagation()
       touch.reset()
       if (cb.reset) cb.reset()
-      if (cb.onend) cb.onend.call(this, touch)
+      if (cb.onend) cb.onend.call(this, touch, e)
     })
   }
+  genBreadcrumb()
+  const isIndex = window.location.pathname[window.location.pathname.length-1] === '/'
   if (!isIndex) {
     getContent() && getContent().classList.add('has-menu')
     getMenu() && getMenu().classList.add('fixed-menu')
     document.addEventListener('scroll', onScroll)
-
     onTouch(getMenu(), {
       reset() {
         setStyle(getMenu(), 'overflow-y')
         setStyle(document.body, 'overflow-y')
       },
-      onmove(touch) {
-        if (touch.offset[0] < 0 && !getContent().classList.contains('menu-closed')) {
-          if (Math.abs(touch.offsetX) > 30) {
+      onmove(touch, e) {
+        if (touch.offset.x < 0 && !getContent().classList.contains('menu-closed')) {
+          if (Math.abs(touch.rotate) > 10) {
             setStyle(this, 'left')
             touch.reset()
           } else {
+            e.preventDefault()
             setStyle(getMenu(), 'overflow-y', 'hidden')
             setStyle(document.body, 'overflow-y', 'hidden')
-            const left = touch.offset[0]
-            touch.triggered = -left > this.offsetWidth * 0.67
+            const left = touch.offset.x
+            touch.triggered = -left > this.offsetWidth * 0.3
             setStyle(this, 'left', left + 'px')
           }
         }
@@ -212,15 +206,17 @@
       reset() {
         setStyle(document.body, 'overflow-y')
       },
-      onmove(touch) {
-        if (touch.offset[0] > 0 && getContent().classList.contains('menu-closed')) {
-          if (Math.abs(touch.offsetX) > 30) {
+      onmove(touch, e) {
+        if (touch.offset.x > 0 && getContent().classList.contains('menu-closed')) {
+          if (Math.abs(touch.rotate) > 10) {
             touch.reset()
           } else {
+            e.preventDefault()
             setStyle(document.body, 'overflow-y', 'hidden')
             const menu = getMenu()
-            const left = touch.offset[0] - menu.offsetWidth
-            touch.triggered = -left < menu.offsetWidth * 0.33
+            const menuWidth = menu.offsetWidth
+            const left = touch.offset.x - menuWidth
+            touch.triggered = -left < menuWidth * 0.3
             setStyle(menu, 'left', left + 'px')
           }
         }
@@ -235,5 +231,29 @@
         }
       }
     })
+    genAnchor()
+  }
+}())
+
+;(function() {
+  function initMermaid() {
+    window.mermaid.initialize({
+      startOnLoad: true,
+      theme: "forest",
+      flowchart:{
+        useMaxWidth: true,
+        htmlLabels: true
+      }
+    })
+    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
+  }
+  if (window.mermaid) {
+    initMermaid()
+  } else {
+    for (const script of document.scripts) {
+      if (/mermaid/.test(script.src)) {
+        script.onload = initMermaid
+      }
+    }
   }
 }())

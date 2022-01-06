@@ -1,4 +1,4 @@
-title: 'NOTES'
+title: Lakca's Notes
 
 theme: jekyll-theme-cayman
 
@@ -8,6 +8,6 @@ plugins:
   - jekyll-seo-tag
 
 mermaid:
-  src: '/assets/script/mermaid.min.js'
+  src: /assets/script/mermaid.min.js
 
 timezone: Asia/Shanghai

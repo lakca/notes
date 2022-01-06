@@ -151,12 +151,18 @@ date: 2020-09-08T08:54:35.938Z
 1. [Homebrew](http://mirrors.ustc.edu.cn/help/brew.git.html):
 
 ```sh
+export HOMEBREW_BREW_GIT_REMOTE="https://mirrors.ustc.edu.cn/brew.git"
+```
+```sh
 cd "$(brew --repo)"
 git remote set-url origin https://mirrors.ustc.edu.cn/brew.git
 ```
 
 2. [Homebrew-Core](http://mirrors.ustc.edu.cn/help/homebrew-core.git.html):
 
+```sh
+export HOMEBREW_CORE_GIT_REMOTE="https://mirrors.ustc.edu.cn/homebrew-core.git"
+```
 ```sh
 cd "$(brew --repo)/Library/Taps/homebrew/homebrew-core"
 git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-core.git
@@ -171,12 +177,8 @@ git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
 
 4. [Homebrew-Bottles](http://mirrors.ustc.edu.cn/help/homebrew-bottles.html)
 
-设置环境变量`HOMEBREW_BOTTLE_DOMAIN`为`https://mirrors.ustc.edu.cn/homebrew-bottles`
-
-例如:
 ```sh
-echo 'export HOMEBREW_BOTTLE_DOMAIN=https://mirrors.ustc.edu.cn/homebrew-bottles' >> ~/.bash_profile
-source ~/.bash_profile
+export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
 ```
 
 ### `Dash`: API Documentation Browser and Code Snippet Manager

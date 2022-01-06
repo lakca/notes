@@ -1,9 +1,13 @@
 ---
-title: General Commands
+title: Commands
 date: 2021-06-26T09:06:35.429Z
 ---
 
-- [数据库（data base）](#数据库data-base)
+- [程序类型](#程序类型)
+  - [utility](#utility)
+  - [facility](#facility)
+  - [program](#program)
+- [系统数据库](#系统数据库)
 - [定位](#定位)
   - [`which`](#which)
   - [`type`](#type)
@@ -20,37 +24,63 @@ date: 2021-06-26T09:06:35.429Z
   - [`expr`](#expr)
   - [`xargs`](#xargs)
 - [文本处理](#文本处理)
-  - [`wc`: word, line, character, and byte count](#wc-word-line-character-and-byte-count)
+  - [`wc`](#wc)
   - [`head`](#head)
   - [`tail`](#tail)
   - [`cut`](#cut)
-  - [`awk`](#awk)
   - [`sed`](#sed)
+  - [`awk`](#awk)
   - [`ed`](#ed)
   - [`grep`](#grep)
 - [设备工具](#设备工具)
-  - [(*Disk*) `df`, `du`, `quota`](#disk-df-du-quota)
-  - [(*FileSystem*) `stat`, `readlink`, `file`, `ls`,](#filesystem-stat-readlink-file-ls)
-  - [(*Process*) `ps`, `top`, `kill`, `uptime`, `iostat`](#process-ps-top-kill-uptime-iostat)
-  - [(*Network*) `netstat`, `host`, `dig`, `ifconfig`, `route`, `arp`, `ndp`](#network-netstat-host-dig-ifconfig-route-arp-ndp)
-  - [(*Users*) `w`, `who`, `users`, `finger`, `last`](#users-w-who-users-finger-last)
-- [格式化（format）](#格式化format)
+  - [硬盘](#硬盘)
+    - [`df`](#df)
+    - [`du`](#du)
+    - [`quota`](#quota)
+  - [文件系统](#文件系统)
+    - [`stat`](#stat)
+    - [`readlink`](#readlink)
+    - [`file`](#file)
+    - [`ls`](#ls)
+  - [进程](#进程)
+    - [`ps`](#ps)
+    - [`top`](#top)
+    - [`kill`](#kill)
+    - [`uptime`](#uptime)
+    - [`iostat`](#iostat)
+  - [网络](#网络)
+    - [`netstat`](#netstat)
+    - [`host`](#host)
+    - [`dig`](#dig)
+    - [`ifconfig`](#ifconfig)
+    - [`route`](#route)
+    - [`arp`](#arp)
+    - [`ndp`](#ndp)
+  - [用户](#用户)
+    - [`w`](#w)
+    - [`who`](#who)
+    - [`users`](#users)
+    - [`finger`](#finger)
+    - [`last`](#last)
+- [格式化](#格式化)
   - [`strftime`](#strftime)
 - [网络工具](#网络工具)
   - [`wget`](#wget)
   - [`curl`](#curl)
   - [`lsof`](#lsof)
-- [进程](#进程)
-  - [`ps`](#ps)
+- [进程](#进程-1)
+  - [`ps`](#ps-1)
   - [`pgrep`](#pgrep)
-    - [`pkill`](#pkill)
-  - [`kill`](#kill)
+  - [`pkill`](#pkill)
+  - [`kill`](#kill-1)
 
-- utility
-- facility
-- program
+# 程序类型
 
-# 数据库（data base）
+## utility
+## facility
+## program
+
+# 系统数据库
 
 - `/etc/hosts`
 - `/etc/networks`
@@ -107,12 +137,15 @@ date: 2021-06-26T09:06:35.429Z
 
 ## `expr`
 
-> The `expr` utility evaluates expression and writes the result on standard output.
+> 执行表达式，并将结果输出到标准输出。
+
+The `expr` utility evaluates expression and writes the result on standard output.
 
 ## `xargs`
 
-> *Execute a command with piped arguments coming from another command, a file, etc. The input is treated as a single block of text and split into separate pieces on spaces, tabs, newlines and end-of-file.*
-> 通过 *pipe* 输入作为参数执行程序，参数列表通过使用 *space*, *tab*, *newline*, *eof* 等符号切割输入得到。
+> 将管道输入解析为参数用于执行命令，参数列表通过使用 *space*, *tab*, *newline*, *eof* 等符号切割得到。
+
+*Execute a command with piped arguments coming from another command, a file, etc. The input is treated as a single block of text and split into separate pieces on spaces, tabs, newlines and end-of-file.*
 
 - `-0`: 指定参数分隔符为空字符（*NUL (``\0'')*），一般配合 `find` 带 `-print0` 选项使用；如 `find . -name '*.backup' -print0 | xargs -0 rm -v`
 - `-E <eofstr>`: 指定逻辑EOF
@@ -130,21 +163,45 @@ date: 2021-06-26T09:06:35.429Z
 
 # 文本处理
 
-## `wc`: word, line, character, and byte count
+## `wc`
+
+> 统计字节 `wc -c`、字符 `wc -m`、单词 `wc -w`、行 `wc -l` 等。
 
 ## `head`
 
+> 获取输入文本的前面多行 `head -n`、或多个字节 `head -c`。
+
 ## `tail`
+
+> 获取输入文本的后面多行 `tail -n`、或多个字节 `tail -c`。
+
+- `-f`，当读到 **文件 (FIFO)** （即对`pipe`不生效）末尾的时候不退出程序，若文件继续增长则持续读入。
+- `-F`，与`-f`类似，但会检测文件名的变化，若检测到则会关闭并重新打开文件。
 
 ## `cut`
 
-## `awk`
+> 获取输入文本的行段，字节 `cut -b`、字符 `cut -c`。
 
-> Pattern-directed scanning and processing language. `awk` scans each input file for lines that match any of a set of patterns specified literally in prog or in one or more files specified as -f progfile.  With each pattern there can be an associated action that will be performed when a line of a  file  matches the  pattern.
+cut out selected portions of each line of a file.
+
+- `-d`，指定行段的分隔符，默认是制表符。
+- `-f`，指定保留的行段序号，多个行段由逗号分隔。
+
+```bash
+echo "
+dkbm:oqyr:qyodd
+lzgv:ortz:zyvf
+" | cut -d : -f 1,3
+# dkbm:qyodd
+# lzgv:zyvf
+```
 
 ## `sed`
 
 > `sed` is a stream editor.  A stream editor is used to perform basic text transformations on an input stream (a file or input from a pipeline).
+## `awk`
+
+> Pattern-directed scanning and processing language. `awk` scans each input file for lines that match any of a set of patterns specified literally in prog or in one or more files specified as -f progfile.  With each pattern there can be an associated action that will be performed when a line of a  file  matches the  pattern.
 
 ## `ed`
 
@@ -159,51 +216,99 @@ date: 2021-06-26T09:06:35.429Z
 # 设备工具
 
 <!-- lsvfs(1), quota(1), fstatfs(2), getfsstat(2), statfs(2), getmntinfo(3), compat(5), fstab(5), mount(8), quot(8) -->
-## (*Disk*) `df`, `du`, `quota`
+## 硬盘
 
-> `df`, display free disk space.
-> `du`, display disk usage statistics.
-> `quota`, display disk usage and limits
+### `df`
 
-## (*FileSystem*) `stat`, `readlink`, `file`, `ls`,
+> display free disk space.
+### `du`
+
+> display disk usage statistics.
+### `quota`
+
+> display disk usage and limits
+
+## 文件系统
 
 <!-- file(1), ls(1), lstat(2), readlink(2), stat(2), printf(3), strftime(3) -->
-> `stat`, display file status. Read, write or execute permissions of the named file are not required, but all directories listed in the path name leading to the file must be searchable.
-> `readlink`, same as `stat`, but only for the target of the symbolic link.
-> `file`, determine file type.
-> `ls`, list directory contents.
+### `stat`
 
-## (*Process*) `ps`, `top`, `kill`, `uptime`, `iostat`
+> display file status. Read, write or execute permissions of the named file are not required, but all directories listed in the path name leading to the file must be searchable.
+### `readlink`
+
+> same as `stat`, but only for the target of the symbolic link.
+### `file`
+
+> determine file type.
+### `ls`
+
+> list directory contents.
+
+## 进程
 
 <!-- kill(1), w(1), kvm(3), strftime(3), sysctl(8) -->
 <!-- finger(1), ps(1), uptime(1), who(1) -->
 <!-- last(1), mesg(1), users(1), getuid(2), utmpx(5) -->
-> `ps`, process status.
-> `top`, display and update sorted information about processes.
-> `kill`, terminate or signal a process.
-> `uptime`, The uptime utility displays the current time, the length of time the system has been up, the number of users, and the load average of the system over the last 1, 5, and 15 minutes.
-> `iostat`, report I/O statistics.
+### `ps`
 
-## (*Network*) `netstat`, `host`, `dig`, `ifconfig`, `route`, `arp`, `ndp`
-<!-- nfsstat(1), ps(1), inet(4), unix(4), hosts(5), networks(5), protocols(5), route(8), services(5), iostat(8), -->
-> `netstat`, show network status.
-> `host`, DNS lookup utility.
-> `dig`, DNS lookup utility.
-> `ifconfig`, The ifconfig utility is used to assign an address to a network interface and/or configure network interface parameters.
-> `route`, manually manipulate the routing tables.
-> `arp`, The arp utility displays and modifies the Internet-to-Ethernet address translation tables used by the address resolution protocol.
-> `ndp`, control/diagnose IPv6 neighbor discovery protocol.
+> process status.
+### `top`
 
-## (*Users*) `w`, `who`, `users`, `finger`, `last`
+> display and update sorted information about processes.
+### `kill`
 
-> `w`, display who is logged in and what they are doing.
-> `who`, display who is logged in.
-> `users`, list current users.
-> `finger`, The finger utility displays information about the system users.
-> `last`, list the sessions of specified users, ttys, and hosts, in reverse time order.
+> terminate or signal a process.
+### `uptime`
+
+> The uptime utility displays the current time, the length of time the system has been up, the number of users, and the load average of the system over the last 1, 5, and 15 minutes.
+### `iostat`
+
+> report I/O statistics.
+
+## 网络
+
+### `netstat`
+
+> show network status.
+### `host`
+
+> DNS lookup utility.
+### `dig`
+
+> DNS lookup utility.
+### `ifconfig`
+
+> The ifconfig utility is used to assign an address to a network interface and/or configure network interface parameters.
+### `route`
+
+> manually manipulate the routing tables.
+### `arp`
+
+> The arp utility displays and modifies the Internet-to-Ethernet address translation tables used by the address resolution protocol.
+### `ndp`
+
+> control/diagnose IPv6 neighbor discovery protocol.
+
+## 用户
+
+### `w`
+
+> display who is logged in and what they are doing.
+### `who`
+
+> display who is logged in.
+### `users`
+
+> list current users.
+### `finger`
+
+> The finger utility displays information about the system users.
+### `last`
+
+> list the sessions of specified users, ttys, and hosts, in reverse time order.
 
 
-# 格式化（format）
+# 格式化
 
 ## `strftime`
 
@@ -276,7 +381,7 @@ date: 2021-06-26T09:06:35.429Z
 - `-P <ppid>`: 指定父进程ID（*ppid*）
 - `-u <uid>`: 指定用户ID（*uid*），如 `pgrep -u root nginx`
 
-### `pkill`
+## `pkill`
 
 > 向进程发送信号（`kill` 需要知道 *pid*），与`pgrep`部分参数相同。
 
