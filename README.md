@@ -18,7 +18,7 @@
     - [README](src/CIS/linux/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
     - [Awk](src/CIS/linux/awk)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
     - [Basic](src/CIS/linux/basic)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
-    - [Command](src/CIS/linux/command)<span style="padding-left:2em;color:orange">R068</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
+    - [Command](src/CIS/linux/command)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
     - [Concept](src/CIS/linux/concept)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
     - [Expr](src/CIS/linux/expr)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
     - [Find](src/CIS/linux/find)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
@@ -46,7 +46,7 @@
     - [Qt](src/CIS/python/qt)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
   - [Rust](src/CIS/rust)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
     - [README](src/CIS/rust/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
-    - [Rust](src/CIS/rust/rust)<span style="padding-left:2em;color:orange">M</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
+    - [Rust](src/CIS/rust/rust)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
   - [Shortcut](src/CIS/shortcut)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
   - [Ssh](src/CIS/ssh)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
   - [Swift](src/CIS/swift)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
@@ -59,17 +59,17 @@
   - [Vscode](src/CIS/vscode)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
   - [Vt100](src/CIS/vt100)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
   - [Web](src/CIS/web)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
-    - [CSS Snippet](src/CIS/web/CSS-Snippet)<span style="padding-left:2em;color:green">A</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
-    - [CSS](src/CIS/web/CSS)<span style="padding-left:2em;color:orange">M</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
+    - [CSS Snippet](src/CIS/web/CSS-Snippet)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
+    - [CSS](src/CIS/web/CSS)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
     - [README](src/CIS/web/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
-    - [ReactJS](src/CIS/web/ReactJS)<span style="padding-left:2em;color:orange">M</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
-    - [Frameworks](src/CIS/web/frameworks)<span style="padding-left:2em;color:green">A</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
+    - [ReactJS](src/CIS/web/ReactJS)<span style="padding-left:2em;color:orange">M</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:19</span>
+    - [Frameworks](src/CIS/web/frameworks)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
     - [Svg](src/CIS/web/svg)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
 - [Color](src/color)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2021-12-18 16:28</span>
 - [Handy](src/handy)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
   - [README](src/handy/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
   - [Mac](src/handy/mac)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
-  - [Productivity](src/handy/productivity)<span style="padding-left:2em;color:orange">M</span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
+  - [Productivity](src/handy/productivity)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
 - [Other](src/other)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
   - [1](src/other/1)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-06 22:14</span>
   - [README](src/other/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-07 00:15</span>
