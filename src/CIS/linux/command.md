@@ -8,12 +8,17 @@ date: 2021-06-26T09:06:35.429Z
   - [facility](#facility)
   - [program](#program)
 - [系统数据库](#系统数据库)
+- [信息](#信息)
+  - [`uname`](#uname)
 - [定位](#定位)
   - [`which`](#which)
   - [`type`](#type)
+  - [`whatis`](#whatis)
   - [`whereis`](#whereis)
   - [`locate`](#locate)
   - [`command`](#command)
+- [搜索](#搜索)
+  - [`compgen` (zsh)](#compgen-zsh)
   - [`find`](#find)
 - [执行命令](#执行命令)
   - [`sh`](#sh)
@@ -28,40 +33,43 @@ date: 2021-06-26T09:06:35.429Z
   - [`head`](#head)
   - [`tail`](#tail)
   - [`cut`](#cut)
+  - [`column`](#column)
   - [`sed`](#sed)
   - [`awk`](#awk)
   - [`ed`](#ed)
   - [`grep`](#grep)
-- [设备工具](#设备工具)
-  - [硬盘](#硬盘)
-    - [`df`](#df)
-    - [`du`](#du)
-    - [`quota`](#quota)
-  - [文件系统](#文件系统)
-    - [`stat`](#stat)
-    - [`readlink`](#readlink)
-    - [`file`](#file)
-    - [`ls`](#ls)
-  - [进程](#进程)
-    - [`ps`](#ps)
-    - [`top`](#top)
-    - [`kill`](#kill)
-    - [`uptime`](#uptime)
-    - [`iostat`](#iostat)
-  - [网络](#网络)
-    - [`netstat`](#netstat)
-    - [`host`](#host)
-    - [`dig`](#dig)
-    - [`ifconfig`](#ifconfig)
-    - [`route`](#route)
-    - [`arp`](#arp)
-    - [`ndp`](#ndp)
-  - [用户](#用户)
-    - [`w`](#w)
-    - [`who`](#who)
-    - [`users`](#users)
-    - [`finger`](#finger)
-    - [`last`](#last)
+- [硬盘](#硬盘)
+  - [`df`](#df)
+  - [`du`](#du)
+  - [`quota`](#quota)
+- [文件系统](#文件系统)
+  - [`stat`](#stat)
+  - [`readlink`](#readlink)
+  - [`file`](#file)
+  - [`ls`](#ls)
+- [进程](#进程)
+  - [`ps`](#ps)
+  - [`top`](#top)
+  - [`kill`](#kill)
+  - [`uptime`](#uptime)
+  - [`iostat`](#iostat)
+- [网络](#网络)
+  - [`whois`](#whois)
+  - [`netstat`](#netstat)
+  - [`host`](#host)
+  - [`dig`](#dig)
+  - [`ifconfig`](#ifconfig)
+  - [`route`](#route)
+  - [`arp`](#arp)
+  - [`ndp`](#ndp)
+- [用户](#用户)
+  - [`w`](#w)
+  - [`who`, `whoami`](#who-whoami)
+  - [`users`](#users)
+  - [`finger`](#finger)
+  - [`last`](#last)
+- [其他](#其他)
+  - [`uptime`](#uptime-1)
 - [格式化](#格式化)
   - [`strftime`](#strftime)
 - [网络工具](#网络工具)
@@ -91,6 +99,19 @@ date: 2021-06-26T09:06:35.429Z
 - `/etc/shells`
 - `/etc/ttys`
 
+# 信息
+
+## `uname`
+
+> *Unix name*
+- `-m`, *machine* hardware name. e.g. `x86_64`
+- `-n`, *node* name，e.g. `xxxMacBook-Air.local`
+- `-p`, machine *processor* architecture name. e.g. `i386`
+- `-r`, operating system *release*. e.g. `19.5.0`
+- `-s`, operating *system* name. e.g. `darwin`
+- `-v`, operating system *version*. e.g. `darwin`
+- `-a`
+
 # 定位
 
 ## `which`
@@ -101,6 +122,10 @@ date: 2021-06-26T09:06:35.429Z
 
 > For each *name*, indicate how it would be interpreted if used as a command name.
 
+## `whatis`
+
+> search the whatis database for complete words. whatis 在一组包含系统命令简短描述的数据库文件中搜索关键字，并将结果显示在标准输出中。仅显示完整的单词匹配。
+
 ## `whereis`
 
 > The whereis utility checks the standard binary directories for the specified programs.
@@ -110,6 +135,24 @@ date: 2021-06-26T09:06:35.429Z
 > The locate program searches a database for all pathnames which match the specified pattern.  The database is recomputed periodically (usually weekly or daily), and contains the pathnames of all files which are publicly accessible.
 
 ## `command`
+
+# 搜索
+
+## `compgen` (zsh)
+
+> Display the possible completions depending on the options. 显示命令补全列表。
+
+- `-a`, *alias*
+- `-b`, *builtin*
+- `-c`, *command*
+- `-d`, *directory*
+- `-e`, *export*
+- `-f`, *file*
+- `-g`, *group*
+- `-j`, *job*
+- `-k`, *keyword*
+- `-u`, *user*
+- `-v`, *variable*
 
 ## `find`
 
@@ -187,6 +230,10 @@ cut out selected portions of each line of a file.
 - `-d`，指定行段的分隔符，默认是制表符。
 - `-f`，指定保留的行段序号，多个行段由逗号分隔。
 
+## `column`
+
+> The column utility formats its input into multiple columns.
+
 ```bash
 echo "
 dkbm:oqyr:qyodd
@@ -213,100 +260,105 @@ lzgv:ortz:zyvf
 > The `grep` utility searches any given input files, selecting lines that match one or more patterns.
 > ( `egrep`, `fgrep`, `zgrep`, `zegrep`, `zfgrep` )
 
-# 设备工具
-
 <!-- lsvfs(1), quota(1), fstatfs(2), getfsstat(2), statfs(2), getmntinfo(3), compat(5), fstab(5), mount(8), quot(8) -->
-## 硬盘
+# 硬盘
 
-### `df`
+## `df`
 
 > display free disk space.
-### `du`
+## `du`
 
 > display disk usage statistics.
-### `quota`
+## `quota`
 
 > display disk usage and limits
 
-## 文件系统
+# 文件系统
 
 <!-- file(1), ls(1), lstat(2), readlink(2), stat(2), printf(3), strftime(3) -->
-### `stat`
+## `stat`
 
 > display file status. Read, write or execute permissions of the named file are not required, but all directories listed in the path name leading to the file must be searchable.
-### `readlink`
+## `readlink`
 
 > same as `stat`, but only for the target of the symbolic link.
-### `file`
+## `file`
 
 > determine file type.
-### `ls`
+## `ls`
 
 > list directory contents.
 
-## 进程
+# 进程
 
 <!-- kill(1), w(1), kvm(3), strftime(3), sysctl(8) -->
 <!-- finger(1), ps(1), uptime(1), who(1) -->
 <!-- last(1), mesg(1), users(1), getuid(2), utmpx(5) -->
-### `ps`
+## `ps`
 
 > process status.
-### `top`
+## `top`
 
 > display and update sorted information about processes.
-### `kill`
+## `kill`
 
 > terminate or signal a process.
-### `uptime`
+## `uptime`
 
 > The uptime utility displays the current time, the length of time the system has been up, the number of users, and the load average of the system over the last 1, 5, and 15 minutes.
-### `iostat`
+## `iostat`
 
 > report I/O statistics.
 
-## 网络
+# 网络
 
-### `netstat`
+## `whois`
+
+> Internet domain name and network number directory service. 域名注册信息查询。
+
+## `netstat`
 
 > show network status.
-### `host`
+## `host`
 
 > DNS lookup utility.
-### `dig`
+## `dig`
 
 > DNS lookup utility.
-### `ifconfig`
+## `ifconfig`
 
 > The ifconfig utility is used to assign an address to a network interface and/or configure network interface parameters.
-### `route`
+## `route`
 
 > manually manipulate the routing tables.
-### `arp`
+## `arp`
 
 > The arp utility displays and modifies the Internet-to-Ethernet address translation tables used by the address resolution protocol.
-### `ndp`
+## `ndp`
 
 > control/diagnose IPv6 neighbor discovery protocol.
 
-## 用户
+# 用户
 
-### `w`
+## `w`
 
 > display who is logged in and what they are doing.
-### `who`
+## `who`, `whoami`
 
 > display who is logged in.
-### `users`
+## `users`
 
 > list current users.
-### `finger`
+## `finger`
 
 > The finger utility displays information about the system users.
-### `last`
+## `last`
 
 > list the sessions of specified users, ttys, and hosts, in reverse time order.
 
+# 其他
+
+## `uptime`
 
 # 格式化
 
