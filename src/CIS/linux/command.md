@@ -47,6 +47,7 @@ date: 2021-06-26T09:06:35.429Z
   - [`readlink`](#readlink)
   - [`file`](#file)
   - [`ls`](#ls)
+  - [`lsof`](#lsof)
 - [进程](#进程)
   - [`ps`](#ps)
   - [`top`](#top)
@@ -75,7 +76,7 @@ date: 2021-06-26T09:06:35.429Z
 - [网络工具](#网络工具)
   - [`wget`](#wget)
   - [`curl`](#curl)
-  - [`lsof`](#lsof)
+  - [`lsof`](#lsof-1)
 - [进程](#进程-1)
   - [`ps`](#ps-1)
   - [`pgrep`](#pgrep)
@@ -288,6 +289,10 @@ lzgv:ortz:zyvf
 ## `ls`
 
 > list directory contents.
+
+## `lsof`
+
+> list open files.
 
 # 进程
 

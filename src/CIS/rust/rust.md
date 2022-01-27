@@ -14,14 +14,22 @@ date: 2021-04-19T11:13:31.973Z
     - [Rustacean](#rustacean)
 - [变量](#变量)
   - [常量](#常量)
-- [数据类型](#数据类型)
-  - [原生类型](#原生类型)
-    - [数字](#数字)
-      - [数字字面量](#数字字面量)
-    - [字符](#字符)
-    - [元组](#元组)
-      - [单元元组](#单元元组)
-    - [数组](#数组)
+- [数据类型（`Data Types`）](#数据类型data-types)
+  - [数字（`Number`）](#数字number)
+    - [数字字面量（`Number Literals`）](#数字字面量number-literals)
+  - [字符（`char`）](#字符char)
+  - [字符串（`str`）](#字符串str)
+  - [Never（`!`）](#never)
+  - [元组（`Tuple`）](#元组tuple)
+    - [单元元组（`Unit`）](#单元元组unit)
+  - [数组（`Array`）](#数组array)
+  - [引用（`&`）](#引用)
+  - [切片（`Slice`）](#切片slice)
+    - [字符串切片（`&str`）](#字符串切片str)
+    - [字符串字面量（`String Literal`）](#字符串字面量string-literal)
+  - [向量（`Vector`）](#向量vector)
+  - [字符串（`String`）](#字符串string)
+  - [字典（`HashMap`）](#字典hashmap)
 - [函数](#函数)
 - [表达式](#表达式)
 - [语句](#语句)
@@ -33,18 +41,14 @@ date: 2021-04-19T11:13:31.973Z
 - [所有权](#所有权)
   - [有效域](#有效域)
   - [Move和Copy](#move和copy)
-  - [引用](#引用)
+  - [引用](#引用-1)
     - [借用](#借用)
     - [悬空引用](#悬空引用)
   - [切片](#切片)
     - [字符串切片](#字符串切片)
     - [字符串字面量](#字符串字面量)
   - [单元](#单元)
-  - [动长数组](#动长数组)
-  - [字符串](#字符串)
-  - [字典](#字典)
   - [指针](#指针)
-  - [Never](#never)
 - [结构](#结构)
   - [元组结构](#元组结构)
   - [单元结构](#单元结构)
@@ -167,23 +171,22 @@ date: 2021-04-19T11:13:31.973Z
 
 ```rust
 // 声明类型
-let v: &str = "hello";
+let foo: &str = "hello";
 
-// 初始化不是必要的
-let mut s: &str;
-s = "hello"
+// 声明类型后初始化不是必要的
+let mut bar: &str;
 
-// 变量遮蔽，Shadowing
-let v = v.len(); // usize
+// 变量遮蔽（Shadowing）：声明同名变量
+let foo = foo.len(); // usize
 
-// 类型推断，Infer
-let v = 1; // i32
+// 类型推断（Infer）
+let foo = 1; // i32
 
-// 默认是不可变的，Immutable
-let v = 1;
+// 变量默认不可变（Immutable）
+let foo = 1;
 
-// 可变，Mutable
-let mut v = 2;
+// 可变变量（Mutable）
+let mut foo = 2;
 ```
 
 ### 常量
@@ -193,15 +196,115 @@ let mut v = 2;
 const MAX: u8 = 100;
 ```
 
-常量在编译时确定：
+- 常量在编译时确定；
 
 - 可在任意域声明，包括全局域；
+
 - 必须是常量表达式，不能是运行时返回的值；
+
 - 存活于程序运行全程；
 
-## 数据类型
+## 有效性
 
-### 原生类型
+> 有效性决定了变量是否失效、数据是否会被回收。
+
+- 数据（*Value*, *Rvalue*, *右值*）的有效范围就是变量（*Variable*, *LValue*, *左值*, *Owner*）的有效范围。
+
+- 变量的有效域：从变量在作用域（*Block Scope*: `{}`）中出现开始，到该变量最后一次被调用。
+
+由上，我们可以在同一个作用域中声明同名变量，即 *Shadowing*：
+
+```rust
+let a = 1;
+println!("{}", a);
+let a = "ha"; //声明新的 a 的时候，Rust 可以判定旧的 a 已失效
+println!("{}", a);
+```
+
+
+## 所有权
+
+> 与其他语言通过手动分配和释放内存或者内置内存回收机制不同，Rust 通过编译时对所有权的检查来管理内存。（*In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*）
+
+|         官方文档示例          |
+| :---------------------------: |
+| ![ownership](./ownership.svg) |
+
+*Rust* 并没有采用手动释放内存或者垃圾回收机制（Garbage Collection）来处理内存回收问题，而是结合了二者的优点，选择了一种既可以及时又能够自动的内存释放机制：所有值（*Value*）都由一个所有者（*Owner*）标记，当所有者（*Owner*）的有效域（*Scope*）结束时，那么这个值（*Value*）便会被自动清理掉。
+
+1. 所有者（*Owner*），就是指向该值的变量（*Variable*）。
+
+2. 值（*Value*）的所有者（*Owner*）是可以改变（*Move*）的，比如变量间赋值、作为参数给函数调用、以及函数返回等；
+
+3. 值（*Value*）同时刻只有一个所有者（*Owner*），即当存在上述所有权的移交（*Move*）的操作时，移交前的变量将会失去指向。如果后续在该变量未被再次赋值前调用，为了安全考虑，编译器将会报错而不是返回空指针。
+
+4. 当所有者（*Owner*）的作用域结束时，若值（*Value*）没被移交（*Move*），其值（*Value*）便会被自动 *Drop*。
+（*the memory is automatically returned once the variable that owns it goes out of scope.*）。
+
+所有权规则：
+
+- 在 *Rust* 中所有 *value* 都有一个表示其 *owner* 的变量；
+
+- 任何时刻都只有一个 *owner* ；
+
+- 当 *Owner* 超出其 *Scope* 时，*Value* 会被删除；
+
+所有权移交（*Move*）：
+
+  - 变量间赋值
+
+  - 函数参数
+
+  - 函数返回
+
+  - 模式匹配（`match`，`if let`等）
+
+P.S. 函数可以理解为调用和结束时有两个赋值操作，调用时值传入给内部变量并转入所有权，结束时可以返回值（交出所有权）。
+
+```rust
+fn main() {
+  let a = String::from("hello");
+  // Move
+  demo(a); // "hello" Move 给了函数
+  println!("{}", a); // 报错
+  // String是在runtime动态创建，存于堆上，通过指针调用，可以移交所有权
+
+  let mut a = String::from("hello");
+  demo(a);
+  // Reassign
+  a = String::from("hello"); // 赋值后指向了新的值（内存）
+  println!("{}", a); // 打印
+  // Clone
+  demo(a.clone()); // 用一份创建出的相同值赋值
+  println!("{}", a); // 打印
+
+  let a = "hello"; // "hello" 是标量
+  // Copy
+  demo2(a); // "hello" 被 copy 给函数使用
+  println!("{}", a); // 打印
+  // "hello" 是字面量，在编译时便确定了，执行时直接加载到栈中，生命周期与程序块相同，不存在所有权的移交
+
+  let a = String::from("hello");
+  a = demo3(a); // 将值的所有权返回
+  println!(a); // 打印
+}
+
+fn demo(a: String) {
+  println!("{}", a)
+}
+
+fn demo2(a: &str) {
+  println!("{}", a)
+}
+
+fn demo3(a: String) -> String {
+  a
+}
+```
+
+## 数据类型（`Data Types`）
+
+[Type System](https://doc.rust-lang.org/reference/types.html)
 
 |           |                  |                                                                                     |
 | --------- | ---------------- | ----------------------------------------------------------------------------------- |
@@ -222,7 +325,7 @@ const MAX: u8 = 100;
 - *Scalar type* represents a single value.
 - *Compound types* can group multiple values into one type.
 
-#### 数字
+### 数字（`Number`）
 
 - 默认整型为 `i32` 。
 
@@ -232,7 +335,7 @@ const MAX: u8 = 100;
 
 - 若赋值超出声明的类型范围，如 `i8` 范围为 `0 ~ 255`，发布编译（`--release`）的执行时不会检查报错，而是遵循 *two’s complement wrapping* 规则，进行溢出偏移，如 `let i: i8 = 260; assert_eq!(i, 4)`；非发布编译则会报错，若溢出偏移为程序正常设计，可通过 `#![allow(overflowing_literals)]` 声明来允许该功能；
 
-##### 数字字面量
+#### 数字字面量（`Number Literals`）
 
 ```rust
 // 整型字面量可以使用 _ 分隔符增强可读性
@@ -249,10 +352,12 @@ let i = 0b11;
 // 字节（u8）
 let i = b'a'; // 等价 let i = 97
 ```
-#### 字符
+
+### 字符（`char`）
 
 > 表示一个 *unicode* 字符，4个字节。
-> *`char` is a ‘Unicode scalar value’, which is similar to, but not the same as, a ‘Unicode code point’.*
+
+`char` is a ‘Unicode scalar value’, which is similar to, but not the same as, a ‘Unicode code point’.
 
 - 字符范围：*U+0000* ~ *U+D7FF* 和 *U+E000* ~ *U+10FFFF* 。
 
@@ -263,7 +368,17 @@ let c = 'A';
 let c = '😻';
 ```
 
-#### 元组
+### 字符串（`str`）
+
+> `str`是一个未知长度的字符数组，即`[u8]`。
+
+A value of type `str` is represented the same way as `[u8]`, it is a slice of 8-bit unsigned bytes.
+
+### Never（`!`）
+
+> **这是一个试验性的功能。** `!` 表示 *never* 类型，表示没有返回值。(*`!` represents the type of computations which never resolve to any value at all.*)
+
+### 元组（`Tuple`）
 
 > *tuple*：一组任意类型（*different types*）但长度固定（*fixed length*）的序列（*sequence*）值。
 
@@ -280,11 +395,11 @@ let a = tup.0;
 tup.0 = 12;
 ```
 
-##### 单元元组
+#### 单元元组（`Unit`）
 
-> *unit tuple*：没有值的元组 `()`。与 *Javascript* 的 *undefined* 类似，一般为没有明确返回值的函数的返回值。
+> 没有值的元组 `()`，一般为没有明确返回值的函数的返回值。
 
-#### 数组
+### 数组（`Array`）
 
 > *array*：一组类型相同（*homogenous type*）、长度固定（*fixed length*）的序列（*sequence*）值。（相对地，变长数组见 `Vector` ）
 
@@ -315,6 +430,202 @@ let a = [0; 3]; // 元素为0，长度为3
 let e1 = a[0];
 let e_err = a[10]; // exit with error
 ```
+
+### 引用（`&`）
+
+> 引用，一种借用（不拥有但使用）数据的手段。
+
+[![reference](./reference.svg)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
+
+根据[所有权](#所有权)章节我们知道，直接赋值会转移（*Move*）数据的所有权（*Ownership*），使原变量失效。
+但在有些时候这样做会产生很多不便，比如在调用函数时传入数据，如果当前作用域仍想继续调用该数据，则需要函数返回该数据来实现，或在与数据地址无关的调用（不要求源数据）情况下通过数据克隆实现。
+很显然，这些方法很重，前者上下文关联性强，为函数引入了额外逻辑（返回源数据），后者则引入了额外的时空损失。因而 *Rust* 提供了引用（*Reference*）类型。
+
+*A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
+
+- 引用分为可变引用（`&mut`, `ref mut`）和不可变引用（`&`, `ref`）。（*You can get one by using the `&` or `&mut` operators on a value, or by using a `ref` or `ref mut` pattern.*）
+
+- 引用也是一个变量（广义左值），其有效作用域（有效存在）开始于引用声明，结束于该引用最后一次使用。（*A reference’s scope starts from where it is introduced and continues through the last time that reference is used.*）
+
+- 在不造成数据竞争（*Date Races*）的情况下，引用可以同时存在多个：
+
+   - 同时 *有效存在* 多个不可变引用；
+
+   - 同时 *有效存在* 多个可变引用；
+
+   - 不可~~同时 *有效存在* 可变和不可变引用~~；
+
+- 引用比较的是地址，不是值。（*Reference equality by address, instead of comparing the values pointed to.*）
+
+- 动态引用可以转换成静态引用。（*`&mut T` references can be freely coerced into `&T` references with the same referent type*）
+
+- 长周期引用可以转换成短周期引用。（*references with longer lifetimes can be freely coerced into references with shorter ones.*）
+
+```rust
+fn main() {
+  // 引用不移交所有权
+  let a = String::from("hello");
+  let b = &a;
+  println!("{}", b);
+  println!("{}", a);
+
+  // 不能同时存在多个有效的可变引用
+  let mut a = String::from("hello");
+  let b = &mut a;
+  let c = &mut a;
+  println!("{}, {}", b, c); // 报错
+
+  // 多个不可变引用
+  let mut a = String::from("hello");
+  let b = &a;
+  let c = &a;
+  println!("{}, {}", b, c);
+
+  // 不能同时存在有效可变引用和有效不可变引用
+  let mut a = String::from("hello");
+  let b = &a;
+  let c = &mut a;
+  println!("{}, {}", b, c); // 报错
+
+  // 有效性结束于最后一次被调用
+  let mut a = String::from("hello");
+  let b = &a;
+  println!("{}", b); // b 作用域结束
+  let c = &mut a;
+  println!("{}", c);
+
+  let mut a = String::from("hello");
+  demo(&mut a);
+  demo(&mut a); // 两个 demo 中的引用先后创建和失效，不存在冲突
+  println!("{}", a);
+
+  let mut a = String::from("hello");
+  let mut b = &mut a;
+  let mut c = &mut a;
+  demo(&mut c); // 报错，b 在后续使用，仍有效存在
+  demo(&mut b);
+
+  let mut a = String::from("hello");
+  let b = &a;
+  {
+    let b = &mut a; // 报错，父作用域中的引用在当前作用域结束后被使用
+  }
+  println!("{}", b);
+}
+
+fn demo(a: &mut String) {
+  a.push_str(", world")
+}
+```
+
+
+#### 借用
+
+> 引用实现了就叫做借用（*Borrow*），与转移（*Move*）所有权相对应。
+
+若一个变量只是被赋值了一个引用，而该变量并没有被调用（借用），那么这个变量相当于无效变量，引用也是一个无效的引用。
+
+### 切片（`Slice`）
+
+> 切片是数据的一个视口（与引用不同的是：不可变性、可以引用部分数据）。视口，顾名思义，用来看（读取）某个空间里面的内容（数据），其可大可小，需要记录视口开始位置（开始地址`ptr`）和大小（切片长度`len`）。
+
+Slices are a view into a block of memory represented as a pointer and a length.
+
+[![slice](./slice.svg)](http://doc.rust-lang.org/book/ch04-03-slices.html#string-slices)
+
+#### 字符串切片（`&str`）
+
+> 即 `&String[..]`
+
+#### 字符串字面量（`String Literal`）
+
+### 向量（`Vector`）
+
+> *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
+
+- *homogenous*
+
+```rust
+/// 创建空数组
+let mut v: Vec<i32> = Vec::new();
+let mut v: Vec<i32> = vec![]; /// 字面量
+let mut v: Vec<i32> = Vec::with_capacity(3); /// 带有容量声明（可以避免在push数据时需要重新分配内存）
+
+/// 带有初始化的数组
+let mut v = vec![1, 2, 3];
+let mut v = vec![1; 3]; /// 容量为3，元素为1
+```
+```rust
+let mut v = vec![0, 1, 2];
+
+assert_eq!(&3, &v.len());
+assert_eq!(&3, &v.capacity());
+
+assert_eq!(&0, &v[0]);
+assert!(std::panic::catch_unwind(|| { &v[10] }).is_err()); // * 这里用到了匿名函数
+
+assert_eq!(&Some(&0), &v.get(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&Some(&mut 0), &v.get_mut(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&(), &v.push(1));
+assert_eq!(&Some(1), &v.pop());
+```
+
+### 字符串（`String`）
+
+> 实际代表的是一个字符向量，即：`Vec<u8>`。
+
+a collection of characters.
+
+- 与 `char` 一样为 *UTF-8* 编码；
+
+```rust
+let s = String::new();
+
+let s = "hello".to_string();
+
+let s = String::from("hello");
+```
+```rust
+let mut s = String::from("hello");
+s.push_str(" world"); // string
+s.push('!'); // char
+s += "!";
+```
+
+### 字典（`HashMap`）
+
+- *homogenous*
+
+`HashMap` 没有预先引入（*prelude*）：
+```rust
+use std::collections::HashMap;
+```
+```rust
+// 标准创建
+let mut scores: HashMap<String, i32> = HashMap::new();
+
+// 推断创建
+let mut scores = HashMap::new();
+
+// 通过 key 和 value 集合间接创建
+let teams = vec![String::from("Blue")];
+let initial_scores = vec![10];
+// collect() 可以返回不同的数据结构，使用 HashMap<_, _> 后可以指定为 HashMap
+// 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
+let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
+```
+```rust
+scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
+scores.insert(String::from("Blue"), 20);
+scores.entry(String::from("Blue")).or_insert(30); // only add
+assert_eq!(Some(&20), scores.get("Blue"));
+assert_eq!(None, scores.get("Yellow"));
+```
+
 
 ## 函数
 
@@ -447,107 +758,6 @@ loop {
 let a = loop { break 1 }
 ```
 
-## 所有权
-
-> 与其他语言通过手动分配和释放内存或者内置内存回收机制不同，Rust 通过编译时对所有权的检查来管理内存。（*In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*）
-
-|         官方文档示例          |
-| :---------------------------: |
-| ![ownership](./ownership.svg) |
-
-*Rust* 并没有采用手动释放内存或者垃圾回收机制（Garbage Collection）来处理内存回收问题，而是结合了二者的优点，选择了一种既可以及时又能够自动的内存释放机制：所有值（*Value*）都由一个所有者（*Owner*）标记，当所有者（*Owner*）的有效域（*Scope*）结束时，那么这个值（*Value*）便会被自动清理掉。
-
-1. 所有者（*Owner*），就是指向该值的变量（*Variable*）。
-
-2. 值（*Value*）的所有者（*Owner*）是可以改变（*Move*）的，比如变量间赋值、作为参数给函数调用、以及函数返回等；
-
-3. 值（*Value*）同时刻只有一个所有者（*Owner*），即当存在上述所有权的移交（*Move*）的操作时，移交前的变量将会失去指向。如果后续在该变量未被再次赋值前调用，为了安全考虑，编译器将会报错而不是返回空指针。
-
-4. 当所有者（*Owner*）的作用域结束时，若值（*Value*）没被移交（*Move*），其值（*Value*）便会被自动 *Drop*。
-（*the memory is automatically returned once the variable that owns it goes out of scope.*）。
-
-所有权规则：
-
-- 在 *Rust* 中所有 *value* 都有一个表示其 *owner* 的变量；
-
-- 任何时刻都只有一个 *owner* ；
-
-- 当 *Owner* 超出其 *Scope* 时，*Value* 会被删除；
-
-所有权移交（*Move*）：
-
-  - 变量间赋值
-
-  - 函数参数
-
-  - 函数返回
-
-  - 模式匹配（`match`，`if let`等）
-
-P.S. 函数可以理解为调用和结束时有两个赋值操作，调用时值传入给内部变量并转入所有权，结束时可以返回值（交出所有权）。
-
-```rust
-fn main() {
-  let a = String::from("hello");
-  // Move
-  demo(a); // "hello" Move 给了函数
-  println!("{}", a); // 报错
-  // String是在runtime动态创建，存于堆上，通过指针调用，可以移交所有权
-
-  let mut a = String::from("hello");
-  demo(a);
-  // Reassign
-  a = String::from("hello"); // 赋值后指向了新的值（内存）
-  println!("{}", a); // 打印
-  // Clone
-  demo(a.clone()); // 用一份创建出的相同值赋值
-  println!("{}", a); // 打印
-
-  let a = "hello"; // "hello" 是标量
-  // Copy
-  demo2(a); // "hello" 被 copy 给函数使用
-  println!("{}", a); // 打印
-  // "hello" 是字面量，在编译时便确定了，执行时直接加载到栈中，生命周期与程序块相同，不存在所有权的移交
-
-  let a = String::from("hello");
-  a = demo3(a); // 将值的所有权返回
-  println!(a); // 打印
-}
-
-fn demo(a: String) {
-  println!("{}", a)
-}
-
-fn demo2(a: &str) {
-  println!("{}", a)
-}
-
-fn demo3(a: String) -> String {
-  a
-}
-```
-
-### 有效域
-
-> 值（*Value*, *Rvalue*, *右值*）的有效范围就是变量（*Ownership*）的有效范围。
-
-> 变量（*Variable*, *Lvalue*, *左值*）的有效范围：从变量在 *Block Scope* 中出现开始，一直到该 *Block Scope* 结束，变量都是 **可能** 有效的。
-
-> *Block Scope* 一般就是大括号 `{}` 包括的范围。
-
-> 说 *Block Scope* 中变量可能有效是因为，变量的实际有效范围（*Scope*）结束于它最后一次被使用。
-
-由上：
-
-我们可以在同一个 *scope* 中声明同名变量：
-
-```rust
-let a = 1;
-println!("{}", a);
-let a = "ha"; //声明新的 a 的时候，Rust 可以判定旧的 a 已失效
-println!("{}", a);
-```
-
 ### Move和Copy
 
 \* 以下所提及的 **赋值** 都是指的广义的赋值，包括等号赋值（*assignment*）、传递函数参数（*argument passing*）、函数返回（*function returning*）、模式匹配（*matching*）等涉及到内存拷贝的操作。
@@ -563,103 +773,6 @@ println!("{}", a);
 与之相对应的，对于非对象赋值（栈拷贝）或者我们就想对某数据类型的对象赋值时也拷贝值（堆拷贝），就是所谓的 *Copy* 策略。
 
 因为 *Rust* 要实现 *“用完即毁”* 的内存释放策略，所以在赋值完成后右值。
-
-### 引用
-
-|         官方文档示例          |
-| :---------------------------: |
-| ![reference](./reference.svg) |
-
-根据之前 *Ownership#Move* 的章节我们知道，直接赋值将会使原来的变量失效，但很多场景下，这不是我们想要的，因此需要一种手段既可以使用原来的值，又不会获取值的 *Ownership* ，于是就有了引用（*Reference*）。
-
-> 引用：在不获取值的所有权（*Move Ownership*）的情况下借用（*Borrowing*）值。(*Reference represents a borrow of some owned value.*)
-
-> *A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
-
-> *You can get one by using the `&` or `&mut` operators on a value, or by using a `ref` or `ref mut` pattern.*
-
-引用的使用：
-
-1. 引用也是一个变量（广义左值），其有效作用域同其他变量一样，开始于引用声明，结束于该引用最后一次使用。（*A reference’s scope starts from where it is introduced and continues through the last time that reference is used.*）。
-
-2. 由于引用不会 *Move Ownership*，因此引用可以创建多个，但多个引用也不可造成数据竞争（*Data Races*）。因而可以得出：
-
-   - 可以同时 *有效存在* 多个不可变引用；
-
-   - 不可同时 *有效存在* 多个可变引用；
-
-   - 不可同时 *有效存在* 可变和不可变引用；
-
-引用的特性：
-
-- 引用比较的是地址，而不是值。（*Reference equality by address, instead of comparing the values pointed to.*）
-
-- 动态引用可以强制转换成静态引用；长周期引用可以转换成短周期引用。（*`&mut T` references can be freely coerced into `&T` references with the same referent type, and references with longer lifetimes can be freely coerced into references with shorter ones.*）
-
-```rust
-fn main() {
-  // 引用不存在所有权的移交
-  let a = String::from("hello");
-  let b = &a;
-  println!("{}", b); // 打印
-  println!("{}", a); // 打印
-
-  // 只能同时存在一个有效可变引用
-  let mut a = String::from("hello");
-  let b = &mut a;
-  let c = &mut a;
-  println!("{}, {}", b, c); // 报错
-
-  // 可以同时存在多个有效不可变引用
-  let mut a = String::from("hello");
-  let b = &a;
-  let c = &a;
-  println!("{}, {}", b, c);
-
-  // 不能同时存在有效可变引用和有效不可变引用
-  let mut a = String::from("hello");
-  let b = &a;
-  let c = &mut a;
-  println!("{}, {}", b, c); // 报错
-
-  // 引用作用域结束于它最后一次被使用
-  let mut a = String::from("hello");
-  let b = &a;
-  println!("{}", b); // b 的作用域结束
-  let c = &mut a;
-  println!("{}", c); // 打印
-
-  let mut a = String::from("hello");
-  demo(&mut a);
-  demo(&mut a); // 两个 demo 中的引用先后创建和失效，不存在冲突
-  println!("{}", a); // 打印 hello, world, world
-
-  let mut a = String::from("hello");
-  let mut b = &mut a;
-  let mut c = &mut a;
-  demo(&mut c); // 报错，b 在后续使用，仍有效存在
-  demo(&mut b);
-
-  let mut a = String::from("hello");
-  let b = &a;
-  {
-    let b = &mut a; // 报错，父级作用域中的引用会在当前作用域结束后使用，所以其仍然是有效存在的
-  }
-  println!("{}", b);
-}
-
-fn demo(a: &mut String) {
-  a.push_str(", world")
-}
-```
-
-> \* 上述示例所阐述的规则不必死记硬背，我们只需要完整理解前面提及的引用的两点特征即可应对，另外，编译器也会给我们足够明白的提示。
-
-#### 借用
-
-> 引用的实现就叫做借用（*Borrow Value*）。与获取所有权（*Move Ownership*）相对应。
-
-若一个变量只是被赋值了一个引用，而该变量并没有被实际调用，那么这个变量相当于无效变量，引用也是一个无效的引用。
 
 ```rust
 let mut a = String::from("hello");
@@ -697,14 +810,6 @@ fn demo() -> &'static str {
 }
 ```
 
-### 切片
-
-|     官方文档示例      |
-| :-------------------: |
-| ![slice](./slice.svg) |
-
-> 切片（*Slice*）是一个特殊引用（*Reference*），引用的是值（*Value*）的一个连续部分（*continuous part*），并且无法通过切片修改值（长度是固定的，相比引用没有容量（*Capacity*）属性）。（*Slices are a view into a block of memory represented as a pointer and a length.*）
-
 #### 字符串切片
 
 > *A string slice is a reference to part of a String.*
@@ -728,104 +833,9 @@ let s = "hello".to_owned();
 let s = "hello".to_string();
 ```
 
-### 单元
-
-> *The `()` type, also called “unit”, has exactly one value `()`.*
-
-*未定义返回值的函数* 或 *没有返回值的表达式* 的隐式（*implicitly*）返回值就是 `()`。
-
-### 动长数组
-
-> *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
-
-- *homogenous*
-
-```rust
-/// 创建空数组
-let mut v: Vec<i32> = Vec::new();
-let mut v: Vec<i32> = vec![]; /// 字面量
-let mut v: Vec<i32> = Vec::with_capacity(3); /// 带有容量声明（可以避免在push数据时需要重新分配内存）
-
-/// 带有初始化的数组
-let mut v = vec![1, 2, 3];
-let mut v = vec![1; 3]; /// 容量为3，元素为1
-```
-```rust
-let mut v = vec![0, 1, 2];
-
-assert_eq!(&3, &v.len());
-assert_eq!(&3, &v.capacity());
-
-assert_eq!(&0, &v[0]);
-assert!(std::panic::catch_unwind(|| { &v[10] }).is_err()); // * 这里用到了匿名函数
-
-assert_eq!(&Some(&0), &v.get(0));
-assert_eq!(&None, &v.get(10));
-
-assert_eq!(&Some(&mut 0), &v.get_mut(0));
-assert_eq!(&None, &v.get(10));
-
-assert_eq!(&(), &v.push(1));
-assert_eq!(&Some(1), &v.pop());
-```
-
-### 字符串
-
-> *a collection of characters.*
-
-- *UTF-8* 编码；
-
-```rust
-let s = String::new();
-
-let s = "hello".to_string();
-
-let s = String::from("hello");
-```
-```rust
-let mut s = String::from("hello");
-s.push_str(" world"); // string
-s.push('!'); // char
-s += "!";
-```
-
-### 字典
-
-- *homogenous*
-
-`HashMap` 没有预先引入（*prelude*）：
-```rust
-use std::collections::HashMap;
-```
-```rust
-// 标准创建
-let mut scores: HashMap<String, i32> = HashMap::new();
-
-// 推断创建
-let mut scores = HashMap::new();
-
-// 通过 key 和 value 集合间接创建
-let teams = vec![String::from("Blue")];
-let initial_scores = vec![10];
-// collect() 可以返回不同的数据结构，使用 HashMap<_, _> 后可以指定为 HashMap
-// 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
-let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
-```
-```rust
-scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
-scores.insert(String::from("Blue"), 20);
-scores.entry(String::from("Blue")).or_insert(30); // only add
-assert_eq!(Some(&20), scores.get("Blue"));
-assert_eq!(None, scores.get("Yellow"));
-```
-
 ### 指针
 
 > *Raw, unsafe pointers, `*const T`, and `*mut T`.*
-
-### Never
-
-> **这是一个试验性的功能。** `!` 表示 *never* 类型，表示没有返回值。(*`!` represents the type of computations which never resolve to any value at all.*)
 
 ## 结构
 
