@@ -3,73 +3,63 @@ title: Rust
 date: 2021-04-19T11:13:31.973Z
 ---
 
-- [准备](#准备)
-  - [语言工具](#语言工具)
-    - [工具链-Rustup](#工具链-rustup)
-    - [包管理-Cargo](#包管理-cargo)
-    - [其他](#其他)
-  - [语言约定或术语](#语言约定或术语)
-    - [变量名](#变量名)
-    - [Rustonomicon](#rustonomicon)
-    - [Rustacean](#rustacean)
-- [变量](#变量)
-  - [常量](#常量)
-- [数据类型（`Data Types`）](#数据类型data-types)
-  - [数字（`Number`）](#数字number)
-    - [数字字面量（`Number Literals`）](#数字字面量number-literals)
-  - [字符（`char`）](#字符char)
-  - [字符串（`str`）](#字符串str)
-  - [Never（`!`）](#never)
-  - [元组（`Tuple`）](#元组tuple)
-    - [单元元组（`Unit`）](#单元元组unit)
-  - [数组（`Array`）](#数组array)
-  - [引用（`&`）](#引用)
-  - [切片（`Slice`）](#切片slice)
-    - [字符串切片（`&str`）](#字符串切片str)
-    - [字符串字面量（`String Literal`）](#字符串字面量string-literal)
-  - [向量（`Vector`）](#向量vector)
-  - [字符串（`String`）](#字符串string)
-  - [字典（`HashMap`）](#字典hashmap)
-- [函数](#函数)
-- [表达式](#表达式)
-- [语句](#语句)
-- [控制流程](#控制流程)
-  - [`if`](#if)
-  - [`while`](#while)
-  - [`for`](#for)
-  - [`loop`](#loop)
-- [所有权](#所有权)
-  - [有效域](#有效域)
-  - [Move和Copy](#move和copy)
-  - [引用](#引用-1)
-    - [借用](#借用)
-    - [悬空引用](#悬空引用)
-  - [切片](#切片)
-    - [字符串切片](#字符串切片)
-    - [字符串字面量](#字符串字面量)
-  - [单元](#单元)
-  - [指针](#指针)
-- [结构](#结构)
-  - [元组结构](#元组结构)
-  - [单元结构](#单元结构)
-  - [自动引用和解引用（*automatic referencing and dereferencing*）：](#自动引用和解引用automatic-referencing-and-dereferencing)
-- [枚举](#枚举)
-  - [`Option`](#option)
-  - [`match`](#match)
-  - [`if let`](#if-let)
-- [模块系统](#模块系统)
-  - [包](#包)
-  - [库](#库)
-  - [路径](#路径)
-  - [模块](#模块)
-    - [创建模块-`mod`](#创建模块-mod)
-    - [加载模块-`mod`](#加载模块-mod)
-    - [暴露模块-`pub`](#暴露模块-pub)
-    - [相对路径之库根模块-`crate`](#相对路径之库根模块-crate)
-    - [相对路径之父级模块-`super`](#相对路径之父级模块-super)
-    - [相对路径之当前模块-`self`](#相对路径之当前模块-self)
-    - [引入路径-`use`](#引入路径-use)
-- [Others](#others)
+## 语言
+
+- 现代语言
+	- 开源
+	- 社区驱动
+	- 极其丰富和优秀的官方文档
+	- 丰富的标准库
+	- 开源社区贡献活跃、发展迅速、优秀包层出不穷
+	- 官方工具链
+		- 编译`cargo build`
+		- 测试`cargo test/bench`
+		- 文档`cargo doc`
+		- 包管理（加强版*npm*）`cargo new/init/publish/search/update/install/uninstall`
+		- 代码检查`cargo check`
+		- 离线文档`rustup doc`
+		- 工具链升级`rustup update`
+		- 工具链自定义`rustup default/toolchain/target/component`
+		- 命令行补全`rustup completions`
+		- ...
+	- 官方注册源[crates.io](https://crates.io)
+	- 官方库文档[docs.rs](https://docs.rs)
+	- 官方语言服务协议（*LSP*）
+	- 智能内存管理
+		- 所有权（*Ownership*）
+		- 生命周期（*Lifetime*）
+	- 增强型模块化能力
+		- 文件内模块化能力（`mod`）
+		- 显式声明代码可见性（默认不可见）
+		- 抽象的模块组织
+			- 统一的文件夹出口/入口（*mod.rs*）
+			- 命名空间式的模块引用方式（区别于文件路径搜寻）
+	- 描述大于实现
+		- 没有类*class*和继承概念，取而代之的是特征描述（`trait`）和宏修饰（*Macros*）。
+- 语言特性
+	- 没有反射（~~*Reflection*~~）
+	- 文件内模块化能力
+	- 智能内存管理
+		- 所有权（*Ownership*）
+		- 生命周期（*Lifetime*）
+	- 没有类(~~*Class*~~)，描述大于实现（`trait`和*Macros*）
+	- 变量遮蔽（*Variable Shadowing*）
+	- 严格的数据可变性（*Mutability*）
+	- 表达式编程（*Everywhere Expressions*）
+		- 一切都是表达式，语句都可以返回值
+		- 函数自动`return`
+	- 元编程（*Meta Programing*）
+		- Rust的宏（*Macros*）不是简单的字符串替换，而是和函数一样具有丰富的高阶编程能力和自定义返回值。
+			- 声明宏（*Declarative Macros*），匹配Rust提供的特定语法结构以执行相应代码，如`vec!`
+			- 过程宏（*Procedural Macros*），解析属性备注的字符流（`TokenStream`）并执行代码
+				- 派生宏（*Derive*），如`#[derive(Clone)]`
+				- 类属性宏（*Attribute-Like*），如`#[route(GET, "/")]`
+				- 类函数宏（*Function-Like*），如`html! { <h1>{ "Hello World" }</h1> }`
+	- 闭包（*Closure*）
+	- 强大的模式匹配（*Pattern Matching*）
+	- 内联的工具链能力
+		- 内联测试：依托宏强大的表达能力，测试代码可以直接写在源文件中
+		- 备注即文档：官方约定、统一风格，自动生成文档发布在官方源中，[查看各种文档](https://docs.rs)不再眼花缭乱、到处查找。
 
 ## 准备
 
@@ -95,7 +85,7 @@ date: 2021-04-19T11:13:31.973Z
 
 #### 包管理-Cargo
 
-> [Cargo](https://doc.rust-lang.org/cargo)：*Rust* 代码构建和包管理工具。
+> [Cargo](https://doc.rust-lang.org/cargo)：*Rust* 代码构建*和包管理*工具。
 > *Cargo is Rust’s build system and package manager.*
 
 - `cargo new`/`cargo init` 创建项目/初始化项目；
@@ -129,9 +119,9 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 引导式教程：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)
 - Rust 范例式教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
 - Rust 语言参考文档：[The Rust Reference](https://doc.rust-lang.org/rustc/)
-- * Rust 编译器介绍：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
-- * Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
-- * Rust 宏：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
+  - Rust 编译器介绍：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
+  - Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+  - Rust 宏：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
 - 社区仓库：[The Rust community’s crate registry](https://crates.io/)
 - 社区仓库文档：[documentation host for crates](https://docs.rs/)
 - Rust仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
@@ -165,8 +155,11 @@ date: 2021-04-19T11:13:31.973Z
 ## 变量
 
 - *Immutable*: 变量默认是不可变的；
+
 - *Infer*: 变量类型可由初始化值推断；
+
 - *Shadowing*: 变量可遮蔽，即可声明同名变量（覆盖旧有变量）；
+
 - 声明类型后，变量可不初始化；
 
 ```rust
@@ -220,7 +213,6 @@ println!("{}", a);
 let a = "ha"; //声明新的 a 的时候，Rust 可以判定旧的 a 已失效
 println!("{}", a);
 ```
-
 
 ## 所有权
 
@@ -412,6 +404,7 @@ tup.0 = 12;
 - 只能访问范围内的元素；
 
 定义：
+
 ```rust
 // 以下等价
 
@@ -425,7 +418,9 @@ let a = [0, 0, 0];
 /// = [x; N]
 let a = [0; 3]; // 元素为0，长度为3
 ```
+
 访问：
+
 ```rust
 let e1 = a[0];
 let e_err = a[10]; // exit with error
@@ -518,7 +513,6 @@ fn demo(a: &mut String) {
 }
 ```
 
-
 #### 借用
 
 > 引用实现了就叫做借用（*Borrow*），与转移（*Move*）所有权相对应。
@@ -555,6 +549,7 @@ let mut v: Vec<i32> = Vec::with_capacity(3); /// 带有容量声明（可以避�
 let mut v = vec![1, 2, 3];
 let mut v = vec![1; 3]; /// 容量为3，元素为1
 ```
+
 ```rust
 let mut v = vec![0, 1, 2];
 
@@ -589,6 +584,7 @@ let s = "hello".to_string();
 
 let s = String::from("hello");
 ```
+
 ```rust
 let mut s = String::from("hello");
 s.push_str(" world"); // string
@@ -601,9 +597,11 @@ s += "!";
 - *homogenous*
 
 `HashMap` 没有预先引入（*prelude*）：
+
 ```rust
 use std::collections::HashMap;
 ```
+
 ```rust
 // 标准创建
 let mut scores: HashMap<String, i32> = HashMap::new();
@@ -618,6 +616,7 @@ let initial_scores = vec![10];
 // 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
 let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
 ```
+
 ```rust
 scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
 scores.insert(String::from("Blue"), 20);
@@ -626,12 +625,12 @@ assert_eq!(Some(&20), scores.get("Blue"));
 assert_eq!(None, scores.get("Yellow"));
 ```
 
-
 ## 函数
 
 > `fn` 也是一个原生类型（*Primitive Type*）。（*Function pointers are pointers that point to code, not data.*）
 
 无参数和返回值：
+
 ```rust
 fn main() {
   println!("Hello");
@@ -642,7 +641,9 @@ fn main() -> () {
   println!("Hello");
 }
 ```
+
 有参数和返回值：
+
 ```rust
 fn add(x: i32, y: i32) -> i32 {
   x + y // return 可以省略，因为此处是最后一个表达式
@@ -693,7 +694,6 @@ let x = {
 let a = 1;
 ```
 
-
 ## 控制流程
 
 ### `if`
@@ -731,18 +731,22 @@ for x in iter {}
 > 无条件循环。
 
 无限循环：
+
 ```rust
 loop {}
 ```
 
 中断循环：
+
 ```rust
 loop {
   println!("hello");
   break // 实际上返回了空元组：()
 }
 ```
+
 中断外层循环
+
 ```rust
 'loopLabel: loop {
   println!("hello");
@@ -754,6 +758,7 @@ loop {
 ```
 
 返回值：
+
 ```rust
 let a = loop { break 1 }
 ```
@@ -987,6 +992,7 @@ enum IpAddr {
 let home = IpAddr::V4(127, 0, 0, 1);
 let loopback = IpAddr::V6(String::from("::1"));
 ```
+
 ```rust
 enum Message {
   // 单元结构（unit struct）
@@ -1035,6 +1041,7 @@ pub enum Option<T> {
   None,
 }
 ```
+
 ```rust
 fn divide(numerator: f64, denominator: f64) -> Option<f64> {
   if denominator == 0.0 {
@@ -1232,24 +1239,29 @@ pub mod a {
   pub fn demo() {}
 }
 ```
+
 > 还可以在导出模块时自定义模块的可见性。
 
 仅模块自己可见，相当于 `pub`
+
 ```rs
 pub(self) a
 ```
 
 最远到父模块可见
+
 ```rs
 pub(super) a
 ```
 
 最远到项目可见
+
 ```rs
 pub(crate) a
 ```
 
 最远到指定祖先模块可见
+
 ```rs
 pub(in a::b) a
 ```
@@ -1390,6 +1402,7 @@ demo();
 ```
 
 ## Others
+
 ```rust
 // 获取数据的类型名称
 fn get_type(_: &T) -> &'static str {
