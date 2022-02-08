@@ -42,24 +42,25 @@ date: 2021-04-19T11:13:31.973Z
 	- 智能内存管理
 		- 所有权（*Ownership*）
 		- 生命周期（*Lifetime*）
-	- 没有类(~~*Class*~~)，描述大于实现（`trait`和*Macros*）
+	- 没有类(~~*Class*~~)，描述和组合大于实现和继承（`trait`和*Macros*）
 	- 变量遮蔽（*Variable Shadowing*）
 	- 严格的数据可变性（*Mutability*）
 	- 表达式编程（*Everywhere Expressions*）
-		- 一切都是表达式，语句都可以返回值
-		- 函数自动`return`
+		- **非**用于项目声明作用的块`{}`都是表达式（声明作用的块如`struct Foo {}`），可以返回值（返回最后一个表达式）
+		- 函数自动`return`(最后一个表达式)
 	- 元编程（*Meta Programing*）
-		- Rust的宏（*Macros*）不是简单的字符串替换，而是和函数一样具有丰富的高阶编程能力和自定义返回值。
+		- 宏（*Macros*）：Rust的宏不是简单的字符串替换，而是和函数一样具有丰富的高阶编程能力和自定义返回值。有：
 			- 声明宏（*Declarative Macros*），匹配Rust提供的特定语法结构以执行相应代码，如`vec!`
 			- 过程宏（*Procedural Macros*），解析属性备注的字符流（`TokenStream`）并执行代码
 				- 派生宏（*Derive*），如`#[derive(Clone)]`
 				- 类属性宏（*Attribute-Like*），如`#[route(GET, "/")]`
 				- 类函数宏（*Function-Like*），如`html! { <h1>{ "Hello World" }</h1> }`
 	- 闭包（*Closure*）
+	- 运算符重载（*Overload*）
 	- 强大的模式匹配（*Pattern Matching*）
 	- 内联的工具链能力
 		- 内联测试：依托宏强大的表达能力，测试代码可以直接写在源文件中
-		- 备注即文档：官方约定、统一风格，自动生成文档发布在官方源中，[查看各种文档](https://docs.rs)不再眼花缭乱、到处查找。
+		- 备注文档：直接由代码备注生成文档，发布包时自动集成在[社区文档网站](https://docs.rs)中，页面格式统一、功能齐全。
 
 ## 准备
 
@@ -118,23 +119,23 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 文档性教程：[The Rust Programming Language](https://doc.rust-lang.org/book/)
 - Rust 引导式教程：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)
 - Rust 范例式教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
-- Rust 语言参考文档：[The Rust Reference](https://doc.rust-lang.org/rustc/)
-  - Rust 编译器介绍：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
-  - Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
-  - Rust 宏：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
-- 社区仓库：[The Rust community’s crate registry](https://crates.io/)
-- 社区仓库文档：[documentation host for crates](https://docs.rs/)
+- Rust 语言参考文档：[The Rust Reference](https://doc.rust-lang.org/reference)
+- Rust 编译器介绍：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
+- Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- Rust 宏详解：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
+- Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
+- Rust 社区仓库文档：[documentation host for crates](https://docs.rs/)
 - Rust仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
 - Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
 - Rust 标准库文档：[The Rust Standard Library](https://doc.rust-lang.org/std/)
-- Rust 编译错误文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
+- Rust 编译错误查询文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
 - 如何用 Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
 - 如何用 Rust 编译 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
 - 如何用 Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
 
 ### 语言约定或术语
 
-#### 变量名
+#### 标识符
 
 - 类型名用 *PascalCase* ；
 
@@ -294,7 +295,7 @@ fn demo3(a: String) -> String {
 }
 ```
 
-## 数据类型（`Data Types`）
+## 数据类型
 
 [Type System](https://doc.rust-lang.org/reference/types.html)
 
@@ -317,17 +318,15 @@ fn demo3(a: String) -> String {
 - *Scalar type* represents a single value.
 - *Compound types* can group multiple values into one type.
 
-### 数字（`Number`）
+### 数字
 
-- 默认整型为 `i32` 。
+- 默认整型为 `i32` ，默认浮点型为 `f64`。
 
-- 浮点型遵循 *IEEE-754* 标准，默认浮点型为 `f64`。
-
-- 支持基础的加减乘除余运算符： `+-*/%` ;
+- 支持运算符： `+-*/%` ;
 
 - 若赋值超出声明的类型范围，如 `i8` 范围为 `0 ~ 255`，发布编译（`--release`）的执行时不会检查报错，而是遵循 *two’s complement wrapping* 规则，进行溢出偏移，如 `let i: i8 = 260; assert_eq!(i, 4)`；非发布编译则会报错，若溢出偏移为程序正常设计，可通过 `#![allow(overflowing_literals)]` 声明来允许该功能；
 
-#### 数字字面量（`Number Literals`）
+数字字面量（`Number Literals`）:
 
 ```rust
 // 整型字面量可以使用 _ 分隔符增强可读性
@@ -387,7 +386,7 @@ let a = tup.0;
 tup.0 = 12;
 ```
 
-#### 单元元组（`Unit`）
+单元元组（`Unit`）:
 
 > 没有值的元组 `()`，一般为没有明确返回值的函数的返回值。
 
@@ -531,8 +530,6 @@ Slices are a view into a block of memory represented as a pointer and a length.
 
 > 即 `&String[..]`
 
-#### 字符串字面量（`String Literal`）
-
 ### 向量（`Vector`）
 
 > *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
@@ -652,47 +649,70 @@ fn add(x: i32, y: i32) -> i32 {
 
 - 返回值和最后一个表达式同义，即最后一个表达式即为返回值，无需显式的 *return*；
 
-## 表达式
+## 表达式和语句
 
-> 表达式：一串返回计算结果的指令。（表达式不包括末尾的分号，加上分号后就是语句）
+> Rust主要是一门[表达式语言](http://localhost/rust/reference/statements-and-expressions.html)，绝大多数计算值或执行副作用的计算式都是表达式，一般地，表达式结尾加上分号便成了语句。
+
+> [语句](https://doc.rust-lang.org/reference/statements-and-expressions.html)（*Expression*）为程序（不是处理器）的最小完整执行单元（本质上也叫程序，我们通常所言的程序是复杂程序，由很多单元程序组成），[表达式](http://localhost/rust/reference/expressions.html)（*Statement*）则是语句的一部分，不能单独存在。一个语句可以有一个或多个表达式构成。
+
+**对于程序来说单纯指导处理器进行计算除了空转费电是没有任何意义的**，因而编程语言（编译器或解释器）不会让孤立的表达式存在，至少将**换行符**或**文件结尾**认定为语句的分隔符以结束一段完整程序，大多数编程语言也会将**分号**或**括号**或**语法逻辑界定符**（逻辑界定符是语言认定的一种词法界定逻辑，一般不是一个全局通用的符号，比如Rust数组中的逗号界定符、元组中的逗号界定符和函数参数逗号界定符等等，虽然都是逗号，但他们的意义是完全不同的，属于特定语法逻辑）等当做语句界定符。
+
+比如 `1 + 2`这段代码（注意，1和2前后没有任何符号，包括前述的任何界定符）：对于任何编程语言来说这是一个表达式，意即处理器可以执行，但这不是一个（完整）语句，即一个单元的程序（编译器/解释器）并不会就此结束，仍将继续读取后续字符以找到语句界定符以结束一个完整语句。在Rust中结束这段语句，我们可以加上分号（语言显式语句界定符`;`） `1 + 2;`，或置于大括号前（语言显式语句界定符`{}`）`{1 + 2}`，函数调用（语言显式语句界定符`()`）`println!(1 + 2)`等等。
 
 ```rust
 let mut a = 1;
-let mut b = { a += 2; a };
+let mut b = { a += 2;/* 语句。其实不用分号也是一个完整语句，但rust语法是一个语法比较的语言 */ a /* 表达式，若加上分号将变成语句，返回值将变成Rust的默认返回值：空元组，() */ };
 ```
 
-复杂的表达式如：
+- 当表达式没有明确返回值的时候，返回的是空元组（`()`）。
 
-- 调用函数（*Function*）；
+#### 语句（*Statement*）
 
-- 调用宏（*Macro*）；
+> [语句](http://localhost/rust/reference/statements.html)：
 
-- 块（*Block*: `{}`）；
+通常以分号`;`结尾，但有两个例外：项目的声明语句（如声明结构：`struct Foo {}`），和
 
-  - *块是一个表达式，所以块是可以返回值的；
+### 表达式（*Expression*）
 
-  - 当没有明确返回值的时候，返回的是空元组（`()`）；
+#### 字面量表达式（*Literal*）
+
+> [字面量](http://localhost/rust/reference/tokens.html#literals)，不需要名称（如变量）引用，直接表达一个值的量。
+
+[主要有](http://localhost/rust/reference/tokens.html#literals)数字字面量、布尔值字面量、字符字面量、字符串字面量。
+
+#### 路径表达式（*Path* ）
+
+> [路径](http://localhost/rust/reference/paths.html)：由命名空间限定符`::`逻辑分隔的一个或多个路径分段序列，用于返回变量（*Variable*）或项目（*Item*）。
+
+如：
+- `x` ：本地变量或项目
+- `x::y::z`：深度项目
+- `::x`：外部（`extern`）crate。（Rust2018之前，这种写法同`self::x`，只代表当前crate根）
+
+特殊路径段：
+
+- `self`（当前模块） `super`（父级模块）, `crate`（crate根）
+- `Self`：表示当前结构的类型（`struct`），用在标注方法返回类型。
+- `$crate`：表示crate根，但只用在宏（*macros*）定义里面。
 
 ```rust
-// macro
-println!("hello");
-
-// block
-let x = { 1 }; // x = 1
-
-let x = {
-  let y = 1;
-  y + 1 // 注意：由于需要返回值，此处应为表达式，故不加分号
+pub fn increment(x: u32) -> u32 {
+    x + 1
 }
+
+#[macro_export]
+macro_rules! inc {
+    ($x:expr) => ( $crate::increment($x) )
+}
+fn main() { }
 ```
 
-## 语句
+#### 块表达式（*Block*）
 
-> 语句：一串执行动作但不返回值的指令。当表达式（*Expression*）加上分号 `;` 后，便成了语句（*Statement*）。
+> [块](http://localhost/rust/reference/expressions/block-expr.html)：包括控制流（如`if {}`）表达式，和独立存在的匿名命名空间（`{}`）。
+> (A _block expression_, or _block_, is a control flow expression and anonymous namespace scope for items and variable declarations.)
 
-```rust
-let a = 1;
-```
+####
 
 ## 控制流程
 
@@ -842,7 +862,7 @@ let s = "hello".to_string();
 
 > *Raw, unsafe pointers, `*const T`, and `*mut T`.*
 
-## 结构
+## 结构：面向对象
 
 > *Struct*: 用以创建特定结构的类型。实际上是一组有名字的值（*Fields*）的模版（*Template*）。
 
@@ -966,6 +986,8 @@ struct A;
 > *when you call a method with object.something(), Rust automatically adds in &, &mut, or * so object matches the signature of the method.*
 
 上述例子中结构方法 `grow` 和 `greet` 虽然对 `self` 的使用不同，但是我们调用方法时，并没有什么区别。这里就是 *Rust* 给我们自动引用和解引用了。
+
+## 特征：抽象对象
 
 ## 枚举
 
