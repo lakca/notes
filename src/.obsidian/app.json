@@ -10,5 +10,6 @@
   "useMarkdownLinks": true,
   "attachmentFolderPath": "./",
   "showUnsupportedFiles": true,
-  "useTab": true
+  "useTab": true,
+  "alwaysUpdateLinks": true
 }

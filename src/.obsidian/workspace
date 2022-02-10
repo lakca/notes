@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "cis/rust/rust.md",
+            "file": "posts/20220210234100.md",
             "mode": "preview",
             "source": false
           }
@@ -55,12 +55,11 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "cis/rust/rust.md"
+                "file": "posts/20220210234100.md"
               }
             }
           }
-        ],
-        "currentTab": 2
+        ]
       }
     ],
     "direction": "horizontal",
@@ -80,7 +79,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "cis/rust/rust.md",
+                "file": "posts/20220210234100.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,7 +96,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "cis/rust/rust.md",
+                "file": "posts/20220210234100.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -132,11 +131,15 @@
   },
   "active": "26442c2cacb7c927",
   "lastOpenFiles": [
+    "posts/20220210234100.md",
+    "posts/20220210235757.md",
+    "posts/20220211001633.png",
+    "posts/20220210193748.jpg",
+    "posts/2020220211001633.png.md",
+    "other/Untitled.md.md",
+    "other/1.md",
+    "other/README.md",
     "cis/rust/rust.md",
-    "crates.io.md",
-    "Excalidraw/Drawing 2022-02-10 17.51.20.excalidraw.md",
-    "Excalidraw/Drawing 2022-02-10 17.51.12.excalidraw.md",
-    "cis/rust/README.md",
-    "cis/rust/reference.svg"
+    "crates.io.md"
   ]
 }
