@@ -25,22 +25,21 @@ date: 2021-04-19T11:13:31.973Z
 	- 官方注册源[crates.io](https://crates.io)
 	- 官方库文档[docs.rs](https://docs.rs)
 	- 官方语言服务协议（*LSP*）
-	- 智能内存管理
-		- 所有权（*Ownership*）
-		- 生命周期（*Lifetime*）
-	- 增强型模块化能力
+	- 无垃圾回收的智能内存管理
+	- 增强型模块化
 		- 文件内模块化能力（`mod`）
 		- 显式声明代码可见性（默认不可见）
 		- 抽象的模块组织
 			- 统一的文件夹出口/入口（*mod.rs*）
 			- 命名空间式的模块引用方式（区别于文件路径搜寻）
 	- 描述大于实现
-		- 没有类*class*和继承概念，取而代之的是特征描述（`trait`）和宏修饰（*Macros*）。
+		- 没有类（~~*class*~~）和继承概念，取而代之的是特征描述（`trait`）和宏修饰（*Macros*）。
 - 语言特性
 	- 没有反射（~~*Reflection*~~）
 	- 文件内模块化能力
-	- 智能内存管理
+	- 内存安全、智能内存管理
 		- 所有权（*Ownership*）
+		- 借用（*Borrowing*）
 		- 生命周期（*Lifetime*）
 	- 没有类(~~*Class*~~)，描述和组合大于实现和继承（`trait`和*Macros*）
 	- 变量遮蔽（*Variable Shadowing*）
@@ -58,81 +57,49 @@ date: 2021-04-19T11:13:31.973Z
 	- 闭包（*Closure*）
 	- 运算符重载（*Overload*）
 	- 强大的模式匹配（*Pattern Matching*）
-	- 内联的工具链能力
+	- 内联的工具链
 		- 内联测试：依托宏强大的表达能力，测试代码可以直接写在源文件中
 		- 备注文档：直接由代码备注生成文档，发布包时自动集成在[社区文档网站](https://docs.rs)中，页面格式统一、功能齐全。
 
 # 准备
+ 
 
-## 语言工具
+## 文档
 
-### 工具链-Rustup
-
-> [rustup](https://rustup.rs/)：管理 *Rust* 版本和工具链的命令行工具。
-> *a command line tool for managing Rust versions and associated tools.*
-
-- `rustup doc` 查看离线文档；
-  - `rustup doc --book`：语言教程（*the book*）
-  - `rustup doc --reference`：语言参考
-  - `rustup doc --nomicon`：语言高级技巧
-  - `rustup doc --std [paths|keyword]`：标准库
-  - `rustup doc --core [topic]`：核心库
-
-- `rustup completions` 在本地添加命令行自动补全；
-
-- `rustup update` 更新版本；
-
-- `rustc` 编译 *Rust* 文件；
-
-### 包管理-Cargo
-
-> [Cargo](https://doc.rust-lang.org/cargo)：*Rust* 代码构建*和包管理*工具。
-> *Cargo is Rust’s build system and package manager.*
-
-- `cargo new`/`cargo init` 创建项目/初始化项目；
-
-- `cargo run` 直接运行代码（编译代码、生成可执行文件、运行可执行文件）；
-
-- `cargo check` 检查语法（编译代码但不生成可执行文件）；
-
-- `cargo clippy` 检查代码风格和质量（类似 *eslint*）；
-  - 需要安装 [*rust-clippy*](https://github.com/rust-lang/rust-clippy) (`rustup component add clippy`)。
-
-- `cargo fmt` 格式化代码；
-  - 需要安装 [*rustfmt*](https://github.com/rust-lang/rustfmt) (`rustup component add rustfmt`)。
-
-- `cargo build` 编译并生成可执行文件（位于 *target/debug*），一般用于开发调试，代码未经编译器优化；
-
-- `cargo build --release` 优化编译并生成可执行文件（位于 *target/release*），编译器会进行代码优化，一般用于正式发布、性能测试等；
-
-- `cargo doc` 生成项目文档；
-  - 通过 [*rustdoc*](https://doc.rust-lang.org/rustdoc/) 实现，Rust 发行版自带。
-
-- `cargo test` 执行测试代码；
-
-- `cargo bench` 执行性能测试；
-
-- `cargo publish` 发布项目；
-
-### 语言文档
-
-- Rust 语言文档：[The Rust Reference](https://doc.rust-lang.org/reference)
-- Rust 阅读式教程（*Book*）：[The Rust Programming Language](https://doc.rust-lang.org/book/)
-- Rust 实例式教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
+- Rust 教程（*The Book*）：[The Rust Programming Language](https://doc.rust-lang.org/book/)，[中文翻译](https://kaisery.github.io/trpl-zh-cn/)
+- Rust 实例教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
 - Rust 练习式教程（*Rustlings*）：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)
-- Rust 语言术语：[Glossary](https://doc.rust-lang.org/reference/glossary.html)
-- Rust 编译器解析：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
-- Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
-- Rust 宏详解：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
-- Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
-- Rust 社区仓库文档：[documentation host for crates](https://docs.rs/)
-- Rust 仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
-- Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
+- Rust 语言文档：[The Rust Reference](https://doc.rust-lang.org/reference)
 - Rust 标准库文档：[The Rust Standard Library](https://doc.rust-lang.org/std/)
-- Rust 编译错误查询文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
+- Rust 宏详解：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
+- Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
+- Rust 语言术语：[Glossary](https://doc.rust-lang.org/reference/glossary.html)
+- Rust 编译器：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
+- Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- Rust 语言版本：[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)
 - 如何用 Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
 - 如何用 Rust 编译 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
 - 如何用 Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
+- 如何设计 Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines/#rust-api-guidelines)
+- Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
+- Rust 社区仓库文档：[documentation host for crates](https://docs.rs/)
+- Rust 仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
+- Rust 编译错误查询文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
+- Cargo：[The Cargo Book](http://localhost/rust/cargo/index.html#the-cargo-book)
+- Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)
+
+常见速查：
+
+- [Operators and Symbols](https://doc.rust-lang.org/book/appendix-02-operators.html#appendix-b-operators-and-symbols)
+- [Keywords](https://doc.rust-lang.org/book/appendix-01-keywords.html#appendix-a-keywords)
+- [Derivable Traits](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html#appendix-c-derivable-traits)
+- 交叉编译：[Cross-compilation](https://rust-lang.github.io/rustup/cross-compilation.html#cross-compilation)
+- [Rustc command-line arguments](http://localhost/rust/rustc/command-line-arguments.html#command-line-arguments)
+- [Specifying Dependencies](http://localhost/rust/cargo/reference/specifying-dependencies.html#specifying-dependencies)
+- 链接库：[Linkage](https://doc.rust-lang.org/reference/linkage.html#linkage)
+- 开发工具：[Useful Development Tools](https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html#appendix-d---useful-development-tools)
+- 自动升级项目语言版本：[Transitioning an existing project to a new edition](https://doc.rust-lang.org/edition-guide/editions/transitioning-an-existing-project-to-a-new-edition.html#transitioning-an-existing-project-to-a-new-edition)，[Advanced migration strategies](https://doc.rust-lang.org/edition-guide/editions/advanced-migrations.html#advanced-migration-strategies)
+- 替换crate源：[Crates Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html#source-replacement)
 
 ## 语言约定或术语
 
@@ -153,6 +120,757 @@ date: 2021-04-19T11:13:31.973Z
 
 > *Rustacean*：Rust 用户
 > *Rustaceans are people who use Rust, contribute to Rust, or are interested in the development of Rust.*
+
+## 版本和工具链管理-Rustup
+
+> [Rustup](https://rust-lang.github.io/rustup/)：*Rust*语言和工具链的版本安装和管理器。对于开发者来说应当作为*Rust*语言安装和版本管理的首选工具。
+
+*Rustup*的本地[配置文件](https://rust-lang.github.io/rustup/configuration.html#configuration) 位于：`${RUSTUP_HOME}/settings.toml`
+
+### 工具链
+
+通过`rustup toolchain`命令可以查看、安装和删除[不同版本工具链](#工具链版本)。
+
+Rustup提供了交叉编译能力，你可以在本地安装不同平台的工具链进行代码生产，也可以同时安装同一平台工具链的不同版本，具体可见[构建-工具链版本](#工具链版本)。
+
+通过`rustup target`可以查看、添加和删除目标平台标准库，以支持[交叉编译](#目标平台和交叉编译)。
+
+### 工具链组件
+
+通过 `rustup component`命令可以查看、安装和删除当前工具链的所有组件。Rustup提供的核心[组件包括](https://rust-lang.github.io/rustup-components-history/)：
+
+- Rust编译器[Rustc](https://doc.rust-lang.org/rustc/)
+- Rust包管理器[Cargo](https://github.com/rust-lang/cargo/)
+- Rust语言服务器[RLS](https://github.com/rust-lang/rls)
+- Rust离线文档[Rust-docs](https://rust-lang.github.io/rust-docs/)
+- Rust代码格式化工具[Rustfmt](https://github.com/rust-lang/rustfmt)
+- Rust代码质量和风格检查工具（*linter*）[Clippy](https://github.com/rust-lang/rust-clippy)
+- Rust中间码解释器[Miri](https://github.com/rust-lang/miri/)
+- ......
+
+### 升级
+
+通过`rustup check/update`检查/升级Rustup和工具链的更新。
+
+通过`rustup self update/uninstall`可以升级和移除*Rustup*。
+
+### 其他
+
+通过`rustup doc`命令可以查看[Rust-docs](https://rust-lang.github.io/rust-docs/)提供的离线文档。如：
+  - `rustup doc --book`：查看语言教程（*the book*）
+  - `rustup doc --reference`：语言参考
+  - `rustup doc --std [paths|keyword]`：标准库文档
+  - `rustup doc --core [topic]`：核心库文档
+
+通过`rustup completions`给当前终端添加命令补全。
+
+## 包管理器-Cargo
+
+> [Cargo](https://doc.rust-lang.org/cargo)：*Rust* 包（Crate）管理和构建工具。
+
+### 配置
+
+[Configuration](https://doc.rust-lang.org/cargo/reference/config.html#configuration)
+
+配置清单保存在`.cargo/config`（或`.cargo/config.toml`，若同时存在则用*config*）文件中：
+- 全局配置目录位于`$CARGO_HOME`（即`$HOME/.cargo/config`）。
+- 项目本地配置位于所有项目源文件目录（即`<repo>/**/.cargo/config`）。
+
+多个配置文件（本地、全局）会进行**深度合并**，其中数组会进行连接。
+
+[所有配置概览](https://doc.rust-lang.org/cargo/reference/config.html#configuration-format)：
+```toml
+[alias] # 命令别名
+b = "build"
+space_example = ["run", "--release", "--", "\"command list\""]
+
+[build]
+jobs = 1                      # number of parallel jobs, defaults to # of CPUs
+rustc = "rustc"               # the rust compiler tool
+rustc-wrapper = "…"           # run this wrapper instead of `rustc`
+rustc-workspace-wrapper = "…" # run this wrapper instead of `rustc` for workspace members
+rustdoc = "rustdoc"           # the doc generator tool
+target = "triple"             # 目标三元组（编译的目标运行环境架构，如x86_64-pc-windows-msvc）
+target-dir = "target"         # 生成文件的存放目录
+rustflags = ["…", "…"]        # custom flags to pass to all compiler invocations
+rustdocflags = ["…", "…"]     # custom flags to pass to rustdoc
+incremental = true            # 增量编译
+dep-info-basedir = "…"        # path for the base directory for targets in depfiles
+pipelining = true             # rustc pipelining
+
+[doc]
+browser = "chromium"          # browser to use with `cargo doc --open`,
+                              # overrides the `BROWSER` environment variable
+
+[env]
+# Set ENV_VAR_NAME=value for any process run by Cargo
+ENV_VAR_NAME = "value"
+# Set even if already present in environment
+ENV_VAR_NAME_2 = { value = "value", force = true }
+# Value is relative to .cargo directory containing `config.toml`, make absolute
+ENV_VAR_NAME_3 = { value = "relative/path", relative = true }
+
+[cargo-new]
+vcs = "none"              # VCS to use ('git', 'hg', 'pijul', 'fossil', 'none')
+
+[http]
+debug = false               # HTTP debugging
+proxy = "host:port"         # HTTP proxy in libcurl format
+ssl-version = "tlsv1.3"     # TLS version to use
+ssl-version.max = "tlsv1.3" # maximum TLS version
+ssl-version.min = "tlsv1.1" # minimum TLS version
+timeout = 30                # timeout for each HTTP request, in seconds
+low-speed-limit = 10        # network timeout threshold (bytes/sec)
+cainfo = "cert.pem"         # path to Certificate Authority (CA) bundle
+check-revoke = true         # check for SSL certificate revocation
+multiplexing = true         # HTTP/2 multiplexing
+user-agent = "…"            # the user-agent header
+
+[install]
+root = "/some/path"         # `cargo install` destination directory
+
+[net]
+retry = 2                   # network retries
+git-fetch-with-cli = true   # use the `git` executable for git operations
+offline = true              # do not access the network
+
+[patch.<registry>]
+# Same keys as for [patch] in Cargo.toml
+
+[profile.<name>]         # Modify profile settings via config.
+opt-level = 0            # Optimization level.
+debug = true             # Include debug info.
+split-debuginfo = '...'  # Debug info splitting behavior.
+debug-assertions = true  # Enables debug assertions.
+overflow-checks = true   # Enables runtime integer overflow checks.
+lto = false              # Sets link-time optimization.
+panic = 'unwind'         # The panic strategy.
+incremental = true       # Incremental compilation.
+codegen-units = 16       # Number of code generation units.
+rpath = false            # Sets the rpath linking option.
+[profile.<name>.build-override]  # Overrides build-script settings.
+# Same keys for a normal profile.
+[profile.<name>.package.<name>]  # Override profile for a package.
+# Same keys for a normal profile (minus `panic`, `lto`, and `rpath`).
+
+[registries.<name>]  # registries other than crates.io
+index = "…"          # URL of the registry index
+token = "…"          # authentication token for the registry
+
+[registry]
+default = "…"        # name of the default registry
+token = "…"          # authentication token for crates.io
+
+[source.<name>]      # source definition and replacement
+replace-with = "…"   # replace this source with the given named source
+directory = "…"      # path to a directory source
+registry = "…"       # URL to a registry source
+local-registry = "…" # path to a local registry source
+git = "…"            # URL of a git repository source
+branch = "…"         # branch name for the git repository
+tag = "…"            # tag name for the git repository
+rev = "…"            # revision for the git repository
+
+[target.<triple>]
+linker = "…"            # linker to use
+runner = "…"            # wrapper to run executables
+rustflags = ["…", "…"]  # custom flags for `rustc`
+
+[target.<cfg>]
+runner = "…"            # wrapper to run executables
+rustflags = ["…", "…"]  # custom flags for `rustc`
+
+[target.<triple>.<links>] # `links` build script override
+rustc-link-lib = ["foo"]
+rustc-link-search = ["/path/to/foo"]
+rustc-flags = ["-L", "/some/path"]
+rustc-cfg = ['key="value"']
+rustc-env = {key = "value"}
+rustc-cdylib-link-arg = ["…"]
+metadata_key1 = "value"
+metadata_key2 = "value"
+
+[term]
+verbose = false        # whether cargo provides verbose output
+color = 'auto'         # whether cargo colorizes output
+progress.when = 'auto' # whether cargo shows progress bar
+progress.width = 80    # width of progress bar
+
+```
+
+### 包来源
+
+详见 [Source Replacement - The Cargo Book](https://doc.rust-lang.org/cargo/reference/source-replacement.html)
+
+包主要有三个来源：注册源（*registry*）、*git*仓库、本地文件夹（*vendor*）。
+
+[*registry*](https://doc.rust-lang.org/cargo/reference/source-replacement.html#registry-sources)：注册源，一个集中管理*crate*的数据库。该数据库存储*crate*包装文件（`.crates`）并通过维护索引（*index*）来分发包。
+
+[*vendor*](https://doc.rust-lang.org/cargo/reference/source-replacement.html#directory-sources)：供给文件夹，一个直接存储*crate*源文件夹（*unpacked*）的文件夹（*/path/to/vendor/package...*）。
+
+可通过*cargo-local-registry*（`cargo install local-registry`）维护[本地注册源](https://doc.rust-lang.org/cargo/reference/source-replacement.html#local-registry-sources)。
+
+*Rust crates*的默认注册源为 [crates.io](https://crates.io)，可通过以下方式可以[修改注册源](https://doc.rust-lang.org/cargo/reference/source-replacement.html#configuration)：
+
+1. 修改配置文件
+```toml
+[source.crates-io]
+# 替换成`[source.my-vendor-source]`的配置
+replace-with = "my-vendor-source"
+
+[source.my-vendor-source]
+# 远程注册源
+registry = "https://example.com/path/to/index"
+# 本地注册源（通过`cargo-local-registry`管理）
+local-registry = "path/to/registry"
+# 本地文件夹
+directory = "path/to/vendor"
+# git源
+git = "https://example.com/path/to/repo"
+# branch = "master"
+# tag = "v1.0.1"
+# rev = "313f44e8"
+```
+
+### 开发流
+
+#### 工具
+
+- `cargo install/uninstall`：安装可执行文件（命令）
+
+- `cargo vendor`：（下载）创建本地注册源目录
+
+#### 创建
+
+```toml
+[package]
+name = "demo"
+version = "0.1.0"
+edition = "2021" # 设置rustc大版本
+```
+
+- `cargo new`：创建（新目录）项目
+
+- `cargo init`：初始化（当前目录）项目；
+
+#### 依赖
+
+[Specifying Dependencies](http://localhost/rust/cargo/reference/specifying-dependencies.html#specifying-dependencies)
+
+```toml
+[dependencies]
+# 1. 默认注册源
+foo = "0.1.12"
+bar = { version = "0.1.12" }
+# 2. 指定注册源
+baz = { registry = "other-registry", version = "1.0.0" }
+# 3. git仓库
+regex = { git = "https://github.com/rust-lang/regex", branch = "next" }
+regex = { git = "...", tag = "1.0.0" }
+regex = { git = "...", rev = "4c59b707" } # 其他任意头
+# 4. 本地路径，仅本地可用
+hello_utils = { path = "hello_utils" }
+
+# * 多来源，同时提供version字段来定义发布后使用注册源
+hello_utils = { path = "hello_utils", version = "1.0.0" }
+smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
+
+[dev-dependencies]
+
+[build-dependencies]
+```
+
+平台特定依赖：
+
+```toml
+[target.'cfg(windows)'.dependencies]
+winhttp = "0.4.0"
+[target.'cfg(target_arch = "x86")'.dependencies] 
+native = { path = "native/i686" }
+[target.'cfg(target_arch = "x86_64")'.dependencies] 
+native = { path = "native/x86_64" }
+```
+
+- `cargo search`
+
+- `cargo fetch`：从网络下载项目依赖包到本地（用于离线编译）
+
+- `cargo update`
+
+#### 开发
+
+- `cargo run`：直接运行代码（编译+运行可执行文件）；（如果没有提前下载）会自动下载依赖。
+
+- `cargo clean`：清理Cargo生成的工件；
+
+#### 测试
+
+- `cargo test`：执行测试代码；
+
+- `cargo bench`： 性能测试；
+
+#### 质量
+
+- `cargo check/fix`：检查项目及其依赖的错误（通过编译）；
+
+```rust
+// 代码中调整检查策略
+#[allow(clippy::needless_lifetimes)]
+#[deny(clippy::needless_lifetimes)]
+#[warn(clippy::needless_lifetimes)]
+#[forbid(clippy::needless_lifetimes)]
+```
+
+- `cargo clippy`：检查代码质量和风格（类似 *eslint*）；由 [*rust-clippy*](https://github.com/rust-lang/rust-clippy) （`rustup component add clippy`）组件实现；
+
+```shell
+cargo clippy --fix
+cargo clippy --no-deps
+```
+
+- `cargo fmt`：格式化代码；由[*rustfmt*](https://github.com/rust-lang/rustfmt) （`rustup component add rustfmt`）组件实现；
+
+#### 编译
+
+见[构建](#构建)
+
+`cargo build`：默认以开发模式编译代码（输出位于 *target/debug*），包含debug信息、代码未经编译器优化。
+
+1. 修改编译器配置（如优化策略、调试符号等）：
+
+```toml
+[profile.dev]
+opt-level = 1               # Use slightly better optimizations.
+overflow-checks = false     # Disable integer overflow checks.
+```
+2. 修改*rustc*参数：
+
+```toml
+[target.xxx]
+rustflags = []
+```
+
+#### 发布
+
+[Publishing on crates.io](https://doc.rust-lang.org/cargo/reference/publishing.html#publishing-on-cratesio)
+
+与发布相关的重要[配置字段](https://doc.rust-lang.org/cargo/reference/manifest.html)：
+
+```toml
+[package]
+# ...
+description = "A short description of my package"
+keywords = ["gamedev", "graphics"]
+categories = ["command-line-utilities", "development-tools::cargo-plugins"]
+readme = "README.md"
+homepage = "https://serde.rs/"
+documentation = "https://docs.rs/bitflags"
+repository = "https://github.com/rust-lang/cargo/"
+license = "MIT OR Apache-2.0"
+license-file = "LICENSE.txt"
+
+version = "1.0.0"
+# include会覆盖exclude
+include = [
+	"**/*.rs",
+	"Cargo.toml",
+	"LICENSE",
+]
+exclude = [
+	"assets/*",
+]
+```
+
+- `cargo package`：打包项目文件（*.crate*），等同于`cargo publish --dry-run`。
+	- [ctates.io](https://crates.io) 限制一个包最大*10MB*，可通过`cargo package --list`命令查看打包后的文件列表，确认是否包含了必要和多余文件。
+	- 打包前会自动执行一些检查，比如检测本地代码是否提交、*Cargo.toml*的规范性验证等。
+	- 打包完成后还会自动解压到临时目录执行一次编译验证。
+
+- `cargo login/logout`：
+
+- `cargo publish`
+
+- `cargo yank`：撤销已发布版本。
+	- 该命令不会删除任何源文件（所以若上传了密码等机密信息只能重置它们）。
+	- 如果撤销的版本已经在其他项目的*Cargo.lock*（可以看到*checksum*字段）中存在，这些项目仍将使用撤销的版本。
+
+```shell
+cargo yank --vers 1.1.0
+cargo yank --vers 1.1.0 --undo # 取消撤回操作
+```
+
+- `cargo owner`：管理包的拥有人（可以多个）。
+	- Owner可以发布和撤销包版本，必须是Github用户（`cargo owner --add <github_user>`）或团队（`cargo owner --add github:<org>:<team>`）。
+	- 只有用户Owner可以添加和删除Owner。
+
+#### 其他
+
+- `cargo doc`： 生成项目文档；通过 [*rustdoc*](https://doc.rust-lang.org/rustdoc/) 实现，Rust 发行版自带。
+
+
+### Cargo环境变量
+
+完整的环境列表可见[Environment Variables - The Cargo Book](https://doc.rust-lang.org/cargo/reference/environment-variables.html)
+
+- `CARGO_HOME`
+- `RUSTC`
+- `CARGO_TARGET_DIR`：生成工件的存放目录，对应配置`build.target-dir`，默认为当前项目的*target*目录
+
+### 工具 
+
+- `cargo-cache`：查看和清理cargo缓存
+	
+## 构建
+
+完整构建一个项目可能包括：声明项目元信息、组织项目结构、管理项目依赖、构建开发环境、进行功能测试、执行性能测试、编译项目代码、打包项目源文件、对外发布......，即使*Rustup*已经为我们提供了各环节的工具链，但无论单独配置每个环节还是整合这些工作依然是繁琐和杂乱的。
+
+不过，通过前面我们已经知道了官方提供了[包管理器-Cargo](#包管理器-Cargo)这一工具，没错，在*Rust*中最简单的项目构建方式就是通过创建*Cargo*来进行。通过编写*Cargo.toml*进行各环节的配置，如配置语言版本、工具链、依赖库、编译条件、环境变量......各种参数，然后执行少许命令就可以自动化地构建项目。
+
+这一章主要针对项目编译这一环节进行描述，其他主要环节可以在[开发流](#开发流)一章节中查阅。
+
+### 语言版本
+
+[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)
+
+虽然*Rust*尽可能提供了前向兼容，但经过语言快速发展，也诞生了很多新的语法特性，尤其是关键字（比如`async`, `await`）等，所以仍存在不同的语言版本。
+
+[`--edition`: specify the edition to use](https://doc.rust-lang.org/rustc/command-line-arguments.html#--edition-specify-the-edition-to-use)
+
+查看目前已有的版本：
+
+```shell
+rustc --help | grep '\--edition'
+```
+
+通过以下方式可以设置版本：
+
+```toml
+[package]
+edition = 2018
+```
+```shell
+rustc --edition 2018
+```
+
+### 工具链版本
+
+[How Rust is Made and “Nightly Rust”](https://doc.rust-lang.org/book/appendix-07-nightly-rust.html#appendix-g---how-rust-is-made-and-nightly-rust)
+
+[Toolchains](https://rust-lang.github.io/rustup/concepts/toolchains.html#toolchains)
+
+Rust官方工具链对外发布有三种[渠道（*channel*）](https://doc.rust-lang.org/book/appendix-07-nightly-rust.html#choo-choo-release-channels-and-riding-the-trains)[版本](https://rust-lang.github.io/rustup/concepts/toolchains.html#toolchain-specification)：
+
+- *nightly*：每天发布一个版本
+- *beta*：每六周发布一个版本
+- *stable*：当前*beta*版本发布六周后正式发布
+
+查看已安装的版本：
+
+```shell
+rustup toolchain list
+```
+```plain
+stable-x86_64-apple-darwin (default)
+```
+
+安装[其他版本工具链](https://rust-lang.github.io/rustup/concepts/toolchains.html#toolchain-specification)：
+
+```shell
+# 版本格式：<channel>[-<date>][-<host>]
+
+rustup toolchain install stable
+rustup toolchain install nightly-2022-02-22
+# 指定编译的目标平台
+rustup toolchain install stable-x86_64-pc-windows-msvc
+# channel除了可以是stable, beta, nightly，还可以是版本号如1.42.1
+rustup toolchain install 1.42.1
+```
+
+> x86_64-pc-windows-msvc 为编译目标平台的特征值（*目标三值*），详细可见[目标平台和交叉编译](#目标平台和交叉编译)。
+
+切换全局（默认）工具链：`rustup default`
+
+```shell
+rustup default stable
+```
+
+也可以在项目中配置特定工具链：`rustup override`
+
+```shell
+cd /path/to/project
+rustup override set nightly
+```
+
+当工具链不是由*Rustup*进行维护时，你也可以将这些以其他方式添加的工具链加入*Rustup*：
+
+```shell
+rustup toolchain link my-toolchain path/to/my-toolchain
+```
+
+### 条件编译
+
+[Conditional compilation](http://localhost/rust/reference/conditional-compilation.html#conditional-compilation)
+
+> 条件编译源码：编译器通过判断源码中特定声明的条件，选择是否加入相关代码进行编译、或在源码中加入特定声明中提供的[属性](http://localhost/rust/reference/attributes.html)、或返回特定声明中的条件是否满足的真值。
+
+代码中编译条件有三种表达方式：
+
+- 通过[`#[cfg(...)]`](http://localhost/rust/reference/conditional-compilation.html#the-cfg-attribute) 属性，选择是否加入相关代码进行编译
+- 通过[`#[cfg_attr(...)]`](http://localhost/rust/reference/conditional-compilation.html#the-cfg_attr-attribute) 属性，选择是否在源码中加入提供的特定属性
+- 通过[`cfg!(...)`](http://localhost/rust/reference/conditional-compilation.html#the-cfg-macro)类函数[宏](http://localhost/rust/reference/macros.html) ，获取条件断言
+
+无论哪种表达方式，其[配置条件](#配置条件)的表达式格式都是相同的。
+
+#### 配置条件
+
+条件表达式可以是一个*配置项*（*configuration option*），也可以是一个*配置断言*（*configuration predicate*）。
+
+*配置项*则是一个*配置名称*（*configuration name*）如`unix`，或者*配置键值对*（*configuration key-value pair*）如`target_os="unix"`。
+
+*配置断言*则由多个*配置项*组合而成，组合的方式有三种`all()`、`any()`、`not()`。如`all(target_os="window", target_arch="x86_64")`
+
+#### 显隐代码
+
+`#[cfg(<condition>)]`
+
+例如：
+
+- 配置名称：`#[cfg(unix)]`
+- 配置键值对：`#[cfg(target_arch="x86_64")]`
+- 配置断言：`#[cfg(any(foo, bar)]`、`#[cfg(all(unix, target_pointer_width = "32"))]
+
+#### 添加属性
+
+`#[cfg_attr(<condition>, <attributes...>)]`
+
+通过断言判断是否展开后续属性，如果后续属性是`cfg_attr`属性，则继续展开。
+
+比如：
+
+```rust
+#[cfg_attr(feature = "magic", sparkles, crackles)]
+```
+
+如果`feature="magic"`条件满足，则展开为：
+
+```rust
+#[sparkles]
+#[crackles]
+```
+
+#### 获取断言
+
+`cfg!(<conditio>)`
+
+通过宏获取断言以在函数内判断当前环境。
+
+```rust
+#![allow(unused)]
+fn main() {
+	let machine_kind = if cfg!(unix) {
+	  "unix"
+	} else if cfg!(windows) {
+	  "windows"
+	} else {
+	  "unknown"
+	};
+}
+```
+
+#### [features]
+
+通过在*Cargo.toml*中定义特征可以简化配置条件。比如：
+
+```toml
+
+```
+
+`[features]`
+
+### 目标平台和交叉编译
+
+[Cross-compilation](https://rust-lang.github.io/rustup/cross-compilation.html#cross-compilation)
+
+[Rust支持交叉编译](https://rust-lang.github.io/rustup/cross-compilation.html)（在A平台编译出B平台所用的软件），可以通过*rustup*官网查看[支持的所有编译平台](https://rust-lang.github.io/rustup-components-history/)。
+
+*rustc*默认即支持交叉编译：
+
+```shell
+rustc --target=aarch64-apple-ios
+```
+
+查看*rustc*支持的目标平台：
+
+```shell
+rustc --print target-list
+```
+```plain
+aarch64-apple-darwin
+aarch64-apple-ios
+...
+```
+
+`rustup target`：**尽管*rustc*本身支持交叉编译，但标准库（*std*, *core*等）仍然需要自行添加**。
+
+查看所有可用平台（标准库）：
+
+```shell
+rustup target list
+```
+```plain
+aarch64-apple-darwin
+aarch64-apple-ios
+...
+x86_64-apple-darwin (installed)
+...
+```
+```shell
+rustup target list --installed
+```
+```plain
+x86_64-apple-darwin (installed)
+```
+
+添加目标平台（标准库）：
+
+```shell
+# 当前工具链
+rustup target add aarch64-apple-ios
+# 指定工具链
+rustup target add aarch64-apple-ios --toolchain stable
+```
+
+在项目中选择编译平台：
+
+```toml
+[build]
+target = "aarch64-apple-ios"
+
+[target.aarch64-apple-ios]
+rustflags = [...]
+```
+
+#### 目标三值（target）
+
+> *Target triplets*，一个描述软件运行平台的特征值，一般来说由三个部分组成：**CPU架构（*target_arch*）**、**平台厂商（*target_vendor*）**、**操作系统（*target_os*）**。编译器通过这些特征值可以将软件以合适的方式编译到不同的平台运行。
+> 
+> 随着平台发展的多样化，目标三值更多是概念性表达，而非只有三个值。
+> 
+> 比如，有些平台可能同时存在多种工具链（如*gnu*和*msvc*），它们编译出来的软件和运行方式会存在区别（比如*msvc*提供了更多库函数，使得编译出的软件更小、兼容性更强），所以在这些平台还可能有额外值用来指示**工具链（*target_env*）**。
+>
+> 再比如，并非所有的编译目标都是直接运行在原始平台上，如*WebAssembly*是运行在虚拟机，所以我们可以看到*Rust*提供的wasm三值如`wasm32-wasi`并没有厂商和操作系统信息。
+
+通过`rustc --print=cfg`命令可以查看当前平台特征信息，比如：
+```plain
+debug_assertions
+target_arch="x86_64"
+target_endian="little"
+target_env=""
+target_family="unix"
+target_feature="fxsr"
+target_feature="sse"
+target_feature="sse2"
+target_feature="sse3"
+target_feature="ssse3"
+target_os="macos"
+target_pointer_width="64"
+target_vendor="apple"
+unix
+```
+
+各特征常见值如：
+
+- CPU架构：`x86_64`, `aarch64`, `arm` ......
+- 平台厂商：`pc`, `apple`, `linux` ......
+- 操作系统：`windows`, `darwin`, `ios` ......
+- 工具链：`msvc`, `gnu` ......
+
+常见平台如：
+
+- [aarch64-apple-darwin](https://rust-lang.github.io/rustup-components-history/aarch64-apple-darwin.html)：M系列（arm平台）macbook
+- [aarch64-apple-ios](https://rust-lang.github.io/rustup-components-history/aarch64-apple-ios.html)：iOS系列产品
+- [x86_64-pc-windows-msvc](https://rust-lang.github.io/rustup-components-history/x86_64-pc-windows-msvc.html)
+- [x86_64-unknown-linux-gnu](https://rust-lang.github.io/rustup-components-history/x86_64-unknown-linux-gnu.html)
+- [aarch64-linux-android](https://rust-lang.github.io/rustup-components-history/aarch64-linux-android.html)：安卓系列产品
+- [x86_64-apple-darwin](https://rust-lang.github.io/rustup-components-history/x86_64-apple-darwin.html)：I系列（x64平台）macbook
+
+更多可见[Rust官方支持的目标编译平台](https://rust-lang.github.io/rustup-components-history/)
+
+#### WebAssembly
+
+*Rust*目前提供了四种*WebAssembly*工具链，分别对应了不同的运行时：
+
+- `wasm32-unknown-unknown`：*Rust*专用的*WebAssembly*编译器，运行在没有IO接口（如浏览器等）的环境。
+- `wasm32-unknown-emscripten`：使用[*emscripten*](https://github.com/kripken/emscripten)编译，在项目依赖了*C*/*C++*等语言时使用。
+- `asmjs-unknown-emscripten`：编译成[*asm.js*](http://asmjs.org/)（*WebAssembly*前身）
+- `wasm32-wasi`：目标环境提供了IO接口。
+
+### 文件类型（正式）
+
+[`--crate-type`: a list of types of crates for the compiler to emit](https://doc.rust-lang.org/rustc/command-line-arguments.html#--crate-type-a-list-of-types-of-crates-for-the-compiler-to-emit)
+
+```shell
+rustc --help | grep '\--crate-type'
+```
+
+- `bin`：生成可执行文件
+- `lib`：生成编译器首选的库文件类型，目前为`rlib`
+- `rlib`：*Rust*规范的静态库文件（`rlib`）
+- `dylib`：*Rust*规范的动态库文件（`.so`,`.dylib`,`.dll`）
+- `cdylib`：*C*语言规范的动态库，适用于跨语言调用（`.so`,`.dylib`,`.dll`）
+- `staticlib`：*C*语言规范的静态库，适用于跨语言调用（`.a`,`.lib`）
+- `proc-macro`：*Rust*过程宏库
+
+关于库文件详见：[Linkage - The Rust Reference](https://doc.rust-lang.org/reference/linkage.html)
+
+```shell
+rustc --crate-type cdylib
+```
+
+```toml
+[lib] 
+crate-type = ["cdylib"]
+```
+
+```rust
+#[crate_type = "cdylib"]
+```
+
+### 文件类型（调试）
+
+[`--emit`: specifies the types of output files to generate](https://doc.rust-lang.org/rustc/command-line-arguments.html#--emit-specifies-the-types-of-output-files-to-generate)
+
+```shell
+rustc --help | grep '\--emit'
+```
+
+-   `asm` ：汇编代码（`.s`）
+-   `dep-info` ：包含生成crate所有源文件依赖关系的*Makefile*文件（`.d`）
+-   `link` ：由`--crate-type`选项指定输出文件类型，为选项的默认值。
+-   `llvm-bc` — LLVM字节码文件（[LLVM bitcode](https://llvm.org/docs/BitCodeFormat.html)`.bc`）
+-   `llvm-ir` — LLVM中间码文件（[LLVM IR](https://llvm.org/docs/LangRef.html)`.ll`）
+-   `metadata` — 包含crate元数据的文件（`.rmeta`）
+-   `mir` — *rustc*中间码文件（`.mir`），可以通过[Miri](https://github.com/rust-lang/miri/)解释
+-   `obj` — 原生对象文件（`.o`）
+
+### 打印编译信息（调试）
+
+[`--print`: print compiler information](https://doc.rust-lang.org/rustc/command-line-arguments.html#--print-print-compiler-information)
+
+这个选项会忽略执行`--emit`这一步
+
+-   `crate-name`
+-   `file-names` — The names of the files created by the `link` emit kind.
+-   `sysroot` — Path to the sysroot.
+-   `target-libdir` - Path to the target libdir.
+-   `cfg` — List of cfg values. See [conditional compilation](https://doc.rust-lang.org/reference/conditional-compilation.html) for more information about cfg values.
+-   `target-list` — List of known targets. The target may be selected with the `--target` flag.
+-   `target-cpus` — List of available CPU values for the current target. The target CPU may be selected with the [`-C target-cpu=val` flag](https://doc.rust-lang.org/rustc/codegen-options/index.html#target-cpu).
+-   `target-features` — List of available target features for the current target. Target features may be enabled with the [`-C target-feature=val` flag](https://doc.rust-lang.org/rustc/codegen-options/index.html#target-feature). This flag is unsafe. See [known issues](https://doc.rust-lang.org/rustc/targets/known-issues.html) for more details.
+-   `relocation-models` — List of relocation models. Relocation models may be selected with the [`-C relocation-model=val` flag](https://doc.rust-lang.org/rustc/codegen-options/index.html#relocation-model).
+-   `code-models` — List of code models. Code models may be selected with the [`-C code-model=val` flag](https://doc.rust-lang.org/rustc/codegen-options/index.html#code-model).
+-   `tls-models` — List of Thread Local Storage models supported. The model may be selected with the `-Z tls-model=val` flag.
+-   `native-static-libs` — This may be used when creating a `staticlib` crate type. If this is the only flag, it will perform a full compilation and include a diagnostic note that indicates the linker flags to use when linking the resulting static library. The note starts with the text `native-static-libs:` to make it easier to fetch the output.
 
 # 变量
 
@@ -733,7 +1451,7 @@ fn add(x: i32, y: i32) -> i32 {
 >
 >[变量](https://doc.rust-lang.org/reference/variables.html)，是执行栈帧的一部分，在执行期间建立，用于指向内存数据。包括函数的命名参数（*named function parameter*）、局部命名变量（*named local variable*，`let`声明）、[匿名临时变量](https://doc.rust-lang.org/reference/expressions.html#temporaries)（*annoymous temporary*，表达式中的字面量或中间值可能是在执行时临时分配的）。
 
-### 变量（*Variable*）
+### 变量（Variable）
 
 > [变量](https://doc.rust-lang.org/reference/variables.html)
 
@@ -745,18 +1463,18 @@ fn hello(word: &str) {
 let word = "hello";
 ```
 
-### 项目（*Item*）
+### 项目（Item）
 
 > [项目](https://doc.rust-lang.org/reference/items.html)
 
-#### 模块（*Module*）
+#### 模块（Module）
 
 > [模块](http://localhost/rust/reference/items/modules.html)，是多[[#项目（ Item ）]]的容器，用于项目的访问性隔离。*A module is a container for zero or more [items](http://localhost/rust/reference/items.html).*
 
 - 同名模块不能声明多次（不支持遮蔽和扩展）
 - 模块与[[#类型系统]]共享命名空间，且不能遮蔽
 - 文件模块有*mod-rs*和*non-mod-rs*两种类型，其中*mod-rs*，包括根模块*main.rs*和*lib.rs*, 以及目录模块*mod.rs*
-- 注意，cargo.toml中声明的依赖，以及外链库（`rustc --extern`）是不需要加载的，编译时已prelude
+- *Cargo.toml*中声明的依赖，以及外链库（`rustc --extern`）是不需要单独加载的，这些属于[预导入包（Preludes）](#预导入包（Preludes）)。
 
 ```rust
 // 内联模块：
@@ -830,21 +1548,42 @@ fn main() {
 }
 ```
 
-#### 外链库（*Extern Crate*）
+##### 预导入包（Preludes）
+
+> [Preludes](http://localhost/rust/reference/names/preludes.html#extern-prelude): 是一组被自动引入到所有模块的名称。但这些名称并不属于这些模块（不能通过`self::xxx`的方式调用）。
+
+分为五种类型：
+
+-   [标准库预导入包（Standard library prelude）](http://localhost/rust/reference/names/preludes.html#standard-library-prelude)
+	- [`std::prelude::v1`](http://localhost/rust/std/prelude/index.html)（使用`no_std`会改变该行为，详见[The `no_std` attribute](http://localhost/rust/reference/names/preludes.html#the-no_std-attribute)）
+-   [外部预导入包（Extern prelude）](http://localhost/rust/reference/names/preludes.html#extern-prelude)
+	- 核心包：[`core`](http://localhost/rust/core/index.html)
+	- 编译时链接的外部包（`rustc --extern xxx`）
+	- 项目根模块中引入的外部包（`extern crate xxx`）
+-  [语言预导入包（Language prelude）](http://localhost/rust/reference/names/preludes.html#language-prelude)
+	- 布尔值、数字、文本（`char`, `str`）等内置类型
+	- 内置属性，详见[Built-in attributes index](http://localhost/rust/reference/attributes.html#built-in-attributes-index)
+-   [`macro_use` prelude](http://localhost/rust/reference/names/preludes.html#macro_use-prelude)
+	- 通过`#[macro_use]`属性修饰`extern crate xxx`引入的外库宏，例如[The `macro_use` attribute](http://localhost/rust/reference/macros-by-example.html#the-macro_use-attribute)
+-   [工具预导入包（Tool prelude）](http://localhost/rust/reference/names/preludes.html#tool-prelude)
+	- 如目前*rustc*识别的*rustfmt*, *clippy*等工具，详见[tool attributes](http://localhost/rust/reference/attributes.html#tool-attributes)。如`#[rustfmt::skip]`
+
+#### 外链库（Extern Crate）
 
 > [外链库](http://localhost/rust/reference/items/extern-crates.html)，在编译时链接的其他（已经编译完成的）库（*ABI*, *Application Binary Interface*）。尤其用于引入通用库或与其他语言进行交互（*[FFI](https://rustcc.cn/article?id=3b8241d0-c4ca-4f49-8e07-0a5142b00f59)*, *Foregin Function Interface*）
 
 ```rust
 // main.rs
-extern crate hello;
+extern crate hello; // rust2018开始不再需要，见备注
 
 fn main() {
 	hello::public_fn();
 }
 ```
-
+ > Note: [No more `extern crate`](https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html#no-more-extern-crate)
+ 
 直接编译：
-```rust
+```shell
 rustc main.rs --extern hello="path/to/hello"
 ```
 
@@ -887,29 +1626,29 @@ hello = { path: "path/to/hello" }
 
 - 当表达式没有明确返回值的时候，返回的是空元组（`()`）。
 
-### 语句（*Statement*）
+### 语句（Statement）
 
 > [语句](https://doc.rust-lang.org/reference/statements.html)：
 
 除了项目的声明语句（*Item Declaration Statement*）外，如声明结构：`struct Foo {}`，语句通常以分号`;`结尾。
 
-#### 声明语句（*Declaration Statement*）
+#### 声明语句（Declaration Statement）
 
-##### 项目声明语句（*Item Declaration*）
+##### 项目声明语句（Item Declaration）
 
-##### 变量声明语句（*Variable Declaration*）
+##### 变量声明语句（Variable Declaration）
 
-#### 表达式语句（*Expression Statement*）
+#### 表达式语句（Expression Statement）
 
-### 表达式（*Expression*）
+### 表达式（Expression）
 
-#### 字面量表达式（*Literal*）
+#### 字面量表达式（Literal）
 
 > [字面量](https://doc.rust-lang.org/reference/tokens.html#literals)，不需要名称（如变量）引用，直接表达一个值的量。
 
 [主要有](https://doc.rust-lang.org/reference/tokens.html#literals)数字字面量、布尔值字面量、字符字面量、字符串字面量。
 
-#### 路径表达式（*Path* ）
+#### 路径表达式（Path）
 
 > [路径](https://doc.rust-lang.org/reference/paths.html)：由命名空间限定符`::`逻辑分隔的一个或多个路径分段序列，用于返回变量（*Variable*）或项目（*Item*）。
 
@@ -936,7 +1675,7 @@ macro_rules! inc {
 fn main() { }
 ```
 
-#### 块表达式（*Block*）
+#### 块表达式（Block）
 
 > [块](https://doc.rust-lang.org/reference/expressions/block-expr.html)：包括控制流（如`if {}`）表达式，和独立存在的匿名命名空间（`{}`）。
 > (A _block expression_, or _block_, is a control flow expression and anonymous namespace scope for items and variable declarations.)
@@ -966,6 +1705,10 @@ let x = {
 ```
 
 ## 类型系统
+
+### 内置类型（Built-in Types）
+
+
 
 ## 控制流程
 
@@ -1068,6 +1811,7 @@ struct User {
 ```
 
 实例（*instantiating*）：
+
 
 ```rust
 let name = String::from("Mike");
@@ -1615,3 +2359,4 @@ fn get_type(_: &T) -> &'static str {
   std::any::type_name::<T>()
 }
 ```
+ 

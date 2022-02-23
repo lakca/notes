@@ -4,7 +4,7 @@
     "type": "split",
     "children": [
       {
-        "id": "26442c2cacb7c927",
+        "id": "d7d56f4af18b7be6",
         "type": "leaf",
         "state": {
           "type": "markdown",
@@ -59,7 +59,8 @@
               }
             }
           }
-        ]
+        ],
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -122,20 +123,24 @@
             }
           }
         ],
-        "currentTab": 3
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
     "width": 300,
     "collapsed": true
   },
-  "active": "26442c2cacb7c927",
+  "active": "d7d56f4af18b7be6",
   "lastOpenFiles": [
     "cis/rust/rust.md",
-    "crates.io.md",
-    "Excalidraw/Drawing 2022-02-10 17.51.20.excalidraw.md",
-    "Excalidraw/Drawing 2022-02-10 17.51.12.excalidraw.md",
+    "cis/python/python.md",
+    "cis/rust/package.md",
+    "cis/rust/lib.md",
+    "cis/rust/ownership.svg",
     "cis/rust/README.md",
-    "cis/rust/reference.svg"
+    "cis/rust/slice.svg",
+    "cis/rust/reference.svg",
+    "crates.io.md",
+    "Excalidraw/Drawing 2022-02-10 17.51.20.excalidraw.md"
   ]
 }

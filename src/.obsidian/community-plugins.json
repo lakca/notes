@@ -1,7 +1,8 @@
 [
-  "table-editor-obsidian",
-  "convert-url-to-iframe",
-  "obsidian-excalidraw-plugin",
-  "obsidian-auto-link-title",
-  "obsidian-collapse"
+  "obsidian-codemirror-options",
+  "emoji-shortcodes",
+  "cm-chs-patch",
+  "highlightr-plugin",
+  "language-translator",
+  "obsidian-command-palette-enhance"
 ]
