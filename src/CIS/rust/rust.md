@@ -6,34 +6,37 @@ date: 2021-04-19T11:13:31.973Z
 # 语言
 
 - 现代语言
-	- 开源
-	- 社区驱动
-	- 极其丰富和优秀的官方文档
-	- 丰富的标准库
-	- 开源社区贡献活跃、发展迅速、优秀包层出不穷
-	- 官方工具链
-		- 编译`cargo build`
-		- 测试`cargo test/bench`
-		- 文档`cargo doc`
-		- 包管理（加强版*npm*）`cargo new/init/publish/search/update/install/uninstall`
-		- 代码检查`cargo check`
-		- 离线文档`rustup doc`
-		- 工具链升级`rustup update`
-		- 工具链自定义`rustup default/toolchain/target/component`
-		- 命令行补全`rustup completions`
+	- [开源](https://github.com/rust-lang)
+	- [社区驱动](https://www.rust-lang.org/governance)
+	- [定期更新](#工具链版本)
+	- 优秀的[官方文档](#文档)
+	- 丰富的[标准库](https://doc.rust-lang.org/std/)
+	- 活跃的[开源社区](https://www.rust-lang.org/community)
+	- 强大的[官方工具链](#版本和工具链管理-Rustup)
+		- 编译
+		- 测试
+		- 文档
+		- 包管理
+		- 代码质量
+		- 离线文档
+		- 交叉编译
+		- 工具链升级
+		- 命令行补全
+		- 语言服务器
 		- ...
-	- 官方注册源[crates.io](https://crates.io)
-	- 官方库文档[docs.rs](https://docs.rs)
-	- 官方语言服务协议（*LSP*）
-	- 无垃圾回收的智能内存管理
-	- 增强型模块化
-		- 文件内模块化能力（`mod`）
-		- 显式声明代码可见性（默认不可见）
-		- 抽象的模块组织
-			- 统一的文件夹出口/入口（*mod.rs*）
-			- 命名空间式的模块引用方式（区别于文件路径搜寻）
-	- 描述大于实现
-		- 没有类（~~*class*~~）和继承概念，取而代之的是特征描述（`trait`）和宏修饰（*Macros*）。
+	- [集中包注册源-crates.io](https://crates.io)
+	- [集中包文档-docs.rs](https://docs.rs)
+	- [语言服务器协议](https://github.com/rust-analyzer/rust-analyzer)（[*LSP*](https://microsoft.github.io/language-server-protocol/)）
+	- 无GC的[智能内存管理](#内存管理)
+	- 增强型[模块化](#模块系统)
+		- 文件内模块化能力
+		- 模块内部对外默认不可见
+		- 统一规范的模块组织结构
+		- 命名空间式（区别于文件路径引用）的模块引用
+	- 组合大于继承
+		- 没有类（~~*class*~~）和继承概念，取而代之的是特征描述（`trait`）。
+	- [元编程](#元编程)
+		- 种类丰富的[宏（*Macros*）](#宏)
 - 语言特性
 	- 没有反射（~~*Reflection*~~）
 	- 文件内模块化能力
@@ -62,9 +65,16 @@ date: 2021-04-19T11:13:31.973Z
 		- 备注文档：直接由代码备注生成文档，发布包时自动集成在[社区文档网站](https://docs.rs)中，页面格式统一、功能齐全。
 
 # 准备
- 
 
-## 文档
+ ## 工具
+
+- [Rust Search Extension](https://rust.extension.sh/)：在浏览器中搜索*Rust*文档、库等的终极解决方案，强烈建议安装。
+
+## 查阅
+
+### 文档
+
+[Learn Rust](https://www.rust-lang.org/learn)
 
 - Rust 教程（*The Book*）：[The Rust Programming Language](https://doc.rust-lang.org/book/)，[中文翻译](https://kaisery.github.io/trpl-zh-cn/)
 - Rust 实例教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
@@ -88,7 +98,7 @@ date: 2021-04-19T11:13:31.973Z
 - Cargo：[The Cargo Book](http://localhost/rust/cargo/index.html#the-cargo-book)
 - Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)
 
-常见速查：
+### 常见速查
 
 - [Operators and Symbols](https://doc.rust-lang.org/book/appendix-02-operators.html#appendix-b-operators-and-symbols)
 - [Keywords](https://doc.rust-lang.org/book/appendix-01-keywords.html#appendix-a-keywords)
@@ -313,6 +323,7 @@ progress.width = 80    # width of progress bar
 *Rust crates*的默认注册源为 [crates.io](https://crates.io)，可通过以下方式可以[修改注册源](https://doc.rust-lang.org/cargo/reference/source-replacement.html#configuration)：
 
 1. 修改配置文件
+
 ```toml
 [source.crates-io]
 # 替换成`[source.my-vendor-source]`的配置
@@ -522,7 +533,7 @@ cargo yank --vers 1.1.0 --undo # 取消撤回操作
 	
 ## 构建
 
-完整构建一个项目可能包括：声明项目元信息、组织项目结构、管理项目依赖、构建开发环境、进行功能测试、执行性能测试、编译项目代码、打包项目源文件、对外发布......，即使*Rustup*已经为我们提供了各环节的工具链，但无论单独配置每个环节还是整合这些工作依然是繁琐和杂乱的。
+完整构建一个项目可能包括：组织项目结构、声明项目元信息、管理项目依赖、构建开发环境、功能测试、性能测试、编译代码、打包源文件、对外发布......，即使*Rustup*已经为我们提供了各环节的工具链，但无论单独配置每个环节还是整合这些工作依然是繁琐和杂乱的。
 
 不过，通过前面我们已经知道了官方提供了[包管理器-Cargo](#包管理器-Cargo)这一工具，没错，在*Rust*中最简单的项目构建方式就是通过创建*Cargo*来进行。通过编写*Cargo.toml*进行各环节的配置，如配置语言版本、工具链、依赖库、编译条件、环境变量......各种参数，然后执行少许命令就可以自动化地构建项目。
 
@@ -917,7 +928,9 @@ const MAX: u8 = 100;
 
 - 存活于程序运行全程；
 
-# 有效性
+# 内存管理
+
+## 有效性
 
 > 有效性决定了变量是否失效、数据是否会被回收。
 
@@ -934,9 +947,11 @@ let a = "ha"; //声明新的 a 的时候，Rust 可以判定旧的 a 已失效
 println!("{}", a);
 ```
 
-# 所有权
+## 所有权
 
-> 与其他语言通过手动分配和释放内存或者内置内存回收机制不同，Rust 通过编译时对所有权的检查来管理内存。（*In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*）
+> 与在运行过程中手动释放（*free*）或由垃圾回收器（*Garbage Collector*）自动回收内存机制不同，Rust 通过在编译时的*所有权*（*Ownership*）检查机制来自动管理内存。
+>
+> *In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*
 
 |         官方文档示例          |
 | :---------------------------: |
@@ -1014,7 +1029,9 @@ fn demo3(a: String) -> String {
 }
 ```
 
-## Move和Copy
+### 移交
+
+### 借用
 
 \* 以下所提及的 **赋值** 都是指的广义的赋值，包括等号赋值（*assignment*）、传递函数参数（*argument passing*）、函数返回（*function returning*）、模式匹配（*matching*）等涉及到内存拷贝的操作。
 
@@ -1041,7 +1058,7 @@ println!("{}", c);
 
 创建引用时，我们在栈中存储了一个指针指向一个值（*Value*），该指针在未被使用前，即没有操作柄（*Handle*），无法改变最终指向的值（*Value*），反之，值（*Value*）被其他 操作柄（*Handle*）改变时，就该指针而言也没有可影响的操作柄（*Handle*），此时该指针不是有效存在的。只有在该指针被使用（*Value Borrowed*）后，双方的操作柄（*Handle*）才会互相影响。
 
-### 悬空引用
+## 悬空引用
 
 > 所谓悬空引用（*dangling reference*），即引用的变量的作用域结束后，该引用仍被使用。
 > 注意，这是一个错误的用法。
@@ -1066,13 +1083,13 @@ fn demo() -> &'static str {
 }
 ```
 
-### 字符串切片
+## 字符串切片
 
 > *A string slice is a reference to part of a String.*
 
 > *The `str` type, also called a ‘string slice’, is the most primitive string type. It is usually seen in its borrowed form, `&str`. It is also the type of string literals, `&'static str`.*
 
-### 字符串字面量
+## 字符串字面量
 
 \* 字面量是程序代码的一部分，直接存储在程序文件中，因而程序文件加载后常驻于内存，拥有静态生命周期。 ^25d384
 
@@ -1416,34 +1433,7 @@ assert_eq!(Some(&20), scores.get("Blue"));
 assert_eq!(None, scores.get("Yellow"));
 ```
 
-# 函数
-
-> `fn` 也是一个原生类型（*Primitive Type*）。（*Function pointers are pointers that point to code, not data.*）
-
-无参数和返回值：
-
-```rust
-fn main() {
-  println!("Hello");
-}
-
-// 与上同义，没有返回值的函数默认返回空元组：()
-fn main() -> () {
-  println!("Hello");
-}
-```
-
-有参数和返回值：
-
-```rust
-fn add(x: i32, y: i32) -> i32 {
-  x + y // return 可以省略，因为此处是最后一个表达式
-}
-```
-
-- 返回值和最后一个表达式同义，即最后一个表达式即为返回值，无需显式的 *return*；
-
-# 语法
+# 语言基础
 
 ## 变量和项目
 
@@ -1570,7 +1560,7 @@ fn main() {
 
 #### 外链库（Extern Crate）
 
-> [外链库](http://localhost/rust/reference/items/extern-crates.html)，在编译时链接的其他（已经编译完成的）库（*ABI*, *Application Binary Interface*）。尤其用于引入通用库或与其他语言进行交互（*[FFI](https://rustcc.cn/article?id=3b8241d0-c4ca-4f49-8e07-0a5142b00f59)*, *Foregin Function Interface*）
+> [外链库](http://localhost/rust/reference/items/extern-crates.html)，在编译时链接的其他（二进制文件）库（*ABI*, *Application Binary Interface*）。尤其用于与其他语言进行交互（*[FFI](https://rustcc.cn/article?id=3b8241d0-c4ca-4f49-8e07-0a5142b00f59)*, *Foregin Function Interface*）
 
 ```rust
 // main.rs
@@ -1783,13 +1773,38 @@ let a = loop { break 1 }
 
 > *Raw, unsafe pointers, `*const T`, and `*mut T`.*
 
+# 面向过程
 
+## 函数
 
-# 属性
+> `fn` 也是一个原生类型（*Primitive Type*）。（*Function pointers are pointers that point to code, not data.*）
 
-# 宏
+无参数和返回值：
 
-# 结构：面向对象
+```rust
+fn main() {
+  println!("Hello");
+}
+
+// 与上同义，没有返回值的函数默认返回空元组：()
+fn main() -> () {
+  println!("Hello");
+}
+```
+
+有参数和返回值：
+
+```rust
+fn add(x: i32, y: i32) -> i32 {
+  x + y // return 可以省略，因为此处是最后一个表达式
+}
+```
+
+- 返回值和最后一个表达式同义，即最后一个表达式即为返回值，无需显式的 *return*；
+
+# 面向对象
+
+## 结构
 
 > *Struct*: 用以创建特定结构的类型。实际上是一组有名字的值（*Fields*）的模版（*Template*）。
 
@@ -1885,7 +1900,7 @@ impl User {
 let tracy = User::new_born(String::from("tracy"));
 ```
 
-## 元组结构
+### 元组结构
 
 > *Tuple struct*: 自定义名称的元组类型。
 
@@ -1901,7 +1916,7 @@ fn main() {
 }
 ```
 
-## 单元结构
+### 单元结构
 
 > *Unit struct*
 
@@ -1909,15 +1924,23 @@ fn main() {
 struct A;
 ```
 
-## 自动引用和解引用（*automatic referencing and dereferencing*）：
+### 自动引用和解引用
 
-> *when you call a method with object.something(), Rust automatically adds in &, &mut, or * so object matches the signature of the method.*
+> *automatic referencing and dereferencing*: *when you call a method with object.something(), Rust automatically adds in &, &mut, or * so object matches the signature of the method.*
 
 上述例子中结构方法 `grow` 和 `greet` 虽然对 `self` 的使用不同，但是我们调用方法时，并没有什么区别。这里就是 *Rust* 给我们自动引用和解引用了。
 
-# 特征：抽象类
+## 特征
 
-# 枚举
+# 元编程
+
+## 属性
+
+## 宏
+
+# 模式匹配
+
+## 枚举
 
 - 枚举元素可以定义为任意类型；
 
