@@ -3,86 +3,6 @@ title: Commands
 date: 2021-06-26T09:06:35.429Z
 ---
 
-- [程序类型](#程序类型)
-  - [utility](#utility)
-  - [facility](#facility)
-  - [program](#program)
-- [系统数据库](#系统数据库)
-- [信息](#信息)
-  - [`uname`](#uname)
-- [定位](#定位)
-  - [`which`](#which)
-  - [`type`](#type)
-  - [`whatis`](#whatis)
-  - [`whereis`](#whereis)
-  - [`locate`](#locate)
-  - [`command`](#command)
-- [搜索](#搜索)
-  - [`compgen` (zsh)](#compgen-zsh)
-  - [`find`](#find)
-- [执行命令](#执行命令)
-  - [`sh`](#sh)
-  - [`bash`](#bash)
-  - [`dash`](#dash)
-  - [`command`](#command-1)
-- [执行](#执行)
-  - [`expr`](#expr)
-  - [`xargs`](#xargs)
-- [文本处理](#文本处理)
-  - [`wc`](#wc)
-  - [`head`](#head)
-  - [`tail`](#tail)
-  - [`cut`](#cut)
-  - [`column`](#column)
-  - [`sed`](#sed)
-  - [`awk`](#awk)
-  - [`ed`](#ed)
-  - [`grep`](#grep)
-- [硬盘](#硬盘)
-  - [`df`](#df)
-  - [`du`](#du)
-  - [`quota`](#quota)
-- [文件系统](#文件系统)
-  - [`stat`](#stat)
-  - [`readlink`](#readlink)
-  - [`file`](#file)
-  - [`ls`](#ls)
-  - [`lsof`](#lsof)
-- [进程](#进程)
-  - [`ps`](#ps)
-  - [`top`](#top)
-  - [`kill`](#kill)
-  - [`uptime`](#uptime)
-  - [`iostat`](#iostat)
-- [网络](#网络)
-  - [`whois`](#whois)
-  - [`netstat`](#netstat)
-  - [`host`](#host)
-  - [`dig`](#dig)
-  - [`ifconfig`](#ifconfig)
-  - [`route`](#route)
-  - [`arp`](#arp)
-  - [`ndp`](#ndp)
-- [用户](#用户)
-  - [`w`](#w)
-  - [`who`, `whoami`](#who-whoami)
-  - [`users`](#users)
-  - [`finger`](#finger)
-  - [`last`](#last)
-- [其他](#其他)
-  - [`uptime`](#uptime-1)
-- [格式化](#格式化)
-  - [`strftime`](#strftime)
-- [网络工具](#网络工具)
-  - [`wget`](#wget)
-  - [`curl`](#curl)
-  - [`lsof`](#lsof-1)
-- [进程](#进程-1)
-  - [`ps`](#ps-1)
-  - [`pgrep`](#pgrep)
-  - [`pkill`](#pkill)
-  - [`kill`](#kill-1)
-
 # 程序类型
 
 ## utility
@@ -207,9 +127,41 @@ The `expr` utility evaluates expression and writes the result on standard output
 
 # 文本处理
 
+## `tr`
+
+> *Translate Characters*：一一对应地替换字符集，或删除字符集。
+
+- `tr <from_charset> <to_charset>`，替换字符集。如 `tr a-z A-Z <<< hello` 输出 `HELLO`
+- `tr -d <charset>`，删除字符集。
+- `tr -s <charset>`，压缩（*Squeeze*）连续重复的字符集。如 `tr -s l <<< hello` 输出 `helo`
+- `tr -C <charset>`，`<from_charset>` 取 *from_charset* 的字符补集（*Complement*）。如 `tr -Cd '[:alpha:]' <<< hello!` 输出 `hello`
+
+特殊字符集：
+
+```
+[:class:]  Represents all characters belonging to the defined character class.  Class names are:
+
+          alnum        <alphanumeric characters>
+          alpha        <alphabetic characters>
+          blank        <whitespace characters>
+          cntrl        <control characters>
+          digit        <numeric characters>
+          graph        <graphic characters>
+          ideogram     <ideographic characters>
+          lower        <lower-case alphabetic characters>
+          phonogram    <phonographic characters>
+          print        <printable characters>
+          punct        <punctuation characters>
+          rune         <valid characters>
+          space        <space characters>
+          special      <special characters>
+          upper        <upper-case characters>
+          xdigit       <hexadecimal characters>
+```
+
 ## `wc`
 
-> 统计字节 `wc -c`、字符 `wc -m`、单词 `wc -w`、行 `wc -l` 等。
+> *Word Count*：统计字节 `wc -c`、字符 `wc -m`、单词 `wc -w`、行 `wc -l` 等。
 
 ## `head`
 

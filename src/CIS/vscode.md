@@ -3,26 +3,6 @@ title: Vscode
 date: 2020-08-04T09:26:34.574Z
 ---
 
-- [View](#view)
-- [Shortcut](#shortcut)
-- [常用命令](#常用命令)
-  - [toggle](#toggle)
-  - [focus](#focus)
-  - [close](#close)
-  - [open](#open)
-  - [copy](#copy)
-  - [reveal](#reveal)
-  - [maximize](#maximize)
-  - [explorer](#explorer)
-  - [run](#run)
-  - [move](#move)
-  - [fold](#fold)
-  - [show](#show)
-  - [*extension](#extension)
-- [tip](#tip)
-  - [breadcrumb](#breadcrumb)
-  - [editor group](#editor-group)
-
 ## View
 
 - activity bar
