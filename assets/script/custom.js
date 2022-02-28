@@ -308,7 +308,7 @@
       }
       for (const h of headers) {
         const lv = +h.tagName[1]
-        const html = [`<li><a href="#${h.id}">${h.textContent}</a>`, '</li>']
+        const html = [`<li><a href="#${h.id}">${h.innerHTML}</a>`, '</li>']
         if (plv === lv) {
           closeLast(lv)
           chain[lv].push(html)

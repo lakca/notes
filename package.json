@@ -2,10 +2,16 @@
   "name": "notes",
   "version": "1.0.0",
   "dependencies": {
+    "@babel/core": "^7.16.7",
+    "gulp": "^4.0.2",
+    "gulp-babel": "^8.0.0",
+    "gulp-stylus": "^2.7.1",
+    "gulp-terser": "^2.1.0",
     "lodash.startcase": "^4.4.0",
     "moment": "^2.29.1"
   },
   "devDependencies": {
+    "@types/node": "^17.0.8",
     "chalk": "^4.1.0",
     "highlight.js": "^10.1.2",
     "marked": "^1.1.1"
