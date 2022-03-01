@@ -88,7 +88,7 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
 - Rust 语言版本：[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)
 - 如何用 Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
-- 如何用 Rust 编译 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
+- 如何用 Rust 和 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
 - 如何用 Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
 - 如何设计 Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines/#rust-api-guidelines)
 - Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
@@ -97,6 +97,25 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 编译错误查询文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
 - Cargo：[The Cargo Book](http://localhost/rust/cargo/index.html#the-cargo-book)
 - Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)
+- Rust 和 WebAssembly：[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
+
+### 非官方
+
+- [Rust 官方文档中文教程](https://rustwiki.org/)
+  - [Rust 程序设计语言](https://rustwiki.org/zh-CN/book)
+  - [通过例子学 Rust](https://rustwiki.org/zh-CN/rust-by-example)
+  - [rustlings](https://github.com/rust-lang-cn/rustlings-cn)
+  - [Rust 参考手册](https://rustwiki.org/zh-CN/reference)
+  - [Rust 标准库](https://rustwiki.org/zh-CN/std)
+  - [Rust Cookbook](https://rustwiki.org/zh-CN/rust-cookbook)
+  - [Cargo 手册](https://rustwiki.org/zh-CN/cargo)
+  - [Rust 版本指南](https://rustwiki.org/zh-CN/edition-guide)
+  - [rustdoc 手册](https://rustwiki.org/zh-CN/rustdoc)
+  - [rustc 手册](https://rustwiki.org/zh-CN/rustc)
+  - [Rust 编译错误索引表](https://rustwiki.org/zh-CN/error-index)
+  - [Rust 规范文档](https://rustwiki.org/wiki)
+  - [Rust 语言术语中英文对照表](https://rustwiki.org/wiki/translate/english-chinese-glossary-of-rust)
+- [给初学者的Rust中文教程](https://rustcc.gitbooks.io/rustprimer)
 
 ### 常见速查
 
@@ -816,6 +835,8 @@ unix
 - `asmjs-unknown-emscripten`：编译成[*asm.js*](http://asmjs.org/)（*WebAssembly*前身）
 - `wasm32-wasi`：目标环境提供了IO接口。
 
+[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
+
 ### 文件类型（正式）
 
 [`--crate-type`: a list of types of crates for the compiler to emit](https://doc.rust-lang.org/rustc/command-line-arguments.html#--crate-type-a-list-of-types-of-crates-for-the-compiler-to-emit)
@@ -894,23 +915,27 @@ rustc --help | grep '\--emit'
 - 声明类型后，变量可不初始化；
 
 ```rust
-// 声明类型
+// 完整声明变量
 let foo: &str = "hello";
 
-// 声明类型后初始化不是必要的
+// 初始化不是必要的
 let mut bar: &str;
+
+// 也可由初始化自动推断类型
+let x;
+x = 1; // i32
+
+let foo = 1; // i32
 
 // 变量遮蔽（Shadowing）：声明同名变量
 let foo = foo.len(); // usize
 
-// 类型推断（Infer）
-let foo = 1; // i32
-
-// 变量默认不可变（Immutable）
+// 变量默认不可变
 let foo = 1;
 
 // 可变变量（Mutable）
 let mut foo = 2;
+
 ```
 
 ## 常量
@@ -928,7 +953,7 @@ const MAX: u8 = 100;
 
 - 存活于程序运行全程；
 
-# 内存管理
+# 内存管理（Memory Management）
 
 ## 有效性
 
@@ -947,17 +972,34 @@ let a = "ha"; //声明新的 a 的时候，Rust 可以判定旧的 a 已失效
 println!("{}", a);
 ```
 
-## 所有权
+## 所有权（Ownership）
 
-> 与在运行过程中手动释放（*free*）或由垃圾回收器（*Garbage Collector*）自动回收内存机制不同，Rust 通过在编译时的*所有权*（*Ownership*）检查机制来自动管理内存。
->
+> 与手动释放内存（*manully free*）或垃圾回收（*Garbage Collection*）不同，Rust 通过在**编译时的所有权（*Ownership*）检查机制**来保证能够在运行时自动释放内存，这种机制没有任何运行时的额外开销。
 > *In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*
 
 |         官方文档示例          |
 | :---------------------------: |
 | ![ownership](./ownership.svg) |
 
-*Rust* 并没有采用手动释放内存或者垃圾回收机制（Garbage Collection）来处理内存回收问题，而是结合了二者的优点，选择了一种既可以及时又能够自动的内存释放机制：所有值（*Value*）都由一个所有者（*Owner*）标记，当所有者（*Owner*）的有效域（*Scope*）结束时，那么这个值（*Value*）便会被自动清理掉。
+如图，在*Rust*中所有值（*Value*）**都有且只有一个**所有者（*Owner*）标记。
+
+与C语言等的传统指针不同的是，所有者指针是强单向绑定的，即指针指向的内存（语言规范，由编译器限制）必须依赖指针而存在，一旦指针生命周期结束了（作用域失效了），该块内存便被释放，这一机制是由编译器保障的。
+
+```rust
+fn main() {
+	{
+		let x = 1;
+	}
+}
+```
+```rust{3}
+fn main() {
+	{
+		let x = 1;
+		drop();
+	}
+}
+```
 
 1. 所有者（*Owner*），就是指向该值的变量（*Variable*）。
 
@@ -976,15 +1018,13 @@ println!("{}", a);
 
 - 当 *Owner* 超出其 *Scope* 时，*Value* 会被删除；
 
-所有权移交（*Move*）：
+### 移交（Move）
 
-  - 变量间赋值
-
-  - 函数参数
-
-  - 函数返回
-
-  - 模式匹配（`match`，`if let`等）
+- 变量赋值
+- 传入函数
+- 函数返回
+- 模式匹配（`match`，`if let`等）
+- ......
 
 P.S. 函数可以理解为调用和结束时有两个赋值操作，调用时值传入给内部变量并转入所有权，结束时可以返回值（交出所有权）。
 
@@ -1029,9 +1069,7 @@ fn demo3(a: String) -> String {
 }
 ```
 
-### 移交
-
-### 借用
+### 借用（Borrow）
 
 \* 以下所提及的 **赋值** 都是指的广义的赋值，包括等号赋值（*assignment*）、传递函数参数（*argument passing*）、函数返回（*function returning*）、模式匹配（*matching*）等涉及到内存拷贝的操作。
 
@@ -1058,7 +1096,9 @@ println!("{}", c);
 
 创建引用时，我们在栈中存储了一个指针指向一个值（*Value*），该指针在未被使用前，即没有操作柄（*Handle*），无法改变最终指向的值（*Value*），反之，值（*Value*）被其他 操作柄（*Handle*）改变时，就该指针而言也没有可影响的操作柄（*Handle*），此时该指针不是有效存在的。只有在该指针被使用（*Value Borrowed*）后，双方的操作柄（*Handle*）才会互相影响。
 
-## 悬空引用
+## 引用（Reference）
+
+### 悬空引用（Dangling Reference）
 
 > 所谓悬空引用（*dangling reference*），即引用的变量的作用域结束后，该引用仍被使用。
 > 注意，这是一个错误的用法。
@@ -1082,6 +1122,12 @@ fn demo() -> &'static str {
   s
 }
 ```
+
+## 生命周期（Lifetime）
+
+> 由于存在
+
+### 生命周期省略规则（Lifetime Elision）
 
 ## 字符串切片
 
