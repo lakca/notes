@@ -19,7 +19,7 @@ date: 2020-09-16T03:04:17.021Z
 
 ### `$@`-以独立字符串表示所有变量
 
-```shell
+```bash
 function demo() {
   # good:
   demo2 "$@" # empty string also included
@@ -54,7 +54,7 @@ demo 1 2 ' ' ''
 
 ### `${!}`-通过变量获取变量
 
-```shell
+```bash
 ver='v1.0'
 var='ver'
 # bash:
@@ -65,7 +65,7 @@ echo ${(P)var}
 
 ### `$OPTIND`-当前变量索引
 
-```shell
+```bash
 arg1=$1
 arg2=$2
 arg1and2=${@:1:2}
@@ -76,7 +76,7 @@ arg2=${!OPTIND}
 
 ### `declare`
 
-```shell
+```bash
 foo='bar'
 declare $foo='Emma Delgado'
 echo $bar
@@ -84,7 +84,7 @@ echo $bar
 
 ### `eval`
 
-```shell
+```bash
 foo='bar'
 eval $foo='天塌下来你先顶着，我去找根棍子。'
 echo $bar
@@ -92,7 +92,7 @@ echo $bar
 
 ### `read`
 
-```shell
+```bash
 foo='bar'
 read -r -d '' $foo <<< 'Estelle Estrada'
 echo "$bar"
@@ -107,7 +107,7 @@ echo "$bar"
 
 > `${parameter}` 与  `$parameter` 相同，在某些情况下可以避免引号嵌套的烦恼。
 
-```shell
+```bash
 a=hello
 b=world
 c=${a}-${b}
@@ -119,7 +119,7 @@ c2="$a-$b"
 > `${:-}`（非严格判断），当变量为空（包括空字符串`''`）时，返回右侧值。
 > `${-}`（严格判断），当变量未声明时，返回右侧值。
 
-```shell
+```bash
 function greet() {
   echo ${1:-hello}, everyone
   echo ${1-hello}, everyone
@@ -139,7 +139,7 @@ greet ''
 
 > 与 `${:-}`（非严格判断）， 和 `${-}`（严格判断），不同的是，操作符左侧的变量会被赋值。
 
-```shell
+```bash
 a=''
 ${a:=hello}
 echo $a
@@ -157,7 +157,7 @@ echo $a
 
 > 与 `${:-}`（非严格判断）， 和 `{-}`（严格判断）作用相对：如果变量被设置了值，则使用替换值。
 
-```shell
+```bash
 function greet() {
   echo ${1:+hello}, everyone
   echo ${1+hello}, everyone
@@ -178,24 +178,24 @@ greet ''
 > 如果变量不存在则使用操作符右侧信息报错。
 > 注意，两者的区别与前几个表现相反：`${?}` 是严格判断，`${:?}`是非严格判断。
 
-```shell
+```bash
 foo=''
 bar=${foo:?foo required} # exit 1 with 'parameter required'
 ```
-```shell
+```bash
 foo=''
 bar=${foo?foo required} # exit 0
 ```
-```shell
+```bash
 bar=${foo:?foo required} # exit 1 with 'parameter required'
 ```
-```shell
+```bash
 bar=${foo?foo required} # exit 1 with 'parameter required'
 ```
 
 ### `${:}`,`${::}`-切割变量
 
-```shell
+```bash
 function demo() {
   echo "${@:1:1}"
   echo "${@:1:2}"

@@ -35,7 +35,7 @@ date: 2021-04-14T07:51:27.822Z
 
 1. 通过 `sips` 生成不同大小 `png` 文件，放在同一文件夹
 
-```sh
+```bash
 sips -z 16 16     icon.png --out iconset/icon_16x16.png
 sips -z 32 32     icon.png --out iconset/icon_16x16@2x.png
 sips -z 32 32     icon.png --out iconset/icon_32x32.png
@@ -50,7 +50,7 @@ sips -z 1024 1024 icon.png --out iconset/icon_512x512@2x.png
 
 2. 通过 `iconutil` 使用上述 `png` 生成 `icns` 文件
 
-```sh
+```bash
 iconutil -c icns iconset -o logo.icns
 ```
 
@@ -103,7 +103,7 @@ with Image.open('icon.png') as icon:
 
 `cairosvg`：
 
-```sh
+```bash
 # 安装 cairosvg
 pip install cairosvg
 

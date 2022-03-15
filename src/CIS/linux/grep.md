@@ -54,7 +54,7 @@ date: 2021-06-04T03:42:03.777Z
 
 常见用法示例：
 
-```sh
+```bash
 grep --exclude-dir={node_modules,dist} -onr <pattern> .
 grep --exclude-dir={node_modules,dist,lib} --exclude={'*.md','*.d.ts'} --line-buffered -nr '\bpause' node_modules/@antv
 ```

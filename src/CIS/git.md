@@ -3,84 +3,6 @@ title: Git
 date: 2021-03-22T07:01:30.074Z
 ---
 
-- [Git](#git)
-- [前言](#前言)
-- [基本概念](#基本概念)
-  - [简化的git的工作过程](#简化的git的工作过程)
-  - [工作区（working directory / working tree）](#工作区working-directory--working-tree)
-  - [索引区 (index / staging area)](#索引区-index--staging-area)
-  - [本地仓库 (repository)](#本地仓库-repository)
-  - [引用（`refs`）](#引用refs)
-  - [头（`HEAD`）](#头head)
-- [常用子命令](#常用子命令)
-  - [`add`](#add)
-    - [基础用法：](#基础用法)
-    - [过滤（Filter）](#过滤filter)
-    - [其他：](#其他)
-  - [`commit`](#commit)
-    - [常见用法：](#常见用法)
-  - [`amend`](#amend)
-    - [常见用法：](#常见用法-1)
-  - [`push`](#push)
-  - [`log`](#log)
-    - [基础用法：](#基础用法-1)
-    - [指定范围（Scope/Filter）](#指定范围scopefilter)
-    - [格式化（Format）](#格式化format)
-    - [筛选内容（Commit Content Filter）](#筛选内容commit-content-filter)
-  - [* `shortlog`（根据提交人分组统计提交）](#-shortlog根据提交人分组统计提交)
-  - [* `rev-list`（列出某个提交中的对象）](#-rev-list列出某个提交中的对象)
-  - [`diff`](#diff)
-    - [常见用法](#常见用法-2)
-    - [指定范围（Scope/Filter）](#指定范围scopefilter-1)
-    - [格式化（Format）](#格式化format-1)
-  - [`tag`](#tag)
-    - [常见用法](#常见用法-3)
-    - [标签签名（Sign）](#标签签名sign)
-  - [`branch`](#branch)
-    - [常见用法](#常见用法-4)
-  - [`blame`](#blame)
-    - [（`blame`）blame指定的文件行：`git blame -L <start>,<end> <filename>`](#blameblame指定的文件行git-blame--l-startend-filename)
-  - [`rm`](#rm)
-    - [（`rm`）`unstage`文件：`git rm —cached`](#rmunstage文件git-rm-cached)
-    - [（`rm`）`delete`文件：`git rm -f`](#rmdelete文件git-rm--f)
-    - [（`rm`）支持递归：`git rm -r`](#rm支持递归git-rm--r)
-  - [`ls-files`](#ls-files)
-    - [常用选项：](#常用选项)
-    - [（`ls-files`）列出未被跟踪的（`untracked`）文件：`git ls-files --others --exclude-standard`](#ls-files列出未被跟踪的untracked文件git-ls-files---others---exclude-standard)
-    - [（`ls-files`）列出忽略的（`ignored`）文件：`git ls-files --ignored --exclude-standard`](#ls-files列出忽略的ignored文件git-ls-files---ignored---exclude-standard)
-  - [`update-index`](#update-index)
-    - [`git update-index --assume-unchanged/--no-assume-unchanged <file>`](#git-update-index---assume-unchanged--no-assume-unchanged-file)
-    - [`git update-index --skip-worktree/--no-skip-worktree <file>`](#git-update-index---skip-worktree--no-skip-worktree-file)
-  - [`config`](#config)
-    - [基础用法](#基础用法-2)
-    - [列出配置项及其来源文件：`git config -l --show-origin`](#列出配置项及其来源文件git-config--l---show-origin)
-    - [配置编辑器：`core.editor`](#配置编辑器coreeditor)
-    - [配置认证信息存储的其他位置：`credential.helper`](#配置认证信息存储的其他位置credentialhelper)
-    - [配置认证时的默认用户名：`credential.username`](#配置认证时的默认用户名credentialusername)
-    - [配置认证信息是否因url路径不同而不同：`credential.useHttpPath`](#配置认证信息是否因url路径不同而不同credentialusehttppath)
-    - [对指定url配置认证信息：`credential.<url>.*`](#对指定url配置认证信息credentialurl)
-    - [配置创建tag时是否创建reflog记录（create reflog for tag）：`core.logallrefupdates`](#配置创建tag时是否创建reflog记录create-reflog-for-tagcorelogallrefupdates)
-  - [更多技巧](#更多技巧)
-    - [获取git项目根目录](#获取git项目根目录)
-    - [不检测指定文件变动](#不检测指定文件变动)
-    - [`git update-index --skip-worktree <file>`](#git-update-index---skip-worktree-file)
-- [Advanced](#advanced)
-  - [`cat-file`](#cat-file)
-  - [`archive`](#archive)
-  - [`instaweb`](#instaweb)
-  - [`gc`](#gc)
-- [Startup](#startup)
-- [Workflow](#workflow)
-- [Inspection](#inspection)
-- [Branch](#branch-1)
-- [Sharing](#sharing)
-- [Debugging](#debugging)
-- [Administration](#administration)
-- [Github](#github)
-- [API](#api)
-
-# Git
-
 # 前言
 
 1. 以下所有内容基本都可以在[官方英文文档](officialDoc)找到，若感觉到有描述不清晰的地方，建议通过查看[官方英文文档](officialDoc)以了解准确含义。
@@ -109,12 +31,12 @@ date: 2021-03-22T07:01:30.074Z
 
 > 对应的是`.git/objects`文件夹，存储了本地的所有提交。
 
-## 引用（`refs`）
+## 引用（refs）
 
 > 引用，相当于是给特定的`commit`对象取的别名，引用指向该`commit`。
 > 引用实例存储在`.git/refs`文件夹下面，包括`heads`、`tags`、`remotes`，分别对应着本地分支、标签和远程分支。
 
-## 头（`HEAD`）
+## 头（HEAD）
 
 > `HEAD`即当前所在的引用（各个引用可以通过`git checkout`来切换）。
 
@@ -122,13 +44,13 @@ date: 2021-03-22T07:01:30.074Z
 
 > 所有命令用法均可以通过`git <command> --help`查看详情，或者[官网](officialSite)查询。
 
-## `add`
+## add
 
 > Add file contents to the index.
 
-### 基础用法：
+基础用法：
 
-```sh
+```bash
 git add <files>
 
 # 交互式添加文件：
@@ -140,8 +62,9 @@ git add <files>
 -n, --dry-run
 ```
 
-### 过滤（Filter）
-```sh
+过滤：
+
+```bash
 
 # excluding ignored：
 -A, --all, --no-ignore-removal
@@ -153,19 +76,20 @@ git add <files>
 -f，--force
 ```
 
-### 其他：
+其他：
 
-```sh
+```bash
 # 修改 staging area 中文件的可执行（executable）属性，本地属性不会变：
 --chmod=(+|-)x
 ```
 
-## `commit`
+## commit
 
 > Record changes to the repository.
 
-### 常见用法：
-```sh
+常见用法：
+
+```bash
 # 提交所有跟踪过（tracked）的文件：
 -a, --all
 
@@ -177,81 +101,99 @@ git add <files>
 -c <commit>, --reuse-message=<commit>
 ```
 
-## `amend`
+## amend
 
-### 常见用法：
-```sh
+常见用法：
+
+```bash
 # 不打开编辑器编辑提交信息：
 --no-edit
 ```
 
-## `push`
+## push
 
 > Update remote refs along with associated objects.
 
-## `log`
+## log
 
 > list all commit logs.
-
 > 下列所涉及的 `pattern` 均指 `glob pattern`；
 
-### 基础用法：
-
-```sh
-# all commit logs：
-git log
-
-# show diff；
--p, -u, --patch
-
-# specify path：
-git log <path>
-
-# specify lines of file：
--L <start>,<end>:<filename>
-
-# specify refs, commit：
-git log <A>..<B> # 包括 A，不包括 B
-git log <A>...<B> # 包括 A 和 B
-git log ^<A> # 不包括 A
+```bash
+git log [<options>] [<revision range>] [[--] <path>...]
 ```
 
-### 指定范围（Scope/Filter）
+指定路径（文件、文件夹）：
 
-```sh
+```bash
+<path>
+```
 
-# 指定文件行（lines）：
--L <start>,<end>:<filename>
+指定文件行区间：
 
-# 指定commit：
-git log <commit1>..<commit2>
-git log <commit1>...<commit2>
-git log ^commit
+```bash
+# 指定开始和结束的绝对行号
+-L <start>,<end>:<file>
 
-# 指定数量：
--<number>, -n <number>, --max-count=<number>
+git log -L 1,10:test.sh # 查找test.sh有修改第1到第10行的log
+
+# 指定开始行号和总行数
+-L <start>,<+count>:<file> # 向后数
+-L <start>,<-count>:<file> # 向前数
+
+git log -L 1,+10:test.sh # 查找test.sh有修改从第1开始总共10行的log。
+
+# start和end也可以是正则表达式
+-L </regex/>,</regex/>:<file>
+
+git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/echo/的行开始总共10行的log
+```
+
+指定引用（提交）区间：
+
+```bash
+<A>..<B> # 包括 A，不包括 B
+<A>...<B> # 包括 A 和 B
+^<A> # 不包括 A
+```
+
+指定日志数量：
+
+```bash
+# 限制最多输出的log数
+-<number>
 
 # 跳过数量：
 --skip=<number>
+```
 
+匹配文本内容：
+
+```bash
+-S<string>
+-G<regex>
+-S<string> --pickaxe-regex
+```
+
+匹配作者信息：
+
+```bash
 # 指定作者/提交人
 --author=<pattern>
 --committer=<pattern>
+```
 
+匹配提交时间：
+
+```bash
 # 指定时间：
 --since=, --after=
 --until=, --before=
+```
 
-# 指定父级提交的数量：
---min-parents=<number>
---max-parents=<number>
-# 指定merge类型的commit：
---merges
---min-parents=2
-# 指定非merge类型的commit：
---no-merges
---max-parents=1
+匹配*commit message*：
 
+```bash
 # 匹配 commit message，其中pattern可以且默认为正则表达式：
 --grep=<pattern> ...
 # （reflog）匹配 commit message：
@@ -266,7 +208,11 @@ git log ^commit
 --invert-grep
 # 同时匹配所有pattern：
 --all-match
+```
 
+匹配各种引用（分支、标签等）的message：
+
+```bash
 # 指定refs：
 --glob[=<pattern>]
 # 排除refs：
@@ -279,9 +225,51 @@ git log ^commit
 --remotes[=<pattern>]
 ```
 
-### 格式化（Format）
+指定父子关系数量：
 
-```sh
+```bash
+# 指定父级提交的数量：
+--min-parents=<number>
+--max-parents=<number>
+# 指定merge类型的commit：
+--merges
+--min-parents=2
+# 指定非merge类型的commit：
+--no-merges
+--max-parents=1
+
+```
+
+筛选内容：
+
+```bash
+# 筛选提交内容的变动类型：
+--diff-filter=[(A|C|D|M|R|T|U|X|B)…​[*]]
+# 分别对应 Added, Copied, Deleted, Modified, Renamed, Changed（`T`）, unmerged, unknown（`X`）, pairing broken（`B`）；
+# 也可以组合使用：
+--diff-filter=DM
+
+# 使用单词级别的diff：
+--word-diff[=color|plain|porcelain|none]
+# color：通过颜色来标记删减；
+# plain：通过[-removed-]和{+added+}格式来标记；
+# porcelain：通过将变动的部分单独成行来标记；
+# none：不显示单词级别diff；
+
+# （如何）显示子模块的提交内容：
+--submodule[=short|log|diff]
+```
+
+其他：
+
+```bash
+# 显示 bytes of commit message
+git log --log-size
+```
+
+格式化：
+
+```bash
 # 指定每条日志的整体格式：
 --pretty=oneline|short|medium|full|fuller|reference|email|raw|format:<string>|tformat:<string>
 # 一些常用的预先定义的格式：
@@ -321,66 +309,126 @@ git log ^commit
 
 ```
 
-### 筛选内容（Commit Content Filter）
+## shortlog（根据提交人分组统计提交）
 
-```sh
-# 筛选提交内容的变动类型：
---diff-filter=[(A|C|D|M|R|T|U|X|B)…​[*]]
-# 分别对应 Added, Copied, Deleted, Modified, Renamed, Changed（`T`）, unmerged, unknown（`X`）, pairing broken（`B`）；
-# 也可以组合使用：
---diff-filter=DM
+## rev-list（列出某个提交中的对象）
 
-# 使用单词级别的diff：
---word-diff[=color|plain|porcelain|none]
-# color：通过颜色来标记删减；
-# plain：通过[-removed-]和{+added+}格式来标记；
-# porcelain：通过将变动的部分单独成行来标记；
-# none：不显示单词级别diff；
-
-# （如何）显示子模块的提交内容：
---submodule[=short|log|diff]
-```
-
-## * `shortlog`（根据提交人分组统计提交）
-
-## * `rev-list`（列出某个提交中的对象）
-
-## `diff`
+## diff
 > Show changes between commits, commit and working tree, etc.
 
-### 常见用法
+将工作区（*tracked but not added*）与指定提交做对比：
 
-```sh
-# 包括 added 文件：
---cached
+```bash
+git diff <commit=HEAD>
 ```
 
-### 指定范围（Scope/Filter）
-```sh
-# 筛选变动类型
---diff-filter=<A,C,D,M,R,T,U,X,B>
+将暂存区（*added*）与指定提交做对比：
+
+```bash
+git diff --cached <commit=HEAD> # 或
+git diff --staged <commit=HEAD>
+
+# 暂存区对比HEAD~3，这将会包括HEAD~1,HEAD~2中的提交
+git diff --cached HEAD~3
+```
+
+对比任意两个对象：
+
+```bash
+git diff <commit> <commit> # 或
+git diff <commit>..<commit>
+
+# 对比两个对象之间的区别
+git diff HEAD..origin/master
+```
+
+对比文件系统中的任意路径：
+
+```bash
+git diff --no-index <path> <path>
+git diff <path> <path> # 当path不都同属于一个git项目时，--no-index可以省略
+```
+
+只对比子目录中的文件：
+```bash
+git diff --relative[=<path>]
+```
+
+显示文件夹的变动比例：
+
+```bash
+git diff --dirstat
+```
+
+过滤变动类型：
+
+```bash
+git diff --diff-filter=<A,C,D,M,R,T,U,X,B>
 # added, copied, deleted, modified, rename, changed (T), umerged, unknown (X), have pairing Broken (B)
 ```
 
-### 格式化（Format）
-```sh
---name-only
---status-only
---name-status
---compact-summary
---numstat
---shortstat
+过滤文本内容：
+
+```bash
+git diff -S<string>
+git diff -G<regex>
+git diff -S<string> --pickaxe-regex # 将string看作扩展POSIX正则表达式
+# 显示上述匹配到内容所在的改变的整个块
+--pickaxe-all
 ```
 
-## `tag`
+其他：
+
+```bash
+# 把所有文件当成文本文件
+--text, -a
+
+--no-color
+--color
+
+# 反向对比
+-R
+
+--ignore-cr-at-eol
+--ignore-space-at-eol
+--ignore-space-change, -b
+--ignore-all-space, -w
+--ignore-blank-lines
+```
+
+格式化：
+```bash
+--shortstat
+# 9 files changed, 141 insertions(+), 73 deletions(-)
+--name-only
+# src/.obsidian/community-plugins.json
+# src/.obsidian/graph.json
+# ...
+--name-status
+# M src/.obsidian/community-plugins.json
+# D src/.obsidian/graph.json
+# ...
+--numstat
+# 3 4 src/.obsidian/community-plugins.json
+# 0 11 src/.obsidian/graph.json
+# ...
+--compact-summary
+# src/.obsidian/community-plugins.json | 7 ++--
+# src/CIS/rust/main.c                  | 11 -------
+# ...
+# 9 files changed, 139 insertions(+), 72 deletions(-)
+--summary
+```
+
+## tag
 
 > Create, list, delete or verify a tag object signed with GPG.
 
 1. * 使用GPG签名创建的tag，若没有该签名私钥，其他用户是不能修改的；对于正式版本，使用签名可以相对保持版本安全；关于GPG签名及密钥生成，自行搜索了解即可；
 
-### 常见用法
+常见用法：
 
-```sh
+```bash
 # list:
 git tag
 git tag -l|--list
@@ -408,9 +456,9 @@ git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
 --no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
 ```
 
-### 标签签名（Sign）
+标签签名（Sign）：
 
-```sh
+```bash
 # 使用  the default e-mail address’s key 作为密钥签名创建tag：
 -s, --sign
 # 使用GPG密钥签名创建tag：
@@ -421,10 +469,10 @@ git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
 -v, --verify
 ```
 
-## `branch`
+## branch
 
-### 常见用法
-```sh
+常见用法：
+```bash
 # 创建
 git branch <name> # = git branch <name> HEAD
 git branch <name> <start-point: a commit|tag|branch>
@@ -461,27 +509,40 @@ git branch <name> <start-point: a commit|tag|branch>
 --no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
 ```
 
-## `blame`
+## blame
 
-### （`blame`）blame指定的文件行：`git blame -L <start>,<end> <filename>`
+blame指定的文件行：
 
-## `rm`
+`git blame -L <start>,<end> <filename>`
 
-### （`rm`）`unstage`文件：`git rm —cached`
-> 将文件从`staging area`移除，但不删除文件，文件将变成`untracked`状态；
+## rm
 
-### （`rm`）`delete`文件：`git rm -f`
-> 既将文件从`staging area`移除，也同时从文件系统中删除文件；
+将文件从`staging area`移除，但不删除文件，文件将变成`untracked`状态：
 
-### （`rm`）支持递归：`git rm -r`
+```bash
+git rm —cached
+```
 
-## `ls-files`
+将文件从`staging area`和文件系统中同时删除：
+
+```bash
+git rm -f
+```
+
+递归：
+
+```bash
+git rm -r
+```
+
+## ls-files
 
 > 用于列出`working directory`和`staging area`中的文件；
 > 相较于`git status`，作用更为单纯，尤其适合在脚本中使用；
 
-### 常用选项：
-```sh
+常用选项：
+
+```bash
 # 使用相对git项目根目录的路径列出，默认是相对于当前目录的；
 --full-name
 
@@ -515,85 +576,142 @@ git ls-files ':!:*.md'
 --exclude-per-directory=<file>
 ```
 
-### （`ls-files`）列出未被跟踪的（`untracked`）文件：`git ls-files --others --exclude-standard`
+列出未被跟踪的（`untracked`）文件：
 
-### （`ls-files`）列出忽略的（`ignored`）文件：`git ls-files --ignored --exclude-standard`
+```bash
+git ls-files --others --exclude-standard
+```
 
-## `update-index`
+列出忽略的（`ignored`）文件：
+
+```bash
+git ls-files --ignored --exclude-standard
+```
+
+## update-index
+
 > Register file contents in the working tree to the index.
 
-### `git update-index --assume-unchanged/--no-assume-unchanged <file>`
-> mark/unmark files as "not changing".
+将文件标记成*not changing*：
+
+```bash
+git update-index --assume-unchanged/--no-assume-unchanged <file>
+```
 
 > `Assume-unchanged bit`: the user promises not to change the file and allows Git to assume that the working tree file matches what is recorded in the index.
 
-### `git update-index --skip-worktree/--no-skip-worktree <file>`
-> mark/unmark files as "index-only".
+将文件标记成*index-only*：
+
+```bash
+git update-index --skip-worktree/--no-skip-worktree <file>
+```
 
 > `Skip-worktree bit`: When reading an entry, if it is marked as skip-worktree, then Git pretends its working directory version is up to date and read the index version instead.
 
-## `config`
+## config
 
 ### 基础用法
-```sh
-# 列出配置
--l, --list
-# 设置值
-<name> <value>
-# 获取值
---get <name> [value_regexp] # 当有多行该配置，返回最后一个；
---get-all <name> [value_regexp] # 当有多行该配置，返回所有的；
---get-regexp <name_regexp> [value_regexp] # name使用正则表达式；
-# 新添一行配置，不会覆盖已存在的配置：
---add <name> <value>
-# 编辑配置文件：
--e, --edit
-# 移除一行/多行配置
---unset <name> [value_regexp]
---unset-all <name> [value_regexp] # 匹配模式
 
-# 指定配置值的类型：
---bool
---int
---bool-or-int
---path
---expiry-date
+指定配置文件：
 
-# 指定配置文件
-
-# 项目配置（.git/config）
+```bash
+# 仓库配置文件（.git/config）
 --local
-# 用户配置（~/.gitconfig）
+# 用户配置文件（~/.gitconfig）
 --global
-# 系统配置（$(prefix)/etc/gitconfig）
+# 系统配置文件（$(prefix)/etc/gitconfig）
 --system
 # 具体配置文件：
 -f <file>, --file <file>
-
-# 同时显示配置项的来源：
---show-origin # 来源文件
---show-scope # 来源类型，local, global, system
-# 只显示配置名称：
---name-only
 ```
 
-### 列出配置项及其来源文件：`git config -l --show-origin`
+列出配置：
 
-### 配置编辑器：`core.editor`
-> 比如使用`git config code.editor 'code --wait'`配置成 vscode，其中引号部分为编辑器的打开命令；
+```bash
+-l, --list
 
-### 配置认证信息存储的其他位置：`credential.helper`
+# 显示配置项的来源文件
+--show-origin
+
+# 来源类型，local, global, system
+--show-scope 
+
+# 只显示配置名称
+--name-only
+
+git config -l --show-origin # 列出配置项及其来源文件
+```
+
+获取配置：
+
+```bash
+--get <name> [<value_regexp>] # 当有多行该配置，返回最后一个；
+--get-all <name> [<value_regexp>] # 当有多行该配置，返回所有的；
+--get-regexp <name_regexp> [<value_regexp>] # name使用正则表达式；
+```
+
+编辑配置项：
+
+```bash
+# 设置配置项，会直接在旧有配置行（多个的话第一个）上修改
+<name> <value>
+
+# 设置配置项，替换所有该配置出现的行
+<name> <value> --replace-all
+
+# 设置配置项，会直接新添一行配置，不修改原有行
+--add <name> <value>
+
+# 移除一行/多行配置
+--unset <name> [<value_regexp>]
+--unset-all <name> [<value_regexp>] # 匹配模式
+
+# 指定配置项的属性
+--type <bool|int|bool-or-int|path|expiry-date>
+
+# 直接打开配置文件进行编辑：
+-e, --edit
+```
+
+常见配置：
+
+```ini
+[user]
+name = foo
+email = foo@bar.com
+
+[core]
+editor = code --wait
+
+[credential]
+helper = store
+
+[http]
+proxy = http://localhost:1080
+
+[https]
+proxy = https://localhost:1080
+
+[pager]
+branch = false
+log = false
+```
+
+配置认证信息存储的其他位置：`credential.helper`
+
 > 如本地文件`git config credential.helper store`，配置存储在`~/.git-credentials`，配置内容如`https://username:password@domain`
 
-### 配置认证时的默认用户名：`credential.username`
+配置认证时的默认用户名：`credential.username`
 
-### 配置认证信息是否因url路径不同而不同：`credential.useHttpPath`
+配置认证信息是否因url路径不同而不同：`credential.useHttpPath`
+
 > 当该项为（默认为）false时，对于同一个origin，使用的是相同的认证信息；
 
-### 对指定url配置认证信息：`credential.<url>.*`
+对指定url配置认证信息：`credential.<url>.*`
+
 > 所有`credential.*`都可以配置；
 
-### 配置创建tag时是否创建reflog记录（create reflog for tag）：`core.logallrefupdates`
+配置创建tag时是否创建reflog记录（create reflog for tag）：`core.logallrefupdates`
 
 ## 更多技巧
 
@@ -608,7 +726,7 @@ git ls-files ':!:*.md'
 
 # Advanced
 
-## `cat-file`
+## cat-file
 > Provide content or type and size information for repository objects(`blob`, `tree`, `commit`, `tag`), files are located in `.git/objects`
 
 `-p`: print content.
@@ -617,13 +735,17 @@ git ls-files ':!:*.md'
 
 `-t`: object type (`blob`,`tree`,`commit`,`tag`)
 
-## `archive`
+## archive
 > Create an archive of files from a named tree.
 
-## `instaweb`
+## rev-list
+
+## rev-parse
+
+## instaweb
 > Instantly browse your working repository in gitweb, `git instaweb --httpd=python`.
 
-## `gc`
+## gc
 > Clean up unnecessary files and optimize the local repository.
 
 

@@ -116,6 +116,7 @@ date: 2021-04-19T11:13:31.973Z
   - [Rust 规范文档](https://rustwiki.org/wiki)
   - [Rust 语言术语中英文对照表](https://rustwiki.org/wiki/translate/english-chinese-glossary-of-rust)
 - [给初学者的Rust中文教程](https://rustcc.gitbooks.io/rustprimer)
+- [The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html), [Rust宏小册 中文版](https://www.bookstack.cn/read/DaseinPhaos-tlborm-chinese/README.md)
 
 ### 常见速查
 
@@ -453,7 +454,7 @@ native = { path = "native/x86_64" }
 
 - `cargo clippy`：检查代码质量和风格（类似 *eslint*）；由 [*rust-clippy*](https://github.com/rust-lang/rust-clippy) （`rustup component add clippy`）组件实现；
 
-```shell
+```bash
 cargo clippy --fix
 cargo clippy --no-deps
 ```
@@ -524,7 +525,7 @@ exclude = [
 	- 该命令不会删除任何源文件（所以若上传了密码等机密信息只能重置它们）。
 	- 如果撤销的版本已经在其他项目的*Cargo.lock*（可以看到*checksum*字段）中存在，这些项目仍将使用撤销的版本。
 
-```shell
+```bash
 cargo yank --vers 1.1.0
 cargo yank --vers 1.1.0 --undo # 取消撤回操作
 ```
@@ -546,7 +547,9 @@ cargo yank --vers 1.1.0 --undo # 取消撤回操作
 - `RUSTC`
 - `CARGO_TARGET_DIR`：生成工件的存放目录，对应配置`build.target-dir`，默认为当前项目的*target*目录
 
-### 工具 
+### 第三方工具
+
+[Third-party-cargo-subcommands](https://github.com/rust-lang/cargo/wiki/Third-party-cargo-subcommands)
 
 - `cargo-cache`：查看和清理cargo缓存
 	
@@ -568,7 +571,7 @@ cargo yank --vers 1.1.0 --undo # 取消撤回操作
 
 查看目前已有的版本：
 
-```shell
+```bash
 rustc --help | grep '\--edition'
 ```
 
@@ -578,7 +581,7 @@ rustc --help | grep '\--edition'
 [package]
 edition = 2018
 ```
-```shell
+```bash
 rustc --edition 2018
 ```
 
@@ -596,7 +599,7 @@ Rust官方工具链对外发布有三种[渠道（*channel*）](https://doc.rust
 
 查看已安装的版本：
 
-```shell
+```bash
 rustup toolchain list
 ```
 ```plain
@@ -605,7 +608,7 @@ stable-x86_64-apple-darwin (default)
 
 安装[其他版本工具链](https://rust-lang.github.io/rustup/concepts/toolchains.html#toolchain-specification)：
 
-```shell
+```bash
 # 版本格式：<channel>[-<date>][-<host>]
 
 rustup toolchain install stable
@@ -620,20 +623,20 @@ rustup toolchain install 1.42.1
 
 切换全局（默认）工具链：`rustup default`
 
-```shell
+```bash
 rustup default stable
 ```
 
 也可以在项目中配置特定工具链：`rustup override`
 
-```shell
+```bash
 cd /path/to/project
 rustup override set nightly
 ```
 
 当工具链不是由*Rustup*进行维护时，你也可以将这些以其他方式添加的工具链加入*Rustup*：
 
-```shell
+```bash
 rustup toolchain link my-toolchain path/to/my-toolchain
 ```
 
@@ -725,13 +728,13 @@ fn main() {
 
 *rustc*默认即支持交叉编译：
 
-```shell
+```bash
 rustc --target=aarch64-apple-ios
 ```
 
 查看*rustc*支持的目标平台：
 
-```shell
+```bash
 rustc --print target-list
 ```
 ```plain
@@ -744,7 +747,7 @@ aarch64-apple-ios
 
 查看所有可用平台（标准库）：
 
-```shell
+```bash
 rustup target list
 ```
 ```plain
@@ -754,7 +757,7 @@ aarch64-apple-ios
 x86_64-apple-darwin (installed)
 ...
 ```
-```shell
+```bash
 rustup target list --installed
 ```
 ```plain
@@ -763,7 +766,7 @@ x86_64-apple-darwin (installed)
 
 添加目标平台（标准库）：
 
-```shell
+```bash
 # 当前工具链
 rustup target add aarch64-apple-ios
 # 指定工具链
@@ -826,22 +829,15 @@ unix
 
 更多可见[Rust官方支持的目标编译平台](https://rust-lang.github.io/rustup-components-history/)
 
-#### WebAssembly
+#### 编译WebAssembly
 
-*Rust*目前提供了四种*WebAssembly*工具链，分别对应了不同的运行时：
-
-- `wasm32-unknown-unknown`：*Rust*专用的*WebAssembly*编译器，运行在没有IO接口（如浏览器等）的环境。
-- `wasm32-unknown-emscripten`：使用[*emscripten*](https://github.com/kripken/emscripten)编译，在项目依赖了*C*/*C++*等语言时使用。
-- `asmjs-unknown-emscripten`：编译成[*asm.js*](http://asmjs.org/)（*WebAssembly*前身）
-- `wasm32-wasi`：目标环境提供了IO接口。
-
-[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
+见[WebAssembly](#WebAssembly)
 
 ### 文件类型（正式）
 
 [`--crate-type`: a list of types of crates for the compiler to emit](https://doc.rust-lang.org/rustc/command-line-arguments.html#--crate-type-a-list-of-types-of-crates-for-the-compiler-to-emit)
 
-```shell
+```bash
 rustc --help | grep '\--crate-type'
 ```
 
@@ -855,7 +851,7 @@ rustc --help | grep '\--crate-type'
 
 关于库文件详见：[Linkage - The Rust Reference](https://doc.rust-lang.org/reference/linkage.html)
 
-```shell
+```bash
 rustc --crate-type cdylib
 ```
 
@@ -872,7 +868,7 @@ crate-type = ["cdylib"]
 
 [`--emit`: specifies the types of output files to generate](https://doc.rust-lang.org/rustc/command-line-arguments.html#--emit-specifies-the-types-of-output-files-to-generate)
 
-```shell
+```bash
 rustc --help | grep '\--emit'
 ```
 
@@ -1479,6 +1475,9 @@ assert_eq!(Some(&20), scores.get("Blue"));
 assert_eq!(None, scores.get("Yellow"));
 ```
 
+
+# 空和错误
+
 # 语言基础
 
 ## 变量和项目
@@ -1619,7 +1618,7 @@ fn main() {
  > Note: [No more `extern crate`](https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html#no-more-extern-crate)
  
 直接编译：
-```shell
+```bash
 rustc main.rs --extern hello="path/to/hello"
 ```
 
@@ -2418,6 +2417,59 @@ use std::io::{self as io, stdout as io_stdout};
 ```rust
 pub use B::demo;
 demo();
+```
+
+# WebAssembly
+
+[Game of Life tutorial](https://rustwasm.github.io/docs/book/game-of-life/introduction.html)
+
+[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
+
+[Awesome Rust and Webassembly](https://github.com/rustwasm/awesome-rust-and-webassembly)
+
+*Rust*目前提供了四种*WebAssembly*工具链，分别对应了不同的运行时：
+
+- `wasm32-unknown-unknown`：*Rust*原生的*WebAssembly*编译器，运行在没有IO接口（如浏览器等）的环境。
+- `wasm32-unknown-emscripten`：使用[*emscripten*](https://github.com/kripken/emscripten)编译，在项目依赖了*C*/*C++*等语言时使用。
+- `asmjs-unknown-emscripten`：编译成[*asm.js*](http://asmjs.org/)（*WebAssembly*前身）
+- `wasm32-wasi`：目标环境提供了IO接口。
+
+## wasm-pack
+
+> [`wasm-pack`](https://rustwasm.github.io/docs/wasm-pack/): 用于一站式构建、测试和发布*Rust*创建的*WebAssembly*包。
+
+`wasm-pack`之于（*Rust-generated*）*WebAssembly*类似于*Cargo*之于*Rust*。
+
+通过`wasm-pack new`可以快速**创建**一个用于构建*WebAssembly*的项目（*Crate*），项目中会预置一些必要的依赖包（如`wasm-bindgen`），预设一些常见配置（如`crate-type = ["cdylib", "rlib"]`）等。
+
+通过`wasm-pack build`**编译**项目，`wasm-pack publish`**发布** *npm*包......
+
+## wasm-bindgen
+
+> [`wasm-bindgen`](https://github.com/rustwasm/wasm-bindgen)：*wasm*和*JavaScript*之间高级特性的实现。
+
+`wasm-bindgen`实现了*wasm*和*JavaScript*之间在*WebAssembly*标准之外的一些高级特性的转接。比如，JS/wasm之间除了使用标准中的数字类型数据进行通信，还可以直接使用字符串、对象、类等数据类型；再比如调用`document.querySelector`等*DOM*操作、`window.alert`等环境方法......
+
+```rust
+use wasm_bindgen::prelude::*;
+
+// Import the `window.alert` function from the Web.
+#[wasm_bindgen]
+extern "C" {
+    fn alert(s: &str);
+}
+
+// Export a `greet` function from Rust to JavaScript, that alerts a
+// hello message.
+#[wasm_bindgen]
+pub fn greet(name: &str) {
+    alert(&format!("Hello, {}!", name));
+}
+```
+```javascript
+import { greet } from "./hello_world";
+
+greet("World!");
 ```
 
 # Others

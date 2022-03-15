@@ -3,6 +3,30 @@ title: Glossary
 date: 2020-08-04T09:26:34.573Z
 ---
 
+# 信号处理
+
+| Phrase                         | Meaning      |
+| ------------------------------ | ------------ |
+| discrete signal                | 离散信号     |
+| sampling rate, sample-rate     | 采样率       |
+| resampling                     | 重采样       |
+| DSP, digital signal processing | 数字信号处理 |
+| vector graphics                | 矢量图       |
+| raster graphics                | 光栅图       |
+| CG, computer graphics          | 计算机图形   |
+| CV, computer vision            | 计算机视觉   |
+| image processing               | 图像处理     |
+| digital imaging                | 数字成像     |
+| AAF, anti-aliasing filter      | 抗锯齿滤波   |
+| reconstruction filter          | 重建滤波     |
+| low-pass filter                | 低通滤波     |
+| high-pass filter               | 高通滤波     |
+| convex quadrilaterals          | 凸四边形     |
+| fit                            | 拟合         |
+| binomial                       | 二项式       |
+| polynomial                     | 多项式       |
+| weighted mean                  | 加权平均     |
+
 | Phrase                 | Meaning or Symbol |
 | ---------------------- | ----------------- |
 | parentheses            | ()                |

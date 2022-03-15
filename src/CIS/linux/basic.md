@@ -18,7 +18,7 @@ date: 2020-11-02T09:07:16.580Z
 
 ### Space-Separated
 
-```sh
+```bash
 while [[ "$#" -gt 0 ]]; do
   case $1 in
     -d|--deploy) deploy="$2"; shift;;
@@ -31,7 +31,7 @@ done
 
 ### Equals-Separated
 
-```sh
+```bash
 for i in "$@"; do
   case $i in
     -e=*|--extension=*) EXTENSION="${i#*=}";;
@@ -46,24 +46,24 @@ done
 
 ### `getopt`
 
-```sh
+```bash
 
 ```
 
 
 ## `read`
 
-```sh
+```bash
 read -p $'\e[31mFoobar\e[0m: ' foo
 ```
 
-```sh
+```bash
 read -p '^[[31mFoobar^[[0m: ' foo
 ```
 
 ## `try ... catch ...`
 
-```sh
+```bash
 {
   # try
 } || {
