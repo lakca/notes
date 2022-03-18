@@ -48,71 +48,166 @@ date: 2021-03-22T07:01:30.074Z
 
 > Add file contents to the index.
 
-基础用法：
+```shell
+git add [options] [--] <pathsepc>...
+```
 
 ```bash
-git add <files>
-
 # 交互式添加文件：
 -i，--interactive
 # 交互式添加补丁块（patching chunk）：
 -p，--patch
-
-# 列出（list, no adding）会被添加的文件：
--n, --dry-run
 ```
 
-过滤：
+所有未忽略的（*unignored*）文件：
 
-```bash
-
-# excluding ignored：
+```shell
 -A, --all, --no-ignore-removal
-# excluding ignored and removed：
---no-all, --ignore-removal
-# only tracked（added earlier）:
+```
+
+只添加**当前目录**（包括子目录）下的所有未忽略的（*unignored*）文件：
+
+```shell
+git add .
+```
+
+更新已跟踪过的（*tracked*）文件：
+
+```shell
 -u，--update
-# ignored:
+```
+
+包括忽略的（*ignored*）文件：
+
+```shell
 -f，--force
 ```
 
-其他：
+忽略删除的（*removed*）文件：
+
+```shell
+--ignore-removal, --not-all
+```
+
+列出**会被添加**的文件：
+
+```shell
+-n, --dry-run
+```
+
+修改索引区中文件的可执行性（*executable bit*），文件在本地文件系统中的属性不会变：
 
 ```bash
-# 修改 staging area 中文件的可执行（executable）属性，本地属性不会变：
---chmod=(+|-)x
+--chmod=+x
+--chmod=-x
 ```
 
 ## commit
 
 > Record changes to the repository.
 
-常见用法：
+```shell
+git commit [options] [--] <pathspec>...
+```
 
-```bash
-# 提交所有跟踪过（tracked）的文件：
+提交所有跟踪过（*tracked*）的文件（跳过索引区）：
+
+```shell
 -a, --all
+```
 
+只提交指定文件：
+
+```shell
+-o, --only
+```
+
+手动选择要提交的数据块：
+
+```shell
 # 进入文件选择补丁块（chunks of patch）进行提交：
 -p, --patch
 # 例如，如果修改中有本地调试代码，使用该选项提交，可以不用每次提交前删除、stash或者切换分支等；
-
-# 使用之前的 commit message 来提交：
--c <commit>, --reuse-message=<commit>
 ```
 
-## amend
+修改上一个提交：
 
-常见用法：
+```shell
+--amend
+```
 
-```bash
-# 不打开编辑器编辑提交信息：
+使用之前的 *commit message*：
+
+```shell
+-C <commit>, --reuse-message=<commit>
+-c <commit>, --reedit-message=<commit>
+```
+
+指定元信息如何提交：
+
+```shell
+--date <date>
+--author <author>
+--reset-author
 --no-edit
+```
+
+提交给之前的提交：
+
+```shell
+> git commit -m 'feature A'
+> git commit -m 'feature B'
+> git log --oneline
+f90eb05 (HEAD -> dev) feature B
+d48a90d feature A
+
+# 示例提交给feature A：
+```
+1. 直接提交进指定提交：
+```shell
+# 通过 --squash 直接提交进入feature A
+> git commit --squash d48a90d
+0c0d4b4 feature B
+780572e feature A
+```
+2. 或者，先提交稍后合并进去：
+```shell
+# 通过 --fixup 标记创建的提交为feature A的修改
+> git commit --fixup d48a90d
+44251ec (HEAD -> dev) fixup! feature A
+f90eb05 feature B
+d48a90d feature A
+# 稍后，将修改压缩（squash）进去：
+> git rebase -i --autosquash d48a90d~
+0c0d4b4 (HEAD -> dev) feature B
+780572e feature A
+```
+
+绕过钩子：
+
+```shell
+# 绕过 pre-commit, commit-msg
+-n, --no-verify
+# 绕过 post-rewrite
+--no-post-rewrite
+```
+
+其他钩子，比如*post-commit*，
+没有内置选项可以绕过，但可以通过变通，比如在脚本里面加入环境变量做判断，比如：
+```shell
+# post-commit
+[ $SKIP_POST_COMMIT ] && exit 0
+...
+```
+```shell
+> SKIP_POST_COMMIT=1 git commit -m '...'
 ```
 
 ## push
 
 > Update remote refs along with associated objects.
+
+## checkout
 
 ## log
 
