@@ -22,7 +22,7 @@ date: 2021-06-26T09:06:35.429Z
 
 # 信息
 
-## `uname`
+## uname
 
 > *Unix name*
 - `-m`, *machine* hardware name. e.g. `x86_64`
@@ -35,31 +35,31 @@ date: 2021-06-26T09:06:35.429Z
 
 # 定位
 
-## `which`
+## which
 
 > The which utility takes a list of command names and searches the path for each executable file that would be run had these commands actually been invoked.
 
-## `type`
+## type
 
 > For each *name*, indicate how it would be interpreted if used as a command name.
 
-## `whatis`
+## whatis
 
 > search the whatis database for complete words. whatis 在一组包含系统命令简短描述的数据库文件中搜索关键字，并将结果显示在标准输出中。仅显示完整的单词匹配。
 
-## `whereis`
+## whereis
 
 > The whereis utility checks the standard binary directories for the specified programs.
 
-## `locate`
+## locate
 
 > The locate program searches a database for all pathnames which match the specified pattern.  The database is recomputed periodically (usually weekly or daily), and contains the pathnames of all files which are publicly accessible.
 
-## `command`
+## command
 
 # 搜索
 
-## `compgen` (zsh)
+## compgen (zsh)
 
 > Display the possible completions depending on the options. 显示命令补全列表。
 
@@ -75,37 +75,37 @@ date: 2021-06-26T09:06:35.429Z
 - `-u`, *user*
 - `-v`, *variable*
 
-## `find`
+## find
 
 > The find utility recursively descends the directory tree for each path listed, evaluating an expression (composed of the \`\`primaries'' and \`\`operands'' listed below) in terms of each file in the tree.
 
 # 执行命令
 
-## `sh`
+## sh
 
 > `sh` is a POSIX-compliant command interpreter (shell). It is implemented by re-execing as either bash(1), dash(1), or zsh(1) as determined by the symbolic link located at /private/var/select/sh.  If /private/var/select/sh does not exist or does not point to a valid shell, sh will use one of the supported shells.
 
-## `bash`
+## bash
 
 > `Bash` is  an sh-compatible command language interpreter that executes commands read from the standard input or from a file.
 
-## `dash`
+## dash
 
 > `dash` is the standard command interpreter for the system.
 
-## `command`
+## command
 
 > Runs command with arguments ignoring any shell function named command. Only shell builtin commands or commands found by searching the PATH are executed.
 
 # 执行
 
-## `expr`
+## expr
 
 > 执行表达式，并将结果输出到标准输出。
 
 The `expr` utility evaluates expression and writes the result on standard output.
 
-## `xargs`
+## xargs
 
 > 将管道输入解析为参数用于执行命令，参数列表通过使用 *space*, *tab*, *newline*, *eof* 等符号切割得到。
 
@@ -127,7 +127,7 @@ The `expr` utility evaluates expression and writes the result on standard output
 
 # 文本处理
 
-## `tr`
+## tr
 
 > *Translate Characters*：一一对应地替换字符集，或删除字符集。
 
@@ -159,22 +159,22 @@ The `expr` utility evaluates expression and writes the result on standard output
           xdigit       <hexadecimal characters>
 ```
 
-## `wc`
+## wc
 
 > *Word Count*：统计字节 `wc -c`、字符 `wc -m`、单词 `wc -w`、行 `wc -l` 等。
 
-## `head`
+## head
 
 > 获取输入文本的前面多行 `head -n`、或多个字节 `head -c`。
 
-## `tail`
+## tail
 
 > 获取输入文本的后面多行 `tail -n`、或多个字节 `tail -c`。
 
 - `-f`，当读到 **文件 (FIFO)** （即对`pipe`不生效）末尾的时候不退出程序，若文件继续增长则持续读入。
 - `-F`，与`-f`类似，但会检测文件名的变化，若检测到则会关闭并重新打开文件。
 
-## `cut`
+## cut
 
 > 获取输入文本的行段，字节 `cut -b`、字符 `cut -c`。
 
@@ -183,7 +183,7 @@ cut out selected portions of each line of a file.
 - `-d`，指定行段的分隔符，默认是制表符。
 - `-f`，指定保留的行段序号，多个行段由逗号分隔。
 
-## `column`
+## column
 
 > The column utility formats its input into multiple columns.
 
@@ -196,19 +196,29 @@ lzgv:ortz:zyvf
 # lzgv:zyvf
 ```
 
-## `sed`
+## less
+
+> 交互式阅读文件，可以搜索、翻页等
+
+- 显示行号：`-N`
+- 连续空行显示为一行：`-s`
+- *tab*显示为空格：`-x <N>`
+- 输出保存到文件：`-o <file>`
+
+## sed
 
 > `sed` is a stream editor.  A stream editor is used to perform basic text transformations on an input stream (a file or input from a pipeline).
-## `awk`
+
+## awk
 
 > Pattern-directed scanning and processing language. `awk` scans each input file for lines that match any of a set of patterns specified literally in prog or in one or more files specified as -f progfile.  With each pattern there can be an associated action that will be performed when a line of a  file  matches the  pattern.
 
-## `ed`
+## ed
 
 > The `ed` utility is a line-oriented text editor. It is used to create, display, modify and otherwise manipulate text files.
 > ( `red` )
 
-## `grep`
+## grep
 
 > The `grep` utility searches any given input files, selecting lines that match one or more patterns.
 > ( `egrep`, `fgrep`, `zgrep`, `zegrep`, `zfgrep` )
@@ -216,33 +226,39 @@ lzgv:ortz:zyvf
 <!-- lsvfs(1), quota(1), fstatfs(2), getfsstat(2), statfs(2), getmntinfo(3), compat(5), fstab(5), mount(8), quot(8) -->
 # 硬盘
 
-## `df`
+## df
 
 > display free disk space.
-## `du`
+
+## du
 
 > display disk usage statistics.
-## `quota`
+
+## quota
 
 > display disk usage and limits
 
 # 文件系统
 
 <!-- file(1), ls(1), lstat(2), readlink(2), stat(2), printf(3), strftime(3) -->
-## `stat`
+
+## stat
 
 > display file status. Read, write or execute permissions of the named file are not required, but all directories listed in the path name leading to the file must be searchable.
-## `readlink`
+
+## readlink
 
 > same as `stat`, but only for the target of the symbolic link.
-## `file`
+
+## file
 
 > determine file type.
-## `ls`
+
+## ls
 
 > list directory contents.
 
-## `lsof`
+## lsof
 
 > list open files.
 
@@ -251,81 +267,96 @@ lzgv:ortz:zyvf
 <!-- kill(1), w(1), kvm(3), strftime(3), sysctl(8) -->
 <!-- finger(1), ps(1), uptime(1), who(1) -->
 <!-- last(1), mesg(1), users(1), getuid(2), utmpx(5) -->
-## `ps`
+
+## ps
 
 > process status.
-## `top`
+
+## top
 
 > display and update sorted information about processes.
-## `kill`
+
+## kill
 
 > terminate or signal a process.
-## `uptime`
+
+## uptime
 
 > The uptime utility displays the current time, the length of time the system has been up, the number of users, and the load average of the system over the last 1, 5, and 15 minutes.
-## `iostat`
+
+## iostat
 
 > report I/O statistics.
 
 # 网络
 
-## `whois`
+## whois
 
 > Internet domain name and network number directory service. 域名注册信息查询。
 
-## `netstat`
+## netstat
 
 > show network status.
-## `host`
+
+## host
 
 > DNS lookup utility.
-## `dig`
+
+## dig
 
 > DNS lookup utility.
-## `ifconfig`
+
+## ifconfig
 
 > The ifconfig utility is used to assign an address to a network interface and/or configure network interface parameters.
-## `route`
+
+## route
 
 > manually manipulate the routing tables.
-## `arp`
+
+## arp
 
 > The arp utility displays and modifies the Internet-to-Ethernet address translation tables used by the address resolution protocol.
-## `ndp`
+
+## ndp
 
 > control/diagnose IPv6 neighbor discovery protocol.
 
 # 用户
 
-## `w`
+## w
 
 > display who is logged in and what they are doing.
-## `who`, `whoami`
+
+## who, whoami
 
 > display who is logged in.
-## `users`
+
+## users
 
 > list current users.
-## `finger`
+
+## finger
 
 > The finger utility displays information about the system users.
-## `last`
+
+## last
 
 > list the sessions of specified users, ttys, and hosts, in reverse time order.
 
 # 其他
 
-## `uptime`
+## uptime
 
 # 格式化
 
-## `strftime`
+## strftime
 
 > format date and time.
 
 # 网络工具
 
-## `wget`
+## wget
 
 - `-p`, `--page-requisites`: 把用于显示页面的必要的静态文件也下载，如js/css/图片/音频/视频等
 - `-E`, `--adjust-extension`: 如果地址中没有(html/xml)文件后缀名，则下载的文件自动加上
@@ -355,16 +386,16 @@ lzgv:ortz:zyvf
 - 下载文件并解压缩：`wget -qO- https://xxx | tar xvf - -C dist`
 - 下载网站：`wget --mirror --convert-links --adjust-extension --page-requisites --no-parent -e robots=off --reject 'zip,gz,xz,msi,exe,pkg,iso,mp4,mp3,mov' https://nodejs.org/en/docs`
 
-## `curl`
+## curl
 
 - 下载文件并以url中的文件名存储：`curl https://xxx -O`
 - 下载文件并以header中指定的文件名存储：`curl https://xxx -J`
 
-## `lsof`
+## lsof
 
 # 进程
 
-## `ps`
+## ps
 
 > *process status*
 
@@ -373,7 +404,7 @@ lzgv:ortz:zyvf
 
 - 通过*grep*筛选时不显示*grep*进程本身：`ps aux | grep [n]ginx`, `ps aux | grep nginx | grep -v grep`
 
-## `pgrep`
+## pgrep
 
 > *pgrep, pkill -- find or signal processes by name*
 > 通过进程名称搜索进程，并返回进程ID（*pid*）；或向进程发送信号（*signal*）。
@@ -390,13 +421,13 @@ lzgv:ortz:zyvf
 - `-P <ppid>`: 指定父进程ID（*ppid*）
 - `-u <uid>`: 指定用户ID（*uid*），如 `pgrep -u root nginx`
 
-## `pkill`
+## pkill
 
 > 向进程发送信号（`kill` 需要知道 *pid*），与`pgrep`部分参数相同。
 
 - `-signal <signal>`: 向进程发送信号
 
-## `kill`
+## kill
 
 > *terminate or signal a/some process*，通过 *pid* 向进程发送信号。
 
