@@ -10,7 +10,7 @@ specifiers:
   gulp-terser: ^2.1.0
   highlight.js: ^10.1.2
   lodash.startcase: ^4.4.0
-  marked: ^1.1.1
+  marked: ^1.2.9
   moment: ^2.29.1
 
 dependencies:
