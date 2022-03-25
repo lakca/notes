@@ -2,18 +2,24 @@
 title: NPM Packages
 ---
 
+# 工具类
 
-- *string*
+## 字符串处理
   - `leven`: 比较两个字符串的不同
   - `anymatch`: Matches strings against configurable strings, globs, regular expressions, and/or functions.
   - *format*
     - `slug`: Slugifies even utf-8 chars!
     - `github-slugger`
 
-- *crypto*
+## 日期
+
+- `date-fns`
+- `moment`
+
+## 加密
   - `crypto-random-string`: Generate a cryptographically strong random string
 
-- *cli*
+## 命令行
   - `inquirer`: provides the user interface and the inquiry session flow.
   - `enquirer`: Stylish CLI prompts that are user-friendly, intuitive and easy to create.
   - `commander`
@@ -22,10 +28,10 @@ title: NPM Packages
     - `ora`: Elegant terminal spinner.
     - `listr`: Terminal task list.
 
-- *path*
+## 路径解析
   - `normalize-path`
 
-- *fs*
+## 文件系统
   - `chokidar`: Minimal and efficient cross-platform file watching library.
   - `fs-extra`: Such as recursive mkdir, copy, and remove.
   - `readdirp`
@@ -43,5 +49,43 @@ title: NPM Packages
   - `temp-write`: Write string/buffer/stream to a random temp file.
   - `tempy`: Get a random temporary file or directory path.
 
-- *mock*
+## 数据模拟
   - `mock-fs`
+
+# 体系类
+
+## ORM
+
+|             | MySQL | SQLite | PostgreSQL | MongoDB | ...                 |
+| ----------- | ----- | ------ | ---------- | ------- | ------------------- |
+| `prisma`    | Yes   | Yes    | Yes        | Yes     | MariaDB, SQL Server |
+| `mikro-orm` | Yes   | Yes    | Yes        | Yes     | MariaDB             |
+| `knex`      |       |        |            |         | -                   |
+| `type-orm`  |       |        |            |         | -                   |
+| `sequelize` |       |        |            |         | -                   |
+| `mongoose`  |       |        |            |         | -                   |
+
+|             | Client | Migration                                   | TypeScript | DSL | Transaction                                   | Read/Write Splitting | Schema Generator                                  |
+| ----------- | ------ | ------------------------------------------- | ---------- | --- | --------------------------------------------- | -------------------- | ------------------------------------------------- |
+| `prisma`    | Yes    | Yes                                         | Yes        | Yes | Yes                                           | Yes                  | Yes                                               |
+| `mikro-orm` |        | [Yes](https://mikro-orm.io/docs/migrations) | Yes        | No  | [Yes](https://mikro-orm.io/docs/transactions) |                      | [Yes](https://mikro-orm.io/docs/schema-generator) |
+| `knex`      |        |                                             |            |     |                                               |                      |                                                   |
+| `type-orm`  |        |                                             | Yes        |     |                                               |                      |                                                   |
+| `sequelize` |        |                                             |            |     |                                               |                      |                                                   |
+| `mongoose`  |        |                                             |            |     |                                               |                      |                                                   |
+
+|             | Raw Query | Sub Query | Cascading                                  | QueryBuilder                                    | Result Caching                            | Filter                                    | Logging                                  |
+| ----------- | --------- | --------- | ------------------------------------------ | ----------------------------------------------- | ----------------------------------------- | ----------------------------------------- | ---------------------------------------- |
+| `prisma`    | Yes       | Yes       |                                            |                                                 |                                           |                                           | -                                        |
+| `mikro-orm` |           |           | [Yes](https://mikro-orm.io/docs/cascading) | [Yes](https://mikro-orm.io/docs/query-builder/) | [Yes](https://mikro-orm.io/docs/caching/) | [Yes](https://mikro-orm.io/docs/filters/) | [Yes](https://mikro-orm.io/docs/logging) |
+| `knex`      |           |           |                                            |                                                 |                                           |                                           | -                                        |
+| `type-orm`  |           |           |                                            |                                                 |                                           |                                           | -                                        |
+| `sequelize` |           |           |                                            |                                                 |                                           |                                           | -                                        |
+| `mongoose`  |           |           |                                            |                                                 |                                           |                                           | -                                        |
+
+1. [`prisma`](https://github.com/prisma/prisma)
+
+- [should-you-use-prisma](https://www.prisma.io/docs/concepts/overview/should-you-use-prisma)
+- [TypeORM](https://www.prisma.io/docs/concepts/more/comparisons/prisma-and-typeorm)
+- [Sequelize](https://www.prisma.io/docs/concepts/more/comparisons/prisma-and-sequelize)
+- [Mongoose](https://www.prisma.io/docs/concepts/more/comparisons/prisma-and-mongoose)

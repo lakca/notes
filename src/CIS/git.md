@@ -209,6 +209,8 @@ d48a90d feature A
 
 ## checkout
 
+## stash
+
 ## log
 
 > list all commit logs.

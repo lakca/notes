@@ -3,6 +3,8 @@ title: Glossary
 date: 2020-08-04T09:26:34.573Z
 ---
 
+|coefficients|系数|
+
 # 信号处理
 
 | Phrase                         | Meaning      |
@@ -64,3 +66,59 @@ date: 2020-08-04T09:26:34.573Z
 | gravitational constant | 引力常量         |
 | gravity                | 引力/重力        |
 | threshold              | 临界值/阈值/门槛 |
+
+# 缩写
+
+| Abbreviation | Phrase                                     |
+| ------------ | ------------------------------------------ |
+| DTO          | Data Transfer Object                       |
+| DI           | Dependency Injection                       |
+| ACID         | Atomicity Consistency Isolation Durability |
+| ORM          | Object Relational Mapping                  |
+| TL;DR        | Too long; didn't read                      |
+| ODBC         | Open Database Connectivity                 |
+
+# 常用术语
+
+|          |          |
+| -------- | -------- |
+| hint     |          |
+| failover | 故障切换 |
+
+# 近义词
+
+复制
+
+- *copy*
+- *replicate*
+- *duplicate*
+
+提醒
+
+- *remind*: 提醒，某人原本已知的，但已经忘记了或有可能忘记的事物
+- *alert*: 警告，告知某人一个不知道的，突发的、急待处理的危急情况
+- *warn*: 警告，让这个人意识到事情或问题的重要性，或告诫做错事情的人
+
+间接表达
+
+- *hint*: *indirect statement*, 间接陈述，换一种方式表达
+- *indicate*: *sign*，指代、表明，通过信号明确代指
+- *imply*: *seem to suggest*，暗示、隐晦表达，有推理和猜测的性质
+- *infer*: 推断、推理、臆测
+
+直接表达
+
+- *announce*：宣布
+- *declare*：声明
+- *proclaim*：宣称
+- *elucidate*: 阐明
+- *explain*：解释
+- *delineate*: 描绘
+- *point*: 指出
+
+一般地
+
+- *general*
+- *common*
+- *universal*
+- *generic*

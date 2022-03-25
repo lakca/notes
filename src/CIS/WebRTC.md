@@ -1,13 +1,28 @@
 ```mermaid
-graph TD
+flowchart LR
 	classDef edge stroke:#9df,stroke-width:3;
-	classDef more stroke-dasharray:5 5;
-	project[Project]
-		project ---> roadmap[Roadmap] 
-		project ---> roadmaps[...]:::more
-	roadmap ---> task[Task]:::edge 
-	roadmap ---> task2["Task<br/>(with subtasks)"] 
-	roadmap ---> tasks[...]:::more
-	task2 ---> subtask[SubTask]:::edge
-	task2 ---> subtasks[...]:::more
+	classDef more stroke:#9df,stroke-dasharray:5 5;
+
+subgraph sauth[Authentication Overview]
+	direction TB
+	authentication ---> account & ticket
+end
+
+subgraph sperm[Authorization Overview]
+	direction TB
+	authorization ---> role & group & account & ticket
+	role ---> group & account
+	group ---> account
+end
+
+subgraph sproj[Project Overview]
+	direction TB
+	project ---> roadmap
+	roadmap ---> session
+	session ---> task
+	task -.-> subtask:::more
+end
+
+sauth ---> sperm ---> sproj
 ```
+26b52c33fe3eed348d8e
