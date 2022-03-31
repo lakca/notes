@@ -4,8 +4,6 @@
 
 [jsdelivr](https://cdn.jsdelivr.net)：支持任意[github](https://github.com), [npm](https://npmjs.org), [wordpress](wordpress.org)仓库
 
-<iframe src="https://www.jsdelivr.com/" frameborder="0" height="500"></iframe>
-
 [unpkg](https://unpkg.com/): 支持任意[npm](https://npmjs.org)仓库
 
 ```
