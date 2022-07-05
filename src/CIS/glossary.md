@@ -194,13 +194,16 @@ date: 2020-08-04T09:26:34.573Z
 | RFC             | Request for Comments                                |                                | 来自Internet的主要技术开发和标准制定机构的一系列出版物      |
 | IANA            | Internet Assigned Numbers Authority                 | 互联网号码分配局               |
 | IEEE            | Institute of Electrical and Electronics Engineers | （美国）电子和电气工程师会     |                                                             |
+| HTAP         | Hybrid Transaction and Analytical Process      |
 
 # 常用术语
 
-|          |          |
-| -------- | -------- |
-| hint     |          |
-| failover | 故障切换 |
+|           |          |
+| --------- | -------- |
+| hint      |          |
+| failover  | 故障切换 |
+| partition | 分区     |
+| sharding  | 分片     |
 
 # 近义词
 

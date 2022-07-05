@@ -420,9 +420,9 @@ smallvec = { git = "https://github.com/servo/rust-smallvec", version = "1.0" }
 ```toml
 [target.'cfg(windows)'.dependencies]
 winhttp = "0.4.0"
-[target.'cfg(target_arch = "x86")'.dependencies] 
+[target.'cfg(target_arch = "x86")'.dependencies]
 native = { path = "native/i686" }
-[target.'cfg(target_arch = "x86_64")'.dependencies] 
+[target.'cfg(target_arch = "x86_64")'.dependencies]
 native = { path = "native/x86_64" }
 ```
 
@@ -556,7 +556,7 @@ cargo yank --vers 1.1.0 --undo # 取消撤回操作
 [Third-party-cargo-subcommands](https://github.com/rust-lang/cargo/wiki/Third-party-cargo-subcommands)
 
 - `cargo-cache`：查看和清理cargo缓存
-	
+
 ## 构建
 
 完整构建一个项目可能包括：组织项目结构、声明项目元信息、管理项目依赖、构建开发环境、功能测试、性能测试、编译代码、打包源文件、对外发布......，即使*Rustup*已经为我们提供了各环节的工具链，但无论单独配置每个环节还是整合这些工作依然是繁琐和杂乱的。
@@ -790,9 +790,9 @@ rustflags = [...]
 #### 目标三值（target）
 
 > *Target triplets*，一个描述软件运行平台的特征值，一般来说由三个部分组成：**CPU架构（*target_arch*）**、**平台厂商（*target_vendor*）**、**操作系统（*target_os*）**。编译器通过这些特征值可以将软件以合适的方式编译到不同的平台运行。
-> 
+>
 > 随着平台发展的多样化，目标三值更多是概念性表达，而非只有三个值。
-> 
+>
 > 比如，有些平台可能同时存在多种工具链（如*gnu*和*msvc*），它们编译出来的软件和运行方式会存在区别（比如*msvc*提供了更多库函数，使得编译出的软件更小、兼容性更强），所以在这些平台还可能有额外值用来指示**工具链（*target_env*）**。
 >
 > 再比如，并非所有的编译目标都是直接运行在原始平台上，如*WebAssembly*是运行在虚拟机，所以我们可以看到*Rust*提供的wasm三值如`wasm32-wasi`并没有厂商和操作系统信息。
@@ -860,7 +860,7 @@ rustc --crate-type cdylib
 ```
 
 ```toml
-[lib] 
+[lib]
 crate-type = ["cdylib"]
 ```
 
@@ -1312,6 +1312,8 @@ let e_err = a[10]; // exit with error
 
 - 长周期引用可以转换成短周期引用。（*references with longer lifetimes can be freely coerced into references with shorter ones.*）
 
+> Note: *Historically, Rust kept the borrow alive until the end of scope, so these examples might fail to compile with older compilers. Also, there are still some corner cases where Rust fails to properly shorten the live part of the borrow and fails to compile even when it looks like it should. These'll be solved over time. [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
+
 ```rust
 fn main() {
   // 引用不移交所有权
@@ -1323,10 +1325,10 @@ fn main() {
   // 不能同时存在多个有效的可变引用
   let mut a = String::from("hello");
   let b = &mut a;
-  let c = &mut a;
-  println!("{}, {}", b, c); // 报错
+  let c = &mut a; // 报错，b在后续使用了，故此时b仍存在
+  println!("{}", b);
 
-  // 多个不可变引用
+  // 多个不可变引用可同时存在
   let mut a = String::from("hello");
   let b = &a;
   let c = &a;
@@ -1335,13 +1337,12 @@ fn main() {
   // 不能同时存在有效可变引用和有效不可变引用
   let mut a = String::from("hello");
   let b = &a;
-  let c = &mut a;
-  println!("{}, {}", b, c); // 报错
+  let c = &mut a; // 报错
+  println!("{}, {}", b);
 
   // 有效性结束于最后一次被调用
   let mut a = String::from("hello");
-  let b = &a;
-  println!("{}", b); // b 作用域结束
+  let b = &a; // b后续没有被使用，此行结束b已失效
   let c = &mut a;
   println!("{}", c);
 
@@ -1569,19 +1570,19 @@ mod inline {
 fn main() {
 	inline::a::hi();
 	inline::b::hi();
-	
+
 	// 如果当前文件为：main.rs, lib.rs
 	crate::inline::a::hi();
 	// 如果当前文件为：foo/mod.rs
 	crate::foo::inline::a::hi();
-	
+
 	// 引入命名空间
 	use inline::a;
 	a::hi();
-	
+
 	use inline::a::{hi as hello};
 	hello();
-	
+
 	use inline::b::*;
 	hi();
 }
@@ -1620,7 +1621,7 @@ fn main() {
 }
 ```
  > Note: [No more `extern crate`](https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html#no-more-extern-crate)
- 
+
 直接编译：
 ```bash
 rustc main.rs --extern hello="path/to/hello"
@@ -1637,7 +1638,7 @@ hello = { path: "path/to/hello" }
 > Rust主要是一门[表达式语言](https://doc.rust-lang.org/reference/statements-and-expressions.html)，绝大多数计算值或执行副作用的计算式都是表达式，一般地，表达式结尾加上分号即形成了语句。
 
 > [语句](https://doc.rust-lang.org/reference/statements-and-expressions.html)（Statement）为程序（不是处理器）的最小完整执行单元（本质上也叫程序，我们通常所言的程序是复杂程序，由很多单元程序组成）。
-> 
+>
 > [表达式](https://doc.rust-lang.org/reference/expressions.html)（*Expression*）则是语句的构成元，不单独存在。一个语句可以有一个或多个表达式构成，一个表达式也可以包含多个表达式，这样的表达式可以叫复合表达式。
 
 程序，本质上来说是一系列抽象逻辑，逻辑即语句，即一个有意义的独立存在。而逻辑的过程即表达式，逻辑的过程是无法独立存在的，它需要表达出这个逻辑才有意义。
@@ -1911,7 +1912,11 @@ let jack = User {
 }
 ```
 
-方法（*methods*）：
+### 关联函数（associated functions）：
+
+> `impl`里面的函数统称为结构的**关联函数**。
+
+- 第一个参数为`self`的关联函数特称为**方法（*methods*）**，通过点表示符调用，如`"hello".to_string()`。
 
 ```rust
 /// 1. 在 impl 里面定义方法；
@@ -1933,9 +1938,7 @@ jack.grow(1); // 错误，因为 grow() 需要 mutable，而 jack 是 immutable.
 jack.greet();
 ```
 
-关联函数（*associated functions*）：
-
-> 类比于类的静态方法。
+- 除了方法外的关联函数通过双冒号表示符调用，如`String::from("hello")`（在某些语言中称之为*静态方法*）。
 
 ```rust
 /// 1. 在 impl 里面定义关联函数；
@@ -2484,4 +2487,3 @@ fn get_type(_: &T) -> &'static str {
   std::any::type_name::<T>()
 }
 ```
- 

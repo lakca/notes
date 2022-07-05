@@ -1,77 +1,58 @@
-# 文档
 
-- [内置函数和操作符](https://dev.mysql.com/doc/refman/en/built-in-function-reference.html)
-- [可加载的函数](https://dev.mysql.com/doc/refman/en/loadable-function-reference.html)
-- [表达式](https://dev.mysql.com/doc/refman/en/expressions.html)
-- [类型转换](https://dev.mysql.com/doc/refman/en/type-conversion.html)
-- [算术操作符](https://dev.mysql.com/doc/refman/en/arithmetic-functions.html)
-- [逻辑操作符](https://dev.mysql.com/doc/refman/en/logical-operators.html)
-- [赋值操作符](https://dev.mysql.com/doc/refman/en/assignment-operators.html)
-- [位函数和操作符](https://dev.mysql.com/doc/refman/en/bit-functions.html)
-- [常用分类函数](https://dev.mysql.com/doc/refman/en/functions.html)
-	- [控制流函数](https://dev.mysql.com/doc/refman/en/flow-control-functions.html)
-	- [数学函数](https://dev.mysql.com/doc/refman/en/mathematical-functions.html)
-	- [时间函数](https://dev.mysql.com/doc/refman/en/date-and-time-functions.html)
-	- [字符串比较函数](https://dev.mysql.com/doc/refman/en/string-comparison-functions.html)
-	- [正则表达式](https://dev.mysql.com/doc/refman/en/regexp.html)
-	- [全文搜索函数](https://dev.mysql.com/doc/refman/en/fulltext-search.html)
-	- [加解密函数](https://dev.mysql.com/doc/refman/en/encryption-functions.html)
-	- [锁函数](https://dev.mysql.com/doc/refman/en/locking-functions.html)
-	- [信息函数（获取相关数据的元信息）](https://dev.mysql.com/doc/refman/en/information-functions.html)
-	- [聚合函数（多数据分析）](https://dev.mysql.com/doc/refman/en/aggregate-functions.html)
-	- [杂项函数](https://dev.mysql.com/doc/refman/en/miscellaneous-functions.html)
 
-官方完整文档
+# 阅读
 
-- [Preface and Legal Notices](https://dev.mysql.com/doc/refman/en/preface.html)
-- [General Information](https://dev.mysql.com/doc/refman/en/introduction.html)
-- [Installing and Upgrading MySQL](https://dev.mysql.com/doc/refman/en/installing.html)
-- [Tutorial](https://dev.mysql.com/doc/refman/en/tutorial.html)
-- [MySQL Programs](https://dev.mysql.com/doc/refman/en/programs.html)
-- [MySQL Server Administration](https://dev.mysql.com/doc/refman/en/server-administration.html)
-- [Security](https://dev.mysql.com/doc/refman/en/security.html)
-- [Backup and Recovery](https://dev.mysql.com/doc/refman/en/backup-and-recovery.html)
-- [Optimization](https://dev.mysql.com/doc/refman/en/optimization.html)
-- [Language Structure](https://dev.mysql.com/doc/refman/en/language-structure.html)
-- [Character Sets, Collations, Unicode](https://dev.mysql.com/doc/refman/en/charset.html)
-- [Data Types](https://dev.mysql.com/doc/refman/en/data-types.html)
-- [Functions and Operators](https://dev.mysql.com/doc/refman/en/functions.html)
-- [SQL Statements](https://dev.mysql.com/doc/refman/en/sql-statements.html)
-- [The InnoDB Storage Engine](https://dev.mysql.com/doc/refman/en/innodb-storage-engine.html)
-- [Alternative Storage Engines](https://dev.mysql.com/doc/refman/en/storage-engines.html)
-- [Replication](https://dev.mysql.com/doc/refman/en/replication.html)
-- [Group Replication](https://dev.mysql.com/doc/refman/en/group-replication.html)
-- [MySQL Shell](https://dev.mysql.com/doc/refman/en/mysql-shell-userguide.html)
-- [Using MySQL as a Document Store](https://dev.mysql.com/doc/refman/en/document-store.html)
-- [InnoDB Cluster](https://dev.mysql.com/doc/refman/en/mysql-innodb-cluster-introduction.html)
-- [MySQL NDB Cluster 7.5 and NDB Cluster 7.6](https://dev.mysql.com/doc/refman/en/mysql-cluster.html)
-- [Partitioning](https://dev.mysql.com/doc/refman/en/partitioning.html)
-- [Stored Objects](https://dev.mysql.com/doc/refman/en/stored-objects.html)
-- [INFORMATION_SCHEMA Tables](https://dev.mysql.com/doc/refman/en/information-schema.html)
-- [MySQL Performance Schema](https://dev.mysql.com/doc/refman/en/performance-schema.html)
-- [MySQL sys Schema](https://dev.mysql.com/doc/refman/en/sys-schema.html)
-- [Connectors and APIs](https://dev.mysql.com/doc/refman/en/connectors-apis.html)
-- [MySQL Enterprise Edition](https://dev.mysql.com/doc/refman/en/mysql-enterprise.html)
-- [MySQL Workbench](https://dev.mysql.com/doc/refman/en/workbench.html)
-- [MySQL 5.7 Frequently Asked Questions](https://dev.mysql.com/doc/refman/en/faqs.html)
-- [Error Messages and Common Problems](https://dev.mysql.com/doc/refman/en/error-handling.html)
-- [Indexes](https://dev.mysql.com/doc/refman/en/indexes.html)
-- [MySQL Glossary](https://dev.mysql.com/doc/refman/en/glossary.html)
+- [InnoDB and the ACID Model](https://dev.mysql.com/doc/refman/8.0/en/mysql-acid.html)
+- [事务模型｜InnoDB Transaction Model](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-model.html)
+- [锁｜InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html)
+- [锁范围｜Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html)
+- [死锁｜Deadlocks in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlocks.html)
+- [事务调度｜Transaction Scheduling](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-scheduling.html)
+- [INFORMATION_SCHEMA schema](https://dev.mysql.com/doc/refman/8.0/en/information-schema.html)
+- [PERFORMANCE_SCHEMA schema](https://dev.mysql.com/doc/refman/8.0/en/performance-schema.html)
+- [SYS schema](https://dev.mysql.com/doc/refman/8.0/en/sys-schema.html)
+- [MYSQL schema](https://dev.mysql.com/doc/refman/8.0/en/system-schema.html)
+- [数据类型｜Data Types](https://dev.mysql.com/doc/refman/en/data-types.html)
+- [函数和操作符｜Functions and Operators](https://dev.mysql.com/doc/refman/en/functions.html)
+- [语句｜SQL Statements](https://dev.mysql.com/doc/refman/en/sql-statements.html)
+- [分区｜Partitioning](https://dev.mysql.com/doc/refman/en/partitioning.html)
+- [存储对象｜Stored Objects](https://dev.mysql.com/doc/refman/5.7/en/stored-objects.html)
+- [备份｜Backup and Recovery](https://dev.mysql.com/doc/refman/en/backup-and-recovery.html)
+- [集群｜InnoDB Cluster](https://dev.mysql.com/doc/refman/8.0/en/mysql-innodb-cluster-introduction.html)
+- [复制｜Replication](https://dev.mysql.com/doc/refman/en/replication.html)
+- [组复制｜Group Replication](https://dev.mysql.com/doc/refman/8.0/en/group-replication.html)
+- [副本集｜InnoDB ReplicaSet](https://dev.mysql.com/doc/refman/8.0/en/mysql-innodb-replicaset-introduction.html)
+- [安全｜Security](https://dev.mysql.com/doc/refman/en/security.html)
+- [参数｜Server System Variable Reference](https://dev.mysql.com/doc/refman/5.7/en/server-system-variable-reference.html)
+- [状态｜Server Status Variable Reference](https://dev.mysql.com/doc/refman/5.7/en/server-status-variable-reference.html)
+- [优化｜Optimization](https://dev.mysql.com/doc/refman/en/optimization.html)
+- [日志｜MySQL Server Logs](https://dev.mysql.com/doc/refman/8.0/en/server-logs.html)
+- [调试｜Debugging MySQL](https://dev.mysql.com/doc/refman/8.0/en/debugging-mysql.html)
+- [错误信息｜Error Messages and Common Problems](https://dev.mysql.com/doc/refman/en/error-handling.html)
+- [词汇表｜MySQL Glossary](https://dev.mysql.com/doc/refman/en/glossary.html)
 
 # 存储引擎
 
-## MyISAM
-
-# 锁
-
-  | Engine   | 表锁 | 行锁    | 页锁 |
-  | -------- | ---- | ------- | ---- |
-  | `InnoDB` | Y    | Y(默认) |
-  | `MyISAM` | Y    |
-  | `MEMORY` | Y    |
-  | `BDB`    |      |         | Y    |
+| Engine   | 表锁 | 行锁    | 页锁 |
+| -------- | ---- | ------- | ---- |
+| `InnoDB` | Y    | Y(默认) |
+| `MyISAM` | Y    |
+| `MEMORY` | Y    |
+| `BDB`    |      |         | Y    |
 
 # InnoDB
+
+- [InnoDB and the ACID Model](https://dev.mysql.com/doc/refman/8.0/en/mysql-acid.html)
+- [InnoDB Locking and Transaction Model](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking-transaction-model.html)
+  - [InnoDB Locking](https://dev.mysql.com/doc/refman/8.0/en/innodb-locking.html)
+  - [InnoDB Transaction Model](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-model.html)
+  - [Locks Set by Different SQL Statements in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-locks-set.html)
+  - [Deadlocks in InnoDB](https://dev.mysql.com/doc/refman/8.0/en/innodb-deadlocks.html)
+  - [Transaction Scheduling](https://dev.mysql.com/doc/refman/8.0/en/innodb-transaction-scheduling.html)
+- [InnoDB Parameters](https://dev.mysql.com/doc/refman/en/innodb-parameters.html)
+- [InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/en/innodb-parameters.html)
+
+## 锁
 
 - 行锁
   - **共享锁（S）（读锁）**：与~~排他锁（X）~~不共存
@@ -82,39 +63,111 @@
 
 锁，建立的目的是，解决非原子性操作的原子性问题，避免不一致（意外的中间状态）的出现。
 
-**行锁，建立在索引的基础上**。如果查询的字段没有索引，那么会默认锁住所有行。
+**行锁，建立在索引的基础上**。如果查询的字段没有索引，那么会使用表锁。
 
 对于`UPDATE`/`DELETE`/`INSERT`语句，*InnoDB*自动给涉及的数据集加*排他锁（X）*。
 
-# 常用语句
+# 基础概念
 
-## 系统
+## Schema
+
+## Charset
+
+> 字符集*Charset*定义了字符的编码存储方式，最直接的影响就是可表示的字符范围和存储大小。
+
+MySQL中的`utf8`只实现了部分**UTF-8**标准（基本平面字符BMP，最多三个字节，即最大*16bits*, *0xFFFF*, *65535*），`utf8mb4`(*utf8 most bytes 4*)实现了完整的**UTF-8**标准。
+
+## Collation
+
+> 为了存储和执行性能，在MySQL中，字符除了有字符集*Charset*以外，还细化出了整理集合*Collation*。
+>
+> 字符集定义了字符的存储方式，整理集定义了字符的范围和处理逻辑，如西欧各国字符、大小写敏感、重音符敏感等。
+>
+> 如`utf8_unicode_ci`为不区分大小写的*unicode*字符，`utf8_roman_ci`为不区分大小学的罗马字符
+
+常见的整理集后缀含义：
+
+| Suffix | Meaning            |
+| ------ | ------------------ |
+| `_ai`  | Accent-insensitive |
+| `_as`  | Accent-sensitive   |
+| `_ci`  | Case-insensitive   |
+| `_cs`  | Case-sensitive     |
+| `_ks`  | Kana-sensitive     |
+| `_bin` | Binary             |
+
+# 基础语句
+
+复合语句：
 
 ```sql
--- 查看数据库所有引擎
-SHOW ENGINES;
-
--- 查看存储引擎状态
-SHOW ENGINE INNODB STATUS;
+-- 常用于创建存储过程或函数中
+[label:] BEGIN [statement_list] END [label]
 ```
 
-## 表格
+流程控制语句：
+
+```sql
+-- 中断流程
+LEAVE label
+
+-- 重新开始流程
+ITERATE label
+
+-- 函数返回
+RETURN expr
+
+-- 条件 if
+IF search_condition THEN statement_list
+    [ELSEIF search_condition THEN statement_list] ...
+    [ELSE statement_list]
+END IF
+
+-- 条件 switch
+CASE case_value
+    WHEN when_value THEN statement_list
+    [WHEN when_value THEN statement_list] ...
+    [ELSE statement_list]
+END CASE
+
+CASE
+    WHEN search_condition THEN statement_list
+    [WHEN search_condition THEN statement_list] ...
+    [ELSE statement_list]
+END CASE
+
+-- 循环语句：
+[label:] LOOP
+    statement_list
+END LOOP [label]
+
+[label:] REPEAT
+    statement_list
+UNTIL search_condition
+END REPEAT [label]
+
+[label:] WHILE search_condition DO
+    statement_list
+END WHILE [label]
+```
+
+# 常用语句
+
+## 表格信息
 
 ```sql
 -- 获取表字段描述
-DESCRIBE table_one;
+[DESCRIBE | SHOW COLUMNS] table_one;
 SHOW FIELDS FROM table_one;
 
 -- 获取表创建语句
 SHOW CREATE TABLE table_one;
 
+SHOW TABLE STATUS table_one;
+
 -- 查看索引信息
 SHOW INDEX FROM table_one;
 SHOW KEYS FROM table_one;
-
--- UPDATE
-UPDATE table_one SET field1=value1, filed2=value2 WHERE ...;
-UPDATE table_one SET field1=REPLACE(field1, 'hello', 'hi') WHERE ...;
 ```
 
 ## 创建表格
@@ -346,7 +399,7 @@ SUBPARTITION logical_name
 [TABLESPACE       [=] tablespace_name]
 ```
 
-## 插入数据
+## 创建记录
 
 ```sql
 -- 插入多条（或一条）数据
@@ -386,7 +439,7 @@ INSERT
   [ON DUPLICATE KEY UPDATE col_name=expr [, col_name=expr] ... ]
 ```
 
-## 更新数据
+## 更新记录
 
 ```sql
 -- Single-table syntax:
@@ -410,7 +463,7 @@ UPDATE
   [WHERE where_condition]
 ```
 
-## 查询数据
+## 查询记录
 
 ```sql
 SELECT
@@ -448,6 +501,57 @@ UNION [ALL | DISTINCT] SELECT ...
 [UNION [ALL | DISTINCT] SELECT ...]
 ```
 
+## 存储过程或函数
+
+创建存储过程或函数：
+
+```sql
+-- 创建存储过程
+CREATE
+  [DEFINER = { user | CURRENT_USER }]
+  PROCEDURE sp_name ([proc_parameter[,...]])
+  [characteristic ...] routine_body
+-- 创建函数
+CREATE
+  [DEFINER = { user | CURRENT_USER }]
+  FUNCTION sp_name ([func_parameter[,...]])
+  RETURNS type
+  [characteristic ...] routine_body
+
+proc_parameter: [ IN | OUT | INOUT ] param_name type
+
+func_parameter: param_name type
+
+type: Any valid MySQL data type
+
+characteristic:
+    COMMENT 'string'
+  | LANGUAGE SQL
+  | [NOT] DETERMINISTIC
+  | { CONTAINS SQL | NO SQL | READS SQL DATA | MODIFIES SQL DATA }
+  | SQL SECURITY { DEFINER | INVOKER }
+
+routine_body: Valid SQL routine statement
+```
+
+调用存储过程/函数：
+
+```sql
+CALL sp_name;
+```
+
+查看存储过程/函数：
+
+```sql
+SELECT * FROM mysql.proc;
+
+SHOW PROCEDURE STATUS;
+SHOW FUNCTION STATUS;
+
+SHOW CREATE PROCEDURE proc_name;
+SHOW CREATE FUNCTION func_name;
+```
+
 ## 会话
 
 ```sql
@@ -478,8 +582,8 @@ LOCK TABLES table_one WRITE;
 UNLOCK TABLES;
 
 -- 行锁
-SELECT * FROM table_one WHERE ... LOCK IN SHARE MODE; -- 在事务中才生效
-SELECT * FROM table_one WHERE ... FOR UPDATE; -- 在事务中才生效
+SELECT * FROM table_one WHERE ... LOCK IN SHARE MODE; -- 共享锁，在事务中才生效
+SELECT * FROM table_one WHERE ... FOR UPDATE; -- 排他锁，在事务中才生效
 
 -- 查看当前存在的锁
 SELECT * FROM INFORMATION_SCHEMA.INNODB_LOCKS;
@@ -501,21 +605,34 @@ SHOW STATUS LIKE 'innodb_row_lock_%';
 ## 事务
 
 ```sql
--- 设置事务参数
-SET TRANSACTION ISOLATION_LEVEL isolation_level;
--- 事务访问模式（读写/只读）
-SET TRANSACTION READ WRITE; -- 默认
-SET TRANSACTION READ ONLY;
-
 -- 开启事务
-BEGIN;
+START TRANSACTION [transaction_characteristic [, ...]]
+-- OR
+BEGIN [WORK];
+
+transaction_characteristic: {WITH CONSISTENT SNAPSHOT | READ WRITE | READ ONLY}
 
 -- 提交事务
-COMMIT;
+-- CHAIN: 是否在结束后立即开启一个同样参数的事务，关联参数: completion_type
+-- RELEASE: 是否在结束后断开会话连接，关联参数: completion_type
+COMMIT [WORK] [AND [NO] CHAIN] [[NO] RELEASE];
 
 -- 回滚事务
-ROLLBACK;
+ROLLBACK [WORK] [AND [NO] CHAIN] [[NO] RELEASE];
 
+SET autocommit={0 | 1};
+
+-- 设置全局或会话默认事务参数
+SET GLOBAL TRANSACTION transaction_characteristic [, ...]
+SET SESSION TRANSACTION transaction_characteristic [, ...]
+-- 设置当前会话下一次事务参数（如果当前会话有已经开启的事务则无法设置）
+SET TRANSACTION transaction_characteristic [, ...]
+
+transaction_characteristic: {ISOLATION LEVEL isolation_level | READ WRITE | READ ONLY}
+
+isolation_level: {REPEATABLE READ | READ COMMITTED | READ UNCOMMITTED | SERIALIZABLE}
+```
+```sql
 -- 查看当前连接的事务信息
 SELECT * FROM INFORMATION_SCHEMA.INNODB_TRX  WHERE TRX_MYSQL_THREAD_ID = CONNECTION_ID();
 
@@ -561,43 +678,33 @@ SET GLOBAL tx_isolation=isolation_level;
 SELECT @@GLOBAL.tx_isolation, @@tx_isolation;
 ```
 
-## 环境参数
+## 系统参数
 
-- 参数分为**系统参数**和**会话参数**；
+- 参数分为**系统参数**（`GLOBAL`修饰）和**会话参数**（`SESSION`修饰）；
 - **会话参数初始值**由创建会话时定义和从系统参数继承而来；
 - **动态类型参数**会立即派发到已建立的会话；
+- 参数存储表格：`show tables from information_schema like '%variables%';`, `show tables from performance_schema like '%variables%';`
 
 ```sql
-HELP VARIABLE;
-HELP SHOW VARIABLES;
+-- 查询参数值
+SHOW [GLOBAL | SESSION] VARIABLES [LIKE 'pattern' | WHERE expr];
+-- SHOW VARIABLES 有最大显示宽度限制，可以由此替代：
+SELECT @@[{GLOBAL | SESSION}.]var_name;
+
+-- 设置参数值
+SET [GLOBAL | SESSION] var_name=var_value;
+SET @@[{GLOBAL | SESSION}.]var_name=var_value;
 ```
 
 ```sql
--- 系统参数
-SELECT @@global.xxx;
-SHOW GLOBAL VARIABLES LIKE ...;
-SHOW GLOBAL VARIABLES WHERE ...;
-SET GLOBAL variable=value;
-SET @@global.variable=value;
+-- 查看数据库所有引擎
+SHOW ENGINES;
 
--- 会话参数（LOCAL是SESSION同义词）
-SELECT @@session.xxx;
-SHOW SESSION VARIABLES LIKE ...;
-SHOW SESSION VARIABLES WHERE ...;
-SET SESSION variable=value;
-SET @@session.variable=value;
--- 如果不加前缀，默认就是SESSION
-SELECT @@xxx;
-SHOW VARIABLES LIKE ...;
-SHOW VARIABLES WHERE ...;
-SET variable=value;
-SET @@variable=value;
+-- 查看存储引擎状态
+SHOW ENGINE INNODB STATUS;
 
 -- 查看超时时间
 SHOW VARIABLES LIKE '%timeout%';
-
--- 查看行锁相关参数
-SHOW STATUS LIKE 'innodb_row_lock_%';
 
 -- 查看当前默认隔离级别
 SELECT @@global.tx_isolation;
@@ -607,14 +714,394 @@ SELECT @@global.autocommit;
 SHOW GLOBAL VARIABLES LIKE 'autocommit';
 ```
 
-一些参数解读：
+## 系统状态
 
-- [Server System Variables](https://dev.mysql.com/doc/refman/en/server-system-variables.html)
-- [Persisted System Variables](https://dev.mysql.com/doc/refman/en/persisted-system-variables.html)
-- [Dynamic System Variables](https://dev.mysql.com/doc/refman/en/dynamic-system-variables.html)
-- [InnoDB Parameters](https://dev.mysql.com/doc/refman/en/innodb-parameters.html)
-- [InnoDB Startup Options and System Variables](https://dev.mysql.com/doc/refman/en/innodb-parameters.html)
+```sql
+SHOW [GLOBAL | SESSION] STATUS [LIKE 'pattern' | WHERE expr]
+```
+
+```sql
+-- 查看行锁相关参数
+SHOW STATUS LIKE 'innodb_row_lock_%';
+-- 显示当前会话的历史警告
+SHOW WARNINGS;
+-- 显示当前会话的历史错误
+SHOW ERRORS;
+```
+
+# 账号和权限
+
+- 用户表：`mysql.user`
+- 权限表：`INFORMATION_SCHEMA.USER_PRIVILEGES`
+
+## 账号（User）
+
+创建账号
+
+```sql
+CREATE USER [IF NOT EXISTS]
+    user [auth_option] [, user [auth_option]] ...
+    [REQUIRE {NONE | tls_option [[AND] tls_option] ...}]
+    [WITH resource_option [resource_option] ...]
+    [password_option | lock_option] ...
+
+user:
+    (see Section 6.2.4, “Specifying Account Names”)
+
+auth_option: {
+    IDENTIFIED BY 'auth_string'
+  | IDENTIFIED WITH auth_plugin
+  | IDENTIFIED WITH auth_plugin BY 'auth_string'
+  | IDENTIFIED WITH auth_plugin AS 'auth_string'
+  | IDENTIFIED BY PASSWORD 'auth_string'
+}
+
+tls_option: {
+   SSL
+ | X509
+ | CIPHER 'cipher'
+ | ISSUER 'issuer'
+ | SUBJECT 'subject'
+}
+
+resource_option: {
+    MAX_QUERIES_PER_HOUR count
+  | MAX_UPDATES_PER_HOUR count
+  | MAX_CONNECTIONS_PER_HOUR count
+  | MAX_USER_CONNECTIONS count
+}
+
+password_option: {
+    PASSWORD EXPIRE
+  | PASSWORD EXPIRE DEFAULT
+  | PASSWORD EXPIRE NEVER
+  | PASSWORD EXPIRE INTERVAL N DAY
+}
+
+lock_option: {
+    ACCOUNT LOCK
+  | ACCOUNT UNLOCK
+}
+
+-- 例如：
+CREATE USER 'local'@'localhost' IDENTIFIED BY PASSWORD '123456';
+CREATE USER 'local'@'localhost' IDENTIFIED BY PASSWORD '123456' PASSWORD EXPIRE INTERVAL 180 DAY;
+```
+
+其他
+
+```sql
+-- 账号列表（及账号权限）
+SELECT * FROM mysql.user;
+```
+
+## 授权（Privilege）
+
+- [权限类型](https://dev.mysql.com/doc/refman/5.7/en/privileges-provided.html)
+
+相关数据库
+
+- `mysql.columns_priv`
+- `mysql.procs_priv`
+- `mysql.proxies_priv`
+- `mysql.tables_priv`
+- `INFORMATION_SCHEMA.COLUMN_PRIVILEGES`
+- `INFORMATION_SCHEMA.SCHEMA_PRIVILEGES`
+- `INFORMATION_SCHEMA.TABLE_PRIVILEGES`
+- `INFORMATION_SCHEMA.USER_PRIVILEGES`
+
+```sql
+GRANT
+    priv_type [(column_list)]
+      [, priv_type [(column_list)]] ...
+    ON [object_type] priv_level
+    TO user_specification [, user_specification] ...
+    [REQUIRE {NONE | ssl_option [[AND] ssl_option] ...}]
+    [WITH {GRANT OPTION | resource_option} ...]
+
+GRANT PROXY ON user_specification
+    TO user_specification [, user_specification] ...
+    [WITH GRANT OPTION]
+
+priv_type: -- https://dev.mysql.com/doc/refman/5.7/en/privileges-provided.html
+
+object_type: {
+    TABLE
+  | FUNCTION
+  | PROCEDURE
+}
+
+priv_level: {
+    *
+  | *.*
+  | db_name.*
+  | db_name.tbl_name
+  | tbl_name
+  | db_name.routine_name
+}
+
+user_specification:
+    user [ auth_option ]
+
+auth_option: {     -- Before MySQL 5.7.6
+    IDENTIFIED BY 'auth_string'
+  | IDENTIFIED BY PASSWORD 'hash_string'
+  | IDENTIFIED WITH auth_plugin
+  | IDENTIFIED WITH auth_plugin AS 'hash_string'
+}
+
+auth_option: {     -- As of MySQL 5.7.6
+    IDENTIFIED BY 'auth_string'
+  | IDENTIFIED BY PASSWORD 'hash_string'
+  | IDENTIFIED WITH auth_plugin
+  | IDENTIFIED WITH auth_plugin BY 'auth_string'
+  | IDENTIFIED WITH auth_plugin AS 'hash_string'
+}
+
+ssl_option: {
+    SSL
+  | X509
+  | CIPHER 'cipher'
+  | ISSUER 'issuer'
+  | SUBJECT 'subject'
+}
+
+resource_option: {
+  | MAX_QUERIES_PER_HOUR count
+  | MAX_UPDATES_PER_HOUR count
+  | MAX_CONNECTIONS_PER_HOUR count
+  | MAX_USER_CONNECTIONS count
+}
+
+-- 例如
+GRANT
+```
+
+其他
+
+```sql
+-- 取消授权
+INVOKE
+-- 查看当前授权语句
+SHOW GRANTS;
+-- 查看授权详细
+SELECT * FROM mysql.user WHERE User='local' AND Host='localhost';
+SELECT * FROM INFORMATION_SCHEMA.USER_PRIVILEGES WHERE GRANTEE="'local'@'localhost'";
+SELECT * FROM INFORMATION_SCHEMA.COLUMN_PRIVILEGES WHERE GRANTEE="'local'@'localhost'";
+SELECT * FROM INFORMATION_SCHEMA.TABLE_PRIVILEGES WHERE GRANTEE="'local'@'localhost'";
+SELECT * FROM INFORMATION_SCHEMA.SCHEMA_PRIVILEGES WHERE GRANTEE="'local'@'localhost'";
+```
+
+# 存储对象
+
+> 所谓存储对象，即存储在服务器上一段供以后执行的代码，根据执行条件分为不同的类型。
+
+MySQL**存储对象** (*Stored Object*)有如下类型：
+
+- *存储程序* (*Stored Program*): 声明+调用
+  - *存储例程* (*Stored Routine*): 手动调用，可传参数（*即普通意义的函数*）
+    - **存储过程** (*Stored Procedure*): 通过`CALL`语句调用，没有返回值（*即没有返回值的函数*）
+    - **存储函数** (*Stored Function*): 作为表达式调用，有返回值（*即有返回值的函数*）
+  - **触发器** (*Trigger*): 在表执行特定动作（如`CREATE`）时触发（*即事件监听器*）
+  - **事件** (*Event*): 定时执行语句（*即定时任务*）
+- **视图** (*View*): 存储静态查询语句在被调用时生成数据集。（*即引用外部数据的虚拟表*）
+
+相关数据库
+
+- `INFORMATION_SCHEMA.ROUTINES`
+- `mysql.proc`
+
+## 存储过程 (Stored Procedure)
+
+> 没有返回值的函数，由`CALL`语句调用。
+
+查看
+
+```sql
+-- 列表
+SHOW PROCEDURE STATUS;
+-- 详情
+SHOW CREATE PROCEDURE proc_name
+-- 查看数据库有哪些存储过程
+SELECT name FROM MYSQL.PROC WHERE type='PROCEDURE' AND db='sys';
+SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE='PROCEDURE' AND ROUTINE_SCHEMA='sys';
+```
+
+## 存储函数 (Stored Function)
+
+> 有返回值的函数，可作为表达式调用。
+
+查看
+
+```sql
+-- 列表
+SHOW EVENTS FROM db_name;
+SHOW FUNCTION STATUS;
+-- 详情
+SHOW CREATE FUNCTION func_name
+-- 查看数据库有哪些存储函数
+SELECT name FROM MYSQL.PROC WHERE type='FUNCTION' AND db='sys';
+SELECT ROUTINE_NAME FROM INFORMATION_SCHEMA.ROUTINES WHERE ROUTINE_TYPE='FUNCTION' AND ROUTINE_SCHEMA='sys';
+```
+
+## 触发器 (Trigger)
+
+> 监听永久表（~~临时表和视图~~不可以）的事件，执行程序。属于数据库对象。
+
+监听器类型
+
+- `INSERT`: 当有新行被插入时触发，包括`INSERT`, `LOAD DATA`, `REPLACE`。
+- `UPDATE`: 当有行本身被直接修改时触发，包括`UPDATE`。
+- `DELETE`: 当有行本身被直接删除时触发，包括`DELETE`和`REPLACE`等，~~`DROP`和`TRUNCATE`~~等不会调用`DELETE`的不会触发。
+
+创建
+
+```sql
+CREATE
+    [DEFINER = { user | CURRENT_USER }]
+    TRIGGER trigger_name
+    trigger_time trigger_event
+    ON tbl_name FOR EACH ROW
+    [trigger_order]
+    trigger_body -- 触发代码中可以使用 OLD 和 NEW 指代被操作的行，如 OLD.col_name
+    -- 注意，col_name 不能是间接生成的列
+
+trigger_time: { BEFORE | AFTER }
+
+trigger_event: { INSERT | UPDATE | DELETE }
+
+trigger_order: { FOLLOWS | PRECEDES } other_trigger_name -- 定义与其他触发器之间的执行顺序
+
+-- 如，
+CREATE TRIGGER schema_name.trigger_name
+AFTER INSERT ON tb_name
+FOR EACH ROW
+```
+
+其他
+
+```sql
+-- 删除
+DROP TRIGGER [IF EXISTS] [schema_name.]trigger_name
+-- 列表
+SHOW TRIGGERS [FROM schema_name] [like_or_where]
+-- 详情
+SHOW CREATE TRIGGER trigger_name
+SELECT * FROM INFORMATION_SCHEMA.TRIGGERS
+```
+
+## 事件 (Event)
+
+> 通过系统调度器，定时执行程序。属于数据库对象。
+
+- 由`event_scheduler`参数控制系统调度器开关。
+
+创建
+
+```sql
+CREATE
+    [DEFINER = { user | CURRENT_USER }]
+    EVENT
+    [IF NOT EXISTS]
+    event_name
+    ON SCHEDULE schedule
+    [ON COMPLETION [NOT] PRESERVE]
+    [ENABLE | DISABLE | DISABLE ON SLAVE]
+    [COMMENT 'comment']
+    DO event_body;
+
+schedule:
+    AT timestamp [+ INTERVAL interval] ...
+  | EVERY interval
+    [STARTS timestamp [+ INTERVAL interval] ...]
+    [ENDS timestamp [+ INTERVAL interval] ...]
+
+interval:
+    quantity {YEAR | QUARTER | MONTH | DAY | HOUR | MINUTE |
+              WEEK | SECOND | YEAR_MONTH | DAY_HOUR | DAY_MINUTE |
+              DAY_SECOND | HOUR_MINUTE | HOUR_SECOND | MINUTE_SECOND}
+
+-- 如，一小时后调用存储过程myproc
+CREATE EVENT db_name.ev_name
+ON SCHEDULE AT CURRENT_TIMESTAMP + INTERVAL 1 HOUR
+DO CALL myproc;
+-- 如，每天统计登录人数，并从6小时15分钟后开始第一次
+CREATE EVENT db_name.ev_name
+ON SCHEDULE EVERY 1 DAY STARTS CURRENT_TIMESTAMP + INTERVAL '6:15' HOUR_MINUTE
+DO SELECT CURRENT_TIMESTAMP, COUNT(*) FROM activity.sessions;
+```
+
+其他
+
+```sql
+-- 修改
+ALTER
+    [DEFINER = { user | CURRENT_USER }]
+    EVENT event_name
+    [ON SCHEDULE schedule]
+    [ON COMPLETION [NOT] PRESERVE]
+    [RENAME TO new_event_name] -- 改名
+    [ENABLE | DISABLE | DISABLE ON SLAVE] -- 开关
+    [COMMENT 'comment']
+    [DO event_body] -- 程序
+-- 删除
+DROP EVENT [IF EXISTS] ev_name
+-- 列表
+SHOW EVENTS FROM db_name
+-- 详情
+SHOW CREATE EVENT ev_name
+SELECT * FROM INFORMATION_SCHEMA.EVENTS
+SELECT * FROM MYSQL.EVENT
+```
+
+## 视图 (View)
+
+> 在定义时，通过`SELECT`语句即时创建虚拟表，该表引用源数据，在被调用时实时生成数据集。
+
+与函数和过程等对语句的动态处理不同，视图中的语句在创建的时候会编译成静态语句（即将`*`用真实字段名替代）。
+如`SELECT * ...`会替换成类似`SELECT name, age ...`的语句。
+
+创建视图
+
+```sql
+CREATE
+    [OR REPLACE]
+    [ALGORITHM = {UNDEFINED | MERGE | TEMPTABLE}]
+    [DEFINER = { user | CURRENT_USER }]
+    [SQL SECURITY { DEFINER | INVOKER }]
+    VIEW view_name [(column_list)]
+    AS select_statement
+    [WITH [CASCADED | LOCAL] CHECK OPTION]
+
+-- 如，
+CREATE OR REPLACE VIEW myschema.
+```
+
+查看
+
+```sql
+-- 列表
+SHOW VIEWS FROM db_name
+SELECT * FROM INFORMATION_SCHEMA.VIEWS
+-- 详情
+SHOW CREATE VIEW view_name
+```
+
+# 索引
+
+# 系统参数和状态
+
+- [Server System Variables](https://dev.mysql.com/doc/refman/5.7/en/server-system-variables.html)
 - [Server Status Variables](https://dev.mysql.com/doc/refman/8.0/en/server-status-variables.html)
+
+| Status                          |                                  |
+| ------------------------------- | -------------------------------- |
+| `Table_locks_immediate`         |                                  |
+| `Innodb_row_lock_current_waits` | 当前等待锁的数量                 |
+| `Innodb_row_lock_time`          | 系统启动到现在，锁定的总时间长度 |
+| `Innodb_row_lock_time_avg`      | 每次平均锁定的时间               |
+| `Innodb_row_lock_time_max`      | 最长一次锁定时间                 |
+| `Innodb_row_lock_waits`         | 系统启动到现在总共锁定的次数     |
 
 | Variable                     |                                                        | Global | Session | Dynamic |
 | ---------------------------- | ------------------------------------------------------ | ------ | ------- | ------- |
@@ -632,28 +1119,20 @@ SHOW GLOBAL VARIABLES LIKE 'autocommit';
 | `time_zone`                  | 时区                                                   | Y      | Y       | Y       |
 | `system_time_zone`           | 系统时区                                               | Y      |         |         |
 
-## 诊断
-
-```sql
--- 显示当前会话的历史警告
-SHOW WARNINGS;
--- 显示当前会话的历史错误
-SHOW ERRORS;
-```
-
-# 状态解读（STATUS）
-
-- `Table_locks_immediate`:
-- `Innodb_row_lock_current_waits`: 当前等待锁的数量
-- `Innodb_row_lock_time`: 系统启动到现在，锁定的总时间长度
-- `Innodb_row_lock_time_avg`: 每次平均锁定的时间
-- `Innodb_row_lock_time_max`: 最长一次锁定时间
-- `Innodb_row_lock_waits`: 系统启动到现在总共锁定的次数
-
 # Explain
 
+> 获取语句的执行计划。与`DESCRIBE`完全同义，只是习惯上将`DESCRIBE`用于获取表结构描述。
+
 ```sql
-EXPLAIN
+{EXPLAIN | DESCRIBE | DESC} tbl_name [col_name | wild]
+
+{EXPLAIN | DESCRIBE | DESC} [explain_type] {explainable_stmt | FOR CONNECTION connection_id}
+
+explain_type: { EXTENDED | PARTITIONS | FORMAT = format_name }
+
+format_name: { TRADITIONAL | JSON }
+
+explainable_stmt: { SELECT ... | DELETE ... | INSERT ... | REPLACE ... | UPDATE ... }
 ```
 
   | 字段            | 值                                                    | 含义                                                                                                                              |
@@ -705,4 +1184,44 @@ EXPLAIN
   |                 | `Using MRR(Multi-Range Read)`                         | 使用辅助索引进行多范围读                                                                                                          |
 [ref](https://cloud.tencent.com/developer/article/1401617)
 
-# 常见函数
+# 常用函数
+
+- [内置函数和操作符](https://dev.mysql.com/doc/refman/en/built-in-function-reference.html)
+- [可加载的函数](https://dev.mysql.com/doc/refman/en/loadable-function-reference.html)
+- [表达式](https://dev.mysql.com/doc/refman/en/expressions.html)
+- [类型转换](https://dev.mysql.com/doc/refman/en/type-conversion.html)
+- [算术操作符](https://dev.mysql.com/doc/refman/en/arithmetic-functions.html)
+- [逻辑操作符](https://dev.mysql.com/doc/refman/en/logical-operators.html)
+- [赋值操作符](https://dev.mysql.com/doc/refman/en/assignment-operators.html)
+- [位函数和操作符](https://dev.mysql.com/doc/refman/en/bit-functions.html)
+- [常用分类函数](https://dev.mysql.com/doc/refman/en/functions.html)
+	- [控制流函数](https://dev.mysql.com/doc/refman/en/flow-control-functions.html)
+	- [数学函数](https://dev.mysql.com/doc/refman/en/mathematical-functions.html)
+	- [时间函数](https://dev.mysql.com/doc/refman/en/date-and-time-functions.html)
+	- [字符串比较函数](https://dev.mysql.com/doc/refman/en/string-comparison-functions.html)
+	- [正则表达式](https://dev.mysql.com/doc/refman/en/regexp.html)
+	- [全文搜索函数](https://dev.mysql.com/doc/refman/en/fulltext-search.html)
+	- [加解密函数](https://dev.mysql.com/doc/refman/en/encryption-functions.html)
+	- [锁函数](https://dev.mysql.com/doc/refman/en/locking-functions.html)
+	- [信息函数（获取相关数据的元信息）](https://dev.mysql.com/doc/refman/en/information-functions.html)
+	- [聚合函数（多数据分析）](https://dev.mysql.com/doc/refman/en/aggregate-functions.html)
+	- [杂项函数](https://dev.mysql.com/doc/refman/en/miscellaneous-functions.html)
+
+|                                           |                                              |
+| ----------------------------------------- | -------------------------------------------- |
+| `AES_ENCRYPT(str, pass)`                  | AES加密                                      |
+| 信息函数                                  |                                              |
+| `DATABASE()`,`SCHEMA()`                   | 当前(`USE`)数据库                            |
+| `CHARSET(str)`                            | 获取字符串的字符集                           |
+| `COLLATION(str)`                          | 获取字符串的整理集                           |
+| `CONNECTION_ID()`                         | 当前连接ID                                   |
+| `CURRENT_USER()`,`CURRENT_USER`           | 当前会话用户账号名[^1]，如`demo@192.168.*.*` |
+| `USER()`,`SESSION_USER()`,`SYSTEM_USER()` | 当前会话用户登录名，如`demo@l92.168.1.2`     |
+| `VERSION()`                               | MySQL服务器版本                              |
+| `FOUND_ROWS()`                            | 上一次查询结果数量                           |
+| `ROW_COUNT()`                             | 上一个语句执行所影响的(*affected*)行数量     |
+| `LAST_INSERT_ID()`                        | 上一次插入新行时自增字段的开始值             |
+| 测试函数                                  |                                              |
+| `BENCHMARK(count, expr)`                  | 对语句进行性能测试                           |
+
+[^1]: MySQL用户名由**用户名称**和**主机名称**一起组成，而MySQL在配置账号时主机名称允许使用通配符，如`192.168.*.*`，故**账号名**和**登录名**可能有所不同：`demo@192.168.*.*`与`demo@192.168.1.1`。此外，当登录用户没有权限时，其账号名的用户部分为空，如`@192.168.1.1`
