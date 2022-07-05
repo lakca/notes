@@ -131,9 +131,13 @@ date: 2021-04-19T11:13:31.973Z
 - 自动升级项目语言版本：[Transitioning an existing project to a new edition](https://doc.rust-lang.org/edition-guide/editions/transitioning-an-existing-project-to-a-new-edition.html#transitioning-an-existing-project-to-a-new-edition)，[Advanced migration strategies](https://doc.rust-lang.org/edition-guide/editions/advanced-migrations.html#advanced-migration-strategies)
 - 替换crate源：[Crates Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html#source-replacement)
 
-## 语言约定或术语
+## 语言周边
 
-### 标识符
+### 吉祥物
+
+> [Ferris](https://www.rustacean.net/): ![Ferris|100x100](https://rustacean.net/assets/rustacean-orig-noshadow.svg)
+
+### 语言习惯
 
 - 类型名用 *PascalCase* ；
 
@@ -141,15 +145,15 @@ date: 2021-04-19T11:13:31.973Z
 
 - 变量名、函数名、属性名等一般标识符使用 *lower_snake_case* ；
 
-### Rustonomicon
-
-> *Rustonomicon*：Rust 高级技巧
-> *The Dark Arts of Advanced and Unsafe Rust Programming.*
-
 ### Rustacean
 
-> *Rustacean*：Rust 用户
+> [*Rustacean*](https://www.rustaceans.org/)：Rust 用户。
 > *Rustaceans are people who use Rust, contribute to Rust, or are interested in the development of Rust.*
+
+### Rustonomicon
+
+> *Rustonomicon*：Rust 高级技巧。
+> *The Dark Arts of Advanced and Unsafe Rust Programming.*
 
 ## 版本和工具链管理-Rustup
 

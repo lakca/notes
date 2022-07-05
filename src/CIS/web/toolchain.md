@@ -1,3 +1,11 @@
+# eslint
+
+## 插件
+
+- [eslint-plugin-import](https://github.com/import-js/eslint-plugin-import/): ESLint plugin with rules that help validate proper imports.
+	- [eslint-import-resolver-alias](https://github.com/johvin/eslint-import-resolver-alias): This is a simple Node.js module import resolution plugin for [`eslint-plugin-import`](https://www.npmjs.com/package/eslint-plugin-import), which supports native Node.js module resolution, module alias/mapping and custom file extensions.
+- [eslint-plugin-simple-import-sort](https://github.com/lydell/eslint-plugin-simple-import-sort/): Easy autofixable import sorting.
+
 # esbuild
 
 *esbuild*支持两种编译模式：
@@ -152,4 +160,5 @@ var process = {
   cwd: () => ""
 };
 console.log(process.cwd());
+
 ```

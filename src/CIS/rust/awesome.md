@@ -1,13 +1,4 @@
-- [Rust awesome packages](#rust-awesome-packages)
-  - [GUI](#gui)
-    - [iced-保留模式的非原生UI](#iced-保留模式的非原生ui)
-      - [保留模式](#保留模式)
-    - [egui-即时模式的非原生UI](#egui-即时模式的非原生ui)
-      - [即时模式](#即时模式)
-      - [Who is egui for?](#who-is-egui-for)
-    - [Azul-使用web技术(CSS/HTML-like)的非原生UI](#azul-使用web技术csshtml-like的非原生ui)
-
-# Rust awesome packages
+≤# Rust awesome crates
 
 ## GUI
 
@@ -16,7 +7,7 @@
 [![GitHub stars](https://img.shields.io/github/stars/iced-rs/iced?style=flat-square)](https://github.com/iced-rs/iced/stargazers)
 [![GitHub license](https://img.shields.io/github/license/iced-rs/iced?style=flat-square)](https://github.com/iced-rs/iced/blob/master/LICENSE)
 [![GitHub last commit](https://img.shields.io/github/last-commit/iced-rs/iced?style=flat-square)](https://github.com/iced-rs/iced/commits)
-
+≤
 - Simple, easy-to-use, batteries-included API
 - Type-safe, reactive programming model
 - [Cross-platform support](https://github.com/hecrj/iced/blob/master/docs/images/todos_desktop.jpg?raw=true) (Windows, macOS, Linux, and [the Web](https://iced.rs/))

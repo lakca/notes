@@ -49,7 +49,7 @@ date: 2021-03-22T07:01:30.074Z
 > Add file contents to the index.
 
 ```shell
-git add [options] [--] <pathsepc>...
+git add [<options>] [--] <pathsepc>...
 ```
 
 ```bash
@@ -107,7 +107,7 @@ git add .
 > Record changes to the repository.
 
 ```shell
-git commit [options] [--] <pathspec>...
+git commit [<options>] [--] <pathspec>...
 ```
 
 提交所有跟踪过（*tracked*）的文件（跳过索引区）：
@@ -163,14 +163,7 @@ d48a90d feature A
 
 # 示例提交给feature A：
 ```
-1. 直接提交进指定提交：
-```shell
-# 通过 --squash 直接提交进入feature A
-> git commit --squash d48a90d
-0c0d4b4 feature B
-780572e feature A
-```
-2. 或者，先提交稍后合并进去：
+1. 使用`--fixup`提交：
 ```shell
 # 通过 --fixup 标记创建的提交为feature A的修改
 > git commit --fixup d48a90d
@@ -181,6 +174,14 @@ d48a90d feature A
 > git rebase -i --autosquash d48a90d~
 0c0d4b4 (HEAD -> dev) feature B
 780572e feature A
+```
+2. 或者，如果需要在合并（*rebase*）的时候修改合并消息，使用`--squash`：
+```shell
+> git commit --squash d48a90d
+44251ec (HEAD -> dev) fixup! feature A
+f90eb05 feature B
+d48a90d feature A
+...
 ```
 
 绕过钩子：
@@ -201,6 +202,87 @@ d48a90d feature A
 ```
 ```shell
 > SKIP_POST_COMMIT=1 git commit -m '...'
+```
+
+## checkout
+
+> Switch branches or restore working tree files. Updates files in the working tree to match the version in the index or the specified tree.
+
+```shell
+git checkout [<options>] [<branch>] [--] <pathspec>...
+```
+
+切换分支：
+
+```shell
+git checkout <branch>
+```
+
+如果，*\<branch\>*不存在，但有同名的远程分支存在，则创建一个追踪分支，等同于：
+
+```shell
+git checkout -b <branch> --track <remote>/<branch>
+```
+
+基于当前*HEAD*创建新分支：
+
+```shell
+-b <branch>
+```
+
+创建全新分支（没有父提交）：
+
+```shell
+--orphan <branch>
+```
+
+对尚未合并（`rebase`或`merge`）的文件检出不同版本（*current changes*或*incomming changes*）：
+
+```shell
+# current changes:
+--ours, -2
+# incomming changes:
+--theirs, -3
+```
+
+## branch
+
+常见用法：
+```bash
+# 创建
+git branch <name> # = git branch <name> HEAD
+git branch <name> <start-point: a commit|tag|branch>
+
+# 创建分支时同时设置upstream
+-t, --track
+
+# 删除
+-d <name>, --delete
+-D <name>, -delete --force
+
+# 详情
+-v, --verbose
+# 详情中附加upstream名称
+-vv
+
+# 重命名
+-m, --move
+-M, -move --force
+
+# 复制分支（包括reflog）
+-c, --copy
+-C, --copy --force
+
+# 设置upstream
+-u <upstream>, --set-upstream-to=<upstream>
+
+# 删除/列出分支时，同时附加该分支追踪的远程分支：
+-r, --remotes
+
+# * 创建/不创建branch的reflog：
+# This activates recording of all changes made to the branch ref;
+--create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for branch；
+--no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
 ```
 
 ## push
@@ -406,10 +488,6 @@ git log --log-size
 
 ```
 
-## shortlog（根据提交人分组统计提交）
-
-## rev-list（列出某个提交中的对象）
-
 ## diff
 > Show changes between commits, commit and working tree, etc.
 
@@ -566,46 +644,6 @@ git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
 -v, --verify
 ```
 
-## branch
-
-常见用法：
-```bash
-# 创建
-git branch <name> # = git branch <name> HEAD
-git branch <name> <start-point: a commit|tag|branch>
-
-# 创建分支时同时设置upstream
--t, --track
-
-# 删除
--d <name>, --delete
--D <name>, -delete --force
-
-# 详情
--v, --verbose
-# 详情中附加upstream名称
--vv
-
-# 重命名
--m, --move
--M, -move --force
-
-# 复制分支（包括reflog）
--c, --copy
--C, --copy --force
-
-# 设置upstream
--u <upstream>, --set-upstream-to=<upstream>
-
-# 删除/列出分支时，同时附加该分支追踪的远程分支：
--r, --remotes
-
-# * 创建/不创建branch的reflog：
-# This activates recording of all changes made to the branch ref;
---create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for branch；
---no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
-```
-
 ## blame
 
 blame指定的文件行：
@@ -634,8 +672,7 @@ git rm -r
 
 ## ls-files
 
-> 用于列出`working directory`和`staging area`中的文件；
-> 相较于`git status`，作用更为单纯，尤其适合在脚本中使用；
+> Show information about files in the index and the working tree.
 
 常用选项：
 
@@ -685,6 +722,10 @@ git ls-files --others --exclude-standard
 git ls-files --ignored --exclude-standard
 ```
 
+## rev-list（列出某个提交中的对象）
+
+## shortlog（根据提交人分组统计提交）
+
 ## update-index
 
 > Register file contents in the working tree to the index.
@@ -731,7 +772,7 @@ git update-index --skip-worktree/--no-skip-worktree <file>
 --show-origin
 
 # 来源类型，local, global, system
---show-scope 
+--show-scope
 
 # 只显示配置名称
 --name-only

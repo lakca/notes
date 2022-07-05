@@ -58,7 +58,114 @@ date: 2020-08-04T09:26:34.573Z
 | initialize             | 初始化            |
 | assign                 | 赋值              |
 
-|                        |                  |
+# 符号
+
+| Symbol | Name                      | 编程含义           |
+| ------ | ------------------------- | ------------------ |
+| ()     | parentheses               | group              |
+| []     | brackets, square brackets | subscript          |
+| {}     | braces                    | block              |
+| <>     | angle brackets            |                    |
+| -      | hyphen, dash              |                    |
+| :      | colon                     |                    |
+| ;      | semicolon                 |                    |
+| ,      | comma                     |                    |
+| .      | dot, period               | period, subscript  |
+| \|     | bar, pipe, or             | or                 |
+| *      | asterisk                  |                    |
+| !      | exclamation mark          |                    |
+| ?      | question mark             |                    |
+| &      | ampersand, and            | and                |
+| #      | hash                      |                    |
+| ~      | tilde                     |                    |
+| ^      | caret                     | exclusive or (xor) |
+
+# 数学符号
+
+| Symbol        | Name                              | Meaning                          |
+| ------------- | --------------------------------- | -------------------------------- |
+| +             | plus sign                         | addition                         |
+| -             | minus sign                        | subtraction                      |
+| ×             | times sign                        | multiplication                   |
+| *             | asterisk                          | multiplication                   |
+| ÷             | division sign, obelus             | division                         |
+| /             | division slash                    | division                         |
+| mod           | modulo                            | remainder calculation            |
+| =             | equals sign                       | equality                         |
+| ≠             | not equal sign                    | inequality                       |
+| –             | horizontal line                   | division / fraction              |
+| $\frac{x}{y}$ | fraction                          | division / fraction              |
+| ^             | caret                             | exponent                         |
+| $x^y$         | power                             | exponent                         |
+| .             | period                            | decimal point, decimal separator |
+| ()            | calculate expression inside first | parentheses                      |
+| []            | calculate expression inside first | brackets                         |
+| {}            |                                   | braces                           |
+| √             | radical                           |                                  |
+| √a            | square root                       |                                  |
+| 3√a           | cube root                         |                                  |
+| 4√a           | forth root                        |                                  |
+| %             | percent                           |                                  |
+| ‰             | per-mille                         |                                  |
+| ppm           | per-million                       | parts per million                |
+| ppb           | per-billion                       | parts per billion                |
+| ppt           | per-trillion                      | parts per trillion               |
+| $\because$    | because, since                    |                                  |
+| $\therefore$  | therefore                         |                                  |
+
+# 数学名词
+
+| Phrase                          | 中文         |
+| ------------------------------- | ------------ |
+| axiom                           | 公理         |
+| theorem                         | 定理         |
+| prove                           | 证明         |
+| hypothesis                      | 假设         |
+| proposition                     | 命题         |
+| arithmetic                      | 算术         |
+| plus, addition, add             | 加法         |
+| augend, summand                 | 被加数       |
+| addend                          | 加数         |
+| sum                             | 和           |
+| minus, subtraction,subtract     | 减法         |
+| minuend                         | 被减数       |
+| subtrahend                      | 减数         |
+| remainder                       | 差           |
+| times, multiplication, multiply | 乘法         |
+| product                         | 积           |
+| multiplicand, faciend           | 被乘数       |
+| multiplicator                   | 乘数         |
+| division, divided by, divide    | 除法         |
+| quotient                        | 商           |
+| dividend                        | 被除数       |
+| divisor                         | 除数         |
+| mean                            | 平均数       |
+| arithmetic mean                 | 算术平均数   |
+| geometric mean                  | 几何平均数   |
+| fraction                        | 分数         |
+| convolution                     | 卷积         |
+| conjugate                       | 共轭         |
+| complex                         | 复数         |
+| imaginary                       | 虚数         |
+| open interval                   | 开区间       |
+| calculus                        | 微积分       |
+| limit                           | 极限         |
+| derivative                      | 导数         |
+| second derivative               | 二阶导数     |
+| nth derivative                  | n阶导数      |
+| partial derivative              | 偏导数       |
+| integral                        | 积分         |
+| line integral                   | 线积分       |
+| double integral                 | 双积分       |
+| triple integral                 | 三重积分     |
+| closed surface integral         | 闭合曲面积分 |
+| closed volume integral          | 闭合体积积分 |
+| delta function                  | 三角函数     |
+| e constant / Euler’s number     | 欧拉常数     |
+
+# 物理名词
+
+| Phrase                 | 中文             |
 | ---------------------- | ---------------- |
 | velocity               | 速度             |
 | accuracy               | 精度             |
@@ -69,14 +176,24 @@ date: 2020-08-04T09:26:34.573Z
 
 # 缩写
 
-| Abbreviation | Phrase                                     |
-| ------------ | ------------------------------------------ |
-| DTO          | Data Transfer Object                       |
-| DI           | Dependency Injection                       |
-| ACID         | Atomicity Consistency Isolation Durability |
-| ORM          | Object Relational Mapping                  |
-| TL;DR        | Too long; didn't read                      |
-| ODBC         | Open Database Connectivity                 |
+| Abbreviation    | Expansion                                           | 中文                           | 解释                                                        |
+| --------------- | --------------------------------------------------- | ------------------------------ | ----------------------------------------------------------- |
+| IRC             | Internet Relay Chat                                 | 互联网中继通信                 |                                                             |
+| RSS             | Really Simple Syndication                           | 真正简单聚合                   |                                                             |
+| DTO             | Data Transfer Object                                | 数据传输对象                   |                                                             |
+| DI              | Dependency Injection                                | 依赖注入                       |                                                             |
+| ACID            | Atomicity Consistency Isolation Durability          | 原子性、一致性、隔离性和持久化 |                                                             |
+| ORM             | Object Relational Mapping                           | 对象关系映射                   |                                                             |
+| TL;DR           | Too long; didn't read                               | 简而言之                       |                                                             |
+| ODBC            | Open Database Connectivity                          | 开放数据库互联                 |                                                             |
+| NAT             | Network Address Translation                         | 网络地址转换                   |                                                             |
+| UUID            | Universally Unique Identifier                       | 通用唯一识别码                 |                                                             |
+| GUID            | Globally Unique Identifier                          | 全局唯一识别码                 |                                                             |
+| ASCII(US-ASCII) | American Standard Code for Information Interchange  |                                | 其中编号从32到126之间的字符都是可打印字符                   |
+| MIME            | Multipurpose Internet Mail Extensions               | 多用途互联网邮件扩展类型       | 扩展电子邮件的消息格式以支持*ASCII*之外的字符集，如音视频等 |
+| RFC             | Request for Comments                                |                                | 来自Internet的主要技术开发和标准制定机构的一系列出版物      |
+| IANA            | Internet Assigned Numbers Authority                 | 互联网号码分配局               |
+| IEEE            | Institute of Electrical and Electronics Engineers | （美国）电子和电气工程师会     |                                                             |
 
 # 常用术语
 
@@ -122,3 +239,29 @@ date: 2020-08-04T09:26:34.573Z
 - *common*
 - *universal*
 - *generic*
+# 文字符号
+
+| Meaning             | Symbol |
+| ------------------- | ------ |
+| line feed, new line | \n     |
+| carriage return     | \r     |
+| horizontal tab      | \t     |
+| vertical tab        | \v     |
+| form feed           | \f     |
+
+# 编程术语
+
+| Phrase      | 中文   |
+| ----------- | ------ |
+| manipulate  | 调用   |
+| interpolate | 插值   |
+| derive      | 派生   |
+| iterate     | 迭代   |
+| declare     | 声明   |
+| define      | 定义   |
+| initialize  | 初始化 |
+| assign      | 赋值   |
+| subscript   | 下标   |
+| vector      | 向量   |
+| array       | 数组   |
+

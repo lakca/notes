@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<!-- 任务名称 -->
+	<key>Label</key>
+	<string>MyProgram</string>
+	<!-- 工作目录 -->
+	<key>WorkingDirectory</key>
+	<string>/tmp</string>
+	<!-- 程序路径，写法一 -->
+	<key>Program</key>
+	<string>/path/to/program</string>
+	<!-- 程序路径，写法二 -->
+	<key>ProgramArguments</key>
+	<array>
+		<string>/usr/bin/rsync</string>
+		<string>--archive</string>
+		<string>--compress-level=9</string>
+		<string>/Volumes/Macintosh HD</string>
+		<string>/Volumes/Backup</string>
+	</array>
+	<!-- 环境变量 -->
+	<key>EnvironmentVariables</key>
+	<dict>
+		<key>PATH</key>
+		<string>/bin:/usr/bin:/usr/local/bin</string>
+	</dict>
+	<!-- 标准输入输出 -->
+	<key>StandardInPath</key>
+	<string>/tmp/test.stdin</string>
+	<key>StandardOutPath</key>
+	<string>/tmp/test.stdout</string>
+	<key>StandardErrorPath</key>
+	<string>/tmp/test.stderr</string>
+	<key>Debug</key>
+	<true/>
+  <!-- 权限：用户 -->
+  <key>UserName</key>
+  <string>nobody</string>
+  <!-- 权限：用户组 -->
+  <key>GroupName</key>
+  <string>nobody</string>
+  <!-- 权限：Umask -->
+  <key>Umask</key>
+  <!--
+    0	read, write and execute/search
+    1	read and write
+    2	read and execute/search
+    3	read only
+    4	write and execute
+    5	write only
+    6	execute/search only
+    7	none
+  -->
+  <string>0</string>
+  <!-- 限流 -->
+  <key>ThrottleInterval</key>
+  <integer>60</integer>
+  <!-- IO优先级 -->
+  <key>LowPriorityIO</key>
+  <true/>
+	<!-- 限制可用资源 -->
+	<key>HardResourceLimits</key>
+  <!-- 包括：CPU, FileSize, NumberOfFiles, Core, Data, MemoryLock, NumberOfProcesses, ResidentSetSize, Stack -->
+	<dict>
+		<key>NumberOfFiles</key>
+		<integer>2048</integer>
+	</dict>
+	<key>SoftResourceLimits</key>
+	<dict>
+		<key>NumberOfFiles</key>
+		<integer>2048</integer>
+	</dict>
+	<!-- 运行条件：常驻运行（自动重启） -->
+	<key>LaunchOnlyOnce</key>
+	<true/>
+	<key>KeepAlive</key>
+	<true/>
+	<!-- 运行条件：常驻运行（自动重启），有条件地 -->
+	<key>KeepAlive</key>
+  <dict>
+    <key>SuccessfulExit</key>
+    <true/>
+    <key>Crashed</key>
+    <true/>
+    <key>NetworkState</key>
+    <true/>
+    <key>PathState</key>
+    <dict>
+      <key>/tmp/runJob</key>
+      <true/>
+    </dict>
+    <key>OtherJobEnabled</key>
+    <dict>
+      <key>local.otherJob</key>
+      <false/>
+    </dict>
+    <key>AfterInitialDemand</key>
+    <dict>
+      <key>local.otherJob</key>
+      <true/>
+    </dict>
+  </dict>
+	<!-- 运行条件：在开机后自动启动 -->
+	<key>RunAtLoad</key>
+	<true/>
+  <!-- 运行条件：周期性启动，按时间间隔 -->
+  <key>StartInterval</key>
+  <integer>3600</integer>
+  <!-- 运行条件：周期性启动，按日历 -->
+  <key>StartCalendarInterval</key>
+  <array>
+  	<dict>
+  		<key>Hour</key>
+  		<integer>3</integer>
+  		<key>Minute</key>
+  		<integer>0</integer>
+  	</dict>
+  	<dict>
+  		<key>Minute</key>
+  		<integer>0</integer>
+  		<key>Weekday</key>
+  		<integer>0</integer>
+  	</dict>
+  </array>
+  <!-- 运行条件：监控路径，当路径变动（创建、删除、写入）时启动 -->
+  <key>WatchPaths</key>
+  <array>
+    <string>/path/to/directory_or_file</string>
+  </array>
+  <!-- 运行条件：监控目录，当目录不为空时启动 -->
+  <key>QueueDirectories</key>
+  <array>
+    <string>/path/to/directory_or_file</string>
+  </array>
+</dict>
+</plist>

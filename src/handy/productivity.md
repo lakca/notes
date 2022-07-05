@@ -3,134 +3,91 @@ title: Productivity
 date: 2020-09-08T08:54:35.938Z
 ---
 
-- [Productivity](#productivity)
-  - [CLI](#cli)
-    - [`z`: 跨平台](#z-跨平台)
-    - [`autojump`](#autojump)
-    - [`zsh`](#zsh)
-      - [`zsh-autosuggestions`](#zsh-autosuggestions)
-      - [`zsh-completions`](#zsh-completions)
-      - [`zsh-syntax-highlighting`](#zsh-syntax-highlighting)
-      - [`pure-prompt`](#pure-prompt)
-      - [`tldr`: Simplified and community-driven man pages](#tldr-simplified-and-community-driven-man-pages)
-      - [`thefuck`: Correct errors in previous console commands.](#thefuck-correct-errors-in-previous-console-commands)
-  - [Editor](#editor)
-    - [`vscode`](#vscode)
-      - [`change-case`](#change-case)
-      - [`Code Runner`](#code-runner)
-      - [`Markdown All in One`](#markdown-all-in-one)
-      - [`Markdown+Math`: LaTeX Math for Markdown](#markdownmath-latex-math-for-markdown)
-      - [`npm intellisense`](#npm-intellisense)
-      - [`Path Intellisense`](#path-intellisense)
-      - [`Polacode`: Polaroid for your code](#polacode-polaroid-for-your-code)
-      - [`Quokka`: Live Scratchpad for JavaScript](#quokka-live-scratchpad-for-javascript)
-      - [`REST Client`](#rest-client)
-      - [`Sort JSON objects`](#sort-json-objects)
-      - [`Sort JS obejct keys`](#sort-js-obejct-keys)
-      - [`Terminal`: Run in Text Editor Directly](#terminal-run-in-text-editor-directly)
-      - [`Terminal Tabs`: Add Each Terminal Tab to Status Bar](#terminal-tabs-add-each-terminal-tab-to-status-bar)
-      - [`Todo Tree`](#todo-tree)
-      - [`WakaTime`: Metrics, insights, and time tracking automatically generated from your programming activity.](#wakatime-metrics-insights-and-time-tracking-automatically-generated-from-your-programming-activity)
-    - [Font](#font)
-      - [`Fira Code`](#fira-code)
-      - [`Operator Mono`](#operator-mono)
-  - [MacOS](#macos)
-    - [`brew`: Package Manager](#brew-package-manager)
-      - [更改源](#更改源)
-    - [`Dash`: API Documentation Browser and Code Snippet Manager](#dash-api-documentation-browser-and-code-snippet-manager)
-  - [SaaS](#saas)
-    - [`Analyse your HTTP response headers`](#analyse-your-http-response-headers)
-    - [`FunDebug`: 专业的应用错误监控平台](#fundebug-专业的应用错误监控平台)
-  - [Other](#other)
-    - [`asciinema`: Record terminal session](#asciinema-record-terminal-session)
-    - [`you-get`: Command-line utility to download media contents (videos, audios, images) from the Web.](#you-get-command-line-utility-to-download-media-contents-videos-audios-images-from-the-web)
-    - [`cloc`: Count lines of code.](#cloc-count-lines-of-code)
+# CLI
 
-# Productivity
+## autojump（记忆版cd）
 
-## CLI
+> [autojump](https://github.com/wting/autojump): A `cd` command that learns - easily navigate directories from the command line
 
-### `z`: 跨平台
+## z（跨平台版autojump）
 
-> https://github.com/rupa/z
+> [z](https://github.com/rupa/z): jump around.
 
-### `autojump`
+## spaceship
+## neofetch
+## onefetch
 
-> https://github.com/wting/autojump
+## git-open（打开当前Git项目网页）
+> [git-open](https://github.com/paulirish/git-open): Type `git open` to open the (directory) repo website (GitHub, GitLab, Bitbucket) in your browser.
 
-### `zsh`
+## asdf（多语言的版本管理器）
+> [asdf](https://github.com/asdf-vm/asdf): Extendable version manager with support for Ruby, Node.js, Elixir, Erlang & more.
 
-#### `zsh-autosuggestions`
-
-> https://github.com/zsh-users/zsh-autosuggestions
-
-#### `zsh-completions`
-
-> https://github.com/zsh-users/zsh-completions
-
-#### `zsh-syntax-highlighting`
-
-> https://github.com/zsh-users/zsh-syntax-highlighting
-
-#### `pure-prompt`
+## pure-prompt
 
 > https://github.com/sindresorhus/pure
 
-#### `tldr`: Simplified and community-driven man pages
+## tldr（社区简化版man）
+> [tldr](https://github.com/tldr-pages/tldr): Simplified and community-driven man pages.
 
-> https://github.com/tldr-pages/tldr
+## thefuck（纠正命令输入）
+> [thefuck](https://github.com/nvbn/thefuck): Correct errors in previous console commands.
 
-#### `thefuck`: Correct errors in previous console commands.
+## bat（集成git和高亮版cat）
 
-> https://github.com/nvbn/thefuck
+> [bat](https://github.com/sharkdp/bat): A _cat(1)_ clone with syntax highlighting and Git integration.
 
-## Editor
+## fzf（命令行模糊查找器）
 
-### `vscode`
+> [fzf](https://github.com/junegunn/fzf): 🌸 A command-line fuzzy finder.
 
-#### `change-case`
+## fd（简单友好的find替代）
 
-#### `Code Runner`
+> [fd](https://github.com/sharkdp/fd): Simple, fast and user-friendly alternative to find
 
-#### `Markdown All in One`
+## caddy（Web服务器）
 
-#### `Markdown+Math`: LaTeX Math for Markdown
+> [Caddy - The Ultimate Server with Automatic HTTPS](https://caddyserver.com/): Fast, multi-platform web server with automatic HTTPS.
 
-#### `npm intellisense`
+## tokei（统计代码）
 
-#### `Path Intellisense`
+> [tokei](https://github.com/XAMPPRocky/tokei): Count your code, quickly.
 
-#### `Polacode`: Polaroid for your code
+## cloc（统计代码）
 
-#### `Quokka`: Live Scratchpad for JavaScript
+> [cloc](https://github.com/AlDanial/cloc): cloc counts blank lines, comment lines, and physical lines of source code in many programming languages.
 
-#### `REST Client`
+## asciinema（文本型终端会话录制）
 
-#### `Sort JSON objects`
+> [asciinema](https://github.com/asciinema/asciinema): Forget screen recording apps and blurry video. Enjoy a lightweight, purely text-based approach to terminal recording.
 
-#### `Sort JS obejct keys`
+## you-get（下载网页视频图片）
 
-#### `Terminal`: Run in Text Editor Directly
+> [you-get](https://github.com/soimort/you-get): Command-line utility to download media contents (videos, audios, images) from the Web. [Supported Sites](https://github.com/soimort/you-get#supported-sites)
 
-#### `Terminal Tabs`: Add Each Terminal Tab to Status Bar
+## zsh
 
-#### `Todo Tree`
+### themes
 
-#### `WakaTime`: Metrics, insights, and time tracking automatically generated from your programming activity.
+- powerlevel10k
 
-### Font
+### zsh-autosuggestions
 
-#### `Fira Code`
+> https://github.com/zsh-users/zsh-autosuggestions
 
-> https://github.com/tonsky/FiraCode
+### zsh-completion
 
-#### `Operator Mono`
+> https://github.com/zsh-users/zsh-completions
 
-> https://github.com/coderJianXun/Operator-Mono
+### zsh-syntax-highlighting
 
-## MacOS
+> https://github.com/zsh-users/zsh-syntax-highlighting
 
-### `brew`: Package Manager
+# 跨平台
+
+# MacOS
+
+## brew（包管理器）
 
 - `brew commands`: list commands
 - `brew search`
@@ -146,7 +103,7 @@ date: 2020-09-08T08:54:35.938Z
 - `brew shellenv`
 - `brew --repo`
 
-#### 更改源
+更改源：
 
 1. [Homebrew](http://mirrors.ustc.edu.cn/help/brew.git.html):
 
@@ -181,28 +138,77 @@ git remote set-url origin https://mirrors.ustc.edu.cn/homebrew-cask.git
 export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
 ```
 
-### `Dash`: API Documentation Browser and Code Snippet Manager
+## Dash（文档浏览器）
 
-## SaaS
+> API Documentation Browser and Code Snippet Manager
 
-### `Analyse your HTTP response headers`
+## KeyCastr（键盘敲击可视化）
+
+> [KeyCastr](https://github.com/keycastr/keycastr): KeyCastr, an open-source keystroke visualizer.
+
+# SaaS
+
+## `Analyse your HTTP response headers`
 
 > https://securityheaders.com
 
-### `FunDebug`: 专业的应用错误监控平台
+## `FunDebug`: 专业的应用错误监控平台
 
 > https://www.fundebug.com/
 
-## Other
+# Editor
 
-### `asciinema`: Record terminal session
+## vscode
 
-### `you-get`: Command-line utility to download media contents (videos, audios, images) from the Web.
+### `change-case`
 
-> https://github.com/soimort/you-get
+### `Code Runner`
 
-### `cloc`: Count lines of code.
+### `Markdown All in One`
 
-> https://github.com/AlDanial/cloc
+### `Markdown+Math`: LaTeX Math for Markdown
 
-> cloc counts blank lines, comment lines, and physical lines of source code in many programming languages.
+### `npm intellisense`
+
+### `Path Intellisense`
+
+### `Polacode`: Polaroid for your code
+
+### `Quokka`: Live Scratchpad for JavaScript
+
+### `REST Client`
+
+### `Sort JSON objects`
+
+### `Sort JS obejct keys`
+
+### `Terminal`: Run in Text Editor Directly
+
+### `Terminal Tabs`: Add Each Terminal Tab to Status Bar
+
+### `Todo Tree`
+
+### `WakaTime`: Metrics, insights, and time tracking automatically generated from your programming activity.
+
+## Font
+
+- Nerd Fonts
+
+- Powerline Fonts
+
+- Fira Code
+
+> https://github.com/tonsky/FiraCode
+
+- Operator Mono
+
+> https://github.com/coderJianXun/Operator-Mono
+
+# Other
+
+## espanso（跨平台的文本展开器）
+
+> [espanso](https://github.com/federico-terzi/espanso): A cross-platform Text Expander written in Rust.
+>
+> 可以展开的文本包括表情、日期、IP、图片、shell命令、自定义snippets......，而且几乎可以工作在任何软件中。
+
