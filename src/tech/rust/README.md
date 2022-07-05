@@ -1,3 +1,5 @@
-  - [README]()<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-  - [Package](package)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Rust](rust)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 11:18</span>
+- [......]()<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+- [Rust Library](lib)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+- [Awesome](awesome)<span style="font-size:.8em;float:right"><span style="color:orange">R091</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+- [IRC](Untitled)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+- [Rust](rust)<span style="font-size:.8em;float:right"><span style="color:orange">R098</span><span style="padding-left:2em;color:gray;">2022-07-05 17:35</span></span>

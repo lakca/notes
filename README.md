@@ -1,104 +1,121 @@
 
-# Notes
+# Index
 
-## Index
+- [Color](src/color)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-03-19 18:01</span></span>
+- [Crates.io](src/crates.io)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-03-19 18:01</span></span>
+- [Tech](src/tech)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [......](src/tech/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [Vt 100](src/tech/vt100)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Vscode](src/tech/vscode)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Vim](src/tech/vim)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Ssh](src/tech/ssh)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Bash](src/tech/shortcut)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Roadmap](src/tech/roadmap)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Open Source](src/tech/open-source)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [一些有用的在线服务](src/tech/online-services)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [阅读](src/tech/mysql)<span style="font-size:.8em;float:right"><span style="color:orange">R056</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [API](src/tech/jira)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Glossary](src/tech/glossary)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Git](src/tech/git)<span style="font-size:.8em;float:right"><span style="color:orange">R094</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [设计原则](src/tech/concept)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [WebRTC](src/tech/WebRTC)<span style="font-size:.8em;float:right"><span style="color:orange">R096</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [资源](src/tech/WebAssembly)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Protocol](src/tech/protocol)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-03-13 23:43</span></span>
+  - [Algo](src/tech/algo)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/algo/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [Aes](src/tech/algo/aes)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Footprint](src/tech/algo/footprint)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Uuid](src/tech/algo/uuid)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Unicode](src/tech/algo/unicode)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Raster](src/tech/algo/image)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Base64](src/tech/algo/base64)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [C](src/tech/c)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/c/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [C](src/tech/c/c)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Go](src/tech/go)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/go/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [语言](src/tech/go/go)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Linux](src/tech/linux)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/linux/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [Xargs](src/tech/linux/xargs)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Variable](src/tech/linux/variable)<span style="font-size:.8em;float:right"><span style="color:orange">R094</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Type](src/tech/linux/type)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Set](src/tech/linux/set)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Sed](src/tech/linux/sed)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Grep](src/tech/linux/grep)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Find](src/tech/linux/find)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Expr](src/tech/linux/expr)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Concept](src/tech/linux/concept)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Commands](src/tech/linux/command)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Basic](src/tech/linux/basic)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Awk](src/tech/linux/awk)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Net](src/tech/net)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/net/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [RTMP](src/tech/net/RTMP)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [RTSP](src/tech/net/RTSP)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Http](src/tech/net/http)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [HLS](src/tech/net/HLS)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Nodejs](src/tech/nodejs)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/nodejs/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [NPM Packages](src/tech/nodejs/packages)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Npm](src/tech/nodejs/npm)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Others](src/tech/others)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/others/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [通过SV G等创建logo文件（ico文件）](src/tech/others/svg-to-ico)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Python](src/tech/python)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/python/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [Qt](src/tech/python/qt)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Python](src/tech/python/python)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Untitled](src/tech/python/Untitled)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Rust](src/tech/rust)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/rust/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [Rust Library](src/tech/rust/lib)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Awesome](src/tech/rust/awesome)<span style="font-size:.8em;float:right"><span style="color:orange">R091</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [IRC](src/tech/rust/Untitled)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Rust](src/tech/rust/rust)<span style="font-size:.8em;float:right"><span style="color:orange">R098</span><span style="padding-left:2em;color:gray;">2022-07-05 17:35</span></span>
+  - [Swift](src/tech/swift)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/swift/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [Swift](src/tech/swift/swift)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [V](src/tech/v)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/v/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [V](src/tech/v/v)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+  - [Web](src/tech/web)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [......](src/tech/web/)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+    - [Mime](src/tech/web/mime)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [rsuite](src/tech/web/uikit)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [eslint](src/tech/web/toolchain)<span style="font-size:.8em;float:right"><span style="color:orange">R086</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [概念](src/tech/web/svg)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [Frameworks](src/tech/web/frameworks)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [React JS](src/tech/web/ReactJS)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [DOM](src/tech/web/DOM)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [CSS](src/tech/web/CSS)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+    - [CSS](src/tech/web/CSS-Snippet)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+- [Handy](src/handy)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [......](src/handy/)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [快速原型](src/handy/rapid)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-05 15:00</span></span>
+  - [Mac](src/handy/mac)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-07-05 15:00</span></span>
+  - [Productivity](src/handy/productivity)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-07-05 15:00</span></span>
+- [Posts](src/posts)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-02-11 00:28</span></span>
+- [App](src/app)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [Bagua](src/app/bagua)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-02-13 14:07</span></span>
+- [Other](src/other)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [......](src/other/)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
+  - [1](src/other/1)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-03-19 18:01</span></span>
 
-- [Cis](src/cis)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-18 18:45</span>
-  - [README](src/cis/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-  - [WebAssembly](src/cis/WebAssembly)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [WebRTC](src/cis/WebRTC)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-14 14:59</span>
-  - [Algo](src/cis/algo)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-16 10:55</span>
-    - [README](src/cis/algo/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Image](src/cis/algo/image)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-16 11:55</span>
-  - [C](src/cis/c)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/c/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [C](src/cis/c/c)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Git](src/cis/git)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-18 17:39</span>
-  - [Glossary](src/cis/glossary)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-16 11:41</span>
-  - [Go](src/cis/go)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/go/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Go](src/cis/go/go)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Jira](src/cis/jira)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Linux](src/cis/linux)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/linux/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Awk](src/cis/linux/awk)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Basic](src/cis/linux/basic)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Command](src/cis/linux/command)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Concept](src/cis/linux/concept)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Expr](src/cis/linux/expr)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Find](src/cis/linux/find)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Grep](src/cis/linux/grep)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Sed](src/cis/linux/sed)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Set](src/cis/linux/set)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Type](src/cis/linux/type)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Variable](src/cis/linux/variable)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Xargs](src/cis/linux/xargs)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Net](src/cis/net)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [HLS](src/cis/net/HLS)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [HTTP](src/cis/net/HTTP)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/net/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [RTMP](src/cis/net/RTMP)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [RTSP](src/cis/net/RTSP)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Nodejs](src/cis/nodejs)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/nodejs/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Npm](src/cis/nodejs/npm)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Packages](src/cis/nodejs/packages)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Online Services](src/cis/online-services)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Open Source](src/cis/open-source)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Others](src/cis/others)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/others/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Svg To Ico](src/cis/others/svg-to-ico)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Python](src/cis/python)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/python/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Python](src/cis/python/python)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Qt](src/cis/python/qt)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Rust](src/cis/rust)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 11:27</span>
-    - [README](src/cis/rust/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Package](src/cis/rust/package)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Rust](src/cis/rust/rust)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 11:18</span>
-  - [Shortcut](src/cis/shortcut)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Ssh](src/cis/ssh)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Swift](src/cis/swift)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/swift/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [Swift](src/cis/swift/swift)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [V](src/cis/v)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/v/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [V](src/cis/v/v)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Vim](src/cis/vim)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-18 18:45</span>
-  - [Vscode](src/cis/vscode)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Vt100](src/cis/vt100)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-  - [Web](src/cis/web)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [CSS Snippet](src/cis/web/CSS-Snippet)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-11 14:32</span>
-    - [CSS](src/cis/web/CSS)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [README](src/cis/web/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-    - [ReactJS](src/cis/web/ReactJS)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Frameworks](src/cis/web/frameworks)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-    - [Svg](src/cis/web/svg)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-10 16:53</span>
-- [Color](src/color)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2021-06-04 11:42</span>
-- [Crates.io](src/crates.io)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-04 18:51</span>
-- [Handy](src/handy)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-04 18:51</span>
-  - [README](src/handy/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
-  - [Mac](src/handy/mac)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2021-07-06 18:10</span>
-  - [Productivity](src/handy/productivity)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-01-14 15:27</span>
-  - [Rapid](src/handy/rapid)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-01 17:19</span>
-- [Other](src/other)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-04 18:51</span>
-  - [1](src/other/1)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2021-07-06 18:10</span>
-  - [README](src/other/)<span style="padding-left:2em;color:orange"></span><span style="color:gray;font-size:.8em;padding-left:2em">2022-03-15 18:42</span>
 
+# Contribute
 
-## Contribute
+## Hook
 
-### Add Hook
+Adding a `post-commit` hook to generate and commit newest notes index automatically.
 
-> Adding a `post-commit` hook to generate and commit newest notes index automatically.
-
-> The hook will detect files change by comparing `HEAD^` with `HEAD`, only files more than `README.md` will take effect.
+The hook will detect files change by comparing `HEAD^` with `HEAD`, only files more than `README.md` will take effect.
 
 ```bash
 ./prepare
 ```
 
-### Commit
+## Commit
 
 No need to generate or commit `README.md` manually.
 
