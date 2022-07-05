@@ -1,4 +1,5 @@
 #!/bin/bash
 # Prepare for contribution.
 
-echo 'npm run generate -- github commit' > .git/hooks/post-commit
+echo '[ $nopostcommit] || npm run generate -- github commit' > .git/hooks/post-commit
+

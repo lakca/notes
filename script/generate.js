@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 
-const { help, ROOT, SRC, SRC_ROOT } = require('./help')
+const { help, ROOT, SRC, SRC_ROOT, parseMeta } = require('./help')
 
 help(`parameters:
 
@@ -52,6 +52,7 @@ function capitalize(str) {
 }
 
 function titlize(str) {
+  if (str.toLowerCase() === 'readme') return '......'
   return str.split(/\s+|-/).map(capitalize).join(' ')
 }
 
@@ -68,39 +69,81 @@ function noext(str, flag) {
   return flag && str.lastIndexOf('.') ? str.replace(/\.[^\.]+$/, '') : str
 }
 
-function readFolder(folder, cb, level = 0) {
-  fs.readdirSync(folder).forEach(file => {
-    if (!level && file === INDEX_FILE) return
-    const filepath = path.join(folder, file)
-    const stat = fs.statSync(filepath)
-    const ext = path.extname(file)
-    if (stat.isFile() && ['.md', '.html'].includes(ext)) {
-      cb(path.basename(file, ext), level, filepath, stat)
-    } else if (stat.isDirectory() && file[0] !== '.') {
-      cb(file, level, filepath, stat)
-      readFolder(filepath, cb, level + 1)
+class FileInfo {
+  /**
+   * @param {string} filepath
+   * @param {string} relRoot
+   * @param {number} level
+   */
+  constructor(filepath, relRoot, level) {
+    this.level = level
+    this.relRoot = relRoot
+    this.relName = path.relative(relRoot, filepath)
+    this.filepath = filepath
+    this.file = path.basename(filepath)
+    this.ext = path.extname(this.file)
+    this.name = path.basename(this.file, this.ext)
+    this.stat = fs.statSync(filepath)
+    this.rank = 0
+    if (this.stat.isDirectory()) {
+      this.rank += 10
+    }
+    if (['readme', 'index'].includes(this.name.toLowerCase())) {
+      this.rank += -1
+    }
+    const info = this.stat.isFile() && parseMeta(fs.readFileSync(filepath).toString().trim()) || null
+    this.meta = info?.meta
+    this.h1 = info?.h1
+    this.title = this.meta?.title || this.h1 || titlize(this.name)
+  }
+}
+
+/**
+ * @param {FileInfo} fileInfo
+ * @param {(fileInfo: FileInfo) => any} cb
+ * @param {number} level
+ * @returns
+ */
+function readFolder(fileInfo, cb, level = 0) {
+  if (!fileInfo.stat.isDirectory()) return
+  fs.readdirSync(fileInfo.filepath).map(file => {
+    return new FileInfo(path.join(fileInfo.filepath, file), fileInfo.relRoot, level)
+  }).sort((info1, info2) => {
+    return info1.rank === info2.rank ? info1.stat.birthtimeMs - info2.stat.birthtimeMs : info1.rank - info2.rank
+  }).forEach(info => {
+    if (!level && info.file === INDEX_FILE) return
+    if (info.stat.isFile() && ['.md', '.html'].includes(info.ext)) {
+      cb(info)
+    } else if (info.stat.isDirectory() && info.file[0] !== '.') {
+      cb(info)
+      readFolder(info, cb, level + 1)
     }
   })
 }
 
-function renderTocItem(name, level, relName, stat) {
+/**
+ * @param {FileInfo} fileInfo
+ */
+function renderTocItem(fileInfo, level) {
+  const collapse = fileInfo.level - level
+  const relName = collapse ? fileInfo.relName.split(path.sep).slice(collapse + 1).join(path.sep) : fileInfo.relName
   const relUrl = IS_GITHUB ? noext(relName, true).replace(/README$/, '') : relName
   return '  '.repeat(level) +
-    `- [${titlize(name)}](${encodeURI(relUrl)})` +
-    `<span style="padding-left:2em;color:${LATEST_COMMITTED[relName] === 'A' ? 'green' : 'orange'}">${LATEST_COMMITTED[relName] || ''}</span>` +
-    `<span style="color:gray;font-size:.8em;padding-left:2em">${date(stat.mtime)}</span>` +
+    `- [${fileInfo.title}](${encodeURI(relUrl)})` +
+    `<span style="font-size:.8em;float:right">` +
+    `<span style="color:${LATEST_COMMITTED[fileInfo.relName] === 'A' ? 'green' : 'orange'}">${LATEST_COMMITTED[fileInfo.relName] || ''}</span>` +
+    `<span style="padding-left:2em;color:gray;">${date(fileInfo.stat.mtime)}</span>` +
+    `</span>` +
     '\n'
 }
 
 const structures = []
 const homeToc = []
 
-readFolder(SRC_ROOT, (name, level, filepath, stat) => {
-  const relName = path.relative(ROOT, filepath)
-  if (!IS_FORCE && UNTRACKED.includes(relName)) return
-  const isDir = stat.isDirectory()
-  homeToc[homeToc.length] = renderTocItem(name, level, relName, stat)
-  structures[structures.length] = { name, level, filepath, stat, isDir }
+readFolder(new FileInfo(SRC_ROOT, ROOT, 0), (fileInfo) => {
+  if (UNTRACKED.includes(fileInfo.relName)) return
+  homeToc[homeToc.length] = renderTocItem(fileInfo, fileInfo.level)
+  structures[structures.length] = fileInfo
 })
 
 // generate index of subdirectories.
@@ -108,15 +151,11 @@ readFolder(SRC_ROOT, (name, level, filepath, stat) => {
   const levelArr = []
   const tocArr = []
 
-  function saveToc(e) {
-    for (let lv = e.level; lv--;) {
+  function saveToc(fileInfo) {
+    for (let lv = fileInfo.level; lv--;) {
       if (levelArr[lv]) {
         if (!tocArr[lv]) tocArr[lv] = []
-        tocArr[lv].push(renderTocItem(
-          e.name,
-          e.level - lv,
-          path.relative(levelArr[lv].filepath, e.filepath),
-          e.stat))
+        tocArr[lv].push(renderTocItem(fileInfo, fileInfo.level - lv - 1))
       }
     }
   }
@@ -135,37 +174,35 @@ readFolder(SRC_ROOT, (name, level, filepath, stat) => {
     }
   }
 
-  for (const e of branches) {
-    tryRenderToc(e.level)
-    if (e.isDir) {
-      levelArr[e.level] = e
+  for (const fileInfo of branches) {
+    tryRenderToc(fileInfo.level)
+    if (fileInfo.stat.isDirectory()) {
+      levelArr[fileInfo.level] = fileInfo
     }
-    saveToc(e)
+    saveToc(fileInfo)
   }
 
   tryRenderToc()
 }(structures))
 
 fs.writeFileSync(path.join(ROOT, INDEX_FILE), `
-# Notes
-
-## Index
+# Index
 
 ${homeToc.join('')}
 
-## Contribute
+# Contribute
 
-### Add Hook
+## Hook
 
-> Adding a \`post-commit\` hook to generate and commit newest notes index automatically.
+Adding a \`post-commit\` hook to generate and commit newest notes index automatically.
 
-> The hook will detect files change by comparing \`HEAD^\` with \`HEAD\`, only files more than \`README.md\` will take effect.
+The hook will detect files change by comparing \`HEAD^\` with \`HEAD\`, only files more than \`README.md\` will take effect.
 
 \`\`\`bash
 ./prepare
 \`\`\`
 
-### Commit
+## Commit
 
 No need to generate or commit \`README.md\` manually.
 

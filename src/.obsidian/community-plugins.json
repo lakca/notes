@@ -1,8 +1,9 @@
 [
-  "obsidian-codemirror-options",
-  "emoji-shortcodes",
-  "cm-chs-patch",
+  "obsidian-excalidraw-plugin",
   "highlightr-plugin",
-  "language-translator",
-  "obsidian-command-palette-enhance"
+  "emoji-shortcodes",
+  "convert-url-to-iframe",
+  "obsidian-command-palette-enhance",
+  "obsidian-command-palette-enhancer",
+  "obsidian-collapse"
 ]

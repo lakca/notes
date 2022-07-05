@@ -1,4 +1,13 @@
 {
+  "editor:toggle-source": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "E"
+    }
+  ],
   "editor:set-heading": [
     {
       "modifiers": [
@@ -15,24 +24,6 @@
       "key": "Q"
     }
   ],
-  "editor:toggle-strikethrough": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "D"
-    }
-  ],
-  "editor:delete-paragraph": [],
-  "editor:toggle-code": [],
-  "editor:toggle-bullet-list": [
-    {
-      "modifiers": [
-        "Mod"
-      ],
-      "key": "L"
-    }
-  ],
   "editor:toggle-numbered-list": [
     {
       "modifiers": [
@@ -42,22 +33,98 @@
       "key": "L"
     }
   ],
-  "editor:toggle-source": [
+  "editor:toggle-strikethrough": [
     {
       "modifiers": [
         "Mod",
         "Shift"
       ],
-      "key": "E"
+      "key": "S"
     }
   ],
-  "obsidian-auto-link-title:enhance-url-with-title": [],
-  "editor:rename-heading": [
+  "editor:toggle-bullet-list": [
     {
       "modifiers": [
         "Mod"
       ],
+      "key": "L"
+    }
+  ],
+  "editor:toggle-code": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "C"
+    }
+  ],
+  "editor:toggle-fold": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "J"
+    }
+  ],
+  "workspace:close-others": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "W"
+    }
+  ],
+  "file-explorer:reveal-active-file": [
+    {
+      "modifiers": [
+        "Alt"
+      ],
       "key": "R"
+    }
+  ],
+  "editor:swap-line-down": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "ArrowDown"
+    }
+  ],
+  "editor:swap-line-up": [
+    {
+      "modifiers": [
+        "Mod"
+      ],
+      "key": "ArrowUp"
+    }
+  ],
+  "editor:toggle-highlight": [
+    {
+      "modifiers": [
+        "Mod",
+        "Shift"
+      ],
+      "key": "H"
+    }
+  ],
+  "app:toggle-left-sidebar": [
+    {
+      "modifiers": [
+        "Alt",
+        "Ctrl"
+      ],
+      "key": "ArrowLeft"
+    }
+  ],
+  "app:toggle-right-sidebar": [
+    {
+      "modifiers": [
+        "Alt",
+        "Ctrl"
+      ],
+      "key": "ArrowRight"
     }
   ]
 }
