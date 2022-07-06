@@ -211,7 +211,7 @@
         .${this.ident('anchor')} {
           position: fixed;
           left: 0;
-          top: 50%;
+          bottom: 0;
           width: 3rem;
           height: 3rem;
           line-height: 3rem;
@@ -233,6 +233,30 @@
         }
         .${this.ident('custom')}.${this.ident('closed')} .${this.ident('anchor')}:before {
           content: "O";
+        }
+        .${this.ident('menu')} .${this.ident('handle')} {
+          display: inline-block;
+          vertical-align: middle;
+          margin: -5px 12px 0 -20px;
+          border-width: 5px 0 5px 8px;
+          border-style: solid;
+          border-color: transparent transparent transparent lightgray;
+          cursor: pointer;
+          transform-origin: center;
+          transition: .2s;
+        }
+        .${this.ident('menu')} .${this.ident('handle')}.${this.ident('active')} {
+          transform: rotate(90deg);
+        }
+        .${this.ident('menu')} .${this.ident('handle')} ~ ul {
+          height: 0;
+          margin: 0;
+          overflow: hidden;
+        }
+        .${this.ident('menu')} .${this.ident('handle')}.${this.ident('active')} ~ ul {
+          height: auto;
+          margin: 0.5em;
+          overflow: visible;
         }
       `
     },
@@ -256,6 +280,12 @@
     open() {
       el(this.menu).style('left')
       el(document.body).class('-' + this.ident('closed'))
+    },
+    onClickMenu(evt) {
+      const classes = evt.target.classList
+      if (classes.contains(this.ident('handle'))) {
+        classes.toggle(this.ident('active'))
+      }
     },
     mountStyle() {
       el('style').html(this.style).mount(document.head)
@@ -287,7 +317,11 @@
         if (!chain[lv]) return
         const last = chain[lv][chain[lv].length - 1]
         if (last) {
-          chain[lv][chain[lv].length - 1] = typeof last === 'string' ? last + withContent : last.join(withContent)
+          if (typeof last === 'string') {
+            chain[lv][chain[lv].length - 1] = last + withContent
+          } else {
+            chain[lv][chain[lv].length - 1] = last[0] + (withContent && `<div class="${it.ident('handle')}"></div>`) + last.slice(1, -1).join('') + withContent + last.pop()
+          }
         }
       }
       function close(start = 0) {
@@ -308,7 +342,7 @@
       }
       for (const h of headers) {
         const lv = +h.tagName[1]
-        const html = [`<li><a href="#${h.id}">${h.innerHTML}</a>`, '</li>']
+        const html = [`<li>`, `<a href="#${h.id}">${h.innerHTML}</a>`, '</li>']
         if (plv === lv) {
           closeLast(lv)
           chain[lv].push(html)
@@ -331,6 +365,7 @@
         .class(this.ident('transitionable'))
         .html(this.generateMenu())
         .mount(document.body)
+        .on('click', (e) => this.onClickMenu(e))
 
       el(document.body).class(this.ident('has-menu'))
 
@@ -415,8 +450,10 @@
 
       ondrag(anchor, {
         onend(drag) {
-          const y = Math.min(Math.max(drag.move.y, 0), document.documentElement.clientHeight - anchor.offsetHeight)
-          el(anchor).style('top', y + 'px')
+          const h = document.documentElement.clientHeight
+          const ah = anchor.offsetHeight
+          const y = Math.min(Math.max(drag.move.y, ah), h)
+          el(anchor).style('bottom', 100 * (h - y) / h + '%')
         }
       })
     },
