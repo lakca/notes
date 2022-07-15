@@ -135,7 +135,7 @@ date: 2021-04-19T11:13:31.973Z
 
 ### 吉祥物
 
-> [Ferris](https://www.rustacean.net/): ![Ferris|100x100](https://rustacean.net/assets/rustacean-orig-noshadow.svg)
+> [Ferris](https://www.rustacean.net/): ![Ferris](https://rustacean.net/assets/rustacean-orig-noshadow.svg)
 
 ### 语言习惯
 
@@ -977,9 +977,7 @@ println!("{}", a);
 > 与手动释放内存（*manully free*）或垃圾回收（*Garbage Collection*）不同，Rust 通过在**编译时的所有权（*Ownership*）检查机制**来保证能够在运行时自动释放内存，这种机制没有任何运行时的额外开销。
 > *In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*
 
-|         官方文档示例          |
-| :---------------------------: |
-| ![ownership](./ownership.svg) |
+![ownership](./ownership.svg)
 
 如图，在*Rust*中所有值（*Value*）**都有且只有一个**所有者（*Owner*）标记。
 

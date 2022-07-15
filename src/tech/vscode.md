@@ -63,8 +63,14 @@ date: 2020-08-04T09:26:34.574Z
 | fold recursively                                 | `⌘ + K, ⌘ + [`         |
 | toggle fold                                      | `⌘ + K, ⌘ + L`         |
 | select all occurrences of Find Match（Find All） | `⇧ + ⌘ + L`            |
+| add cursor above/below                           | `⌥ + ⌘ + ↑ (↓)`        |
+| add cursors to line ends (selected lines)        | `⇧ + ⌥ + I`            |
 
 ## 常用命令
+
+### Add
+
+- add cursor above/below/to bottom/to top/to line ends
 
 ### toggle
 

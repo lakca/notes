@@ -12,41 +12,257 @@ date: 2021-03-22T07:01:30.074Z
 
 ## 简化的git的工作过程
 
-1. `local repository`
-   1. `working directory`；
-   2. 通过`add`命令，让`git`保存`working directory`的`snapshot`；
-   3. 通过`commit`命令，把`snapshot`保存到`local repository`；
-2. `append to remote repository`
-   1. 通过`push`命令，将本地仓库的`commit history`同步到`remote repository`；
-## 工作区（working directory / working tree）
+```shell
+# working directory, then
+> git add .
+# index, then
+> git commit -m 'commit something.'
+# repository, then
+> git push
+# remote
+```
 
-> `working directory`，可以简单理解为排除了特定目录（如`./.git`）或文件的`git`项目文件夹（`git project folder with certain directories/files excluded`）;
+## Git项目中文件的状态
 
-## 索引区 (index / staging area)
+- `Untracked`：Git已知的文件，即被提交过（*committed*）或者暂存过（*staged*）的文件。（*Untracked files are everything else — any files in your working directory that were not in your last snapshot and are not in your staging area.*）
+- `Unmodified`：已跟踪过，但工作区内容与最新提交过（*staged or committed*）的内容不一致的文件。
+- `Modified`：当前内容与上次提交过的内容不一致的文件。
+- `Staged`：提交到暂存区的文件。
 
-> `staging area`，实际上是保存了一份`working directory`的当前快照（snapshot）；
-> `staging area`对应的是`.git/index`二进制文件，切换分支时索引文件也会相应的重置到新分支的部分；
+![Git中文件的状态](https://git-scm.com/book/en/v2/images/lifecycle.png)
 
-## 本地仓库 (repository)
+## 工作区（Working Tree）
 
-> 对应的是`.git/objects`文件夹，存储了本地的所有提交。
+> 工作区（*working directory*, *working tree*），可以简单理解为排除了特定目录（如`.git`）或文件的Git项目文件夹（*git project folder with certain directories/files excluded*），文件或文件内容在被声明前（*stage*）都处于工作区。
 
-## 引用（refs）
+## 暂存区（Staging Area）
 
-> 引用，相当于是给特定的`commit`对象取的别名，引用指向该`commit`。
-> 引用实例存储在`.git/refs`文件夹下面，包括`heads`、`tags`、`remotes`，分别对应着本地分支、标签和远程分支。
+> 暂存区（*staging area*, *index*），是[工作区](#工作区working-tree)和[版本库](#仓库repository)之间的一层缓冲区，内容在提交（*commit*）之前需先暂存（*stage*）于工作区，其内容存储在`.git/index`二进制文件中。
 
-## 头（HEAD）
+对于简单的修改提交而言，可能暂存区没什么意义，但有了暂存区，我们就可以：
 
-> `HEAD`即当前所在的引用（各个引用可以通过`git checkout`来切换）。
+- 快速对内容进行选择性提交或分次提交。（如在主线任务中穿插的小的修改）
+- 在提交在合并发生冲突时停下来解决冲突。（因为冲突后，Git会将未冲突的代码将会保存在暂存区中，冲突和修改就可以发生在工作区，两不干扰）
+- 保存无需提交的修改。（如本地调试代码）
+- ......
+
+## 仓库（Repository）
+
+> 广义地讲，Git仓库（*Repository*）是Git数据库，存储了Git元数据和Git对象，对应的实体是Git目录（*Git Directory*）`./.git`。
+
+> 狭义地讲，也是我们一般所说的Git仓库，是*Commit对象库*、*快照库*、*版本库*，即通过`git commit`实现的永久存储。
+
+## 对象（Object）
+
+> Git是对项目文件系统进行快照存储和调用来进行版本控制的，在实现上，通过*key-value*形式的存储构建一个内容可寻址的文件系统，来对快照信息存储和索引，其中*value*即为Git对象，*key*为对象的*SHA1*哈希值。
+>
+> 所以，[Git对象（*Object*）](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)，是Git的数据（如文件、提交、标签、分支......）模型，底层是一个以其存储内容的SHA1为名称（实际是文件夹名称+文件名）的文件，存储于`.git/objects`文件夹，可通过`git cat-file -p`命令查看内容。
+
+查看对象：
+
+```shell
+> ls .git/objects/36
+049069ed448142208ece96f24bc5973a40e5a1 1e275573431469f9d3b44c0192b4b0500ea62c 586ad664fe49bc278838313c258b48d00db990 e9f6ce0abecc76f88d0f32a0351d1bef2b7279
+08357fc04e9a03be92e0cb3a209400d0486403 2e8d4e49c23265edd9b32f8a977ad84371f463 af3c8aacfe102e6de816181ff7e3376aca8a80 ebef39c9050cfdca4ba6c1802fb24fd6c99ac4
+0a8a1267f4a23ae91f4a49d9e55ae297d0063f 4130ae2eba9aa19c4a06abf0eccd812aeb1480 dfecc81832f84e60a094ce3be6184dda9bf701
+```
+
+查看某个commit：
+
+```shell
+> git cat-file -p 36049069ed448142208ece96f24bc5973a40e5a1
+tree fa76d812a0ea86c341fc807b439de63ff68df300
+parent 416e02829c971eadd56f8a5b4c7ffc21c891f76a
+author lakca <912910011@qq.com> 1657004979 +0800
+committer lakca <912910011@qq.com> 1657004983 +0800
+
+update index
+```
+
+查看*tree*对象，可以看到引用了一系列其他对象：
+
+```shell
+> git cat-file -p fa76d812a0ea86c341fc807b439de63ff68df300
+100644 blob abdb414b694f40d84514b77e9801ea609b4ee9ee	.gitignore
+100644 blob 086a5c9ea988c5a4d37acc5f8ea089e37cb19371	404.html
+100644 blob 0125c33c46071fecf35c095eae25009299966b52	README.md
+100644 blob 985955792818c2b4eb89b3bc1e2c0a12dfec28d5	_config.yml
+040000 tree abe56721e3150cb441c8196b97ebc6c6f74f8ab5	_layouts
+040000 tree dd5318d970a8f3bcf8d8a8298258f4a9f4b81194	assets
+100644 blob 1bb85c2df02bf3673331bd4337e745061c5dba53	package.json
+100644 blob 53e6b266edfcdb8ea93d318da8dcec335bdf7988	pnpm-lock.yaml
+100755 blob dc67133decc3f8a1a61e3049bc414d483412a4b2	prepare
+040000 tree c952480116841bfc9f53838b2461c14d3df5b0da	script
+040000 tree c64bb8182f7f8f5188013c2dd035135fa759cd5d	src
+```
+
+查看*blob*对象，可以看到直接显示（当次提交时的）整个文件的内容：
+
+```shell
+> git cat-file -p abdb414b694f40d84514b77e9801ea609b4ee9ee
+html
+node_modules
+vendor
+_site
+.DS_Store
+```
+
+在上述结果中，Git对象的哈希*key*前面是对象的类型，我们也可以通过`git cat-file -t <sha1>`命令查看一个对象类型。有三种：
+
+- *blob* 为文件对象，用于存储文件内容，也是Git的原子对象，类似文件系统中的文件；
+- *tree* 为树对象，用于表示一组文件对象的集合，类似文件系统中的文件夹；
+- *commit* 为提交对象，其存储的信息包括对当次提交产生的根级树对象的引用、对父提交的引用和当次提交的元信息；
+
+注意，*parent* 只是*commit*类型的对象在特定语境下的别名，我们可以通过`git cat-file -t <sha1>`来查看。
+
+### 树对象（Tree Object）
+
+> Git对象是*key-value*的存储结构，对于多文件的存储，是通过存储文件对象的*key*来直接引用，或通过存储引用了文件对象的树对象*key*来间接引用。这种存储一组多个文件的对象即为[树对象](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_tree_objects)，类比文件系统中的文件夹。
+
+### 相关命令
+
+- [`cat-file`](https://git-scm.com/docs/git-cat-file)
+- [`ls-tree`](https://git-scm.com/docs/git-ls-tree)：List the contents of a tree object.
+
+#### 提交（Commit）
+
+> 提交（*commit*）：使用暂存区信息创建一个[提交对象（*commit object*）](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_commit_objects)。
+
+## 引用（Reference）
+
+> [引用（*References*）](https://git-scm.com/book/en/v2/Git-Internals-Git-References)，是对某个[对象](#对象object)创建的别名。引用信息存储在`.git/refs`文件夹下面，包括*heads*、
+*tags*、*stash*、*remotes*等，分别对应着本地分支头、标签、暂存和远程分支头。
+
+
+## 头（Head）
+
+> 我们知道，在版本控制系统中可以切换到（检出）不同的历史版本进行操作，而记录所处版本的实体在Git中称之为头（*head*）。在Git中，头本质上是一个存储了其引用版本的哈希值的文件，其中当前头（*HEAD*）的存储位置在`.git/HEAD`，其他头见[分支](#分支branch)。
+
+\* 注意*head*和*HEAD*的区别，前者表示的是创建的所有头，后者代表的是当前所处的头。
+
+## 分支（Branch）
+
+> [分支（*Branch*）](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell)，是版本控制系统提供并发任务能力或任务分解能力的核心支撑。在Git中，分支是由创建多个[头](#头head)来实现的，换句话来说，分支是具有名字的头（无名的头叫*detached head*）。其中，本地分支的头信息存储在`.git/refs/heads`，远程分支的头信息存储在`.git/refs/remotes`。
 
 # 常用子命令
 
 > 所有命令用法均可以通过`git <command> --help`查看详情，或者[官网](officialSite)查询。
 
-## add
+## branch（分支）
 
-> Add file contents to the index.
+> 增删改查分支。*List, create, or delete branches.*
+
+（基于指定对象）创建新分支：
+
+- 基于远程分支创建时，默认会（`branch.autoSetupMerge`配置为true）自动设置为上游分支，可设置`--no-track`避免。
+- 基于本地分支创建时，需要手动设置`-t`上游分支。
+
+```shell
+git branch <branchname> [<object=HEAD>] [-t/--track <upstream>]
+```
+
+（v2.35.0）基于当前HEAD创建新分支，并设置相同的上游分支：
+
+```shell
+git branch <branchname> --track=inherit
+```
+
+（v2.35.0）基于远程分支创建本地分支，并以之为上游分支：
+
+```shell
+git branch <branchname> <upstream> --track=direct
+```
+
+设置upstream：
+
+```shell
+(-u <upstream> | --set-upstream-to=<upstream>) [<branchname>]
+
+--unset-upstream [<branchname>]
+```
+
+```shell
+# 给当前分支设置upstream
+> git branch -u origin/develop
+
+# 给指定分支dev设置upstream
+> git branch -u origin/develop dev
+```
+
+```shell
+# 同时删除跟踪的远程分支
+> git branch -d -r dev
+```
+
+重命名：
+
+```shell
+(-m | -M) [<oldbranch>] <newbranch>
+```
+
+```shell
+# 将当前分支名称改为dev
+> git branch -m dev
+
+# 将dev分支名称改为develop
+> git branch -m dev develop
+```
+
+复制分支（包括reflog）：
+
+```shell
+(-c, --copy | -C, --copy --force) [<oldbranch>] <newbranch>
+```
+
+删除：
+
+```shell
+(-d, --delete | -D, --delete --force) <branchname>…
+```
+
+列表：
+
+```shell
+-a, --all
+# 列出分支名称
+-l, --list
+# 同时显示HEAD信息
+-v, --verbose
+# 同时显示upstream名称
+-vv
+
+--contains <commit>
+
+--no-contains <commit>
+
+# 过滤出已完全合并到当前分支的分支：
+--merged
+
+# 过滤出有提交未合并到当前分支的分支：
+--no-merged
+
+# 过滤出head为某个对象的分支：
+--points-at <object>
+```
+
+（在删除或列表时）作用于远程分支：
+
+```
+-r, --remotes
+```
+
+其他
+
+```shell
+# * 创建/不创建branch的reflog：
+# This activates recording of all changes made to the branch ref;
+--create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for branch；
+--no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
+```
+
+## add（暂存）
+
+> 将工作区变动移存到暂存区。（*Add file contents to the index.*）
 
 ```shell
 git add [<options>] [--] <pathsepc>...
@@ -65,13 +281,13 @@ git add [<options>] [--] <pathsepc>...
 -A, --all, --no-ignore-removal
 ```
 
-只添加**当前目录**（包括子目录）下的所有未忽略的（*unignored*）文件：
+只添加当前目录（包括子目录）下的所有未忽略的（*unignored*）文件：
 
 ```shell
 git add .
 ```
 
-更新已跟踪过的（*tracked*）文件：
+仅暂存已跟踪过的（*tracked*）文件：
 
 ```shell
 -u，--update
@@ -89,7 +305,7 @@ git add .
 --ignore-removal, --not-all
 ```
 
-列出**会被添加**的文件：
+列出会被添加的文件：
 
 ```shell
 -n, --dry-run
@@ -97,14 +313,101 @@ git add .
 
 修改索引区中文件的可执行性（*executable bit*），文件在本地文件系统中的属性不会变：
 
-```bash
+```shell
 --chmod=+x
 --chmod=-x
 ```
 
-## commit
+## stash（贮藏）
 
-> Record changes to the repository.
+> 将工作区和暂存区的内容提交（*Git Object*也是*commit*类型）到一个独立的储藏栈（区别于当前分支），最近一次的stash信息存储于`refs/stash`。（*saves your local modifications away and reverts the working directory to match the `HEAD` commit.*）
+
+```shell
+git stash push [<options>] [<pathspec>...]
+
+# 仅stash指定文件
+<pathspec>
+
+# 不包含暂存区内容
+-k, --keep-index
+
+# 包含暂存区内容
+--no-keep-index
+
+# 包含untracked文件
+-u, --include-untracked
+
+# 包含所有变动，包括ignored文件
+-a, --all
+
+# 交互性地选择stash内容，隐含--keep-index
+-P, --patch
+
+# 仅stash暂存区内容
+-S, --staged
+
+# 设置备注
+-m, --message
+```
+
+列出历史 stash（选项同 `git log`）：
+
+```shell
+git stash list [<options>]
+
+> git stash list -1 --name-status
+```
+
+查看某个 stash（选项同 `git diff`）：
+
+```shell
+git stash show [<options>] [<stash=stash@{0}>]
+
+> git stash show -p stash{0}
+```
+
+调用历史 stash：
+
+```shell
+git stash apply [--index] <stash>
+
+# 应用栈中第一个stash
+> git stash apply stash@{0}
+```
+
+弹出（应用并删除记录）历史 stash：
+
+```shell
+git stash pop [--index] [<stash=stash@{0}>]
+```
+
+基于创建 stash 的 commit 创建一个新分支，并弹出该stash：
+
+```shell
+git stash branch <branchname> [<stash=stash@{0}>]
+```
+
+清理 stash：
+
+```shell
+# 清理指定 stash
+git stash drop [<stash=stash@{0}>]
+
+# 直接清空
+git stash clear
+```
+
+列出已被清理的 stash：
+
+```shell
+git fsck --unreachable |
+grep commit | cut -d\  -f3 |
+xargs git log --merges --no-walk --grep=WIP
+```
+
+## commit（提交）
+
+> 将暂存区内容提交到当前分支。(*Record changes to the repository.*)
 
 ```shell
 git commit [<options>] [--] <pathspec>...
@@ -161,8 +464,10 @@ git commit [<options>] [--] <pathspec>...
 f90eb05 (HEAD -> dev) feature B
 d48a90d feature A
 
-# 示例提交给feature A：
 ```
+
+示例提交给feature A：
+
 1. 使用`--fixup`提交：
 ```shell
 # 通过 --fixup 标记创建的提交为feature A的修改
@@ -204,99 +509,79 @@ d48a90d feature A
 > SKIP_POST_COMMIT=1 git commit -m '...'
 ```
 
-## checkout
+## checkout（检出）
 
-> Switch branches or restore working tree files. Updates files in the working tree to match the version in the index or the specified tree.
+> 检出某个对象：切换分支，或者复原工作区文件（到*HEAD*状态）。（*Switch branches or restore working tree files.*）
 
 ```shell
-git checkout [<options>] [<branch>] [--] <pathspec>...
+git checkout [<options>] [<branchname>] [--] <pathspec>...
 ```
 
-切换分支：
+丢弃工作区变动：
 
-```shell
-git checkout <branch>
+```
+git checkout <pathspec>
+
+# 丢弃所有修改
+> git checkout .
+# 将索引区（index tree）复原到工作区（working tree）
+> git reset HEAD
 ```
 
-如果，*\<branch\>*不存在，但有同名的远程分支存在，则创建一个追踪分支，等同于：
+切换分支，或检出（唯一）远程同名分支：
 
 ```shell
-git checkout -b <branch> --track <remote>/<branch>
+git checkout <branchname>
+
+# 若本地分支不存在，但存在同名远程分支，则创建本地分支并追踪该远程分支，等同于：
+
+git checkout -b <branchname> -t/--track <remote>/<branchname>
 ```
 
-基于当前*HEAD*创建新分支：
+从远程分支检出同名新分支：
 
 ```shell
--b <branch>
+git checkout --track <upstream>
 ```
 
-创建全新分支（没有父提交）：
+```shell
+git checkout --track origin/develop
+```
+
+强制切换分支（丢弃未提交的变动）
 
 ```shell
---orphan <branch>
+-f, --force
+```
+
+基于当前*HEAD*检出新分支：
+
+```shell
+-b <branchname>
+```
+
+检出一个孤儿分支（HEAD为空的分支）：
+
+```shell
+--orphan <branchname>
 ```
 
 对尚未合并（`rebase`或`merge`）的文件检出不同版本（*current changes*或*incomming changes*）：
 
 ```shell
 # current changes:
---ours, -2
+-2, --ours
 # incomming changes:
---theirs, -3
+-3, --theirs
 ```
 
-## branch
-
-常见用法：
-```bash
-# 创建
-git branch <name> # = git branch <name> HEAD
-git branch <name> <start-point: a commit|tag|branch>
-
-# 创建分支时同时设置upstream
--t, --track
-
-# 删除
--d <name>, --delete
--D <name>, -delete --force
-
-# 详情
--v, --verbose
-# 详情中附加upstream名称
--vv
-
-# 重命名
--m, --move
--M, -move --force
-
-# 复制分支（包括reflog）
--c, --copy
--C, --copy --force
-
-# 设置upstream
--u <upstream>, --set-upstream-to=<upstream>
-
-# 删除/列出分支时，同时附加该分支追踪的远程分支：
--r, --remotes
-
-# * 创建/不创建branch的reflog：
-# This activates recording of all changes made to the branch ref;
---create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for branch；
---no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
-```
-
-## push
+## push（推送）
 
 > Update remote refs along with associated objects.
 
-## checkout
+## log（日志）
 
-## stash
-
-## log
-
-> list all commit logs.
-> 下列所涉及的 `pattern` 均指 `glob pattern`；
+> 列出提交日志。（*list all commit logs.*）。下列所涉及的 `pattern` 均指 `glob pattern`。
 
 ```bash
 git log [<options>] [<revision range>] [[--] <path>...]
@@ -488,7 +773,8 @@ git log --log-size
 
 ```
 
-## diff
+## diff（对比）
+
 > Show changes between commits, commit and working tree, etc.
 
 将工作区（*tracked but not added*）与指定提交做对比：
@@ -595,7 +881,7 @@ git diff -S<string> --pickaxe-regex # 将string看作扩展POSIX正则表达式
 --summary
 ```
 
-## tag
+## tag（标签）
 
 > Create, list, delete or verify a tag object signed with GPG.
 
@@ -644,7 +930,7 @@ git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
 -v, --verify
 ```
 
-## blame
+## blame（追溯）
 
 blame指定的文件行：
 
