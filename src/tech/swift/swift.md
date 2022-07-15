@@ -13,27 +13,35 @@ date: 2020-09-08T08:54:35.929Z
 
 ## 特性
 
-- 不显式暴露指针/内存（与脚本语言类似，数据是引用还是复制在类型实现时已经决定），但也提供了标准库进行调用
-- 内存采用严格的引用计数进行自动回收，没有垃圾回收对进程的干预（*Deterministic Reference Counting*）
-- *unicode*编码
-- 静态类型
-- 支持类型推断（*Type Inference*）
+- 不直接暴露指针/内存，但提供了标准库进行支持
+- 数据传递策略是引用还是复制在类型实现（值类型和引用类型）时已经决定
+- 通过严格的引用计数（*Deterministic Reference Counting*）自动进行内存回收，没有垃圾回收对进程的干预
+- Unicode编码
+- 强类型（编译时确定类型）
+- 静态类型（不可在~~使用中改变变量类型~~）
+- 不支持名称遮蔽（~~二次声明~~）
+- 支持自动推断类型（*Type Inference*）
 - 强制显式处理空值（*Optional*）
-- 元组（*Tuple*）
-- 支持泛型（*Generics*）
-- 支持协议（*Protocols*）(类似*Interface*或*Trait*)
-- 支持类型扩展（*Extensions*）（类似*Rust*的*derive*）
-- 支持运算符重载（*Operator Overloading*）
-- 支持字符串插值（*String Interpolation*）
-- 支持闭包（*Closure*）
-- 支持命名参数（*Named Parameters*）
+- 支持元组（*Tuple*）
 - 支持多值返回（*Multiple Return Values*）
+- 支持泛型（*Generics*）
+- 支持协议（*Protocols*）(类似*Rust Trait*)
+- 支持类型扩展（*Extensions*）（类似*Rust derive*）
+- 支持运算符重载（*Operator Overloading*）
+- 支持[字符串插值](#插值string-interpolation)（*String Interpolation*）
+- 支持[闭包](#闭包表达式)（*Closure*）
+- 支持单独定义[实参标签](#实参标签argument-label)（形参和实参可以不同名称）
+- 支持[不定参数](#不定参数-variadic-parameter)
+- 支持[函数传入和修改引用](#可修改参数-in-out-parameter)
 - 支持枚举关联值（*Enumeration Playload*）
 - 支持模式匹配（*Pattern Matching*）
 - 支持错误捕获，*catch*非必需（`try`、 `catch`、`throw`）
-- 变量和常量（*Variable and Constant*）
-- 常量没有严格的值不可变，对于引用类型只存储引用地址，属性仍然是可变的（类似*Javascript*的*Object*和*const*）
-- 句尾分号可选 ~~`;`~~（同*Javascript*一样，换行符和分号均为语句分隔符）
+- 常量没有严格的值不可变，对于引用类型只存储引用地址，属性仍然是可变的（类似*Javascript*的常量对象）
+- 句尾分号可选 ~~`;`~~（同*Javascript*，换行符和分号均为语句分隔符）
+
+## 约定
+
+- 标识符使用*camelCase*（变量、函数等）和*PascalCase*（类、结构、枚举等）命名方式
 
 ## 重要概念
 
@@ -47,38 +55,67 @@ date: 2020-09-08T08:54:35.929Z
 
 - 标识符使用*camelCase*（变量、函数等）和*PascalCase*（类、结构、枚举等）命名方式
 
-# 基础
+# 变量和常量
+
+- 使用前必须声明；
+
+- Swift是强类型语言，量在声明时必须确定类型：
+
+- 不支持名称遮蔽（二次声明）；
+
+- 命名支持*unicode*字符，但不支持空白字符、数学符号、箭头、[线框字符](https://en.wikipedia.org/wiki/Box-drawing_character)、[私域字符](https://en.wikipedia.org/wiki/Private_Use_Areas)等字符。（*Constant and variable names can’t contain whitespace characters, mathematical symbols, arrows, private-use Unicode scalar values, or line- and box-drawing characters. Nor can they begin with a number, although numbers may be included elsewhere within the name.*）
+
+- 变量名可以使用语言关键字，用反引号（<code>``</code>）包裹即可，但不建议。
+
+## 变量（Variables）
+
+声明时必须确定类型：
 
 ```swift
-print("hello world!")
-print("hello world!", terminator: "")
+var a: Int = 10
 ```
 
-## 变量（Variable）和常量（Constant）
-
-- 虽然命名支持*unicode*字符，但不支持空白字符、数学符号、箭头、[线框字符](https://en.wikipedia.org/wiki/Box-drawing_character)、[私域字符](https://en.wikipedia.org/wiki/Private_Use_Areas)等字符。（*Constant and variable names can’t contain whitespace characters, mathematical symbols, arrows, private-use Unicode scalar values, or line- and box-drawing characters. Nor can they begin with a number, although numbers may be included elsewhere within the name.*）
-- 另外，关键字可以用反引号**\`**包裹作为变量名，但不建议。（*If you need to give a constant or variable the same name as a reserved Swift keyword, surround the keyword with backticks (`` ` ``) when using it as a name. However, avoid using keywords as names unless you have absolutely no choice.*）
-
-### 变量（Variable）和常量（Constant）
+初始化不是必须：
 
 ```swift
-// 声明时初始化可推断类型
-var a = 1
-
-// 声明时不初始化时需要声明类型
 var b: Int
-b = 10
+```
 
-// 可以同时声明多个
+但初始化可自动推断类型：
+
+```swift
+var b = 1
+```
+
+可以在同一行声明多个变量：
+
+```swift
 var c = 2, d = 3
-
 var e, f, g: Int
 ```
-### 常量（Constant）
 
-- 全局声明时必须初始化（*Globally declared with initialized*）；
-- 局部声明只需在调用前初始化即可（*Scoped initialized before being read*）；
-- 常量可在全局或局部声明（*Globally or Scoped*），且不影响结构等复合类型（*Compound Types*）内属性的可变性；
+## 常量（Constants）
+
+声明时必须确定类型：
+
+```swift
+let a: Int = 1;
+```
+
+全局声明时必须初始化（*Globally declared with initialized*）：
+
+```swift
+let a = 1;
+```
+
+局部声明只需在调用前初始化即可（*Scoped initialized before being read*）：
+
+```
+let
+```
+
+常量可在全局或局部声明（*Globally or Scoped*），且不影响结构等复合类型（*Compound Types*）内属性的可变性：
+
 
 ```swift
 // 全局范围内常量必须初始化
@@ -86,7 +123,15 @@ let a = 1
 let b = 2, c = 3
 ```
 
-# 值类型（Value Types）
+# 类型
+
+获取数据类型：
+
+```swift
+print(type(of: "hello"))
+```
+
+## 值类型（Value Types）
 
 > 所谓[值类型](https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html#ID88)，即在其被传递时，如赋值给变量、常量或者作为参数传入函数等，会复制出新的副本。（*A _value type_ is a type whose value is _copied_ when it’s assigned to a variable or constant, or when it’s passed to a function.*）
 
@@ -95,13 +140,13 @@ let b = 2, c = 3
 > **基础类型（*Basic Types*）在底层都是通过结构（*structures*）来实现的**，所以都是值类型，包括数字（`Int`, `Double`）、布尔值（`Bool`）、字符串（`String`）、数组（`Array`）、集合（`Set`）、字典（`Dictionary`）等。(*In fact, all of the basic types in Swift—integers, floating-point numbers, Booleans, strings, arrays and dictionaries—are value types, and are implemented as structures behind the scenes.*)
 > \* 标准库定义的集合类型如数组、字典和字符串等，为了优化性能，只有在数据被修改前才会被复制。
 
-# 引用类型（Reference Types）
+## 引用类型（Reference Types）
 
 > [引用类型](https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html#ID89)
 
 **引用类型包括类（*classes*）、行为体（*actors*）。**
 
-# 基本类型
+## 基本类型（Basic Types）
 
 - 具有推断类型
 
@@ -111,27 +156,110 @@ let foo: String = "hello"
 let foo = "hello"
 ```
 
-## 字符串（String）和字符（Character）
+### 字符串（String）和字符（Character）
 
-> [字符串和字符](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#)都是使用双引号`"`包裹。
+```swift
+let str: String = "hello"
+let char: Character = "h"
+```
 
-- 通过下标、切片或某些方法返回（如`prefix(_:)`）得到的字符串为[**子字符串（Substring）**](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID555)，子字符串只是引用原字符串（String）内存地址，若需要独立存活需手动复制成字符串，如`String(aSubstring)`。
+```swift
+let str = "hello"
+```
+
+使用Unicode码字符：
+
+```swift
+print("\u{1F425}") // 🐥
+```
+
+字符串和字符混合运算：
 
 ```swift
 let char: Character = "!"
-
 let chars: [Character] = ["C", "a", "t", "!", "🐱"]
-
-// 字符和字符串
 var str = String(chars)
 str.append(char)
 ```
 
+#### 子字符串（Substring）
+
+> [子字符串（Substring）](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID555)是引用原字符串（String）内存地址一部分，若需要独立存活需手动复制成字符串。通过下标、切片或某些方法返回（如`prefix(_:)`）得到的字符串均为子字符串，类型为`Substring`。
+
+#### 字符串字面量
+
+字符串和字符均用双引号（`"`）标注：
+
 ```swift
-let hi = "hello"
-// 或
-let hi2 = String("hello")
+let a = "hello"
+let b = String("hello")
 ```
+```swift
+let a = "h"
+let b = Character("i")
+```
+
+多行字符串用三个双引号（`"""`）标注，且引号必须在单独一行：
+
+```swift
+let multiline = """
+1. must begin/end with a newline.
+2. end with backslash \
+   to skip line break
+"""
+```
+
+多行字符串首行前的空格忽略，后续行前同数量的空格也被忽略，以下与上同：
+
+```swift
+let multiline = """
+   1. must begin/end with a newline.
+   2. end with backslash \
+      to skip line break
+"""
+```
+
+为了简化转义，多行字符串还可以自定义(v5.0) [扩展定界符](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID606)（*Extended String Delimiters*）：
+
+```swift
+// 用 # 作为字符串的扩展定界符
+print(#"hello\n world""#) // hello\n world"
+
+// 同行注释符号由 \ 变成 \#
+print(#"""
+hello \#
+world\n"""
+"""#) // hello world\n"""
+```
+
+#### 字符串插值
+
+> [插值](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID292)内容使用带有转义的小括号 `\()`包裹。
+
+```swift
+print("6 times 7 is \(6 * 7).") // 6 times 7 is 42.
+
+print(#"6 times 7 is \(6 * 7)."#) // 6 times 7 is \(6 * 7).
+
+print(#"6 times 7 is \#(6 * 7)."#) // 6 times 7 is 42.
+```
+
+#### 字符串比较
+
+使用双等号（`==`）判断两个字符串的扩展字符簇是否等价，换句话说，两个字符串是否在人类语言上完全相同（*same linguistic meaning and appearance*）：
+
+```swift
+// Voulez-vous un café?
+let eAcuteQuestion = "Voulez-vous un caf\u{E9}?"
+let combinedEAcuteQuestion = "Voulez-vous un caf\u{65}\u{301}?"
+print(eAcuteQuestion == combinedEAcuteQuestion) // true
+
+let latinCapitalLetterA: Character = "\u{41}" // 拉丁字母A，如英语
+let cyrillicCapitalLetterA: Character = "\u{0410}" // 西里尔字母А，如俄语
+print(latinCapitalLetterA == cyrillicCapitalLetterA) // false
+```
+
+#### 字符串方法
 
 ```swift
 var phrase = "abcde"
@@ -165,71 +293,7 @@ print("hello world".hasPrefix("hello")) // true
 print("hello world!".hasSuffix("!")) // true
 ```
 
-> 多行字符串用三个双引号 `"""`（定界符）包裹，且引号必须在单独一行
-
-```swift
-let multiline = """
-1. must begin/end with a newline.
-2. end with backslash \
-   to skip line break
-"""
-```
-> 首行前的空格忽略，后续行前同数量的空格也被忽略，以下与上同：
-```swift
-let multiline = """
-   1. must begin/end with a newline.
-   2. end with backslash \
-      to skip line break
-"""
-```
-
-> (v5.0) [扩展定界符](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID606)（*Extended String Delimiters*）
-
-```swift
-// 用 # 作为字符串的扩展定界符
-print(#"hello\n world""#) // hello\n world"
-
-// 同行注释符号由 \ 变成 \#
-print(#"""
-hello \#
-world\n"""
-"""#) // hello world\n"""
-```
-
-### 比较
-
-> `==`：判断两个字符串的扩展字符簇是否等价，换句话说，两个字符串是否在人类语言上完全相同（*same linguistic meaning and appearance*）。
-
-```swift
-// Voulez-vous un café?
-let eAcuteQuestion = "Voulez-vous un caf\u{E9}?"
-let combinedEAcuteQuestion = "Voulez-vous un caf\u{65}\u{301}?"
-print(eAcuteQuestion == combinedEAcuteQuestion) // true
-
-let latinCapitalLetterA: Character = "\u{41}" // 拉丁字母A，如英语
-let cyrillicCapitalLetterA: Character = "\u{0410}" // 西里尔字母А，如俄语
-print(latinCapitalLetterA == cyrillicCapitalLetterA) // false
-```
-
-### 插值（String Interpolation）
-
-> [插值](https://docs.swift.org/swift-book/LanguageGuide/StringsAndCharacters.html#ID292)内容使用带有转义的小括号 `\()`包裹。
-
-```swift
-print("6 times 7 is \(6 * 7).") // 6 times 7 is 42.
-
-print(#"6 times 7 is \(6 * 7)."#) // 6 times 7 is \(6 * 7).
-
-print(#"6 times 7 is \#(6 * 7)."#) // 6 times 7 is 42.
-```
-
-### Unicode
-
-```swift
-print("\u{1F425}") // 🐥
-```
-
-### Swift字符范围：扩展字符簇（Extended Grapheme Clusters）
+#### Swift字符范围：扩展字符簇（Extended Grapheme Clusters）
 
 > 扩展字符簇，包括单码字符，和使用多个单码组合产生的复杂字符。如`e`的变体`é`可以是`\u{e9}`，或由`e`和`\u{301}`两个单码组合而成。(Extended Grapheme Cluster is a sequence of one or more Unicode scalars that (when combined) produce a single human-readable character.)。
 
@@ -254,51 +318,131 @@ print("the number of characters in \(word) is \(word.count)")
 // the number of characters in café is 4
 ```
 
-## 数字（Number）
+### 数字（Number）
 
-- Numeric Literals can contain extra formatting (zero and underscore) for easily read.
+类型有：
+
+- `Int`（32bit/64bit）、`Int16`、`Int32`、`Int64`；`UInt`（32bit/64bit）、`UInt16`、`UInt32`、`UInt64`
+- `Float`（32bit）、`Double`（64bit）
+
+通过类构造可以进行类型转换：
+
+```swift
+let a = 100
+let b = Int8(a)
+let c = 1.2
+let d = Int(c) // 1
+```
+
+整数字面量自动推断为`Int`：
+
+```swift
+let a = 1
+print(type(of: a)) // Int
+```
+
+浮点数字面量自动推断为`Double`：
+
+```swift
+let a = 1.0
+print(type(of: a)) // Double
+```
+
+数字字面量没有具体类型，也即其兼容所有数字类型（*Numeric Literals don't have an explicit type, so combining of literals won't cause a mixed-type error.*）：
+
+```swift
+let a: Int = 1
+let b: UInt = 1
+let c: Float = 1
+let d: Double = 1
+let e: Float = 1.2
+let f: Double = 1.2
+
+print(e + 1) // 2.2
+print(f + 1) // 2.2
+```
+
+#### 数字字面量
+
+字面量支持补`0`和`_`分隔符进行格式化（*Numeric Literals can contain extra formatting (zero and underscore) for easily read.*）：
 
 ```swift
 print(1_000_000) // 1000000
 print(00.1200) // 0.12
 ```
 
-- Numeric Literals don't have an explicit type, so combining of literals won't cause a mixed-type error.
+二进制（`0b`）、八进制（`0o`）、十六进制（`0x`）：
 
 ```swift
-let a = 1
-print(a + 1.2) // error
-print(1 + 1.2) // 2.2
+print(31, 0b11111, 0o37, 0x1f)
 ```
 
-### Integer
-
-> decimal, binary(`0b`), octal(`0o`), hexadecimal(`0x`)
-
-### Floating
-
-> decimal, hexadecimal(`0x`)
-
-- must always have a number on both sides of decimal point.
-
-- hexadecimal must have an exponent.
+十进制科学计数法：
 
 ```swift
-print(1.2) // 1.2
-print(1.2e2) // 120
-print(0x1.2p2) // 4.5
+print(1.2e2, 1.2e-2) // 120.0, 0.012
 ```
 
-## 布尔（Boolean）
-
-## 元组（Tuples）
+十六进制（浮点数必须使用）科学计数法：
 
 ```swift
-print((1, 2).0) // 1
-print((code: 1, message: "hello").code) // 1
+// 十六进制科学计数法以2为底数
+print(0x1.2p2) // 4.5 = (1 + 2 * 16^-1) * 2^2
+print(0x1.2p-2) // 0.28125 = (1 + 2 * 16^-1) * 2^-2
 ```
 
-## 集合类型（Collection Types）
+#### 数字常量
+
+整数最大值、最小值：
+
+```swift
+print(Int.max, Int.min, UInt.max, UInt.min)
+print(Int8.max, Int8.min, UInt8.max, UInt8.min)
+// ...
+```
+
+#### 数字方法
+
+```swift
+// 幂运算
+pow(2, 10)
+```
+
+### 布尔（Boolean）
+
+```swift
+let orangesAreOrange: Bool = true
+let turnipsAreDelicious = false
+```
+
+Swift是类型安全的，不允许非布尔值替代（自动转换成）布尔值：
+
+```swift
+if 1 {} // error
+```
+
+### 元组（Tuples）
+
+```swift
+// a tuple of type (Int, String)
+let http404Error = (404, "Not Found")
+print(http404Error.0) // 404
+```
+
+解构（*decompose*）元组：
+
+```swift
+let (statusCode, statusMessage) = http404Error
+```
+
+命名组内元素：
+
+```swift
+let http200Status = (statusCode: 200, description: "OK")
+print(http404Error.statusCode) // 200
+```
+
+### 集合类型（Collection）
 
 > [集合类型](https://docs.swift.org/swift-book/LanguageGuide/CollectionTypes.html)，是同一类型值的集合。
 
@@ -317,7 +461,7 @@ print((code: 1, message: "hello").code) // 1
 - `.isEmpty`
 - `.index()`
 
-### 数组（`Array`）
+### 数组（Array）
 
 > 值的有序集合。
 
@@ -367,7 +511,7 @@ for e in arr {}
 for (i, e) in arr.enumerated() {}
 ```
 
-### 集合（`Set`）
+### 集合（Set）
 
 > 唯一值的无序集合。
 
@@ -427,7 +571,7 @@ sa.isDisjoint(with: sb)     // 不相交集
 
 - 基础类型都实现了可散列协议
 
-### 字典（`Dictionary`）
+### 字典（Dictionary）
 
 > 键值关联的无序集合。
 
@@ -476,30 +620,58 @@ let arr = [String](dict.keys)
 let arr = [String](dict.values.sorted())
 ```
 
-# 可选类型（Optional）
+## 或有类型（Optional）
 
-- Optionals indicate possible absence of value for any type.
+> *Optional* 表示某类型不是一直都存在值。一般用于变量声明、类型转换的返回值等。
 
-- appears in Variable Declaration, Type Conversion etc.
-
-- Optionals underlying value should be unwrapped before access.
+在类型后添加`?`表示或有类型：
 
 ```swift
 let a: Int? = 1
-print(a) // Optional(1) // warning
-print(a!) // 1
-print(a as Any) // Optional(1)
-print(Int("1")) // Optional(1) // warning
-print(Int("1")!) // 1
+print(type(of: a)) // Optional(Int)
 ```
 
-## Optional Binding
+或有值在使用前必须强制解包（*force unwrapping*）以获取其具体值，在值后添加`!`可以解包：
 
-- used in Control Flow statement, such as `if`, `guard` and `while` etc.
+```swift
+let a: Int? = 1
+print(a!) // 1
+```
 
-- Optional Binding is a certain value.
+### 空值（nil）
 
-## 强制展开（Force Unwrapping）
+> `nil` 只用于赋值或有类型或与之比较等。`nil`不是一个空指针，单纯是在语法层面表示值不存在。
+
+或有类型的变量不初始化即为`nil`
+
+```swift
+let a: Int?
+```
+
+`nil`只能与或有类型进行比较：
+
+```swift
+if (1 == nil) {} // error
+```
+
+### 或有绑定（Optional Binding）
+
+> 或有绑定，是先判断或有值是否存在，如果存在则将其值存于临时变量中。一般出现在控制流语句，如`if`, `guard` 和 `while`。
+
+```swift
+if let actualNumber = Int(possibleNumber) {
+    print("The string \"\(possibleNumber)\" has an integer value of \(actualNumber)")
+}
+```
+
+```swift
+let actualNumber = Int(possibleNumber)
+if let myNumber {
+    print("My number is \(myNumber)")
+}
+```
+
+### 强制展开（Force Unwrapping）
 
 - Force Unwrapping indicates I am sure Optional has a typed value.
 
@@ -508,26 +680,20 @@ let a: Int? = 1
 print(a!) // 1 // use exclamation point(!) as postfix.
 ```
 
-## Implicitly Unwrapped Optionals
+### Implicitly Unwrapped Optionals
 
 ```swift
 let a: Int! = 1
 print(a) // Optional(1)
 ```
 
-# 空值（nil）
-
-- `nil` isn't a pointer to a nonexistent object, but the absence of a value of a certain type.
-
-- `nil` can only assigned to Optionals.
-
-# 类型别名（Type Alias）
+## 类型别名（Type Alias）
 
 ```swift
 typealias Audio = Int8
 ```
 
-# 断言和先决条件（Assertion and Precondition）
+# 断言和先决（Assertion and Precondition）
 
 > building: `assert`, `assertFailure`
 
@@ -537,31 +703,148 @@ typealias Audio = Int8
 
 - used to detect the condition that is certain to prevent program from proceeding.
 
-# 操作符（Operator）
+# 操作符
 
-## 算术（Arithmetic Operator）
+> Swift支持重载操作符方法，以及自定义新的操作符。
 
-> `+`, `-`, `*`, `/`, `%`
+## 标准操作符
 
-## 比较（Comparison Operator）
+[Swift标准运算符](https://developer.apple.com/documentation/swift/operator-declarations)
 
-> `==`, `!=`, `>`, `>=`, `<`, `<=`, `===`, `!==`
+标准操作符及操作符优先级[OperatorContext](https://github.com/apple/swift-format/blob/main/Sources/SwiftFormatPrettyPrint/OperatorContext.swift)
+
+### 前缀运算符
+
+- `+`（Unary Plus）
+- `-`（Unary Minus）
+- `!`（Logical NOT）
+- `.!`（Pointwise logical NOT）
+- `~`（Bitwise NOT）
+- `..<`（Prefix Half-open Range）
+- `...`（Prefix Closed Range）
+
+### 后缀运算符
+
+- `...`（Postfix Half-open Range）
+
+### 中缀运算符
+
+#### BitwiseShiftPrecedence
+
+- `<<`（Bitwise left shift）
+- `&<<`（Bitwise left shift, ignoring overflow）
+- `>>`（Bitwise right shift）
+- `&<<`（Bitwise right shift, ignoring overflow）
+
+#### MultiplicationPrecedence
+
+- `*`（Multiplication）
+- `&*`（Multiplication with overflow）
+- `/`（Division）
+- `%`（Remainder）
+- `&`（Bitwise AND）
+
+#### AdditionPrecedence
+
+- `+`（Addition）
+- `&+`（Addition with overflow）
+- `-`（Subtraction）
+- `&-`（Subtraction with overflow）
+- `|`（Bitwise OR）
+- `^`（Bitwise XOR）
+
+#### RangeFormationPrecedence
+
+- `...`（Closed Range）
+- `..<`（Half-open Range）
+
+#### CastingPrecedence
+
+- `is`（Type Check）
+- `as`、`as?`、`as!`（Type cast）
+
+#### NilCoalescingPrecedence
+
+- `??`（Nil coalescing）
+
+#### ComparisonPrecedence
+
+- `<`（Less than）
+- `<=`（Less than or equal）
+- `>`（Greater than）
+- `>=`（Greater than or equal）
+- `==`（Equal）
+- `!=`（Not equal）
+- `===`（Identical）
+- `!==`（Not identical）
+- `~=`（Pattern Match）
+- `.<`（Pointwise less than）
+- `.<=`（Pointwise less than or equal）
+- `.>`（Pointwise greater than）
+- `.>=`（Pointwise greater than or equal）
+- `.==`（Pointwise equal）
+- `.!=`（Pointwise not equal）
+
+#### LogicalConjunctionPrecedence
+
+- `&&`（Logical AND）
+- `.&`（Pointwise bitwise AND）
+
+#### LogicalDisjunctionPrecedence
+
+- `||`（Logical OR）
+- `.|`（Pointwise bitwise OR）
+- `.^`（Pointwise bitwise XOR）
+
+#### TernaryPrecedence
+
+- `? :`（Ternary Conditional）
+
+#### AssignmentPrecedence
+
+- `=`（Assign）
+- `*=`（Multiply and assign）
+- `&*=`（Multiply with overflow and assign）
+- `/=`（Divide and assign）
+- `%=`（Remainder and assign）
+- `+=`（Add and assign）
+- `&+=`（Add with overflow and assign）
+- `-=`（Subtract and assign）
+- `&-=`（Subtract with overflow and assign）
+- `<<=`（Left bit shift and assign）
+- `&<<=`（Left bit shift ignoring overflow and assign）
+- `>>=`（Right bit shift and assign）
+- `&>>=`（Right bit shift ignoring overflow and assign）
+- `&=`（Bitwise AND and assign）
+- `&|`（Bitwise OR and assign）
+- `^=`（Bitwise XOR and assign）
+- `.&=`（Pointwise bitwise AND and assign）
+- `.|=`（Pointwise bitwise OR and assign）
+- `.^=`（Pointwise bitwise XOR and assign）
+
+多元运算符的符号两边的空格要求一致：
 
 ```swift
-print("appleA" < "appleB")
-print((1, "zebra") < (2, "apple"))
-print((1, "apple") < (1, "zebra"))
+print(1 + 1) // 2
+print(1+1) // 2
+print(1 +1) // error
+print(1+ 1) // error
 ```
 
-## 三元（Ternary Operator）
+## 赋值
 
-> `?...:...`
+赋值（`=`）不会~~返回值~~：
 
-## 复合赋值（Compound Assignment Operator）
+```swift
+if x = y {} // error
+```
 
-> `+=`, `-=`, `*=`, `/=`, `%=`
+赋值可以解构：
 
-## Nil-Coalescing Operator
+```swift
+let (x, y) = (1, 2)
+```
+## 空合并（Nil-Coalescing）
 
 > `??`
 
@@ -572,6 +855,36 @@ a != nil ? a! : b
 ```
 
 ## 区间（Range Operator）
+
+闭区间（Closed Range）
+
+```swift
+print(type(of: 1...2)) // ClosedRange<Int>
+```
+
+半开区间（Half-open Range）
+
+```swift
+print(type(of: 1..<2)) // Range<Int>
+```
+
+前缀半开区间（Prefix Half-open Range）
+
+```swift
+print(type(of: ..<2)) // PartialRangeUpTo<Int>
+```
+
+前缀闭区间（Prefix Closed Range）
+
+```swift
+print(type(of: ...2)) // PartialRangeThrough<Int>
+```
+
+后缀闭区间（Postfix Closed Range）
+
+```swift
+print(type(of: 1...)) // PartialRangeFrom<Int>
+```
 
 ```swift
 // Closed Range
@@ -594,7 +907,7 @@ for e in 1... {
 
 > `!`, `&&`, `||`
 
-# 控制流程（Control Flow）
+# 控制流程
 
 ## `for...in`
 
@@ -661,7 +974,7 @@ case 1:
 
 - like a production mode `assert`
 
-# 函数（Function）
+# 函数
 
 [Function](https://docs.swift.org/swift-book/LanguageGuide/Functions.html#)
 
@@ -772,9 +1085,11 @@ _ = greet("Lucky")
 greet("Lucky") // warning: result of call to 'test()' is unused
 ```
 
-# 闭包（Closure）
+# 闭包表达式
 
-[Closure](https://docs.swift.org/swift-book/LanguageGuide/Closures.html#)
+> [闭包](https://docs.swift.org/swift-book/LanguageGuide/Closures.html#)：捕获并可*持续*（即使这些变量的原始上下文已经不存在了）读取外部变量的*自包含功能块*（即函数，区别于与普通代码块）。故，嵌套函数是一种具名的闭包。（*Closures are self-contained blocks of functionality that can be passed around and used in your code. Closures can capture and store references to any constants and variables from the context in which they’re defined.*）
+
+闭包表达式（*Closure Expression*）语法：
 
 ```swift
 { (parameters) -> return type in
@@ -786,19 +1101,27 @@ greet("Lucky") // warning: result of call to 'test()' is unused
 let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
 names.sorted(by: { (a: String, b: String) -> Bool in return a > b })
 ```
-> 单一表达式可以省略`return`
-```swift
-names.sorted(by: { (a: String, b: String) -> Bool in a > b })
-```
-> 通过上下文自动推导参数类型
+
+通过上下文自动推导参数类型（*Inferring Type From Context*）
+
 ```swift
 names.sorted(by: { (a, b) -> Bool in a > b })
 ```
-> 通过魔术变量省略形参
+
+单表达式可以省略`return`（*Implicit Returns from Single-Expression Closures*）
+
+```swift
+names.sorted(by: { (a: String, b: String) -> Bool in a > b })
+```
+
+通过魔术变量省略形参定义（*Shorthand Argument Names*）
+
 ```swift
 names.sorted(by: { $0 > $1 })
 ```
-> 直接使用操作符方法（Operator Method）
+
+直接使用操作符方法（*Operator Methods*）
+
 ```swift
 names.sorted(by: >)
 ```
@@ -827,9 +1150,9 @@ names.sorted { $0 > $1 }
 
 ## 逃逸闭包（Escaping Closure）
 
-> 如果传入函数的闭包在函数返回后才会调用，则该闭包为**逃逸闭包**。
+> 传入了函数但在函数返回后才会调用的闭包。（*A closure is said to escape a function when the closure is passed as an argument to the function, but is called after the function returns.*）
 
-> 逃逸闭包需要在其类型前标记 `@escaping`：
+逃逸闭包需要在其类型前标记 `@escaping`：
 
 ```swift
 var completionHandlers: [() -> Void] = []
@@ -838,7 +1161,7 @@ func someFunctionWithEscapingClosure(completionHandler: @escaping () -> Void) {
 }
 ```
 
-> 当*逃逸闭包*中需要引用**类实例**`self`的属性或方法时，需要明确通过`self`引用：
+当逃逸闭包中需要引用*类实例*（`self`）的属性或方法时，需要明确通过`self`引用：
 
 ```swift
 class SomeClass {
@@ -856,16 +1179,18 @@ class SomeClass {
 
 ## 自动闭包（Autoclosure）
 
-> 如果一个闭包没有参数的话，可以省略参数的括号。
+> 一种自动创建的闭包：如果一个闭包没有参数的话，可以省略参数声明部分，只写闭包体部分（`{ statement }`），会被自动创建成闭包。(*An autoclosure is a closure that’s automatically created to wrap an expression that’s being passed as an argument to a function. It doesn’t take any arguments, and when it’s called, it returns the value of the expression that’s wrapped inside of it.*)
 
 ```swift
+let customer = { customersInLine.remove(at: 0) }
+
 func serve(customer customerProvider: () -> String) {
     print("Now serving \(customerProvider())!")
 }
-serve(customer: { customersInLine.remove(at: 0) } )
+serve(customer: customer)
 ```
 
-> 通过在闭包类型前声明`@autoclosure`，可以将调用参数自动包裹进闭包：
+通过在闭包类型前声明`@autoclosure`，可以省略闭包体~~标识符（`{}`）~~：
 
 ```swift
 func serve(customer customerProvider: @autoclosure () -> String) {
@@ -874,7 +1199,9 @@ func serve(customer customerProvider: @autoclosure () -> String) {
 serve(customer: customersInLine.remove(at: 0))
 ```
 
-# 枚举（Enumerations）
+# 枚举
+
+> [枚举（Enumerations）](https://docs.swift.org/swift-book/LanguageGuide/Enumerations.html)：（*An enumeration defines a common type for a group of related values and enables you to work with those values in a type-safe way within your code.*）
 
 - 枚举的原始值类型可以是字符串、字符、整数、浮点数；
 - 可以定义案例关联值；
