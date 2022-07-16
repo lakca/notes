@@ -1,2 +1,2 @@
-- [......]()<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-06 15:58</span></span>
-- [Swift](swift)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-07-05 15:51</span></span>
+- [......]()<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-16 12:37</span></span>
+- [Swift](swift)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-16 12:39</span></span>
