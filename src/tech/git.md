@@ -35,9 +35,9 @@ date: 2021-03-22T07:01:30.074Z
 
 > 工作区（*working directory*, *working tree*），可以简单理解为排除了特定目录（如`.git`）或文件的Git项目文件夹（*git project folder with certain directories/files excluded*），文件或文件内容在被声明前（*stage*）都处于工作区。
 
-## 暂存区（Staging Area）
+## 索引区（Index）
 
-> 暂存区（*staging area*, *index*），是[工作区](#工作区working-tree)和[版本库](#仓库repository)之间的一层缓冲区，内容在提交（*commit*）之前需先暂存（*stage*）于工作区，其内容存储在`.git/index`二进制文件中。
+> 索引区（*index*），也叫暂存区（*staging area*），为了和*stash*进行区分，所以中文一般叫索引区。是[工作区](#工作区working-tree)和[版本库](#版本库commit-history)之间的一层缓冲区。内容在提交之前需先暂存于工作区，存储于`.git/index`文件中。
 
 对于简单的修改提交而言，可能暂存区没什么意义，但有了暂存区，我们就可以：
 
@@ -46,19 +46,35 @@ date: 2021-03-22T07:01:30.074Z
 - 保存无需提交的修改。（如本地调试代码）
 - ......
 
+## 版本库（Commit History）
+
+> 即Git提交历史。*commit* 类似于其他版本控制系统的 *revision*、*version* 等。
+
 ## 仓库（Repository）
 
-> 广义地讲，Git仓库（*Repository*）是Git数据库，存储了Git元数据和Git对象，对应的实体是Git目录（*Git Directory*）`./.git`。
-
-> 狭义地讲，也是我们一般所说的Git仓库，是*Commit对象库*、*快照库*、*版本库*，即通过`git commit`实现的永久存储。
+> Git仓库（*Repository*）是Git数据库，存储了Git元数据和Git对象，对应的实体是Git目录（*Git Directory*）`./.git`。
 
 ## 对象（Object）
 
-> Git是对项目文件系统进行快照存储和调用来进行版本控制的，在实现上，通过*key-value*形式的存储构建一个内容可寻址的文件系统，来对快照信息存储和索引，其中*value*即为Git对象，*key*为对象的*SHA1*哈希值。
->
-> 所以，[Git对象（*Object*）](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)，是Git的数据（如文件、提交、标签、分支......）模型，底层是一个以其存储内容的SHA1为名称（实际是文件夹名称+文件名）的文件，存储于`.git/objects`文件夹，可通过`git cat-file -p`命令查看内容。
+Git是对项目目录进行快照存储和调用来进行版本控制的，在实现上，通过*key-value*形式的存储构建了一个内容可寻址的文件系统，其中*value*即为Git对象，*key*为对象内容的*SHA-1*值，也是对象的名称（*object name*）。
 
-查看对象：
+> [Git对象（*Object*）](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects)，是Git的数据（如文件、提交、标签、分支......）的存储单元，通过其内容SHA-1唯一标识。
+
+![](https://git-scm.com/book/en/v2/images/data-model-4.png)
+
+Git对象在底层是一个以其存储内容的SHA-1为名称（实际是文件夹名称+文件名）的文件，存储于`.git/objects`文件夹，可通过`git cat-file -p`命令查看内容。
+
+Git对象有四种类型：
+
+- *tree* 即树对象，包含文件名和文件模式，用于表示一组文件对象的集合，类似文件系统中的文件夹；
+
+- *commit* 即提交对象，包含对当次提交产生的根级树对象的引用、对父级的引用和当次提交的元信息（如提交人、时间、信息...）；
+
+- *tag* 即标签对象，包含指向另一个对象的 ref 的对象;
+
+- *blob* 即无类型对象，如文件内容等；
+
+注意，*parent* 只是*commit*类型的对象在特定语境下的别名，我们可以通过`git cat-file -t <sha1>`来查看一个对象类型查看对象。
 
 ```shell
 > ls .git/objects/36
@@ -67,7 +83,7 @@ date: 2021-03-22T07:01:30.074Z
 0a8a1267f4a23ae91f4a49d9e55ae297d0063f 4130ae2eba9aa19c4a06abf0eccd812aeb1480 dfecc81832f84e60a094ce3be6184dda9bf701
 ```
 
-查看某个commit：
+查看*commit*对象：
 
 ```shell
 > git cat-file -p 36049069ed448142208ece96f24bc5973a40e5a1
@@ -107,44 +123,73 @@ _site
 .DS_Store
 ```
 
-在上述结果中，Git对象的哈希*key*前面是对象的类型，我们也可以通过`git cat-file -t <sha1>`命令查看一个对象类型。有三种：
-
-- *blob* 为文件对象，用于存储文件内容，也是Git的原子对象，类似文件系统中的文件；
-- *tree* 为树对象，用于表示一组文件对象的集合，类似文件系统中的文件夹；
-- *commit* 为提交对象，其存储的信息包括对当次提交产生的根级树对象的引用、对父提交的引用和当次提交的元信息；
-
-注意，*parent* 只是*commit*类型的对象在特定语境下的别名，我们可以通过`git cat-file -t <sha1>`来查看。
-
-### 树对象（Tree Object）
-
-> Git对象是*key-value*的存储结构，对于多文件的存储，是通过存储文件对象的*key*来直接引用，或通过存储引用了文件对象的树对象*key*来间接引用。这种存储一组多个文件的对象即为[树对象](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_tree_objects)，类比文件系统中的文件夹。
-
-### 相关命令
+相关命令：
 
 - [`cat-file`](https://git-scm.com/docs/git-cat-file)
 - [`ls-tree`](https://git-scm.com/docs/git-ls-tree)：List the contents of a tree object.
-
-#### 提交（Commit）
-
-> 提交（*commit*）：使用暂存区信息创建一个[提交对象（*commit object*）](https://git-scm.com/book/en/v2/Git-Internals-Git-Objects#_commit_objects)。
 
 ## 引用（Reference）
 
 > [引用（*References*）](https://git-scm.com/book/en/v2/Git-Internals-Git-References)，是对某个[对象](#对象object)创建的别名。引用信息存储在`.git/refs`文件夹下面，包括*heads*、
 *tags*、*stash*、*remotes*等，分别对应着本地分支头、标签、暂存和远程分支头。
 
+# 术语解释
 
-## 头（Head）
+[Glossary](https://git-scm.com/docs/gitglossary)
 
-> 我们知道，在版本控制系统中可以切换到（检出）不同的历史版本进行操作，而记录所处版本的实体在Git中称之为头（*head*）。在Git中，头本质上是一个存储了其引用版本的哈希值的文件，其中当前头（*HEAD*）的存储位置在`.git/HEAD`，其他头见[分支](#分支branch)。
+- **working tree**（*工作区*）：即项目文件目录，包含着当前检出的仓库文件以及用户本地还未提交的修改。
 
-\* 注意*head*和*HEAD*的区别，前者表示的是创建的所有头，后者代表的是当前所处的头。
+- **index**（*索引*）：即索引区（即暂存区）的存储。是工作区的一个保存版本，包含一系列具有统计信息的对象文件。
 
-## 分支（Branch）
+- **index entry**（*索引条目*）：指索引区中的某个文件的信息。
 
-> [分支（*Branch*）](https://git-scm.com/book/en/v2/Git-Branching-Branches-in-a-Nutshell)，是版本控制系统提供并发任务能力或任务分解能力的核心支撑。在Git中，分支是由创建多个[头](#头head)来实现的，换句话来说，分支是具有名字的头（无名的头叫*detached head*）。其中，本地分支的头信息存储在`.git/refs/heads`，远程分支的头信息存储在`.git/refs/remotes`。
+- **object**（*对象*）：对象是Git数据的存储单元。在Git中，所有实体都是通过对象来直接描述的，与对象相对的是*引用*（*reference*），用来直接或间接指代对象。
 
-# 常用子命令
+- **object name**（*对象名称*）：与 *SHA-1*、*hash* 同义。
+
+- **reachable**（*可达的*）：通过引用能够溯源即为可达。
+
+- **dangling object**（*悬空对象*）：即对于任何对象或引用都不可达的对象。
+
+- **branch**（*分支*）：一个独立的开发线。通过建立不同的开发线，可以针对不同的业务进行并行单独的开发，也可以在需要的是时候合并开发线。
+
+- **rebase**（*变基*）：将当前分支重置为目标分支的目标点（`--onto`），再将本地分支不同于目标分支的提交（会预先存储）一一在当前分支头上应用。
+
+- **merge**（*合并*）：以并入分支从与当前分支分歧开始的所有提交的内容创建一个新的提交，提交到当前分支。所以*rebase*和*merge*最大的区别是是否在当前分支上保留历史提交记录。
+
+- **commit**（*提交*）：即提交对象，对项目创建的一个历史版本。作为名词时，与*revision*、*version*同义。
+
+- **parent**（*父级*）：如果提交对象包含一个开发线中的逻辑前任（*logical predecessor*）列表，该列表即父级列表（*parents*）。
+
+- **chain**（*（对象）链*）：一个对象单向链表，列表中的每个对象都包含对其前任（*parent*）的引用。
+
+- **reference**：即*ref*。
+
+- **ref**（*引用*）：一个以`refs/`开头的名称，引用一个对象名称（即SHA-1）或另一个*ref*，后者也叫*符号引用*（*symbolic ref*）。
+
+- **symref**（*符号引用*）：引用*ref*的*ref*。例如 `HEAD`，引用的是一个分支头，比如`refs/heads/master`。
+
+- **head**（*头*）：一种总是引用着分支尖端（即最新提交）的动态引用，命名空间为`refs/heads`。
+
+- **HEAD**（*当前头*）：工作区当前所在的最新提交，如果不是头（*head*），则叫*分离头*（*detached HEAD*）。
+
+- **detached HEAD**（*分离头*）：通常来说，（通过检出分支）`HEAD`指向的是某个分支（头），而如果检出的是某个提交，则`HEAD`即为分离头。
+
+- **tag**（*标签*）：一种命名空间为`refs/tags/`的静态引用，不会随着提交的变动而更新。
+
+- **stash entry**（*暂存条目*）
+
+- **checkout**（*检出*）：调出某个状态。详细地说就是，调整工作区HEAD，或撤销工作区文件变更。
+
+- **pathspec**：路径描述。包括但不限于文件路径、文件内容定位等。
+
+- **refspec**：用于描述本地引用和远程引用的关系，一般用在`push`、`pull`等命令中，。
+
+- **commit-ish**（*提交类*）：提交对象或者可以解引用为提交对象的对象（如标签对象）。
+
+- **tree-ish**（*树类*）：树对象或者可以解引用为树对象的对象（如树对象、提交对象、标签对象等）。
+
+# 常用命令
 
 > 所有命令用法均可以通过`git <command> --help`查看详情，或者[官网](officialSite)查询。
 
@@ -407,86 +452,120 @@ xargs git log --merges --no-walk --grep=WIP
 
 ## commit（提交）
 
-> 将暂存区内容提交到当前分支。(*Record changes to the repository.*)
+> 创建一个提交对象，即向版本库中存储一个新的项目快照。
 
 ```shell
 git commit [<options>] [--] <pathspec>...
 ```
 
-提交所有跟踪过（*tracked*）的文件（跳过索引区）：
+```shell
+--pathspec-from-file=<file>
+--pathspec-file-nul
+```
+
+环境变量：
+
+- `GIT_AUTHOR_NAME`
+- `GIT_AUTHOR_EMAIL`
+- `GIT_AUTHOR_DATE`
+- `GIT_COMMITTER_NAME`
+- `GIT_COMMITTER_EMAIL`
+- `GIT_COMMITTER_DATE`
+
+提交所有*tracked*的文件（可以跳过索引区）：
 
 ```shell
 -a, --all
 ```
 
-只提交指定文件：
+提交指定文件：
 
 ```shell
 -o, --only
+
+-i, --include
 ```
 
-手动选择要提交的数据块：
+逐块选择文件内容进行提交：
 
 ```shell
-# 进入文件选择补丁块（chunks of patch）进行提交：
 -p, --patch
-# 例如，如果修改中有本地调试代码，使用该选项提交，可以不用每次提交前删除、stash或者切换分支等；
 ```
 
-修改上一个提交：
+针对提交信息：
 
 ```shell
---amend
-```
+-m <message>, --message=<message>
 
-使用之前的 *commit message*：
+# 针对其他选项提供的提供信息进行编辑
+-e, --edit
+--no-edit
 
-```shell
+# 允许不编写提交信息
+--allow-empty-message
+
+# 复用其他提交的提交信息：
 -C <commit>, --reuse-message=<commit>
 -c <commit>, --reedit-message=<commit>
+
+# 读取文件的内容作为提交信息
+-F <file>
+
+# 指定提交信息模版文件
+-t <file>, --template=<file>
+
+# 怎样清理提交信息，可配置默认值 commit.cleanup
+--cleanup=[strip|whitespace|verbatim|scissors|default]
+# whitespace：清理首尾空行、连续空行及行两端空字符
+# strip：除了whitespace，还会清理注释
+# verbatim：不做清理
 ```
 
-指定元信息如何提交：
+其他：
 
 ```shell
 --date <date>
+
 --author <author>
 --reset-author
---no-edit
+
+# 允许不提交内容
+--allow-empty
 ```
 
-提交给之前的提交：
+修改上次提交：
 
 ```shell
-> git commit -m 'feature A'
-> git commit -m 'feature B'
-> git log --oneline
-f90eb05 (HEAD -> dev) feature B
-d48a90d feature A
+--amend
 
+# 如：
+> git commit --amend -m 'refined message.'
+> git commit --amend --no-edit --date=now
 ```
 
-示例提交给feature A：
+修改任意历史提交：
 
-1. 使用`--fixup`提交：
+1. 针对目标提交创建修改提交：
 ```shell
-# 通过 --fixup 标记创建的提交为feature A的修改
-> git commit --fixup d48a90d
-44251ec (HEAD -> dev) fixup! feature A
-f90eb05 feature B
-d48a90d feature A
-# 稍后，将修改压缩（squash）进去：
+# 仅修改提交信息
+--fixup=reword:<commit>
+
+# 仅提交修改内容
+--fixup=<commit>
+
+# 类似 --amend，内容和消息都可提交
+--fixup=amend:<commit>
+
+# 单独的提交信息，在rebase时手动选择如何保留
+--squash=<commit>
+
+# 如，修改d48a90d
+> git commit --fixup=d48a90d
+```
+2. 通过 *rebase* 合并修改提交：
+
+```shell
 > git rebase -i --autosquash d48a90d~
-0c0d4b4 (HEAD -> dev) feature B
-780572e feature A
-```
-2. 或者，如果需要在合并（*rebase*）的时候修改合并消息，使用`--squash`：
-```shell
-> git commit --squash d48a90d
-44251ec (HEAD -> dev) fixup! feature A
-f90eb05 feature B
-d48a90d feature A
-...
 ```
 
 绕过钩子：
@@ -494,11 +573,11 @@ d48a90d feature A
 ```shell
 # 绕过 pre-commit, commit-msg
 -n, --no-verify
-# 绕过 post-rewrite
+
 --no-post-rewrite
 ```
 
-其他钩子，比如*post-commit*，
+其他钩子，如*post-commit*，
 没有内置选项可以绕过，但可以通过变通，比如在脚本里面加入环境变量做判断，比如：
 ```shell
 # post-commit
@@ -509,9 +588,20 @@ d48a90d feature A
 > SKIP_POST_COMMIT=1 git commit -m '...'
 ```
 
+有助于写脚本的选项：
+
+```shell
+--dry-run
+--short
+--long
+--porcelain
+--branch
+-z, --null
+```
+
 ## checkout（检出）
 
-> 检出某个对象：切换分支，或者复原工作区文件（到*HEAD*状态）。（*Switch branches or restore working tree files.*）
+> 使用对象数据库中的树对象或 blob 更新全部或部分工作树的操作。即切换分支，或者复原工作区文件（到*HEAD*状态）。（*Switch branches or restore working tree files.*）
 
 ```shell
 git checkout [<options>] [<branchname>] [--] <pathspec>...
@@ -575,59 +665,461 @@ git checkout --track origin/develop
 -3, --theirs
 ```
 
+## reset（重置）
+
+> 将让前HEAD重置到指定状态。（*Reset current HEAD to the specified state*）
+
+## rebase（变基）
+
+> 将当前分支重置到目标分支的目标点（`--onto`），再将本地分支不同于目标分支的提交（会预先存储）一一在当前分支头上应用。
+
+```shell
+git rebase [<upstream> [<branch>]]
+```
+
+```shell
+> git rebase master topic # git checkout topic & git rebase master
+> git rebase master # 如果当前分支是topic
+```
+
+```
+       A---B---C topic
+      /
+ D---E---F---G master
+
+> git rebase master topic
+
+               A'--B'--C' topic
+              /
+ D---E---F---G master
+```
+即使两个分支有相同提交（如下A和A'），也依旧使用目标分支的提交：
+```
+     A---B---C topic
+    /
+D---E---A'---F master
+
+> git rebase master topic
+
+                B'---C' topic
+               /
+ D---E---A'---F master
+```
+
+*upstream*可以是任何有效的*commit-ish*，而不仅限于已存在的分支：
+
+```shell
+git rebase master~2 topic
+```
+
+指定分支（变基后的）新基点：
+
+```shell
+--onto <newbase>
+```
+```shell
+--fork-point
+--no-fork-point
+```
+```shell
+--keep-base
+
+> git rebase --keep-base <upstream> <branch>
+# 等价于
+> git rebase --onto <upstream>...<branch> <upstream> <branch>
+```
+
+> 所谓基点，就是变基后，分支从该提交开始独立，然后分支领先upstream提交的所有内容以一个新的提交应用到该基点后面。
+
+```shell
+                        H---I---J topicB
+                       /
+              E---F---G  topicA
+             /
+A---B---C---D  master
+
+> git rebase --onto master topicA topicB
+
+            H'--I'--J'  topicB
+            /
+            | E---F---G  topicA
+            |/
+A---B---C---D  master
+```
+
+默认变基分支是当前分支，基点和目标分支是追踪分支:
+
+```shell
+git rebase
+```
+
+```shell
+[-i | --interactive] [<options>] [--exec <cmd>] [--onto <newbase> | --keep-base]
+```
+
+```shell
+--committer-date-is-author-date
+--ignore-date, --reset-author-date
+```
+
+钩子：
+
+```shell
+# pre-rebase
+--verify
+--no-verify
+```
+
+## merge（合并）
+
+## tag（标签）
+
+> Create, list, delete or verify a tag object signed with GPG.
+
+1. * 使用GPG签名创建的tag，若没有该签名私钥，其他用户是不能修改的；对于正式版本，使用签名可以相对保持版本安全；关于GPG签名及密钥生成，自行搜索了解即可；
+
+常见用法：
+
+```bash
+# list:
+git tag
+git tag -l|--list
+git tag -l <pattern>...
+--contains [<commit>]
+--no-contains [<commit>]
+
+# create:
+git tag <tagname>
+git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
+## annotate with editor:
+-a, --annotate
+## annotate with message directly，可以使用多次该选项，每个message都会被当成单独的段落：
+-m <msg>, --message=<msg>
+## annotate with message from file：
+-F <file>, --file=<file>
+## edit annotation message with editor：
+-e, --edit
+
+# force：
+-f, --force
+
+# * 创建/不创建tag的reflog：
+--create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for tag；
+--no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
+```
+
+标签签名（Sign）：
+
+```bash
+# 使用  the default e-mail address’s key 作为密钥签名创建tag：
+-s, --sign
+# 使用GPG密钥签名创建tag：
+-u <keyid>, --local-user=<keyid>
+# 对于正式的稳定版本，使用签名可以保证版本的安全性，防止篡改。
+
+# 验证标签的签名：
+-v, --verify
+```
+
+## remote
+
+```shell
+```
+
 ## push（推送）
 
-> Update remote refs along with associated objects.
+> 更新远程引用（并推送必要对象以完成引用），如 HEAD、tag、branch...
+
+```shell
+git push
+  [
+    # 推送所有本地分支，即refs/heads/*
+    --all
+
+    # 将本地refs/同步到远程，使远程和本地具有相同的refs
+    |--mirror
+
+    #
+    |--tags
+  ]
+
+  [--follow-tags]
+
+  [--repo=<repository>]
+
+  [-u,--set-upstream]
+
+  # 删除远程分支
+  [-d,--delete]
+  # git push -d origin b1 b2 b3
+
+  # 删除所有不存在本地同名分支的远程分支
+  [--prune]
+  # 可以与 <refspec>... 结合使用，如 ref/heads/*:refs/tmp/*
+
+  [--atomic]
+
+  [(-o <string>)|(--push-option=<string>)]
+
+  [--no-verify] [-n,--dry-run] [-f,--force] [-v,--verbose] [--porcelain]
+
+  [repository=branch.<branch>.remote]
+
+ # 本地和远程refs的对应关系，格式为 <src>:<dst>
+ [<refspec>...]
+ # 如果不提供src参数，则是删除dst
+```
+
+```shell
+> git push origin HEAD~:develop
+
+## remote
+
+```shell
+git remote
+  [
+    (add [-t <branch>] [-m <master>] [-f] [--[no--]tags] [--mirror])
+  ]
+```
+
+## rm
+
+将文件从`staging area`移除，但不删除文件，文件将变成`untracked`状态：
+
+```bash
+git rm —cached
+```
+
+将文件从`staging area`和文件系统中同时删除：
+
+```bash
+git rm -f
+```
+
+递归：
+
+```bash
+git rm -r
+```
+
+## ls-files
+
+> Show information about files in the index and the working tree.
+
+常用选项：
+
+```bash
+# 使用相对git项目根目录的路径列出，默认是相对于当前目录的；
+--full-name
+
+# 同时列出子模块的文件
+--recurse-submodules
+
+# 筛选文件，pattern 为 shell wildcard pattern：
+git ls-files <pattern>
+# 如排除markdown文件：
+git ls-files ':!:*.md'
+
+# 筛选出 modified 文件：
+-m, --modified
+
+# 筛选出 untracked 文件：
+-o, --others
+
+# 筛选出 deleted 文件：
+-d, --deleted
+
+# 筛选出 ignored 文件：
+-i, --ignored
+
+## 排除某些 untracked 文件：
+-x <pattern>, --exclude=<pattern>
+# 也可以使用git的标准exclusion文件，包括`.gitignore`, `.git/info/exclude`和用户的全局排除文件等文件：
+--exclude-standard
+# 也可以使用指定的exclusion文件：
+--exclude-from=<file>
+# 也可以只指定exclusion文件的名称，当有目录中出现了该文件，则该目录及其子目录都会应用该文件的配置：
+--exclude-per-directory=<file>
+```
+
+列出未被跟踪的（`untracked`）文件：
+
+```bash
+git ls-files --others --exclude-standard
+```
+
+列出忽略的（`ignored`）文件：
+
+```bash
+git ls-files --ignored --exclude-standard
+```
+
+## config（配置）
+
+同一个配置文件中，同名配置可以有任意多行，但只会应用最后一个。
+
+```shell
+git config
+  [
+    --get # 获取最后一行
+    |--get-all # 获取所有行
+    |--get-regexp
+    |--get-urlmatch
+
+    |--add
+    |--replace-all
+
+    |--unset
+    |--unset-all
+
+    |--rename-section
+
+    |--remove-section
+  ]
+
+  [(-t,--type <bool|int|bool-or-int|path|expiry-date>)|--bool|--int|--bool-or-int|--bool-or-str|--path|--expiry-date]
+
+  [--show-origin] [--show-scope] [--name-only] [-z,--null]
+
+  [--fixed-value] # value-pattern 当作普通字面量
+
+  [-e,--edit] # 打开编辑器
+
+  <name|new-name> [<new-name|value|URL> [<value-pattern>]]
+```
+
+```shell
+> git config user.email 123675@foo.com
+> git config --add user.email 123675@bar.com
+> git config --add user.email 90783@bar.com
+> git config --unset user.email @baz
+```
+
+指定配置文件：
+
+```bash
+# $GIT_DIR/config，仓库配置文件
+--local
+# ~/.gitconfig、$HOME/.config/git/config，用户配置文件
+--global
+# $(prefix)/etc/gitconfig，系统配置文件
+--system
+# $GIT_DIR/config.worktree，见 git-worktree
+--worktree
+# 指定配置文件路径：
+-f <file>, --file <file>
+# 类似 --file，但是可以读取不同存储的文件，如读取分支上的文件：--blob=master:.gitmodules
+--blob <blob>
+```
+
+常见配置：
+
+```ini
+[user]
+name = foo
+email = foo@bar.com
+
+[core]
+editor = code --wait
+
+[credential]
+helper = store
+
+[http]
+proxy = http://localhost:1080
+
+[https]
+proxy = https://localhost:1080
+
+[pager]
+branch = false
+log = false
+```
+
+配置认证信息存储的其他位置：`credential.helper`
+
+> 如本地文件`git config credential.helper store`，配置存储在`~/.git-credentials`，配置内容如`https://username:password@domain`
+
+配置认证时的默认用户名：`credential.username`
+
+配置认证信息是否因url路径不同而不同：`credential.useHttpPath`
+
+> 当该项为（默认为）false时，对于同一个origin，使用的是相同的认证信息；
+
+对指定url配置认证信息：`credential.<url>.*`
+
+> 所有`credential.*`都可以配置；
+
+配置创建tag时是否创建reflog记录（create reflog for tag）：`core.logallrefupdates`
 
 ## log（日志）
 
-> 列出提交日志。（*list all commit logs.*）。下列所涉及的 `pattern` 均指 `glob pattern`。
+> 列出指定提交（默认为HEAD）及其（所在分支）之前的提交日志。（*List commits that are reachable by following the parent links from the given commit(s), but exclude commits that are reachable from the one(s) given with a ^ in front of them. The output is given in reverse chronological order by default.*）
 
-```bash
+下列所涉及的 `pattern` 均指 `glob pattern`。
+
+```shell
 git log [<options>] [<revision range>] [[--] <path>...]
 ```
 
-指定路径（文件、文件夹）：
+指定文件：
 
-```bash
+```shell
 <path>
 ```
 
-指定文件行区间：
+指定文件行：
 
-```bash
+```shell
 # 指定开始和结束的绝对行号
 -L <start>,<end>:<file>
 
-git log -L 1,10:test.sh # 查找test.sh有修改第1到第10行的log
+> git log -L 1,10:test.sh # 查找test.sh有修改第1到第10行的log
 
 # 指定开始行号和总行数
 -L <start>,<+count>:<file> # 向后数
 -L <start>,<-count>:<file> # 向前数
 
-git log -L 1,+10:test.sh # 查找test.sh有修改从第1开始总共10行的log。
+> git log -L 1,+10:test.sh # 查找test.sh有修改从第1开始总共10行的log。
 
 # start和end也可以是正则表达式
 -L </regex/>,</regex/>:<file>
 
-git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/echo/的行开始总共10行的log
+> git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/echo/的行开始总共10行的log
 ```
 
-指定引用（提交）区间：
+对比分支不同：
 
 ```bash
-<A>..<B> # 包括 A，不包括 B
-<A>...<B> # 包括 A 和 B
-^<A> # 不包括 A
+# 不存在于A的parents中，但存在于B的parents中的提交
+git log <A>..<B>
+# 相当于
+git log ^<A> <B>
+
+> git log develop..master
+# 等价于：
+> git log develop ^master
+
+> git log HEAD ^HEAD~
+# 等同于：
+> git log -1
 ```
 
-指定日志数量：
+```shell
+git log <A>...<B> # 同时存在于A和B的parents中的提交
+# 或
+git log A B --not $(git merge-base --all A B)
+```
 
-```bash
-# 限制最多输出的log数
+限制日志数量：
+
+```shell
 -<number>
+```
 
-# 跳过数量：
+跳过日志数量：
+
+```shell
 --skip=<number>
 ```
 
@@ -639,7 +1131,7 @@ git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/e
 -S<string> --pickaxe-regex
 ```
 
-匹配作者信息：
+匹配提交人/作者：
 
 ```bash
 # 指定作者/提交人
@@ -647,7 +1139,7 @@ git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/e
 --committer=<pattern>
 ```
 
-匹配提交时间：
+制定提交时间范围：
 
 ```bash
 # 指定时间：
@@ -655,7 +1147,7 @@ git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/e
 --until=, --before=
 ```
 
-匹配*commit message*：
+匹配提交信息（*commit message*）：
 
 ```bash
 # 匹配 commit message，其中pattern可以且默认为正则表达式：
@@ -674,7 +1166,7 @@ git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/e
 --all-match
 ```
 
-匹配各种引用（分支、标签等）的message：
+匹配提交信息（*message*）：
 
 ```bash
 # 指定refs：
@@ -704,23 +1196,29 @@ git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/e
 
 ```
 
-筛选内容：
+指定提交中文件的变动类型（修改、新增、重命名...）：
 
-```bash
-# 筛选提交内容的变动类型：
+```shell
 --diff-filter=[(A|C|D|M|R|T|U|X|B)…​[*]]
 # 分别对应 Added, Copied, Deleted, Modified, Renamed, Changed（`T`）, unmerged, unknown（`X`）, pairing broken（`B`）；
 # 也可以组合使用：
 --diff-filter=DM
+```
 
+筛选内容：
+
+```shell
 # 使用单词级别的diff：
 --word-diff[=color|plain|porcelain|none]
 # color：通过颜色来标记删减；
 # plain：通过[-removed-]和{+added+}格式来标记；
 # porcelain：通过将变动的部分单独成行来标记；
 # none：不显示单词级别diff；
+```
 
-# （如何）显示子模块的提交内容：
+指定如何显示子模块的提交内容：
+
+```shell
 --submodule[=short|log|diff]
 ```
 
@@ -881,131 +1379,27 @@ git diff -S<string> --pickaxe-regex # 将string看作扩展POSIX正则表达式
 --summary
 ```
 
-## tag（标签）
-
-> Create, list, delete or verify a tag object signed with GPG.
-
-1. * 使用GPG签名创建的tag，若没有该签名私钥，其他用户是不能修改的；对于正式版本，使用签名可以相对保持版本安全；关于GPG签名及密钥生成，自行搜索了解即可；
-
-常见用法：
-
-```bash
-# list:
-git tag
-git tag -l|--list
-git tag -l <pattern>...
---contains [<commit>]
---no-contains [<commit>]
-
-# create:
-git tag <tagname>
-git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
-## annotate with editor:
--a, --annotate
-## annotate with message directly，可以使用多次该选项，每个message都会被当成单独的段落：
--m <msg>, --message=<msg>
-## annotate with message from file：
--F <file>, --file=<file>
-## edit annotation message with editor：
--e, --edit
-
-# force：
--f, --force
-
-# * 创建/不创建tag的reflog：
---create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for tag；
---no-create-reflog # 该选项只能取消 --create-reflog，无法覆盖全局配置；
-```
-
-标签签名（Sign）：
-
-```bash
-# 使用  the default e-mail address’s key 作为密钥签名创建tag：
--s, --sign
-# 使用GPG密钥签名创建tag：
--u <keyid>, --local-user=<keyid>
-# 对于正式的稳定版本，使用签名可以保证版本的安全性，防止篡改。
-
-# 验证标签的签名：
--v, --verify
-```
-
 ## blame（追溯）
 
 blame指定的文件行：
 
 `git blame -L <start>,<end> <filename>`
 
-## rm
+## bisect（二分）
 
-将文件从`staging area`移除，但不删除文件，文件将变成`untracked`状态：
+## grep（搜索）
 
-```bash
-git rm —cached
+# 进阶命令
+
+## daemon
+
+实现两个仓库的同步：
+
+```shell
+> git daemon --export-all --base-path=. --verbose
 ```
-
-将文件从`staging area`和文件系统中同时删除：
-
-```bash
-git rm -f
-```
-
-递归：
-
-```bash
-git rm -r
-```
-
-## ls-files
-
-> Show information about files in the index and the working tree.
-
-常用选项：
-
-```bash
-# 使用相对git项目根目录的路径列出，默认是相对于当前目录的；
---full-name
-
-# 同时列出子模块的文件
---recurse-submodules
-
-# 筛选文件，pattern 为 shell wildcard pattern：
-git ls-files <pattern>
-# 如排除markdown文件：
-git ls-files ':!:*.md'
-
-# 筛选出 modified 文件：
--m, --modified
-
-# 筛选出 untracked 文件：
--o, --others
-
-# 筛选出 deleted 文件：
--d, --deleted
-
-# 筛选出 ignored 文件：
--i, --ignored
-
-## 排除某些 untracked 文件：
--x <pattern>, --exclude=<pattern>
-# 也可以使用git的标准exclusion文件，包括`.gitignore`, `.git/info/exclude`和用户的全局排除文件等文件：
---exclude-standard
-# 也可以使用指定的exclusion文件：
---exclude-from=<file>
-# 也可以只指定exclusion文件的名称，当有目录中出现了该文件，则该目录及其子目录都会应用该文件的配置：
---exclude-per-directory=<file>
-```
-
-列出未被跟踪的（`untracked`）文件：
-
-```bash
-git ls-files --others --exclude-standard
-```
-
-列出忽略的（`ignored`）文件：
-
-```bash
-git ls-files --ignored --exclude-standard
+```shell
+> git remote add git://<ip>/<repo_name>
 ```
 
 ## rev-list（列出某个提交中的对象）
@@ -1032,124 +1426,6 @@ git update-index --skip-worktree/--no-skip-worktree <file>
 
 > `Skip-worktree bit`: When reading an entry, if it is marked as skip-worktree, then Git pretends its working directory version is up to date and read the index version instead.
 
-## config
-
-### 基础用法
-
-指定配置文件：
-
-```bash
-# 仓库配置文件（.git/config）
---local
-# 用户配置文件（~/.gitconfig）
---global
-# 系统配置文件（$(prefix)/etc/gitconfig）
---system
-# 具体配置文件：
--f <file>, --file <file>
-```
-
-列出配置：
-
-```bash
--l, --list
-
-# 显示配置项的来源文件
---show-origin
-
-# 来源类型，local, global, system
---show-scope
-
-# 只显示配置名称
---name-only
-
-git config -l --show-origin # 列出配置项及其来源文件
-```
-
-获取配置：
-
-```bash
---get <name> [<value_regexp>] # 当有多行该配置，返回最后一个；
---get-all <name> [<value_regexp>] # 当有多行该配置，返回所有的；
---get-regexp <name_regexp> [<value_regexp>] # name使用正则表达式；
-```
-
-编辑配置项：
-
-```bash
-# 设置配置项，会直接在旧有配置行（多个的话第一个）上修改
-<name> <value>
-
-# 设置配置项，替换所有该配置出现的行
-<name> <value> --replace-all
-
-# 设置配置项，会直接新添一行配置，不修改原有行
---add <name> <value>
-
-# 移除一行/多行配置
---unset <name> [<value_regexp>]
---unset-all <name> [<value_regexp>] # 匹配模式
-
-# 指定配置项的属性
---type <bool|int|bool-or-int|path|expiry-date>
-
-# 直接打开配置文件进行编辑：
--e, --edit
-```
-
-常见配置：
-
-```ini
-[user]
-name = foo
-email = foo@bar.com
-
-[core]
-editor = code --wait
-
-[credential]
-helper = store
-
-[http]
-proxy = http://localhost:1080
-
-[https]
-proxy = https://localhost:1080
-
-[pager]
-branch = false
-log = false
-```
-
-配置认证信息存储的其他位置：`credential.helper`
-
-> 如本地文件`git config credential.helper store`，配置存储在`~/.git-credentials`，配置内容如`https://username:password@domain`
-
-配置认证时的默认用户名：`credential.username`
-
-配置认证信息是否因url路径不同而不同：`credential.useHttpPath`
-
-> 当该项为（默认为）false时，对于同一个origin，使用的是相同的认证信息；
-
-对指定url配置认证信息：`credential.<url>.*`
-
-> 所有`credential.*`都可以配置；
-
-配置创建tag时是否创建reflog记录（create reflog for tag）：`core.logallrefupdates`
-
-## 更多技巧
-
-### 获取git项目根目录
-> `git rev-parse --show-toplevel`
-
-### 不检测指定文件变动
-> `git update-index --assume-unchanged <file>`
-> [REF](https://stackoverflow.com/questions/1274057/how-to-make-git-forget-about-a-file-that-was-tracked-but-is-now-in-gitignore#answer-20241145)
-
-### `git update-index --skip-worktree <file>`
-
-# Advanced
-
 ## cat-file
 > Provide content or type and size information for repository objects(`blob`, `tree`, `commit`, `tag`), files are located in `.git/objects`
 
@@ -1172,6 +1448,16 @@ log = false
 ## gc
 > Clean up unnecessary files and optimize the local repository.
 
+## 更多技巧
+
+### 获取git项目根目录
+> `git rev-parse --show-toplevel`
+
+### 不检测指定文件变动
+> `git update-index --assume-unchanged <file>`
+> [REF](https://stackoverflow.com/questions/1274057/how-to-make-git-forget-about-a-file-that-was-tracked-but-is-now-in-gitignore#answer-20241145)
+
+### `git update-index --skip-worktree <file>`
 
 # Startup
 
@@ -1299,9 +1585,34 @@ log = false
 
 > Move object and refs by archive.
 
+# 配置
+
+常见配置：
+
+- `credential.username`
+- `user.name`
+- `user.email`
+- `author.name`
+- `author.email`
+- `committer.name`
+- `committer.email`
+
+# 环境变量
+
+[内置环境变量](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
+
+常见变量：
+
+- `GIT_AUTHOR_NAME`
+- `GIT_AUTHOR_EMAIL`
+- `GIT_AUTHOR_DATE`
+- `GIT_COMMITTER_NAME`
+- `GIT_COMMITTER_EMAIL`
+- `GIT_COMMITTER_DATE`
+
 # Github
 
-# API
+## API
 
 - 获取用户star的项目: `https://api.github.com/users/ddavison/starred`
 

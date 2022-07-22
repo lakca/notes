@@ -14,7 +14,7 @@ date: 2020-10-10T06:57:14.375Z
 | Option Name | 同义命令 | 作用                                                                                               | Default |
 | ----------- | -------- | -------------------------------------------------------------------------------------------------- | ------- |
 | allexport   | `set -a` | -------                                                                                            |         |
-| braceexpand | `set -B` | -------                                                                                            |  true       |
+| braceexpand | `set -B` | -------                                                                                            | true    |
 | emacs       |          | -------                                                                                            |         |
 | *errexit*   | `set -e` | Exit immediately if a [`pipeline`](./basic.md#pipelines) returns a non-zero status                 |         |
 | errtrace    | `set -E` | -------                                                                                            |         |

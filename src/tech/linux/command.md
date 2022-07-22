@@ -33,6 +33,8 @@ date: 2021-06-26T09:06:35.429Z
 - `-v`, operating system *version*. e.g. `darwin`
 - `-a`
 
+## uptime
+
 # 定位
 
 ## which
@@ -46,6 +48,8 @@ date: 2021-06-26T09:06:35.429Z
 ## whatis
 
 > search the whatis database for complete words. whatis 在一组包含系统命令简短描述的数据库文件中搜索关键字，并将结果显示在标准输出中。仅显示完整的单词匹配。
+
+## apropos
 
 ## whereis
 
@@ -77,9 +81,124 @@ date: 2021-06-26T09:06:35.429Z
 
 ## find
 
-> The find utility recursively descends the directory tree for each path listed, evaluating an expression (composed of the \`\`primaries'' and \`\`operands'' listed below) in terms of each file in the tree.
+> 选项中的数字参数（`n`）前可带上加减号（`+`,`-`），表示超过和少于。
 
-# 执行命令
+操作符选项：
+
+> 操作符用于修饰选项。
+
+- `()`
+- `-not|! <expression>`
+- `-true`
+- `-false`
+- `<expression> -or <expression>`
+- `<expression> -and <expression>`
+
+```shell
+> find / \! -name "*.c" -print
+
+> find / \( -newer ttt -or -user wnj \) -print
+```
+
+其他选项：
+
+- `-E`：`-regex`/`-iregex` 支持扩展正则表达式
+
+- `-print0`：以 `NUL` 分割返回的条目，可以配合 `xargs -0` 使用
+
+- `-prune`：排除当前文件
+
+遍历方式：
+
+- `-d`：深度优先遍历
+
+- `-depth <n>`：遍历深度
+
+- `-maxdepth <n>`：最大遍历深度
+
+- `-mindepth <n>`：最小遍历深度
+
+- `-s`：按字母顺序遍历
+
+针对基础属性：
+
+- `-name <pattern>`，`-iname <pattern>`：指定文件名称的模式
+
+- `-lname <pattern>`，`-ilname <pattern>`：指定文件名称的模式，遇到软链接以源文件代替
+
+- `-path/-wholename <pattern>`，`-ipath/-iwholename <pattern>`：指定路径名的模式
+
+- `-regex <pattern>`，`-iregex`：使用正则表达式指定路径匹配的模式
+
+- `-size <n><unit>`：文件大小（四舍五入）
+  - 单位可以是 B `c`、KB `k`、MB `M`、GB `G`、TB `T`、PB `P`
+  - 如 `-size -1M -and -size +1k`
+
+- `-type <type>`：文件类型
+  - 类型可以是块文件 `b`、字符文件 `c`、目录 `d`、常规文件 `f`、软链接 `l`、FIFO `p`、套接字 `s`）
+
+- `-xattr`，`-xattrname <name>`：文件是否有扩展属性（扩展属性是由程序定义的，区别于系统固定属性）
+
+- `-inum <n>`：指定inode
+
+- `-empty`：找出内容为空的文件/文件夹
+
+针对时间：
+
+- `-Btime/-atime/-ctime/-mtime n[smhdw]`：文件的相关时间与当前时间间隔。
+  - 时间类型 `Bacm` 分别表示创建时间、上次访问时间、上次改变时间、上次修改时间；
+  - 单位 `smhdw` 分别表示秒、分、时、天、周；
+  - 时间可以组合，如`-Btime -1h30m`；
+
+- `-newerXY <file>`：文件的相关时间（`X`）晚于`file`的相关时间（`Y`）。
+  - `X`、`Y` 取值范围为 `Bacm`，如`-newercB demo.txt`；
+  - `Y` 值还可以是 `t`，表示参数 `file` 为时间，如`-newerct 1 minute ago`；
+
+- `-newerXt <time>`：文件的相关时间（`X`）晚于`time`。
+  - `X`、`Y` 取值范围为 `Bacm`；
+  - 如`-newerct 1 minute ago`；
+
+- `-newer <file>`：同 `-newermm <file>`
+
+针对权限：
+
+- `-perm [+|-]mode`：指定权限模式
+  - 前缀 `+` 表示 `mode` 中任一位数与文件的该位相同即可；
+  - 前缀 `-` 则表示指定的所有位数须全部相同。
+
+- `-gid/-group <gname>`：所属组
+
+- `-uid/-user <uname>`：所属用户
+
+- `-nogroup`，`-nouser`：文件的组、用户未知
+
+针对文件链接：
+
+- `-L`：软链接显示其链接的源文件信息
+
+- `-P`：软链接返回链接本身信息（这是默认行为）
+
+- `-links <n>`：指定文件有n个链接（软链接和硬链接）
+
+- `-samefile <file>`：指定文件是 `file` 的硬链接，如果指定了 `-L`，则是软链接。
+
+执行命令：
+
+- `-delete`：删除找到的文件
+
+- `-exec <utility> [arguments...] ;`：在**当前工作目录**为找到的每个文件逐个执行命令。
+  - 参数中使用 `{}` 指代当前找到的文件，如 `-exec echo {}\;`
+
+- `-exec <utility> [arguments...] +`：同上，但将所有找到的文件作为整个参数执行一次命令。
+  - 如 `-exec echo {} +`
+
+- `-execdir ...`：同 `-exec ...`，但在**文件所在目录**执行命令。
+
+- `-ok/-okdir ...`：同`-exec/-execdir ...`，但在执行命令前会请求用户确认。
+
+## grep
+
+# 执行脚本
 
 ## sh
 
@@ -174,6 +293,10 @@ The `expr` utility evaluates expression and writes the result on standard output
 - `-f`，当读到 **文件 (FIFO)** （即对`pipe`不生效）末尾的时候不退出程序，若文件继续增长则持续读入。
 - `-F`，与`-f`类似，但会检测文件名的变化，若检测到则会关闭并重新打开文件。
 
+## uniq
+
+> 重复行去重。(*report or filter out repeated lines in a file*)
+
 ## cut
 
 > 获取输入文本的行段，字节 `cut -b`、字符 `cut -c`。
@@ -207,7 +330,38 @@ lzgv:ortz:zyvf
 
 ## sed
 
-> `sed` is a stream editor.  A stream editor is used to perform basic text transformations on an input stream (a file or input from a pipeline).
+> [sed](https://www.gnu.org/software/sed/manual/sed.html)：流编辑器。(*stream editor for filtering and transforming text.*）
+
+```shell
+sed
+  (
+    -e <script>, --expression=<script>
+
+    | -f <script-file>, --file=<script-file>
+
+    | <script>
+  )
+
+  # 对`l`命令，指定换行长度
+  [-l <N>, --line-length=<N>]
+
+  [-r, --regexp-extended]
+
+  # 把输入的每个文件都看成单独的流，而不是一个连续流
+  [-s, --separate]
+
+  # 以 NUL 分割行
+  [-z, --null-data]
+
+  [--follow-symlinks]
+
+  # 最小化加载数据量，输出更频繁
+  [-u, --unbuffered]
+
+  [-n, --quiet, --silent]
+
+  <input-file>...
+```
 
 ## awk
 
@@ -361,10 +515,6 @@ lzgv:ortz:zyvf
 ## last
 
 > list the sessions of specified users, ttys, and hosts, in reverse time order.
-
-# 其他
-
-## uptime
 
 # 格式化
 
