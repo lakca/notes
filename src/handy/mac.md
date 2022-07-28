@@ -1,6 +1,6 @@
 ---
 title: Mac
-wehujdf: 
+wehujdf:
 date: 2020-08-27T09:42:26.913Z
 ---
 
@@ -43,7 +43,7 @@ kernel[OS Kernel]
 
 关于*plist*，可以查看`man plist`, `man launchd.plist`。
 
-```shell
+```bash
 # 系统自带的系统级进程配置文件
 /System/Library/LaunchDaemons
 # 系统自带的用户级进程配置文件
@@ -64,12 +64,12 @@ kernel[OS Kernel]
 
 > `sysctl`: get or set kernel state.
 
-```shell
+```bash
 ```
 
 查看交换内存（*swap usage*）：
 
-```shell
+```bash
 sysctl vm.swapusage
 # vm.swapusage: total = 0.00M used = 0.00M free = 0.00M (encrypted)
 ```
@@ -80,7 +80,7 @@ sysctl vm.swapusage
 
 >  `mdutil`: Utility to manage Spotlight indexes.
 
-```shell
+```bash
 # 关闭所有卷（volumes）的索引服务
 mdutil -a -i off
 # 开启
@@ -91,7 +91,7 @@ mdutil -a -i on
 
 > `diskutil`: Utility to manage local disks and volumes.
 
-```shell
+```bash
 # 列出磁盘的分区（Partitions）
 diskutil list
 # 获取磁盘或分区信息
@@ -102,6 +102,66 @@ diskutil info <disk>
 
 > `caffeinate`: prevent the system from sleeping on behalf of a utility.
 
+### 电源管理
+
+> `pmset`: manipulate power management settings.
+
+设置（不同电源条件下）不同事件的
+
+```bash
+pmset
+  [
+    -a # all
+    | -b # battery
+    | -c # charger
+    | -u # UPS
+  ]
+  [displaysleep|disksleep|sleep|...]
+```
+
+获取当前配置：
+
+```bash
+pmset -g [
+  everything
+  | stats # sleeps and wakes system has gone thru since boot.
+  | ac,adapter
+  | ps # ups
+  | batt # battery
+  | sched # scheduled events
+  ...
+]
+```
+
+#### 定时开关机休眠唤醒
+
+- `type`: *sleep*, *wake*, *poweron*, *shutdown*, *wakeorpoweron*
+
+- `weekdays`: Subset of *MTWRFSU*
+
+- `date+time`: *"MM/dd/yy HH:mm:ss"* (in 24 hour format; must be in quotes)
+
+- `time`: *HH:mm:ss*
+
+一次性：
+
+```bash
+pmset schedule [cancel|cancelall] <type> <date+time> [owner]
+```
+
+重复：
+
+```bash
+pmset repeat <type> <weekdays> <time>
+pmset repeat cancel
+```
+
+相对上次休眠/关机进行唤醒/开机：
+
+```bash
+pmset relative [wake | poweron] <seconds>
+```
+
 ### 管理plist文件：plutil
 
 > `plutil`: can be used to check the syntax of property list files, or convert a plist file from one format to another. Specifying - as an input file reads from stdin.
@@ -110,7 +170,7 @@ diskutil info <disk>
 
 例如，关闭Microsoft AutoUpdate软件的自动启动：
 
-```shell
+```bash
 plutil -remove SuccessfulExit /Library/LaunchAgents/com.microsoft.update.agent.plist
 plutil -replace RunAtLoad -bool NO /Library/LaunchAgents/com.microsoft.update.agent.plist
 ```
@@ -284,7 +344,7 @@ plutil -replace RunAtLoad -bool NO /Library/LaunchAgents/com.microsoft.update.ag
 
 4. 如果父进程不是`launchd`，则继续执行第一步，找到最终进程即可
 
-```shell
+```bash
 # 直接搜索配置文件（自动启动的服务），注意，对于二进制格式的.plist无法直接搜索，可以先找到文件。
 grep -iw -e 'RunAtLoad' \
          -e 'KeepAlive' \
@@ -298,7 +358,7 @@ grep -iw -e 'RunAtLoad' \
 
 例如禁止*Microsoft AutoUpdate*（包括*Edge*）弹窗：
 
-```shell
+```bash
 # 查找microsoft产品相关的配置文件，比如使用关键词 microsoft：
 ls /System/Library/Launch*/*.plist \
    /Library/Launch*/*.plist \

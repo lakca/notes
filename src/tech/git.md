@@ -12,7 +12,7 @@ date: 2021-03-22T07:01:30.074Z
 
 ## 简化的git的工作过程
 
-```shell
+```bash
 # working directory, then
 > git add .
 # index, then
@@ -76,7 +76,7 @@ Git对象有四种类型：
 
 注意，*parent* 只是*commit*类型的对象在特定语境下的别名，我们可以通过`git cat-file -t <sha1>`来查看一个对象类型查看对象。
 
-```shell
+```bash
 > ls .git/objects/36
 049069ed448142208ece96f24bc5973a40e5a1 1e275573431469f9d3b44c0192b4b0500ea62c 586ad664fe49bc278838313c258b48d00db990 e9f6ce0abecc76f88d0f32a0351d1bef2b7279
 08357fc04e9a03be92e0cb3a209400d0486403 2e8d4e49c23265edd9b32f8a977ad84371f463 af3c8aacfe102e6de816181ff7e3376aca8a80 ebef39c9050cfdca4ba6c1802fb24fd6c99ac4
@@ -85,7 +85,7 @@ Git对象有四种类型：
 
 查看*commit*对象：
 
-```shell
+```bash
 > git cat-file -p 36049069ed448142208ece96f24bc5973a40e5a1
 tree fa76d812a0ea86c341fc807b439de63ff68df300
 parent 416e02829c971eadd56f8a5b4c7ffc21c891f76a
@@ -97,24 +97,24 @@ update index
 
 查看*tree*对象，可以看到引用了一系列其他对象：
 
-```shell
+```bash
 > git cat-file -p fa76d812a0ea86c341fc807b439de63ff68df300
-100644 blob abdb414b694f40d84514b77e9801ea609b4ee9ee	.gitignore
-100644 blob 086a5c9ea988c5a4d37acc5f8ea089e37cb19371	404.html
-100644 blob 0125c33c46071fecf35c095eae25009299966b52	README.md
-100644 blob 985955792818c2b4eb89b3bc1e2c0a12dfec28d5	_config.yml
-040000 tree abe56721e3150cb441c8196b97ebc6c6f74f8ab5	_layouts
-040000 tree dd5318d970a8f3bcf8d8a8298258f4a9f4b81194	assets
-100644 blob 1bb85c2df02bf3673331bd4337e745061c5dba53	package.json
-100644 blob 53e6b266edfcdb8ea93d318da8dcec335bdf7988	pnpm-lock.yaml
-100755 blob dc67133decc3f8a1a61e3049bc414d483412a4b2	prepare
-040000 tree c952480116841bfc9f53838b2461c14d3df5b0da	script
-040000 tree c64bb8182f7f8f5188013c2dd035135fa759cd5d	src
+100644 blob abdb414b694f40d84514b77e9801ea609b4ee9ee  .gitignore
+100644 blob 086a5c9ea988c5a4d37acc5f8ea089e37cb19371  404.html
+100644 blob 0125c33c46071fecf35c095eae25009299966b52  README.md
+100644 blob 985955792818c2b4eb89b3bc1e2c0a12dfec28d5  _config.yml
+040000 tree abe56721e3150cb441c8196b97ebc6c6f74f8ab5  _layouts
+040000 tree dd5318d970a8f3bcf8d8a8298258f4a9f4b81194  assets
+100644 blob 1bb85c2df02bf3673331bd4337e745061c5dba53  package.json
+100644 blob 53e6b266edfcdb8ea93d318da8dcec335bdf7988  pnpm-lock.yaml
+100755 blob dc67133decc3f8a1a61e3049bc414d483412a4b2  prepare
+040000 tree c952480116841bfc9f53838b2461c14d3df5b0da  script
+040000 tree c64bb8182f7f8f5188013c2dd035135fa759cd5d  src
 ```
 
 查看*blob*对象，可以看到直接显示（当次提交时的）整个文件的内容：
 
-```shell
+```bash
 > git cat-file -p abdb414b694f40d84514b77e9801ea609b4ee9ee
 html
 node_modules
@@ -202,31 +202,31 @@ _site
 - 基于远程分支创建时，默认会（`branch.autoSetupMerge`配置为true）自动设置为上游分支，可设置`--no-track`避免。
 - 基于本地分支创建时，需要手动设置`-t`上游分支。
 
-```shell
+```bash
 git branch <branchname> [<object=HEAD>] [-t/--track <upstream>]
 ```
 
 （v2.35.0）基于当前HEAD创建新分支，并设置相同的上游分支：
 
-```shell
+```bash
 git branch <branchname> --track=inherit
 ```
 
 （v2.35.0）基于远程分支创建本地分支，并以之为上游分支：
 
-```shell
+```bash
 git branch <branchname> <upstream> --track=direct
 ```
 
 设置upstream：
 
-```shell
+```bash
 (-u <upstream> | --set-upstream-to=<upstream>) [<branchname>]
 
 --unset-upstream [<branchname>]
 ```
 
-```shell
+```bash
 # 给当前分支设置upstream
 > git branch -u origin/develop
 
@@ -234,18 +234,18 @@ git branch <branchname> <upstream> --track=direct
 > git branch -u origin/develop dev
 ```
 
-```shell
+```bash
 # 同时删除跟踪的远程分支
 > git branch -d -r dev
 ```
 
 重命名：
 
-```shell
+```bash
 (-m | -M) [<oldbranch>] <newbranch>
 ```
 
-```shell
+```bash
 # 将当前分支名称改为dev
 > git branch -m dev
 
@@ -255,19 +255,19 @@ git branch <branchname> <upstream> --track=direct
 
 复制分支（包括reflog）：
 
-```shell
+```bash
 (-c, --copy | -C, --copy --force) [<oldbranch>] <newbranch>
 ```
 
 删除：
 
-```shell
+```bash
 (-d, --delete | -D, --delete --force) <branchname>…
 ```
 
 列表：
 
-```shell
+```bash
 -a, --all
 # 列出分支名称
 -l, --list
@@ -298,7 +298,7 @@ git branch <branchname> <upstream> --track=direct
 
 其他
 
-```shell
+```bash
 # * 创建/不创建branch的reflog：
 # This activates recording of all changes made to the branch ref;
 --create-reflog # 配置 core.logAllRefUpdates，全局开启reflog for branch；
@@ -309,7 +309,7 @@ git branch <branchname> <upstream> --track=direct
 
 > 将工作区变动移存到暂存区。（*Add file contents to the index.*）
 
-```shell
+```bash
 git add [<options>] [--] <pathsepc>...
 ```
 
@@ -322,43 +322,43 @@ git add [<options>] [--] <pathsepc>...
 
 所有未忽略的（*unignored*）文件：
 
-```shell
+```bash
 -A, --all, --no-ignore-removal
 ```
 
 只添加当前目录（包括子目录）下的所有未忽略的（*unignored*）文件：
 
-```shell
+```bash
 git add .
 ```
 
 仅暂存已跟踪过的（*tracked*）文件：
 
-```shell
+```bash
 -u，--update
 ```
 
 包括忽略的（*ignored*）文件：
 
-```shell
+```bash
 -f，--force
 ```
 
 忽略删除的（*removed*）文件：
 
-```shell
+```bash
 --ignore-removal, --not-all
 ```
 
 列出会被添加的文件：
 
-```shell
+```bash
 -n, --dry-run
 ```
 
 修改索引区中文件的可执行性（*executable bit*），文件在本地文件系统中的属性不会变：
 
-```shell
+```bash
 --chmod=+x
 --chmod=-x
 ```
@@ -367,7 +367,7 @@ git add .
 
 > 将工作区和暂存区的内容提交（*Git Object*也是*commit*类型）到一个独立的储藏栈（区别于当前分支），最近一次的stash信息存储于`refs/stash`。（*saves your local modifications away and reverts the working directory to match the `HEAD` commit.*）
 
-```shell
+```bash
 git stash push [<options>] [<pathspec>...]
 
 # 仅stash指定文件
@@ -397,7 +397,7 @@ git stash push [<options>] [<pathspec>...]
 
 列出历史 stash（选项同 `git log`）：
 
-```shell
+```bash
 git stash list [<options>]
 
 > git stash list -1 --name-status
@@ -405,7 +405,7 @@ git stash list [<options>]
 
 查看某个 stash（选项同 `git diff`）：
 
-```shell
+```bash
 git stash show [<options>] [<stash=stash@{0}>]
 
 > git stash show -p stash{0}
@@ -413,7 +413,7 @@ git stash show [<options>] [<stash=stash@{0}>]
 
 调用历史 stash：
 
-```shell
+```bash
 git stash apply [--index] <stash>
 
 # 应用栈中第一个stash
@@ -422,19 +422,19 @@ git stash apply [--index] <stash>
 
 弹出（应用并删除记录）历史 stash：
 
-```shell
+```bash
 git stash pop [--index] [<stash=stash@{0}>]
 ```
 
 基于创建 stash 的 commit 创建一个新分支，并弹出该stash：
 
-```shell
+```bash
 git stash branch <branchname> [<stash=stash@{0}>]
 ```
 
 清理 stash：
 
-```shell
+```bash
 # 清理指定 stash
 git stash drop [<stash=stash@{0}>]
 
@@ -444,7 +444,7 @@ git stash clear
 
 列出已被清理的 stash：
 
-```shell
+```bash
 git fsck --unreachable |
 grep commit | cut -d\  -f3 |
 xargs git log --merges --no-walk --grep=WIP
@@ -454,11 +454,11 @@ xargs git log --merges --no-walk --grep=WIP
 
 > 创建一个提交对象，即向版本库中存储一个新的项目快照。
 
-```shell
+```bash
 git commit [<options>] [--] <pathspec>...
 ```
 
-```shell
+```bash
 --pathspec-from-file=<file>
 --pathspec-file-nul
 ```
@@ -474,13 +474,13 @@ git commit [<options>] [--] <pathspec>...
 
 提交所有*tracked*的文件（可以跳过索引区）：
 
-```shell
+```bash
 -a, --all
 ```
 
 提交指定文件：
 
-```shell
+```bash
 -o, --only
 
 -i, --include
@@ -488,13 +488,13 @@ git commit [<options>] [--] <pathspec>...
 
 逐块选择文件内容进行提交：
 
-```shell
+```bash
 -p, --patch
 ```
 
 针对提交信息：
 
-```shell
+```bash
 -m <message>, --message=<message>
 
 # 针对其他选项提供的提供信息进行编辑
@@ -523,7 +523,7 @@ git commit [<options>] [--] <pathspec>...
 
 其他：
 
-```shell
+```bash
 --date <date>
 
 --author <author>
@@ -535,7 +535,7 @@ git commit [<options>] [--] <pathspec>...
 
 修改上次提交：
 
-```shell
+```bash
 --amend
 
 # 如：
@@ -546,7 +546,7 @@ git commit [<options>] [--] <pathspec>...
 修改任意历史提交：
 
 1. 针对目标提交创建修改提交：
-```shell
+```bash
 # 仅修改提交信息
 --fixup=reword:<commit>
 
@@ -564,13 +564,13 @@ git commit [<options>] [--] <pathspec>...
 ```
 2. 通过 *rebase* 合并修改提交：
 
-```shell
+```bash
 > git rebase -i --autosquash d48a90d~
 ```
 
 绕过钩子：
 
-```shell
+```bash
 # 绕过 pre-commit, commit-msg
 -n, --no-verify
 
@@ -579,18 +579,18 @@ git commit [<options>] [--] <pathspec>...
 
 其他钩子，如*post-commit*，
 没有内置选项可以绕过，但可以通过变通，比如在脚本里面加入环境变量做判断，比如：
-```shell
+```bash
 # post-commit
 [ $SKIP_POST_COMMIT ] && exit 0
 ...
 ```
-```shell
+```bash
 > SKIP_POST_COMMIT=1 git commit -m '...'
 ```
 
 有助于写脚本的选项：
 
-```shell
+```bash
 --dry-run
 --short
 --long
@@ -603,7 +603,7 @@ git commit [<options>] [--] <pathspec>...
 
 > 使用对象数据库中的树对象或 blob 更新全部或部分工作树的操作。即切换分支，或者复原工作区文件（到*HEAD*状态）。（*Switch branches or restore working tree files.*）
 
-```shell
+```bash
 git checkout [<options>] [<branchname>] [--] <pathspec>...
 ```
 
@@ -620,7 +620,7 @@ git checkout <pathspec>
 
 切换分支，或检出（唯一）远程同名分支：
 
-```shell
+```bash
 git checkout <branchname>
 
 # 若本地分支不存在，但存在同名远程分支，则创建本地分支并追踪该远程分支，等同于：
@@ -630,35 +630,35 @@ git checkout -b <branchname> -t/--track <remote>/<branchname>
 
 从远程分支检出同名新分支：
 
-```shell
+```bash
 git checkout --track <upstream>
 ```
 
-```shell
+```bash
 git checkout --track origin/develop
 ```
 
 强制切换分支（丢弃未提交的变动）
 
-```shell
+```bash
 -f, --force
 ```
 
 基于当前*HEAD*检出新分支：
 
-```shell
+```bash
 -b <branchname>
 ```
 
 检出一个孤儿分支（HEAD为空的分支）：
 
-```shell
+```bash
 --orphan <branchname>
 ```
 
 对尚未合并（`rebase`或`merge`）的文件检出不同版本（*current changes*或*incomming changes*）：
 
-```shell
+```bash
 # current changes:
 -2, --ours
 # incomming changes:
@@ -673,11 +673,11 @@ git checkout --track origin/develop
 
 > 将当前分支重置到目标分支的目标点（`--onto`），再将本地分支不同于目标分支的提交（会预先存储）一一在当前分支头上应用。
 
-```shell
+```bash
 git rebase [<upstream> [<branch>]]
 ```
 
-```shell
+```bash
 > git rebase master topic # git checkout topic & git rebase master
 > git rebase master # 如果当前分支是topic
 ```
@@ -708,20 +708,20 @@ D---E---A'---F master
 
 *upstream*可以是任何有效的*commit-ish*，而不仅限于已存在的分支：
 
-```shell
+```bash
 git rebase master~2 topic
 ```
 
 指定分支（变基后的）新基点：
 
-```shell
+```bash
 --onto <newbase>
 ```
-```shell
+```bash
 --fork-point
 --no-fork-point
 ```
-```shell
+```bash
 --keep-base
 
 > git rebase --keep-base <upstream> <branch>
@@ -731,7 +731,7 @@ git rebase master~2 topic
 
 > 所谓基点，就是变基后，分支从该提交开始独立，然后分支领先upstream提交的所有内容以一个新的提交应用到该基点后面。
 
-```shell
+```bash
                         H---I---J topicB
                        /
               E---F---G  topicA
@@ -749,22 +749,22 @@ A---B---C---D  master
 
 默认变基分支是当前分支，基点和目标分支是追踪分支:
 
-```shell
+```bash
 git rebase
 ```
 
-```shell
+```bash
 [-i | --interactive] [<options>] [--exec <cmd>] [--onto <newbase> | --keep-base]
 ```
 
-```shell
+```bash
 --committer-date-is-author-date
 --ignore-date, --reset-author-date
 ```
 
 钩子：
 
-```shell
+```bash
 # pre-rebase
 --verify
 --no-verify
@@ -821,16 +821,11 @@ git tag <tagname> <point: commit|object> # point refer, 默认为 HEAD
 -v, --verify
 ```
 
-## remote
-
-```shell
-```
-
 ## push（推送）
 
 > 更新远程引用（并推送必要对象以完成引用），如 HEAD、tag、branch...
 
-```shell
+```bash
 git push
   [
     # 推送所有本地分支，即refs/heads/*
@@ -870,16 +865,26 @@ git push
  # 如果不提供src参数，则是删除dst
 ```
 
-```shell
+```bash
 > git push origin HEAD~:develop
+```
 
 ## remote
 
-```shell
+```bash
 git remote
   [
     (add [-t <branch>] [-m <master>] [-f] [--[no--]tags] [--mirror])
   ]
+git remote
+  show 
+    [-n] # 不查询远程信息 
+    <name>
+  add <name> <url>
+  rename <oldname> <newname>
+  remove <name>
+  set-url [--add|--delete] [--push] <name> <url> [<oldurl>]
+  get-url [--push] [--all] <name>
 ```
 
 ## rm
@@ -958,7 +963,7 @@ git ls-files --ignored --exclude-standard
 
 同一个配置文件中，同名配置可以有任意多行，但只会应用最后一个。
 
-```shell
+```bash
 git config
   [
     --get # 获取最后一行
@@ -988,7 +993,7 @@ git config
   <name|new-name> [<new-name|value|URL> [<value-pattern>]]
 ```
 
-```shell
+```bash
 > git config user.email 123675@foo.com
 > git config --add user.email 123675@bar.com
 > git config --add user.email 90783@bar.com
@@ -1058,19 +1063,19 @@ log = false
 
 下列所涉及的 `pattern` 均指 `glob pattern`。
 
-```shell
+```bash
 git log [<options>] [<revision range>] [[--] <path>...]
 ```
 
 指定文件：
 
-```shell
+```bash
 <path>
 ```
 
 指定文件行：
 
-```shell
+```bash
 # 指定开始和结束的绝对行号
 -L <start>,<end>:<file>
 
@@ -1105,7 +1110,7 @@ git log ^<A> <B>
 > git log -1
 ```
 
-```shell
+```bash
 git log <A>...<B> # 同时存在于A和B的parents中的提交
 # 或
 git log A B --not $(git merge-base --all A B)
@@ -1113,13 +1118,13 @@ git log A B --not $(git merge-base --all A B)
 
 限制日志数量：
 
-```shell
+```bash
 -<number>
 ```
 
 跳过日志数量：
 
-```shell
+```bash
 --skip=<number>
 ```
 
@@ -1198,7 +1203,7 @@ git log A B --not $(git merge-base --all A B)
 
 指定提交中文件的变动类型（修改、新增、重命名...）：
 
-```shell
+```bash
 --diff-filter=[(A|C|D|M|R|T|U|X|B)…​[*]]
 # 分别对应 Added, Copied, Deleted, Modified, Renamed, Changed（`T`）, unmerged, unknown（`X`）, pairing broken（`B`）；
 # 也可以组合使用：
@@ -1207,7 +1212,7 @@ git log A B --not $(git merge-base --all A B)
 
 筛选内容：
 
-```shell
+```bash
 # 使用单词级别的diff：
 --word-diff[=color|plain|porcelain|none]
 # color：通过颜色来标记删减；
@@ -1218,7 +1223,7 @@ git log A B --not $(git merge-base --all A B)
 
 指定如何显示子模块的提交内容：
 
-```shell
+```bash
 --submodule[=short|log|diff]
 ```
 
@@ -1230,6 +1235,16 @@ git log --log-size
 ```
 
 格式化：
+
+```bash
+--format=<format-string>
+```
+
+- Author (Committer, a => c)
+	- name: `%an`, `%aN`
+	- email: `%ae`, `%aE`, `%al`, `%aL`
+	- date: 
+		- `%ah` (human)`%as` (YYYY-MM-DD), `%aI` (ISO 8601), `%ai` (ISO 8601), `%at` (UNIX), `%ar` (relative), `%aD` (RFC2822), `%ad` (Fri, 24 Dec 2021 16:11:27 +0800)
 
 ```bash
 # 指定每条日志的整体格式：
@@ -1391,14 +1406,14 @@ blame指定的文件行：
 
 # 进阶命令
 
-## daemon
+## daemon（服务器）
 
 实现两个仓库的同步：
 
-```shell
+```bash
 > git daemon --export-all --base-path=. --verbose
 ```
-```shell
+```bash
 > git remote add git://<ip>/<repo_name>
 ```
 
