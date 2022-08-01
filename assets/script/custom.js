@@ -152,6 +152,7 @@
           height: 100%;
           background: white;
           bax-shadow: 0 0 1px #999;
+          font-family: Times New Roman, Adobe Kaiti Std;
         }
         @media (min-width: 64rem) {
           .${this.ident('custom')}.${this.ident('has-menu')} {
