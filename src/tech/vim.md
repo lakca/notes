@@ -126,158 +126,205 @@ date: 2020-10-09T07:22:16.283Z
 
 ## motion.txt
 
-| Command                                   | Synonym              | Usage       |                                                                                    |
-| -                                         | -                    | -           | -                                                                                  |
-| Text Object Selection (*object-select*)   |                      |             |                                                                                    |
-| `aw`                                      |                      |             | a **word**, leading or trailing white space is included, but not counted.          |
-| `iw`                                      |                      |             | inner **word**                                                                     |
-| `aW`                                      |                      |             | a **WORD**                                                                         |
-| `iW`                                      |                      |             | inner **WORD**                                                                     |
-| `as`                                      |                      |             | a **sentence**                                                                     |
-| `is`                                      |                      |             | inner **sentence**                                                                 |
-| `ap`                                      |                      |             | a **paragraph**                                                                    |
-| `ip`                                      |                      |             | inner **paragraph**                                                                |
-| `a"`, `a'`, `` a` ``                      |                      |             | a **quote** string                                                                 |
-| `i"`, `i'`, `` i` ``                      |                      |             | inner **quote** string                                                             |
-| `a[`, `a]`                                |                      |             | a **[]** block                                                                     |
-| `i[`, `i]`                                |                      |             | inner **[]** block                                                                 |
-| `a(`, `a)`                                | `ab`                 |             | a **()** block                                                                     |
-| `i(`, `i)`                                | `ib`                 |             | inner **()** block                                                                 |
-| `a{`, `a}`                                | `aB`                 |             | a **{}** block                                                                     |
-| `i{`, `i}`                                | `iB`                 |             | inner **{}** block                                                                 |
-| `a<`, `a>`                                |                      |             | a **<>** block                                                                     |
-| `i<`, `i>`                                |                      |             | inner **<>** block                                                                 |
-| `at`                                      |                      |             | a (html) **tag** block                                                             |
-| `it`                                      |                      |             | inner **tag** block                                                                |
-| Left-right motions (*left-right-motions*) |                      |             |                                                                                    |
-| `h`                                       | `<Left>`, `ctrl+h`   |             |                                                                                    |
-| `l`                                       | `<Right>`, `<Space>` |             |                                                                                    |
-| `0`                                       |                      |             | **To** first character of line                                                     |
-| `^`                                       |                      |             | **To** first non-blank character of line                                           |
-| `$`                                       | `<End>`              |             | **To** end of line                                                                 |
-| 选择模式                                  |                      |             |                                                                                    |
-| `v`                                       |                      |             | **View**：开启选择模式                                                             |
-| `V`                                       |                      |             | 开启行选择模式                                                                     |
-| `ctrl+v`                                  |                      |             | 开启矩形选择模式                                                                   |
-| 搜索                                      |                      |             |
-| `/`                                       |                      |             | `/{pattern}[/[offset]]<CR>`前向（forward）搜索                                     |
-| `?`                                       |                      |             | `?{pattern}[?[offset]]<CR>`后向（backward）搜索                                    |
-| `n`, `N`                                  |                      |             | 重复、反向重复上次搜索                                                             |
-| `*`, `#`                                  |                      |             | 前向、后向搜索当前光标处标识符（单词）                                             |
-| `gd`, `gD`                                |                      |             | 查找当前光标处标识符（类似变量）的本地、全局定义位置                               |
-| 光标                                      |                      |             |                                                                                    |
-| 光标标记                                  |                      |             |                                                                                    |
-| `m{a-zA-Z}`                               |                      |             | 在光标处设置标记                                                                   |
-| `'{a-zA-Z}` 或 `` `{a-zA-Z} ``            |                      |             | 跳转到标记                                                                         |
-| `'{a-zA-Z}` 或 `` `{a-zA-Z} ``            |                      |             | 跳转到标记                                                                         |
-| `'[` 或 `` `[ ``                          |                      |             | 跳转到上次修改或粘贴的文本首字符                                                   |
-| `']` 或 `` `] ``                          |                      |             | 跳转到上次修改或粘贴的文本尾字符                                                   |
-| 光标位置-行                               |                      |             |                                                                                    |
-| `0`                                       |                      |             | to *Line* START                                                                    |
-| `^`                                       |                      |             | to *Line* START char                                                               |
-| `$`                                       |                      |             | to *Line* END                                                                      |
-| `{n}G`                                    |                      |             | to *Line* <n>                                                                      |
-| `gg`                                      |                      |             | to FIRST *Line*                                                                    |
-| `G`                                       |                      |             | to LAST *Line*                                                                     |
-| `{n}%`                                    |                      |             | to *Line* in <n>%                                                                  |
-| `H`                                       |                      |             | **Home**：移动到可视区域的首行                                                     |
-| `M`                                       |                      |             | **Middle**：移动到可视区域的中间行                                                 |
-| `L`                                       |                      |             | **Last**：：移动到可视区域的尾行                                                   |
-| 光标位置-词                               |                      |             |
-| `b`                                       |                      |             | to (PREV) *Word* START                                                             |
-| `e`                                       |                      |             | to (NEXT) *Word* END                                                               |
-| `E`                                       | gpuMemoryUsage       |             | to (NEXT) *Word* END，单词以空格界定                                               |
-| `ge`                                      |                      |             | to PREV *Word* END                                                                 |
-| `gE`                                      |                      |             | to PREV *Word* END，单词以空格界定                                                 |
-| `w`                                       |                      |             | to NEXT *Word* START                                                               |
-| `W`                                       |                      |             | to NEXT *Word* START，单词以空格界定                                               |
-| 光标位置-字符                             |                      |             |                                                                                    |
-| `f{char}`                                 |                      |             | **Find**：前向移动到第一次出现的该字符处                                           |
-| `F{char}`                                 |                      |             | 后向移动到第一次出现的该字符处                                                     |
-| `t{char}`                                 |                      |             | **To**：后向移动到第一次出现的该字符的前一个字符处                                 |
-| `T{char}`                                 |                      |             | 后向移动到第一次出现的该字符的后一个字符处                                         |
-| `;`                                       |                      |             | 重复`f`,`F`,`t`,`T`命令                                                            |
-| `,`                                       |                      |             | 反向重复`f`,`F`,`t`,`T`命令，如`fx`变成`Fx`                                        |
-| 块                                        |                      |             |                                                                                    |
-| `%`                                       |                      |             | 移动到下一对括号或在括号对间跳转，默认有`{}`,`[]`,`()`，可通过`matchpairs`选项配置 |
-| 其他                                      |                      |             |                                                                                    |
-| `ctrl+g`                                  |                      |             | 显示当前光标位置信息                                                               |
-| 视口                                      |                      |             | :q                                                                                 |
-| `ctrl+y`                                  |                      |             | 向上滚动行                                                                         |
-| `ctrl+e`                                  |                      |             | 向下滚动行                                                                         |
-| `ctrl+b`                                  |                      |             | **Backward**: 向上滚动页                                                           |
-| `ctrl+f`                                  |                      |             | **Forward**: 向下滚动页                                                            |
-| `ctrl+u`                                  |                      |             | **Up**: 向上滚动缓冲区，缓冲区大小可通过`scroll`选项配置                           |
-| `ctrl+d`                                  |                      |             | **Down**: 向下滚动缓冲区                                                           |
-| `z<CR>`, `z.`, `z-`                       |                      |             | 滚动到光标行位于视口顶部、中间、底部位置，光标移至行首非空字符                     |
-| `zt`, `zz`, `zb`                          |                      |             | 滚动到光标行位于视口顶部、中间、底部位置，保持光标列位置不变                       |
-| `zh`/`z+left`, `zl`/`z+right`             |                      |             | （开启了折行时）将视口文字：右向滚动、左向滚动；折行通过`wrap`选项配置             |
-| `zH`, `zL`                                |                      |             | （开启了折行时）将视口文字：右向滚动视口宽度一半、左向滚动视口宽度一半             |
-| `zs`, `ze`                                |                      |             | 以光标为开始、结束位置横向移动视口                                                 |
-| `z{height}<CR>`                           |                      |             | 设置视口行数（无法超过窗口高度）                                                   |
-|                                           |                      |             |                                                                                    |
-| Marks (*mark-motions*)                    |                      |             |                                                                                    |
-| `m`                                       |                      | `m{a-zA-Z}` | **Mark** {a-zA-Z} at cursor position                                               |
-| 选择模式                                  |                      |             |                                                                                    |
-| `v`                                       |                      |             | **View**：开启选择模式                                                             |
-| `V`                                       |                      |             | 开启行选择模式                                                                     |
-| `ctrl+v`                                  |                      |             | 开启矩形选择模式                                                                   |
-| 搜索                                      |                      |             |
-| `/`                                       |                      |             | `/{pattern}[/[offset]]<CR>`前向（forward）搜索                                     |
-| `?`                                       |                      |             | `?{pattern}[?[offset]]<CR>`后向（backward）搜索                                    |
-| `n`, `N`                                  |                      |             | 重复、反向重复上次搜索                                                             |
-| `*`, `#`                                  |                      |             | 前向、后向搜索当前光标处标识符（单词）                                             |
-| `gd`, `gD`                                |                      |             | 查找当前光标处标识符（类似变量）的本地、全局定义位置                               |
-| 光标                                      |                      |             |                                                                                    |
-| 光标标记                                  |                      |             |                                                                                    |
-| `m{a-zA-Z}`                               |                      |             | 在光标处设置标记                                                                   |
-| `'{a-zA-Z}` 或 `` `{a-zA-Z} ``            |                      |             | 跳转到标记                                                                         |
-| `'{a-zA-Z}` 或 `` `{a-zA-Z} ``            |                      |             | 跳转到标记                                                                         |
-| `'[` 或 `` `[ ``                          |                      |             | 跳转到上次修改或粘贴的文本首字符                                                   |
-| `']` 或 `` `] ``                          |                      |             | 跳转到上次修改或粘贴的文本尾字符                                                   |
-| 光标位置-行                               |                      |             |                                                                                    |
-| `0`                                       |                      |             | to *Line* START                                                                    |
-| `^`                                       |                      |             | to *Line* START char                                                               |
-| `$`                                       |                      |             | to *Line* END                                                                      |
-| `{n}G`                                    |                      |             | to *Line* <n>                                                                      |
-| `gg`                                      |                      |             | to FIRST *Line*                                                                    |
-| `G`                                       |                      |             | to LAST *Line*                                                                     |
-| `{n}%`                                    |                      |             | to *Line* in <n>%                                                                  |
-| `H`                                       |                      |             | **Home**：移动到可视区域的首行                                                     |
-| `M`                                       |                      |             | **Middle**：移动到可视区域的中间行                                                 |
-| `L`                                       |                      |             | **Last**：：移动到可视区域的尾行                                                   |
-| 光标位置-词                               |                      |             |
-| `b`                                       |                      |             | to (PREV) *Word* START                                                             |
-| `e`                                       |                      |             | to (NEXT) *Word* END                                                               |
-| `E`                                       |                      |             | to (NEXT) *Word* END，单词以空格界定                                               |
-| `ge`                                      |                      |             | to PREV *Word* END                                                                 |
-| `gE`                                      |                      |             | to PREV *Word* END，单词以空格界定                                                 |
-| `w`                                       |                      |             | to NEXT *Word* START                                                               |
-| `W`                                       |                      |             | to NEXT *Word* START，单词以空格界定                                               |
-| 光标位置-字符                             |                      |             |                                                                                    |
-| `f{char}`                                 |                      |             | **Find**：前向移动到第一次出现的该字符处                                           |
-| `F{char}`                                 |                      |             | 后向移动到第一次出现的该字符处                                                     |
-| `t{char}`                                 |                      |             | **To**：后向移动到第一次出现的该字符的前一个字符处                                 |
-| `T{char}`                                 |                      |             | 后向移动到第一次出现的该字符的后一个字符处                                         |
-| `;`                                       |                      |             | 重复`f`,`F`,`t`,`T`命令                                                            |
-| `,`                                       |                      |             | 反向重复`f`,`F`,`t`,`T`命令，如`fx`变成`Fx`                                        |
-| 块                                        |                      |             |                                                                                    |
-| `%`                                       |                      |             | 移动到下一对括号或在括号对间跳转，默认有`{}`,`[]`,`()`，可通过`matchpairs`选项配置 |
-| 其他                                      |                      |             |                                                                                    |
-| `ctrl+g`                                  |                      |             | 显示当前光标位置信息                                                               |
-| 视口                                      |                      |             |                                                                                    |
-| `ctrl+y`                                  |                      |             | 向上滚动行                                                                         |
-| `ctrl+e`                                  |                      |             | 向下滚动行                                                                         |
-| `ctrl+b`                                  |                      |             | **Backward**: 向上滚动页                                                           |
-| `ctrl+f`                                  |                      |             | **Forward**: 向下滚动页                                                            |
-| `ctrl+u`                                  |                      |             | **Up**: 向上滚动缓冲区，缓冲区大小可通过`scroll`选项配置                           |
-| `ctrl+d`                                  |                      |             | **Down**: 向下滚动缓冲区                                                           |
-| `z<CR>`, `z.`, `z-`                       |                      |             | 滚动到光标行位于视口顶部、中间、底部位置，光标移至行首非空字符                     |
-| `zt`, `zz`, `zb`                          |                      |             | 滚动到光标行位于视口顶部、中间、底部位置，保持光标列位置不变                       |
-| `zh`/`z+left`, `zl`/`z+right`             |                      |             | （开启了折行时）将视口文字：右向滚动、左向滚动；折行通过`wrap`选项配置             |
-| `zH`, `zL`                                |                      |             | （开启了折行时）将视口文字：右向滚动视口宽度一半、左向滚动视口宽度一半             |
-| `zs`, `ze`                                |                      |             | 以光标为开始、结束位置横向移动视口                                                 |
-| `z{height}<CR>`                           |                      |             | 设置视口行数（无法超过窗口高度）                                                   |
+| Command                                   | Synonym                              | Usage           |                                                                                                                                                     |
+| -                                         | -                                    | -               | -                                                                                                                                                   |
+| Left-right motions (*left-right-motions*) |                                      |                 |                                                                                                                                                     |
+| `h`                                       | `<Left>`, `ctrl+h`                   |                 |                                                                                                                                                     |
+| `l`                                       | `<Right>`, `<Space>`                 |                 |                                                                                                                                                     |
+| `0`                                       | `<Home>`                             |                 | **Goto** first character of line, *exclusive*                                                                                                       |
+| `^`                                       |                                      |                 | **Goto** first non-blank character of line, *exclusive*                                                                                             |
+| `$`                                       | `<End>`                              |                 | **Goto** end of line, *inclusive*                                                                                                                   |
+| `g_`                                      |                                      |                 | **Goto** the last non-blank character of the line, *inclusive*                                                                                      |
+| `g0`                                      | `g<Home>`                            |                 | **Goto** the first character of *screen line* when `wrap` on, *exclusive*                                                                           |
+| `g$`                                      | `g<End>`                             |                 | **Goto** the last character of *screen line* when `wrap` on, *exclusive*                                                                            |
+| `g^`                                      |                                      |                 | **Goto** the first *non-blank* character of *screen line* when `wrap` on, *exclusive*                                                               |
+| `g$`                                      |                                      |                 | **Goto** the first *non-blank* character of *screen line* when `wrap` on, *exclusive*                                                               |
+| `gm`                                      |                                      |                 | **Goto** character in halfway a *screenwidth* to the right                                                                                          |
+| `gM`                                      |                                      |                 | **Goto** character in halfway of line                                                                                                               |
+| `\|`                                      |                                      |                 | **Goto** screen column [count] in the current line, *exclusive*                                                                                     |
+| `f`                                       |                                      | `f{char}`       | **Goto** [count]'th occurrence of {char} to the right, *inclusive*                                                                                  |
+| `F`                                       |                                      | `F{char}`       | **Goto** [count]'th occurrence of {char} to the left, *exclusive*                                                                                   |
+| `t`                                       |                                      | `t{char}`       | **Goto** before [count]'th occurrence of {char} to the right, *inclusive*                                                                           |
+| `T`                                       |                                      | `T{char}`       | **Goto** before [count]'th occurrence of {char} to the left, *exclusive*                                                                            |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Up-down motions (*up-down-motions*)       |                                      |                 |                                                                                                                                                     |
+| `;`                                       |                                      |                 | **Repeat** latest `f`, `t`, `F` or `T` [count] times                                                                                                |
+| `,`                                       |                                      |                 | **Repeat** latest `f`, `t`, `F` or `T` in opposite direction [count] times                                                                          |
+| `k`                                       | `<Up>`, `ctrl+p`                     |                 | **Goto** [count] lines upward *linewise*                                                                                                            |
+| `j`                                       | `<Down>`, `ctrl+j`, `<NL>`, `ctrl+n` |                 | **Goto** [count] lines downward *linewise*                                                                                                          |
+| `gk`                                      | `g<Up>`                              |                 | **Goto** [count] display lines upward (differs from `k` when lines wrap)                                                                            |
+| `gj`                                      | `g<Down>`                            |                 | **Goto** [count] display lines downward (differs from `j` when lines wrap)                                                                          |
+| `-`                                       |                                      |                 | **Goto** [count] lines upward, on the first non-blank character *linewise*                                                                          |
+| `+`                                       | `ctrl+m`, `<CR>`                     |                 | **Goto** [count] lines downward, on the first non-blank character *linewise*                                                                        |
+| `_`                                       |                                      |                 | **Goto** [count] - 1 lines downward, on the first non-blank character *linewise*                                                                    |
+| `G`                                       |                                      |                 | **Goto** line [count], default first line, on the first non-blank character *linewise*                                                              |
+| `gg`                                      |                                      |                 | **Goto** line [count], default last line, on the first non-blank character *linewise*                                                               |
+| `:[range]`                                |                                      |                 | **Goto** the last line of [range]                                                                                                                   |
+| `{count}%`                                |                                      |                 | **Goto** {count} percentage in the file, on the first non-blank in the line *linewise*                                                              |
+| `go`                                      | `:[range]go[to] [count]`             | `[count]go`     | **Goto** [count] byte in the buffer.  Default [count] is one, start of the file.  When giving [range], the last number in it used as the byte count |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Word motions (*word-motions*)             |                                      |                 |                                                                                                                                                     |
+| `w`                                       |                                      |                 | **Forward** [count] words, *exclusive*                                                                                                              |
+| `W`                                       |                                      |                 | **Forward** [count] WORDS(continuous non-blank charaters), *exclusive*                                                                              |
+| `e`                                       |                                      |                 | **Forward** the end of word [count], *inclusive*                                                                                                    |
+| `E`                                       |                                      |                 | **Forward** the end of WORD [count], *inclusive*                                                                                                    |
+| `b`                                       |                                      |                 | **Backward** word [count]                                                                                                                           |
+| `B`                                       |                                      |                 | **Backward** WORD [count]                                                                                                                           |
+| `ge`                                      |                                      |                 | **Backward** the end of word [count], *inclusive*
+| `gE`                                      |                                      |                 | **Backward** the end of WORD [count], *inclusive*                                                                                                   |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Text-Object motions (*object-motions*)    |                                      |                 |                                                                                                                                                     |
+| `(`, `)`                                  |                                      |                 | **Backward/Forward** [count] *sentences* , *exclusive*                                                                                              |
+| `{`, `}`                                  |                                      |                 | **Backward/Forward** [count] *paragraphs* , *exclusive*                                                                                             |
+| `[[`, `]]`                                | `[]`, `][`                           |                 | **Backward/Forward** [count] *sections* , *exclusive*                                                                                               |
+| `[[`                                      |                                      |                 | **Goto** previous '{' in the first column                                                                                                           |
+| `]]`                                      |                                      |                 | **Goto** next '{' in the first column                                                                                                               |
+| `[]`                                      |                                      |                 | **Goto** previous '}' in the first column                                                                                                           |
+| `][`                                      |                                      |                 | **Goto** next '}' in the first column                                                                                                               |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Text Object Selection (*object-select*)   |                                      |                 |                                                                                                                                                     |
+| `aw`                                      |                                      |                 | a **word**, leading or trailing white space is included, but not counted.                                                                           |
+| `iw`                                      |                                      |                 | inner **word**                                                                                                                                      |
+| `aW`                                      |                                      |                 | a **WORD**                                                                                                                                          |
+| `iW`                                      |                                      |                 | inner **WORD**                                                                                                                                      |
+| `as`                                      |                                      |                 | a **sentence**                                                                                                                                      |
+| `is`                                      |                                      |                 | inner **sentence**                                                                                                                                  |
+| `ap`                                      |                                      |                 | a **paragraph**                                                                                                                                     |
+| `ip`                                      |                                      |                 | inner **paragraph**                                                                                                                                 |
+| `a"`, `a'`, `` a` ``                      |                                      |                 | a **quote** string                                                                                                                                  |
+| `i"`, `i'`, `` i` ``                      |                                      |                 | inner **quote** string                                                                                                                              |
+| `a[`, `a]`                                |                                      |                 | a **[]** block                                                                                                                                      |
+| `i[`, `i]`                                |                                      |                 | inner **[]** block                                                                                                                                  |
+| `a(`, `a)`                                | `ab`                                 |                 | a **()** block                                                                                                                                      |
+| `i(`, `i)`                                | `ib`                                 |                 | inner **()** block                                                                                                                                  |
+| `a{`, `a}`                                | `aB`                                 |                 | a **{}** block                                                                                                                                      |
+| `i{`, `i}`                                | `iB`                                 |                 | inner **{}** block                                                                                                                                  |
+| `a<`, `a>`                                |                                      |                 | a **<>** block                                                                                                                                      |
+| `i<`, `i>`                                |                                      |                 | inner **<>** block                                                                                                                                  |
+| `at`                                      |                                      |                 | a (html) **tag** block                                                                                                                              |
+| `it`                                      |                                      |                 | inner **tag** block                                                                                                                                 |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Marks (*mark-motions*)                    |                                      |                 |                                                                                                                                                     |
+| `m`                                       |                                      | `m{a-zA-Z}`     | **Mark** {a-zA-Z} at cursor position                                                                                                                |
+| `'`                                       |                                      | `'{mark}`       | **Goto** {mark}                                                                                                                                     |
+| `` ` ``                                   |                                      | `` `{mark}``    | **Goto** {mark}                                                                                                                                     |
+| `'[`, `']`                                | `` `[ ``, `` `] ``                   |                 | **Goto** the first/last character previously changes or yanked                                                                                      |
+| `'<`, `'>`                                | `` `< ``, `` `> ``                   |                 | **Goto** the first/last line or character of last selected Visual area                                                                              |
+| `'(`, `')`                                | `` `( ``, `` `) ``, `(`, `)`         |                 | **Goto** the start/end of current sentence                                                                                                          |
+| `'{`, `'}`                                | `` `{ ``, `` `} ``, `{`, `}`         |                 | **Goto** the start/end of current paragraph                                                                                                         |
+| `''`                                      | ` `` `                               |                 | **Goto** the position before the latest jump                                                                                                        |
+| `'"`                                      | `` `" ``                             |                 | **Goto** the cursor position when last exiting the current buffer                                                                                   |
+| `'^`                                      | `` `^ ``                             |                 | **Goto** the position where the cursor was the last time when Insert mode was stopped.                                                              |
+| `'.`                                      | `` `. ``                             |                 | **Goto** the position where the last change was made                                                                                                |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Jumps (*jump-motions*)                    |                                      |                 |                                                                                                                                                     |
+| `:jumps`                                  |                                      | `:ju[mps]`      | **Print** *jump list*                                                                                                                               |
+| `:changes`                                |                                      |                 | **Print** *change list*                                                                                                                             |
+| `:clearjumps`                             |                                      | `:cle[arjumps]` | **Clear** *jump list* of current window                                                                                                             |
+| `ctrl+o`                                  |                                      |                 | **Goto** [count] older cursor position in *jump list*                                                                                               |
+| `ctrl+i`                                  | `<Tab>`                              |                 | **Goto** [count] newer cursor position in *jump list*                                                                                               |
+| `g;`                                      |                                      |                 | **Goto** [count] older position in *change list*                                                                                                    |
+| `g,`                                      |                                      |                 | **Goto** [count] newer position in *change list*                                                                                                    |
+|                                           |                                      |                 |                                                                                                                                                     |
+| Various (*various-motions*)               |                                      |                 |                                                                                                                                                     |
+| `%`                                       |                                      |                 | **Find** the next item in this line after or under the cursor and jump to its match.                                                                |
+| `[(`, `[{`                                |                                      |                 | **Goto** [count] previous unmatched '(' or '{' , *exclusive*                                                                                        |
+| `](`, `]{`                                |                                      |                 | **Goto** [count] next unmatched '(' or '{' , *exclusive*                                                                                            |
+| `[m`, `[M`                                |                                      |                 | **Goto** [count] previous start/end of a method , *exclusive*                                                                                       |
+| `]m`, `]M`                                |                                      |                 | **Goto** [count] next start/end of a method , *exclusive*                                                                                           |
+| `[*`                                      | `[/`                                 |                 | **Goto** [count] previous start of a C comment "/*", *exclusive*                                                                                    |
+| `]*`                                      | `]/`                                 |                 | **Goto** [count] next end of a C comment "*/", *exclusive*                                                                                          |
+| `H`                                       |                                      |                 | **Goto** first non-blank character of line [count] from top (Home) of window, *exclusive*                                                           |
+| `M`                                       |                                      |                 | **Goto** first non-blank character of Middle line of window, *exclusive*                                                                            |
+| `L`                                       |                                      |                 | **Goto** first non-blank character of line [count] from bottom of window, *exclusive*                                                               |
+| 选择模式                                  |                                      |                 |                                                                                                                                                     |
+| `v`                                       |                                      |                 | **View**：开启选择模式                                                                                                                              |
+| `V`                                       |                                      |                 | 开启行选择模式                                                                                                                                      |
+| `ctrl+v`                                  |                                      |                 | 开启矩形选择模式                                                                                                                                    |
+| 搜索                                      |                                      |                 |
+| `/`                                       |                                      |                 | `/{pattern}[/[offset]]<CR>`前向（forward）搜索                                                                                                      |
+| `?`                                       |                                      |                 | `?{pattern}[?[offset]]<CR>`后向（backward）搜索                                                                                                     |
+| `n`, `N`                                  |                                      |                 | 重复、反向重复上次搜索                                                                                                                              |
+| `*`, `#`                                  |                                      |                 | 前向、后向搜索当前光标处标识符（单词）                                                                                                              |
+| `gd`, `gD`                                |                                      |                 | 查找当前光标处标识符（类似变量）的本地、全局定义位置                                                                                                |
+| 块                                        |                                      |                 |                                                                                                                                                     |
+| `%`                                       |                                      |                 | 移动到下一对括号或在括号对间跳转，默认有`{}`,`[]`,`()`，可通过`matchpairs`选项配置                                                                  |
+| 其他                                      |                                      |                 |                                                                                                                                                     |
+| `ctrl+g`                                  |                                      |                 | 显示当前光标位置信息                                                                                                                                |
+| 视口                                      |                                      |                 | :q                                                                                                                                                  |
+| `ctrl+y`                                  |                                      |                 | 向上滚动行                                                                                                                                          |
+| `ctrl+e`                                  |                                      |                 | 向下滚动行                                                                                                                                          |
+| `ctrl+b`                                  |                                      |                 | **Backward**: 向上滚动页                                                                                                                            |
+| `ctrl+f`                                  |                                      |                 | **Forward**: 向下滚动页                                                                                                                             |
+| `ctrl+u`                                  |                                      |                 | **Up**: 向上滚动缓冲区，缓冲区大小可通过`scroll`选项配置                                                                                            |
+| `ctrl+d`                                  |                                      |                 | **Down**: 向下滚动缓冲区                                                                                                                            |
+| `z<CR>`, `z.`, `z-`                       |                                      |                 | 滚动到光标行位于视口顶部、中间、底部位置，光标移至行首非空字符                                                                                      |
+| `zt`, `zz`, `zb`                          |                                      |                 | 滚动到光标行位于视口顶部、中间、底部位置，保持光标列位置不变                                                                                        |
+| `zh`/`z+left`, `zl`/`z+right`             |                                      |                 | （开启了折行时）将视口文字：右向滚动、左向滚动；折行通过`wrap`选项配置                                                                              |
+| `zH`, `zL`                                |                                      |                 | （开启了折行时）将视口文字：右向滚动视口宽度一半、左向滚动视口宽度一半                                                                              |
+| `zs`, `ze`                                |                                      |                 | 以光标为开始、结束位置横向移动视口                                                                                                                  |
+| `z{height}<CR>`                           |                                      |                 | 设置视口行数（无法超过窗口高度）                                                                                                                    |
+|                                           |                                      |                 |                                                                                                                                                     |
+| 选择模式                                  |                                      |                 |                                                                                                                                                     |
+| `v`                                       |                                      |                 | **View**：开启选择模式                                                                                                                              |
+| `V`                                       |                                      |                 | 开启行选择模式                                                                                                                                      |
+| `ctrl+v`                                  |                                      |                 | 开启矩形选择模式                                                                                                                                    |
+| 搜索                                      |                                      |                 |
+| `/`                                       |                                      |                 | `/{pattern}[/[offset]]<CR>`前向（forward）搜索                                                                                                      |
+| `?`                                       |                                      |                 | `?{pattern}[?[offset]]<CR>`后向（backward）搜索                                                                                                     |
+| `n`, `N`                                  |                                      |                 | 重复、反向重复上次搜索                                                                                                                              |
+| `*`, `#`                                  |                                      |                 | 前向、后向搜索当前光标处标识符（单词）                                                                                                              |
+| `gd`, `gD`                                |                                      |                 | 查找当前光标处标识符（类似变量）的本地、全局定义位置                                                                                                |
+| 光标                                      |                                      |                 |                                                                                                                                                     |
+| 光标标记                                  |                                      |                 |                                                                                                                                                     |
+| `m{a-zA-Z}`                               |                                      |                 | 在光标处设置标记                                                                                                                                    |
+| `'{a-zA-Z}` 或 `` `{a-zA-Z} ``            |                                      |                 | 跳转到标记                                                                                                                                          |
+| `'{a-zA-Z}` 或 `` `{a-zA-Z} ``            |                                      |                 | 跳转到标记                                                                                                                                          |
+| `'[` 或 `` `[ ``                          |                                      |                 | 跳转到上次修改或粘贴的文本首字符                                                                                                                    |
+| `']` 或 `` `] ``                          |                                      |                 | 跳转到上次修改或粘贴的文本尾字符                                                                                                                    |
+| 光标位置-行                               |                                      |                 |                                                                                                                                                     |
+| `0`                                       |                                      |                 | to *Line* START                                                                                                                                     |
+| `^`                                       |                                      |                 | to *Line* START char                                                                                                                                |
+| `$`                                       |                                      |                 | to *Line* END                                                                                                                                       |
+| `{n}G`                                    |                                      |                 | to *Line* <n>                                                                                                                                       |
+| `gg`                                      |                                      |                 | to FIRST *Line*                                                                                                                                     |
+| `G`                                       |                                      |                 | to LAST *Line*                                                                                                                                      |
+| `{n}%`                                    |                                      |                 | to *Line* in <n>%                                                                                                                                   |
+| `H`                                       |                                      |                 | **Home**：移动到可视区域的首行                                                                                                                      |
+| `M`                                       |                                      |                 | **Middle**：移动到可视区域的中间行                                                                                                                  |
+| `L`                                       |                                      |                 | **Last**：：移动到可视区域的尾行                                                                                                                    |
+| 光标位置-词                               |                                      |                 |
+| `b`                                       |                                      |                 | to (PREV) *Word* START                                                                                                                              |
+| `e`                                       |                                      |                 | to (NEXT) *Word* END                                                                                                                                |
+| `E`                                       |                                      |                 | to (NEXT) *Word* END，单词以空格界定                                                                                                                |
+| `ge`                                      |                                      |                 | to PREV *Word* END                                                                                                                                  |
+| `gE`                                      |                                      |                 | to PREV *Word* END，单词以空格界定                                                                                                                  |
+| `w`                                       |                                      |                 | to NEXT *Word* START                                                                                                                                |
+| `W`                                       |                                      |                 | to NEXT *Word* START，单词以空格界定                                                                                                                |
+| 光标位置-字符                             |                                      |                 |                                                                                                                                                     |
+| `f{char}`                                 |                                      |                 | **Find**：前向移动到第一次出现的该字符处                                                                                                            |
+| `F{char}`                                 |                                      |                 | 后向移动到第一次出现的该字符处                                                                                                                      |
+| `t{char}`                                 |                                      |                 | **To**：后向移动到第一次出现的该字符的前一个字符处                                                                                                  |
+| `T{char}`                                 |                                      |                 | 后向移动到第一次出现的该字符的后一个字符处                                                                                                          |
+| `;`                                       |                                      |                 | 重复`f`,`F`,`t`,`T`命令                                                                                                                             |
+| `,`                                       |                                      |                 | 反向重复`f`,`F`,`t`,`T`命令，如`fx`变成`Fx`                                                                                                         |
+| 块                                        |                                      |                 |                                                                                                                                                     |
+| `%`                                       |                                      |                 | 移动到下一对括号或在括号对间跳转，默认有`{}`,`[]`,`()`，可通过`matchpairs`选项配置                                                                  |
+| 其他                                      |                                      |                 |                                                                                                                                                     |
+| `ctrl+g`                                  |                                      |                 | 显示当前光标位置信息                                                                                                                                |
+| 视口                                      |                                      |                 |                                                                                                                                                     |
+| `ctrl+y`                                  |                                      |                 | 向上滚动行                                                                                                                                          |
+| `ctrl+e`                                  |                                      |                 | 向下滚动行                                                                                                                                          |
+| `ctrl+b`                                  |                                      |                 | **Backward**: 向上滚动页                                                                                                                            |
+| `ctrl+f`                                  |                                      |                 | **Forward**: 向下滚动页                                                                                                                             |
+| `ctrl+u`                                  |                                      |                 | **Up**: 向上滚动缓冲区，缓冲区大小可通过`scroll`选项配置                                                                                            |
+| `ctrl+d`                                  |                                      |                 | **Down**: 向下滚动缓冲区                                                                                                                            |
+| `z<CR>`, `z.`, `z-`                       |                                      |                 | 滚动到光标行位于视口顶部、中间、底部位置，光标移至行首非空字符                                                                                      |
+| `zt`, `zz`, `zb`                          |                                      |                 | 滚动到光标行位于视口顶部、中间、底部位置，保持光标列位置不变                                                                                        |
+| `zh`/`z+left`, `zl`/`z+right`             |                                      |                 | （开启了折行时）将视口文字：右向滚动、左向滚动；折行通过`wrap`选项配置                                                                              |
+| `zH`, `zL`                                |                                      |                 | （开启了折行时）将视口文字：右向滚动视口宽度一半、左向滚动视口宽度一半                                                                              |
+| `zs`, `ze`                                |                                      |                 | 以光标为开始、结束位置横向移动视口                                                                                                                  |
+| `z{height}<CR>`                           |                                      |                 | 设置视口行数（无法超过窗口高度）                                                                                                                    |
 
 ## repeat.txt
 
@@ -292,7 +339,7 @@ date: 2020-10-09T07:22:16.283Z
 | `@`                                |         | `[count]@{0-9a-zA-Z"}` | **Execute** the contents of register [count] times                   |
 | `@@`                               |         | `[count]@@`            | **Repeat** previous `@{0-9a-z":*}` [count] times                     |
 
-## verious.txt
+## various.txt
 
 | Command     | Synonym            | Usage                              |                                                                                                                   |
 | -           | -                  | -                                  | -                                                                                                                 |
@@ -319,6 +366,20 @@ date: 2020-10-09T07:22:16.283Z
 | `:silent`   |                    | `:sil[ent][!] [cmd]`               | **Execute** {cmd} silently(no output messages, even error messages with using `!`), corresponding with `:unsilent`
 | `K`         |                    |                                    | **Run** a program (`keywordprg`, default is `man`) to lookup the keyword under the cursor.                          |
 | `:sleep`    | `:gs` (goto sleep) | `:[N]sl[eep] [N] [m]`              | **Sleep** [N] seconds, default is one, or milliseconds with [m]                                                     |
+
+## editing.txt
+
+| Command                        | Synonym                                 | Usage                              |                                                                                                     |
+| -                              | -                                       | -                                  | -                                                                                                   |
+| Editing a file (*edit-a-file*) |                                         |                                    |                                                                                                     |
+| `:edit`                        |                                         | `:e[dit][!] [++opt] [+cmd]`        | **Edit** current file, useful to re-edit current file                                               |
+|                                |                                         | `:e[dit][!] [++opt] [+cmd] {file}` | **Edit** {file}.  Discard any changes to the current buffer.                                        |
+|                                | `[count]ctrl+^`                         | `:e[dit] [++opt] [+cmd] #[count]`  | **Edit** the [count]th buffer (as shown by `:files`)                                                |
+| `:files`                       | `:buffers[!] [flags]`, `:ls[!] [flags]` | `:files[!] [flags]`                | **List** all buffers. indicators: `%`(current buffer), `#`(alternate buffer) and ...                |
+| `ctrl+^`                       |                                         |                                    | **Edit** alternate file (**Toggle** to previousily edited file)                                     |
+|                                | `:e #[count]`                           | `[count]ctrl+^`                    | **Edit** [count]th file in the buffer list; **Edit** alternate file (**Toggle** with previous file) |
+| `gf`                           |                                         | `[count]gf`                        | **Edit** file under or after cursor                                                                 |
+| `gF`                           |                                         | `[count]gF`                        | **Edit** file under or after cursor with certain line if a number follows the file name             |
 
 ## Range
 
@@ -349,15 +410,18 @@ date: 2020-10-09T07:22:16.283Z
 
 特殊标记：
 
-||||
-|-|-|-|
-|``|||
+| Name       |                    |                                                                      |
+| -          | -                  | -                                                                    |
+| `'[`, `']` | `` `[ ``, `` `] `` | **Goto** the first/last character previously changes or yanked         |
+| `'<`, `'>` | `` `< ``, `` `> `` | **Goto** the first/last line or character of last selected Visual area |
+| `''`       | ` `` `             | **Goto** the position before the latest jump                           |
+| `'"`       | `` `" ``           | **Goto** the cursor position when last exiting the current buffer      |
 
 ## Register
 
 特殊寄存器：
 
-| Command  |                                                                                                            |
+| Name  |                                                                                                            |
 | -        | -                                                                                                          |
 | `_`      | **black hole** register                                                                                    |
 | `-`      | **small delete** register (less than one line)                                                             |
@@ -374,49 +438,90 @@ date: 2020-10-09T07:22:16.283Z
 
 ## Pattern
 
-| Pattern    |                                                  |
-| -          | -                                                |
-| `\m`       | `magic`                                          |
-| `\M`       | `nomagic`                                        |
-| `\v`       | very magic                                       |
-| `\V`       | very nomagic                                     |
-| `\c`       | `ignorecase`                                     |
-| `\C`       | match case                                       |
-| `\@=`      | for preceding atom, likes `(?=pattern)` in Perl  |
-| `\@123=`   | same as `\@=`, but only look back 123 bytes      |
-| `\@!`      | for preceding atom, likes `(?!pattern)` in Perl  |
-| `\@<=`     | for preceding atom, likes `(?<=pattern)` in Perl |
-| `\@<!`     | for preceding atom, likes `(?<!pattern)` in Perl |
-| `\@>`      | for preceding atom, likes `(?>pattern)` in Perl  |
-| `{}`       | any, as many as possible                         |
-| `{m,n}`    | between m and n, as many as possible             |
-| `{-}`      | any, as few as possible                          |
-| `{-m,n}`   | between m and n, as many as few                  |
-| `\<`       | zero-width, beginning of word                    |
-| `\>`       | zero-width, end of word                          |
-| `.`        | any character, but not end-of-line               |
-| `\_.`      | any character and end-of-line                    |
-| `\u`       | next character made uppercase                    |
-| `\U`       | following characters made uppercase, until `\E`  |
-| `\l`       | next character made lowercase                    |
-| `\L`       | following characters made lowercase, until `\E`  |
-| `\e`, `\E` | end of `\u`, `\U`, `\l` and `\L`                 |
+| Pattern                     |                                                  |
+| -                           | -                                                |
+| `\m`                        | `magic`                                          |
+| `\M`                        | `nomagic`                                        |
+| `\v`                        | very magic                                       |
+| `\V`                        | very nomagic                                     |
+| `\c`                        | `ignorecase`                                     |
+| `\C`                        | match case                                       |
+| `\@=`                       | for preceding atom, likes `(?=pattern)` in Perl  |
+| `\@123=`                    | same as `\@=`, but only look back 123 bytes      |
+| `\@!`                       | for preceding atom, likes `(?!pattern)` in Perl  |
+| `\@<=`                      | for preceding atom, likes `(?<=pattern)` in Perl |
+| `\@<!`                      | for preceding atom, likes `(?<!pattern)` in Perl |
+| `\@>`                       | for preceding atom, likes `(?>pattern)` in Perl  |
+| `{}`                        | any, as many as possible                         |
+| `{m,n}`                     | between m and n, as many as possible             |
+| `{-}`                       | any, as few as possible                          |
+| `{-m,n}`                    | between m and n, as many as few                  |
+| `.`                         | any character, but not end-of-line               |
+| `\_.`                       | any character or end-of-line                     |
+| `^`, `$`                    | start/end-of-line (at end of pattern)            |
+| `\_^`, `\_$`                | start/end-of-line (used anywhere)                |
+| `\<`, `\>`                  | beginning/end of **word**                        |
+| `\%^`, `\%$`                | beginning/end of **file**                        |
+| `\%V`                       | inside **Visual area**                           |
+| `\%#`                       | at **cursor** position                           |
+| `\%23l`, `\%<23l`, `\%>23l` | at/above/below **line** 23                       |
+| `\%23c`, `\%<23c`, `\%>23c` | at/before/after **col** 23                       |
+| `\%'m`, `\%<'m`, `\%>'m`    | at/before/after **mark** m                       |
+| `\u`                        | next character made uppercase                    |
+| `\U`                        | following characters made uppercase, until `\E`  |
+| `\l`                        | next character made lowercase                    |
+| `\L`                        | following characters made lowercase, until `\E`  |
+| `\e`, `\E`                  | end of `\u`, `\U`, `\l` and `\L`                 |
 
+字符集
 
-| very magic | very nomagic |                             |
-| -          | -            | -                           |
-| `$`        | `\$`         | end-of-line                 |
-| `.`        | `\.`         | any character               |
-| `*`        | `\*`         | any number of previous atom |
-| `~`        | `\~`         | latest substitute string    |
-| `()`       | `\(\)`       | grouping into an atom       |
-| `{}`       | `\{}`        | number of preceding atom    |
-| `|`        | `\|`         | separating alternatives     |
-| `\a`       | `\a`         | alphabatical character      |
-| `\\`       | `\\`         | literal '\'                 |
-| `\.`       | `.`          | literal '.'                 |
-| `\{`       | `{`          | literal '{'                 |
-| `a`        | `a`          | literal 'a'                 |
+| magic | nomagic |                                                                                   |
+| -     | -       | -                                                                                 |
+| `\i`  | `\i`    | identifier character (see `isident` option)                                       |
+| `\I`  | `\I`    | like `\i`, but excluding digits                                                   |
+| `\k`  | `\k`    | keyword character (see `iskeyword` option)                                        |
+| `\K`  | `\K`    | like `\k`, but excluding digits                                                   |
+| `\f`  | `\f`    | file name character (see `isfname` option)                                        |
+| `\F`  | `\F`    | like `\f`, but excluding digits                                                   |
+| `\p`  | `\p`    | printable character (see `isprint` option)                                        |
+| `\P`  | `\P`    | like `\p`, but excluding digits                                                   |
+| `\s`  | `\s`    | whitespace character: `<Space>` and `<Tab>`                                           |
+| `\S`  | `\S`    | non-whitespace character; opposite of `\s`                                          |
+| `\d`  | `\d`    | digit:				`[0-9]`                                                               |
+| `\D`  | `\D`    | non-digit:			`[^0-9]`                                                            |
+| `\x`  | `\x`    | hex digit:			`[0-9A-Fa-f]`                                                       |
+| `\X`  | `\X`    | non-hex digit:			`[^0-9A-Fa-f]`                                                  |
+| `\o`  | `\o`    | octal digit:			`[0-7]`                                                           |
+| `\O`  | `\O`    | non-octal digit:		`[^0-7]`                                                        |
+| `\w`  | `\w`    | word character:			`[0-9A-Za-z_]`                                                  |
+| `\W`  | `\W`    | non-word character:		`[^0-9A-Za-z_]`                                               |
+| `\h`  | `\h`    | head of word character:		`[A-Za-z_]`                                               |
+| `\H`  | `\H`    | non-head of word character:	`[^A-Za-z_]`                                            |
+| `\a`  | `\a`    | alphabetic character:		`[A-Za-z]`                                                  |
+| `\A`  | `\A`    | non-alphabetic character:	`[^A-Za-z]`                                               |
+| `\l`  | `\l`    | lowercase character:		`[a-z]`                                                     |
+| `\L`  | `\L`    | non-lowercase character:	`[^a-z]`                                                  |
+| `\u`  | `\u`    | uppercase character:		`[A-Z]`                                                     |
+| `\U`  | `\U`    | non-uppercase character		`[^A-Z]`                                                  |
+| `\_x` | `\_x`   | where x is any of the characters above: character class with end-of-line included |
+
+| very magic `\v` | magic `\m` | nomagic `\M` | very nomagic `\V` |                             |
+| -               | -          | -            | -                 | -                           |
+| `$`             | `$`        | `$`          | `\$`              | end-of-line                 |
+| `.`             | `.`        | `\.`         | `\.`              | any character except end-of-line              |
+| `*`             | `*`        | `\*`         | `\*`              | 0 or more previous atom |
+|                 | `\+`       | `\+`         |                   | 1 or more                   |
+|                 | `\=`       | `\=`         |                   | 0 or 1                      |
+|                 | `\?`       | `\?`         |                   | 0 or 1                      |
+| `~`             | `~`        | `\~`         | `\~`              | latest substitute string    |
+| `()`            | `\(\)`     | `\(\)`       | `\(\)`            | grouping into an atom       |
+| `{}`            | `\{}`      | `\{}`        | `\{}`             | number of preceding atom    |
+| `\|`            | `\\|`      | `\\|`        | `\\|`             | separating alternatives     |
+| `\a`            | `\a`       | `\a`         | `\a`              | alphabetical character      |
+| `\\`            | `\\`       | `\\`         | `\\`              | literal backslash           |
+| `\.`            | `\.`       | `.`          | `.`               | literal '.'                 |
+| `\{`            | `{`        | `{`          | `{`               | literal '{'                 |
+| `a`             | `a`        | `a`          | `a`               | literal 'a'                 |
 
 | Flags |                                                          |
 | -     | -                                                        |
@@ -431,6 +536,8 @@ date: 2020-10-09T07:22:16.283Z
 | `l`   | Like `p` but print the text like `:list`                 |
 
 ## Spell Checking
+
+- 开启拼写检查：`:setlocal spell spelllang=en_us`
 
 | Commands |                                                   |
 | -        | -                                                 |
