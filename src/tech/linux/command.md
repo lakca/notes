@@ -297,6 +297,14 @@ The `expr` utility evaluates expression and writes the result on standard output
 
 > 重复行去重。(*report or filter out repeated lines in a file*)
 
+## sort
+
+> 排序或者合并文本行。（sort or merge records (lines) of text and binary files.）
+
+- `-u/--unique`, 保留唯一行（去重）；
+- `-s`, 稳定排序，即保持重复行的原始顺序；
+- `-m/--merge`: 只合并；
+
 ## cut
 
 > 获取输入文本的行段，字节 `cut -b`、字符 `cut -c`。

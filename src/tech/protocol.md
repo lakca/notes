@@ -9,11 +9,29 @@
 
 ### HTTP
 
+> HTTP 没有规定其必须使用或支持的层，只要求**下层协议提供可靠传输**。
+
+#### 持久链接（Keep-Alive）
+
+> 通过`connection: keep-alive`开启保持Socket连接。1.1默认为`connection: keep-alive`。
+
+#### 管道化（Pipelining）
+
+> 始于1.1，把多个HTTP请求放在一个TCP连接（`connection: keep-alive`）中发送。但请求仍需按请求顺序进行响应，故而会导致队头阻塞（*HOL blocking*）。
+
+#### HTTP2
+
 ### HTTPS
 
 ### RTSP
 
 > 实时流协议（*Real Time Streaming Protocol*），属于TCP/IP协议簇。
+
+### DNS
+
+> 域名系统（*Domain Name System*）
+
+### RPC
 
 ### RTCP
 
@@ -36,12 +54,6 @@
 ### DHCP (UDP)
 
 > 动态主机配置协议（*Dynamic Host Configuration Protocol*）
-
-### DNS
-
-> 域名系统（*Domain Name System*）
-
-### RPC
 
 ## 表示层
 
