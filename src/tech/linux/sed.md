@@ -3,6 +3,9 @@ title: Sed
 date: 2020-09-14T07:18:08.540Z
 ---
 
+> stream editor for filtering and transforming text.
+
+Sed：流（文件或管道）编辑器
 
 # sed命令
 
