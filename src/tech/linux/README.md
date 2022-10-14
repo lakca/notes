@@ -1,4 +1,4 @@
-- [......]()<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-09-02 18:41</span></span>
+- [......]()<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-09-30 18:50</span></span>
 - [Basic](basic)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
 - [Concept](concept)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
 - [Expr](expr)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
@@ -8,8 +8,8 @@
 - [Type](type)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
 - [Xargs](xargs)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
 - [Curl](curl)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-25 14:08</span></span>
-- [Rsync](rsync)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-08-19 17:08</span></span>
+- [Rsync](rsync)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-08-19 17:08</span></span>
 - [Commands](command)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-09-01 11:59</span></span>
-- [Awk](awk)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-09-07 11:16</span></span>
-- [Sed](sed)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-09-07 11:17</span></span>
-- [Misc](misc)<span style="font-size:.8em;float:right"><span style="color:green">A</span><span style="padding-left:2em;color:gray;">2022-09-13 11:49</span></span>
+- [Awk](awk)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-09-07 11:16</span></span>
+- [Sed](sed)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-10-11 18:20</span></span>
+- [Misc](misc)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-10-12 16:39</span></span>
