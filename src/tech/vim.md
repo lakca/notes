@@ -99,11 +99,14 @@ date: 2020-10-09T07:22:16.283Z
 | `ctrl+y`                                        |          |                                 | **Insert** the character which is above the cursor                                |
 |                                                 |          |                                 |                                                                                   |
 | Completion (*ins-completion*)                   |          |                                 |                                                                                   |
+| `ctrl+x ctrl+l`                                 |          |                                 | whole lines                                                                       |
+| `ctrl+x ctrl+]`                                 |          |                                 | tags                                                                              |
 | `ctrl+x ctrl+n`                                 |          |                                 | keywords in current file                                                          |
+| `ctrl+x ctrl+i`                                 |          |                                 | keywords in the current and included files                                        |
+| `ctrl+x ctrl+D`                                 |          |                                 | definitions or macros                                                             |
 | `ctrl+x ctrl+f`                                 |          |                                 | file names                                                                        |
-| `ctrl+x ctrl+l`                                 |          |                                 | lines                                                                             |
-| `ctrl+x ctrl+v`                                 |          |                                 | VIM commands                                                                      |
-| `ctrl+x ctrl+s`                                 |          |                                 | Spell Checking (`:setlocal spell spelllang=en_us`)                                |
+| `ctrl+x ctrl+v`                                 |          |                                 | Vim command-line                                                                  |
+| `ctrl+x ctrl+s`                                 |          |                                 | Spelling suggestions(`:setlocal spell spelllang=en_us`)                                |
 |                                                 |          |                                 |                                                                                   |
 | Insert mode commands (*inserting*)              |          |                                 |                                                                                   |
 | `i`                                             |          | `[count]i`                      | **Insert** before CURSOR [count] times                                            |
@@ -412,10 +415,10 @@ date: 2020-10-09T07:22:16.283Z
 | `\V`                        | very nomagic                                     |
 | `\c`                        | `ignorecase`                                     |
 | `\C`                        | match case                                       |
-| `\@=`                       | for preceding atom, likes `(?=pattern)` in Perl  |
+| `\@=`                       | for preceding atom, likes `(?=pattern)` in Perl, e.g. `\(hello\)\@=world`  |
 | `\@123=`                    | same as `\@=`, but only look back 123 bytes      |
 | `\@!`                       | for preceding atom, likes `(?!pattern)` in Perl  |
-| `\@<=`                      | for preceding atom, likes `(?<=pattern)` in Perl |
+| `\@<=`                      | for preceding atom, likes `(?<=pattern)` in Perl, e.g. `\(hello\)\@<=world` |
 | `\@<!`                      | for preceding atom, likes `(?<!pattern)` in Perl |
 | `\@>`                       | for preceding atom, likes `(?>pattern)` in Perl  |
 | `{}`                        | any, as many as possible                         |
@@ -453,22 +456,22 @@ date: 2020-10-09T07:22:16.283Z
 | `\P`  | `\P`    | like `\p`, but excluding digits                                                   |
 | `\s`  | `\s`    | whitespace character: `<Space>` and `<Tab>`                                       |
 | `\S`  | `\S`    | non-whitespace character; opposite of `\s`                                        |
-| `\d`  | `\d`    | digit:				`[0-9]`                                                                 |
-| `\D`  | `\D`    | non-digit:			`[^0-9]`                                                             |
-| `\x`  | `\x`    | hex digit:			`[0-9A-Fa-f]`                                                        |
-| `\X`  | `\X`    | non-hex digit:			`[^0-9A-Fa-f]`                                                   |
-| `\o`  | `\o`    | octal digit:			`[0-7]`                                                            |
-| `\O`  | `\O`    | non-octal digit:		`[^0-7]`                                                        |
-| `\w`  | `\w`    | word character:			`[0-9A-Za-z_]`                                                  |
-| `\W`  | `\W`    | non-word character:		`[^0-9A-Za-z_]`                                              |
-| `\h`  | `\h`    | head of word character:		`[A-Za-z_]`                                              |
-| `\H`  | `\H`    | non-head of word character:	`[^A-Za-z_]`                                          |
-| `\a`  | `\a`    | alphabetic character:		`[A-Za-z]`                                                 |
-| `\A`  | `\A`    | non-alphabetic character:	`[^A-Za-z]`                                             |
-| `\l`  | `\l`    | lowercase character:		`[a-z]`                                                     |
-| `\L`  | `\L`    | non-lowercase character:	`[^a-z]`                                                 |
-| `\u`  | `\u`    | uppercase character:		`[A-Z]`                                                     |
-| `\U`  | `\U`    | non-uppercase character		`[^A-Z]`                                                 |
+| `\d`  | `\d`    | digit:    `[0-9]`                                                                 |
+| `\D`  | `\D`    | non-digit:   `[^0-9]`                                                             |
+| `\x`  | `\x`    | hex digit:   `[0-9A-Fa-f]`                                                        |
+| `\X`  | `\X`    | non-hex digit:   `[^0-9A-Fa-f]`                                                   |
+| `\o`  | `\o`    | octal digit:   `[0-7]`                                                            |
+| `\O`  | `\O`    | non-octal digit:  `[^0-7]`                                                        |
+| `\w`  | `\w`    | word character:   `[0-9A-Za-z_]`                                                  |
+| `\W`  | `\W`    | non-word character:  `[^0-9A-Za-z_]`                                              |
+| `\h`  | `\h`    | head of word character:  `[A-Za-z_]`                                              |
+| `\H`  | `\H`    | non-head of word character: `[^A-Za-z_]`                                          |
+| `\a`  | `\a`    | alphabetic character:  `[A-Za-z]`                                                 |
+| `\A`  | `\A`    | non-alphabetic character: `[^A-Za-z]`                                             |
+| `\l`  | `\l`    | lowercase character:  `[a-z]`                                                     |
+| `\L`  | `\L`    | non-lowercase character: `[^a-z]`                                                 |
+| `\u`  | `\u`    | uppercase character:  `[A-Z]`                                                     |
+| `\U`  | `\U`    | non-uppercase character  `[^A-Z]`                                                 |
 | `\_x` | `\_x`   | where x is any of the characters above: character class with end-of-line included |
 
 | very magic `\v` | magic `\m` | nomagic `\M` | very nomagic `\V` |                                  |
@@ -763,6 +766,66 @@ type:
 
 - 设置加密方法：`:set cm=zip/blowfish/blowfish2`
 
+## 快捷键
+
+- 获取所有按键代码（名称）: `:h keycodes`
+
+| notation             | meaning                                                                               | equivalent | decimal          | value(s) ~                    |
+| -                    | -                                                                                     | -          | -                | -                             |
+| `<Nul>`              | zero                                                                                  | `CTRL-@`   | 0 (stored as 10) | *`<Nul>`*                     |
+| `<BS>`               | backspace                                                                             | `CCTRL-H`  | 8                | *backspace*                   |
+| `<Tab>`              | tab                                                                                   | `CCTRL-I`  | 9                | *tab* *Tab*  *linefeed*       |
+| `<NL>`               | linefeed                                                                              | `CCTRL-J`  | 10               | (used for `<Nul>`)            |  |
+| `<FF>`               | formfeed                                                                              | `CCTRL-L`  | 12               | *formfeed*                    |
+| `<CR>`               | carriage return                                                                       | `CCTRL-M`  | 13               | *carriage-return*             |
+| `<Return>`           | same as `<CR>`                                                                        |            |                  | *`<Return>`*                  |
+| `<Enter>`            | same as `<CR>`                                                                        |            |                  | *`<Enter>`*                   |
+| `<Esc>`              | escape                                                                                | `CTRL-[`   | 27               | *escape* *`<Esc>`*            |
+| `<Space>`            | space                                                                                 |            | 32               | *space*                       |
+| `<lt>`               | less-than                                                                             | `<`        | 60               | *`<lt>`*                      |
+| `<Bslash>`           | backslash                                                                             | `\`        | 92               | *backslash* *`<Bslash>`*      |
+| `<Bar>`              | vertical bar                                                                          | `\|`       | 124              | *`<Bar>`*                     |
+| `<Del>`              | delete                                                                                |            | 127              |                               |
+| `<CSI>`              | command sequence intro                                                                | `ALT-Esc`  | 155              | *`<CSI>`*                     |
+| `<xCSI>`             | CSI when typed in the GUI                                                             |            |                  | *`<xCSI>`*                    |
+| `<EOL>`              | end-of-line (can be `<CR>`, `<LF>` or `<CR><LF>`, depends on system and 'fileformat') |            |                  | *`<EOL>`*                     |
+| `<Up>`               | cursor-up                                                                             |            |                  | *cursor-up* *cursor_up*       |
+| `<Down>`             | cursor-down                                                                           |            |                  | *cursor-down* *cursor_down*   |
+| `<Left>`             | cursor-left                                                                           |            |                  | *cursor-left* *cursor_left*   |
+| `<Right>`            | cursor-right                                                                          |            |                  | *cursor-right* *cursor_right* |
+| `<S-Up>`             | shift-cursor-up                                                                       |            |                  |                               |
+| `<S-Down>`           | shift-cursor-down                                                                     |            |                  |                               |
+| `<S-Left>`           | shift-cursor-left                                                                     |            |                  |                               |
+| `<S-Right>`          | shift-cursor-right                                                                    |            |                  |                               |
+| `<C-Left>`           | control-cursor-left                                                                   |            |                  |                               |
+| `<C-Right>`          | control-cursor-right                                                                  |            |                  |                               |
+| `<F1>` - `<F12>`     | function keys 1 to 12                                                                 |            |                  | *function_key* *function-key* |
+| `<S-F1>` - `<S-F12>` | shift-function keys 1 to 12                                                           |            |                  | *`<S-F1>`*
+| `<Help>`             | help key                                                                              |            |                  |                               |
+| `<Undo>`             | undo key                                                                              |            |                  |                               |
+| `<Insert>`           | insert key                                                                            |            |                  |                               |
+| `<Home>`             | home                                                                                  |            |                  | *home*                        |
+| `<End>`              | end                                                                                   |            |                  | *end*                         |
+| `<PageUp>`           | page-up                                                                               |            |                  | *page_up* *page-up*           |
+| `<PageDown>`         | page-down                                                                             |            |                  | *page_down* *page-down*       |
+| `<kHome>`            | keypad home (upper left)                                                              |            |                  | *keypad-home*                 |
+| `<kEnd>`             | keypad end (lower left)                                                               |            |                  | *keypad-end*                  |
+| `<kPageUp>`          | keypad page-up (upper right)                                                          |            |                  | *keypad-page-up*              |
+| `<kPageDown>`        | keypad page-down (lower right)                                                        |            |                  | *keypad-page-down*            |
+| `<kPlus>`            | keypad +                                                                              |            |                  | *keypad-plus*                 |
+| `<kMinus>`           | keypad -                                                                              |            |                  | *keypad-minus*                |
+| `<kMultiply>`        | keypad *                                                                              |            |                  | *keypad-multiply*             |
+| `<kDivide>`          | keypad /                                                                              |            |                  | *keypad-divide*               |
+| `<kEnter>`           | keypad Enter                                                                          |            |                  | *keypad-enter*                |
+| `<kPoint>`           | keypad Decimal point                                                                  |            |                  | *keypad-point*                |
+| `<k0>` - `<k9>`      | keypad 0 to 9                                                                         |            |                  | *keypad-0* *keypad-9*         |
+| `<S-...>`            | shift-key                                                                             |            |                  | *shift* *<S-*                 |
+| `<C-...>`            | control-key                                                                           |            |                  | *control* *ctrl* *<C-*        |
+| `<M-...>`            | alt-key or meta-key                                                                   |            |                  | *meta* *alt* *<M-*            |
+| `<A-...>`            | same as `<M-...>`                                                                     |            |                  | *<A-*                         |
+| `<D-...>`            | command-key (Macintosh only)                                                          |            |                  | *<D-*                         |
+| `<t_xx>`             | key with "xx" entry in termcap                                                        |            |                  |                               |
+
 # 文档
 
 [VIM REFERENCE MANUAL](http://vimdoc.sourceforge.net/htmldoc/quickref.html)
@@ -1021,7 +1084,7 @@ type:
   - [90.3](http://vimdoc.sourceforge.net/htmldoc/usr_90.html#90.3) Upgrading
   - [90.4](http://vimdoc.sourceforge.net/htmldoc/usr_90.html#90.4) Common installation issues
   - [90.5](http://vimdoc.sourceforge.net/htmldoc/usr_90.html#90.5) Uninstalling Vim
-      
+
 # Plugin
 
 - [vim-plug](https://github.com/junegunn/vim-plug): 管理vim插件；

@@ -331,7 +331,7 @@ read -p $'\033[31mhello world!\033[0m'
 
 #### 字符渲染指令（SGR）
 
-> 即*Select Graphic Rendition*，格式为：`ESC[<style;color>m`。例如：`echo '\033[1,31mhello world\033[0m'`
+> 即*Select Graphic Rendition*，格式为：`ESC[<style;color>m`。例如：`echo '\033[1;31mhello world\033[0m'`
 
 |    |            |
 | -  | -          |
@@ -379,6 +379,12 @@ read -p $'\033[31mhello world!\033[0m'
 | RGB                     |        |                             |
 | `ESC[38;2;{r};{g};{b}m` |        | 前景色，{r}/{g}/{b}为分量值 |
 | `ESC[48;2;{r};{g};{b}m` |        | 背景色，{r}/{g}/{b}为分量值 |
+
+### 扩展CSI
+
+| 来源  | 格式                    | 含义             |
+| -     | -                       | -                |
+| iterm | `\033];{NEW_TITLE}\007` | 设置标签页的标题 |
 
 # 字符串操作
 
