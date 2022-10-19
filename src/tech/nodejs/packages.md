@@ -1,5 +1,6 @@
 ---
 title: NPM Packages
+date: 2022-07-05T14:59:01+08:00
 ---
 
 # 体系类
@@ -290,3 +291,11 @@ Zdog was designed to bring the simplicity of vector illustration into 3D. Drawin
 ![lakca's GitHub stats](https://github-readme-stats.vercel.app/api?username=lakca&show_icons=true)
 ![Top Langs](https://github-readme-stats.vercel.app/api/top-langs/?username=lakca&layout=compact)
 ![Readme Card](https://github-readme-stats.vercel.app/api/pin/?username=lakca&repo=scripts)
+
+# 算法类
+
+## `image-compare-viewer`
+
+> Compare before and after images, for grading, CGI and other retouching comparisons. Vanilla Javascript.
+
+<iframe src="https://image-compare-viewer.netlify.app/"/>

@@ -671,9 +671,9 @@ if let myNumber {
 }
 ```
 
-### 强制展开（Force Unwrapping）
+### 强制解包（Implicitly Force Unwrapping）
 
-- Force Unwrapping indicates I am sure Optional has a typed value.
+> 有的情况下，我们知道一个或有值是一定存在值的，这时候再使用控制语句来判断其值存在性就显得冗余，故提供了强制解包的快捷方式。
 
 ```swift
 let a: Int? = 1
@@ -693,7 +693,7 @@ print(a) // Optional(1)
 typealias Audio = Int8
 ```
 
-# 断言和先决（Assertion and Precondition）
+# 错误和断言
 
 > building: `assert`, `assertFailure`
 
@@ -702,6 +702,82 @@ typealias Audio = Int8
 - terminate your app while false condition met.
 
 - used to detect the condition that is certain to prevent program from proceeding.
+
+## 错误处理
+
+[Error Handling](https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html)
+
+- 在Swift中，所有错误都遵循`Error`协议。
+
+- 为了避免大量性能消耗，Swift错误处理不会解开调用栈（~~unwinding call stack~~）。
+
+枚举非常适合定义一系列有关的错误：
+
+```swift
+enum VendingMachineError: Error {
+    case invalidSelection
+    case insufficientFunds(coinsNeeded: Int)
+    case outOfStock
+}
+
+throw VendingMachineError.insufficientFunds(coinsNeeded: 5)
+```
+
+## 抛出函数（Throwing Functions）
+
+> 抛出函数（throwing functions）：可以主动抛出错误，其内部产生的错误可以自动传播给（*propagate*）它的调用者，而无需处理（`catch`）。**如果一个函数不是抛出函数，则其无法主动抛出错误，内部抛出的错误必须处理。**
+
+```swift
+func canThrowErrors() throws {
+  //
+}
+```
+
+```swift
+func throwing() throws {
+  throw Error
+}
+
+func canThrowErrors() throws {
+  try throwing()
+}
+
+func shouldCatchErrors() {
+  do {
+    try canThrowAnError()
+  } catch {
+    print("catched")
+  }
+}
+```
+
+捕获错误：
+
+```swift
+do {
+    try canThrowAnError()
+    // no error was thrown
+} catch {
+    // an error was thrown
+}
+```
+
+捕获多种类型错误：
+
+```swift
+func makeASandwich() throws {
+    // ...
+}
+
+do {
+    try makeASandwich()
+    eatASandwich()
+} catch SandwichError.outOfCleanDishes {
+    washDishes()
+} catch SandwichError.missingIngredients(let ingredients) {
+    buyGroceries(ingredients)
+}
+```
 
 # 操作符
 

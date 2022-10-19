@@ -60,13 +60,18 @@ function* traverse(dir) {
   }
 }
 
+function getBirthtime(file) {
+  const items = gitList(`git log --follow --format=%aI ${file} | tail -1`)
+  return items[0]
+}
+
 const gitStatus = gitHead()
 
 for (const file of traverse(SRC_ROOT)) {
   if (path.extname(file) === '.md') {
     const { meta, content } = extractFile(file)
     const stat = fileStat(file)
-    meta.date = new Date(stat.birthtime).toISOString()
+    if (!meta.date) gmeta.date = getBirthtime(file)
     meta.title = startCase(meta.title || path.basename(file, '.md'))
     const relPath = path.relative(SRC_ROOT, file)
     if (gitStatus[relPath]) {

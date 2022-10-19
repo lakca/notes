@@ -211,4 +211,3 @@ export HOMEBREW_BOTTLE_DOMAIN="https://mirrors.ustc.edu.cn/homebrew-bottles"
 > [espanso](https://github.com/federico-terzi/espanso): A cross-platform Text Expander written in Rust.
 >
 > 可以展开的文本包括表情、日期、IP、图片、shell命令、自定义snippets......，而且几乎可以工作在任何软件中。
-

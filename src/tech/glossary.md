@@ -273,3 +273,29 @@ date: 2020-08-04T09:26:34.573Z
 - *common*
 - *universal*
 - *generic*
+
+# 文字符号
+
+| Meaning             | Symbol |
+| ------------------- | ------ |
+| line feed, new line | \n     |
+| carriage return     | \r     |
+| horizontal tab      | \t     |
+| vertical tab        | \v     |
+| form feed           | \f     |
+
+# 编程术语
+
+| Phrase      | 中文   |
+| ----------- | ------ |
+| manipulate  | 调用   |
+| interpolate | 插值   |
+| derive      | 派生   |
+| iterate     | 迭代   |
+| declare     | 声明   |
+| define      | 定义   |
+| initialize  | 初始化 |
+| assign      | 赋值   |
+| subscript   | 下标   |
+| vector      | 向量   |
+| array       | 数组   |

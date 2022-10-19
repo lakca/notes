@@ -1154,21 +1154,21 @@ let s = "hello".to_string();
 
 [Type System](https://doc.rust-lang.org/reference/types.html)
 
-|           |                  |                                                                                     |
-| --------- | ---------------- | ----------------------------------------------------------------------------------- |
-| Scalar    | *integer*        | `i8`,`u8`,`i16`,`u16`,`i32`（默认）,`u32`,`i64`,`u64`,`i128`,`u128`,`isize`,`usize` |
-|           | *floating-point* | `f32`,`f64`（默认）                                                                 |
-|           | *boolean*        | `bool`                                                                              |
-|           | *character*      | `char`                                                                              |
-| Compound  | *tuple*          | `()`                                                                                |
-|           | *array*          | `[]`                                                                                |
+|          |                  |                                                                                     |
+| -------- | ---------------- | ----------------------------------------------------------------------------------- |
+| Scalar   | *integer*        | `i8`,`u8`,`i16`,`u16`,`i32`（默认）,`u32`,`i64`,`u64`,`i128`,`u128`,`isize`,`usize` |
+|          | *floating-point* | `f32`,`f64`（默认）                                                                 |
+|          | *boolean*        | `bool`                                                                              |
+|          | *character*      | `char`                                                                              |
+| Compound | *tuple*          | `()`                                                                                |
+|          | *array*          | `[]`                                                                                |
 
-|           |                  |                                                                                     |
-| --------- | ---------------- | ----------------------------------------------------------------------------------- |
-| Function  |                  | `fn`                                                                                |
-| Reference |                  | `&`                                                                                 |
-|           | *slice*          | `&[]`, `str`                                                                        |
-| Never     |                  | `!`                                                                                 |
+|           |         |              |
+| --------- | ------- | ------------ |
+| Function  |         | `fn`         |
+| Reference |         | `&`          |
+|           | *slice* | `&[]`, `str` |
+| Never     |         | `!`          |
 
 - *Scalar type* represents a single value.
 - *Compound types* can group multiple values into one type.

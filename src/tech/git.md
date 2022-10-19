@@ -442,6 +442,7 @@ git stash drop [<stash=stash@{0}>]
 git stash clear
 ```
 
+<<<<<<< Updated upstream
 列出已被清理的 stash：
 
 ```bash
@@ -450,6 +451,8 @@ grep commit | cut -d\  -f3 |
 xargs git log --merges --no-walk --grep=WIP
 ```
 
+=======
+>>>>>>> Stashed changes
 ## commit（提交）
 
 > 创建一个提交对象，即向版本库中存储一个新的项目快照。
@@ -1236,6 +1239,8 @@ git log --log-size
 
 格式化：
 
+[PRETTY FORMATS](https://git-scm.com/docs/git-log)
+
 ```bash
 --format=<format-string>
 ```
@@ -1415,6 +1420,25 @@ blame指定的文件行：
 ```
 ```bash
 > git remote add git://<ip>/<repo_name>
+```
+
+## fsck
+
+### 找回删掉的文件
+
+> 如果一个文件有被`add`但没被提交过，该文件还是可以找回的，因为生成了*blob*。
+
+```bash
+for i in `git fsck --unreachable | grep blob | cut -d\  -f3`; do `git cat-file -p $i |  grep 干支` && echo $i; done
+```
+
+### 列出已被清理的stash：
+
+```bash
+# WIP是stash message的特征文字，如果你自定义过，修改即可
+> git fsck --unreachable |
+grep commit | cut -d\  -f3 |
+xargs git log --merges --no-walk --grep=WIP
 ```
 
 ## rev-list（列出某个提交中的对象）

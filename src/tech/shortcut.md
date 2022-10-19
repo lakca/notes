@@ -1,3 +1,8 @@
+---
+date: 2021-12-24T18:35:16+08:00
+title: Shortcut
+---
+
 # Bash
 
 | Shortcut          | Action                                   |
