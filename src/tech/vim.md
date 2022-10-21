@@ -142,7 +142,7 @@ date: 2020-10-09T07:22:16.283Z
 | `ctrl+x ctrl+v`               |         |       | **Completion** VIM command-line                                      |
 | `ctrl+x ctrl+u`               |         |       | **Completion** user-defined completions                              |
 | `ctrl+x ctrl+s`               |         |       | **Completion** spell suggestions (`:setlocal spell spelllang=en_us`) |
-| `ctrl+x ctrl+o`               |         |       | **Completion** omni completion     ****                              |
+| `ctrl+x ctrl+o`               |         |       | **Completion** omni completion                                       |
 |                               |         |       |                                                                      |
 
 ### Insert Mode Command
@@ -734,7 +734,7 @@ date: 2020-10-09T07:22:16.283Z
 
 显示坐标轴：`set cursorline/cul/nocursorline/nocul`，`set cursorcolumn/cuc/nocursorcolumn/nocuc`
 
-## 标记
+## marks
 
 - 列出标记：`:marks`
 
@@ -886,7 +886,11 @@ type:
 
 - 设置加密方法：`:set cm=zip/blowfish/blowfish2`
 
-## 快捷键
+## 粘贴模式
+
+`:set paste`
+
+# 键名查询
 
 - 获取所有按键代码（名称）: `:h keycodes`
 
@@ -1205,7 +1209,7 @@ type:
   - [90.4](http://vimdoc.sourceforge.net/htmldoc/usr_90.html#90.4) Common installation issues
   - [90.5](http://vimdoc.sourceforge.net/htmldoc/usr_90.html#90.5) Uninstalling Vim
 
-# Plugin
+# 插件
 
 - [vim-plug](https://github.com/junegunn/vim-plug): 管理vim插件；
    - `:PlugInstall [name]`: 安装插件；
@@ -1229,7 +1233,7 @@ type:
 - `tabular`: 文本对齐；
 - `vim-markdown`: Markdown;
 
-# Resource
+# 其他资源
 
 - [Learn Vim](https://github.com/iggredible/Learn-Vim)
 - [vim-galore](https://github.com/mhinz/vim-galore/blob/master/PLUGINS.md)
