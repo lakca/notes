@@ -19,8 +19,51 @@ date: 2021-06-26T09:06:35.429Z
 - `/etc/manpaths`
 - `/etc/shells`
 - `/etc/ttys`
+# 执行
 
-# 信息
+## sh
+
+> `sh` is a POSIX-compliant command interpreter (shell). It is implemented by re-execing as either bash(1), dash(1), or zsh(1) as determined by the symbolic link located at /private/var/select/sh.  If /private/var/select/sh does not exist or does not point to a valid shell, sh will use one of the supported shells.
+
+## bash
+
+> `Bash` is  an sh-compatible command language interpreter that executes commands read from the standard input or from a file.
+
+## dash
+
+> `dash` is the standard command interpreter for the system.
+
+## command
+
+> Runs command with arguments ignoring any shell function named command. Only shell builtin commands or commands found by searching the PATH are executed.
+
+## expr
+
+> 执行表达式，并将结果输出到标准输出。
+
+The `expr` utility evaluates expression and writes the result on standard output.
+
+## xargs
+
+> 将管道输入解析为参数列表。具体地，通过使用 *space*, *tab*, *newline*, *eof* 等符号切割输入得到。
+
+*Execute a command with piped arguments coming from another command, a file, etc. The input is treated as a single block of text and split into separate pieces on spaces, tabs, newlines and end-of-file.*
+
+- `-0`: 指定参数分隔符为空字符（*NUL (``\0'')*），一般配合 `find` 带 `-print0` 选项使用；如 `find . -name '*.backup' -print0 | xargs -0 rm -v`
+- `-E <eofstr>`: 指定逻辑EOF
+- `-n <number>`: 指定每次执行程序使用的参数个数；如 `echo 1 2 3 | xargs -n 1 echo`
+- `-J <placeholder>`: 通过使用占位符，把输入整体作为一个参数（不进行切割）传入指定位置；如 `ls -1d [A-Z]* | xargs -J % cp -rp % destdir`
+- `-I <placeholder>`: 通过使用占位符，自定义每个参数位置；如 `ls | xargs -I _ echo _ is a filename`
+- `-R <holder_count>`: 指定 `-I` 选项执行替换的最大次数
+- `-P <maxprocs>`: 指定程序最大并行数量；
+- `-s <bytes>`: 指定程序命令行的最大字节数；
+- `-o`: 在程序执行之前将输入重新用 */dev/tty* 打开，对执行的是交互式程序会很有用；如 `echo console.log('hello!') | xargs -o node`
+- `-t`: 在每次执行程序前打印命令；
+- `-p`: 在每次执行程序前打印命令并询问是否执行；
+
+- 删除文件：`find . -name '*.backup' -print0 | xargs -0 rm -v`
+
+# 系统
 
 ## uname
 
@@ -34,6 +77,27 @@ date: 2021-06-26T09:06:35.429Z
 - `-a`
 
 ## uptime
+
+## w
+
+> display who is logged in and what they are doing.
+
+## who, whoami
+
+> display who is logged in.
+
+## users
+
+> list current users.
+
+## finger
+
+> The finger utility displays information about the system users.
+
+## last
+
+> list the sessions of specified users, ttys, and hosts, in reverse time order.
+
 
 # 定位
 
@@ -83,9 +147,29 @@ date: 2021-06-26T09:06:35.429Z
 
 > 选项中的数字参数（`n`）前可带上加减号（`+`,`-`），表示超过和少于。
 
-操作符选项：
+其他选项：
 
-> 操作符用于修饰选项。
+- `-E`：`-regex`/`-iregex` 支持扩展正则表达式
+
+- `-print0`：以 `NUL` 分割返回的条目，可以配合 `xargs -0` 使用
+
+- `-prune`：排除当前文件
+
+- `-empty`：找出内容为空的文件/文件夹
+
+遍历方式：
+
+- `-d`：深度优先遍历
+
+- `-depth <n>`：遍历深度
+
+- `-maxdepth <n>`：最大遍历深度
+
+- `-mindepth <n>`：最小遍历深度
+
+- `-s`：按字母顺序遍历
+
+操作符：
 
 - `()`
 - `-not|! <expression>`
@@ -100,27 +184,7 @@ date: 2021-06-26T09:06:35.429Z
 > find / \( -newer ttt -or -user wnj \) -print
 ```
 
-其他选项：
-
-- `-E`：`-regex`/`-iregex` 支持扩展正则表达式
-
-- `-print0`：以 `NUL` 分割返回的条目，可以配合 `xargs -0` 使用
-
-- `-prune`：排除当前文件
-
-遍历方式：
-
-- `-d`：深度优先遍历
-
-- `-depth <n>`：遍历深度
-
-- `-maxdepth <n>`：最大遍历深度
-
-- `-mindepth <n>`：最小遍历深度
-
-- `-s`：按字母顺序遍历
-
-针对基础属性：
+文件名：
 
 - `-name <pattern>`，`-iname <pattern>`：指定文件名称的模式
 
@@ -130,20 +194,24 @@ date: 2021-06-26T09:06:35.429Z
 
 - `-regex <pattern>`，`-iregex`：使用正则表达式指定路径匹配的模式
 
+文件大小：
+
 - `-size <n><unit>`：文件大小（四舍五入）
   - 单位可以是 B `c`、KB `k`、MB `M`、GB `G`、TB `T`、PB `P`
   - 如 `-size -1M -and -size +1k`
 
+文件类型：
+
 - `-type <type>`：文件类型
   - 类型可以是块文件 `b`、字符文件 `c`、目录 `d`、常规文件 `f`、软链接 `l`、FIFO `p`、套接字 `s`）
+
+文件属性：
 
 - `-xattr`，`-xattrname <name>`：文件是否有扩展属性（扩展属性是由程序定义的，区别于系统固定属性）
 
 - `-inum <n>`：指定inode
 
-- `-empty`：找出内容为空的文件/文件夹
-
-针对时间：
+时间：
 
 - `-Btime/-atime/-ctime/-mtime n[smhdw]`：文件的相关时间与当前时间间隔。
   - 时间类型 `Bacm` 分别表示创建时间、上次访问时间、上次改变时间、上次修改时间；
@@ -160,7 +228,7 @@ date: 2021-06-26T09:06:35.429Z
 
 - `-newer <file>`：同 `-newermm <file>`
 
-针对权限：
+权限：
 
 - `-perm [+|-]mode`：指定权限模式
   - 前缀 `+` 表示 `mode` 中任一位数与文件的该位相同即可；
@@ -172,7 +240,7 @@ date: 2021-06-26T09:06:35.429Z
 
 - `-nogroup`，`-nouser`：文件的组、用户未知
 
-针对文件链接：
+链接：
 
 - `-L`：软链接显示其链接的源文件信息
 
@@ -198,53 +266,60 @@ date: 2021-06-26T09:06:35.429Z
 
 ## grep
 
-# 执行脚本
+> The `grep` utility searches any given input files, selecting lines that match one or more patterns.
+> ( `egrep`, `fgrep`, `zgrep`, `zegrep`, `zfgrep` )
 
-## sh
+# 文件
 
-> `sh` is a POSIX-compliant command interpreter (shell). It is implemented by re-execing as either bash(1), dash(1), or zsh(1) as determined by the symbolic link located at /private/var/select/sh.  If /private/var/select/sh does not exist or does not point to a valid shell, sh will use one of the supported shells.
+<!-- file(1), ls(1), lstat(2), readlink(2), stat(2), printf(3), strftime(3) -->
 
-## bash
+## stat
 
-> `Bash` is  an sh-compatible command language interpreter that executes commands read from the standard input or from a file.
+> display file status. Read, write or execute permissions of the named file are not required, but all directories listed in the path name leading to the file must be searchable.
 
-## dash
+## readlink
 
-> `dash` is the standard command interpreter for the system.
+> same as `stat`, but only for the target of the symbolic link.
 
-## command
+## file
 
-> Runs command with arguments ignoring any shell function named command. Only shell builtin commands or commands found by searching the PATH are executed.
+> determine file type.
 
-# 执行
+## ls
 
-## expr
+> list directory contents.
 
-> 执行表达式，并将结果输出到标准输出。
+- `-a`：包含名称以`.`开始的文件
+- `-l`：长结果
+- `-1`：每项独占一行
+- `-i`：显示inode
+- `-r`: 反向排序
+- `-R`: 递归子目录
+- `-S`：按文件大小排序
+- `-t`：时间排序（默认为修改时间）
+- `-T`：显示完整时间
+- `-u`：用文件访问时间替代修改时间
+- `-U`：用文件创建时间替代修改时间
+- `-c`：用文件上次改变时间替代修改时间
+- `-p`：在目录结尾显示斜杠`/`
+- `-P`：显示软链接，而非其链接的文件
+- `-n`：显示用户ID，而非名字
+- `-F`：在项目后添加额外符号：文件夹`/`、可执行文件`*`、符号链接`@`、Socket`=`、whiteout`%`、FIFO`|`
+- `-w`：强制显示不可打印字符原始值
 
-The `expr` utility evaluates expression and writes the result on standard output.
+## lsof
 
-## xargs
+> list open files.
 
-> 将管道输入解析为参数用于执行命令，参数列表通过使用 *space*, *tab*, *newline*, *eof* 等符号切割得到。
+## iostat
 
-*Execute a command with piped arguments coming from another command, a file, etc. The input is treated as a single block of text and split into separate pieces on spaces, tabs, newlines and end-of-file.*
+> report I/O statistics.
 
-- `-0`: 指定参数分隔符为空字符（*NUL (``\0'')*），一般配合 `find` 带 `-print0` 选项使用；如 `find . -name '*.backup' -print0 | xargs -0 rm -v`
-- `-E <eofstr>`: 指定逻辑EOF
-- `-n <number>`: 指定每次执行程序使用的参数个数；如 `echo 1 2 3 | xargs -n 1 echo`
-- `-J <placeholder>`: 通过使用占位符，把输入整体作为一个参数（不进行切割）传入指定位置；如 `ls -1d [A-Z]* | xargs -J % cp -rp % destdir`
-- `-I <placeholder>`: 通过使用占位符，自定义每个参数位置；如 `ls | xargs -I _ echo _ is a filename`
-- `-R <holder_count>`: 指定 `-I` 选项执行替换的最大次数
-- `-P <maxprocs>`: 指定程序最大并行数量；
-- `-s <bytes>`: 指定程序命令行的最大字节数；
-- `-o`: 在程序执行之前将输入重新用 */dev/tty* 打开，对执行的是交互式程序会很有用；如 `echo console.log('hello!') | xargs -o node`
-- `-t`: 在每次执行程序前打印命令；
-- `-p`: 在每次执行程序前打印命令并询问是否执行；
+## setbuf
 
-- 删除文件：`find . -name '*.backup' -print0 | xargs -0 rm -v`
+## script
 
-# 文本处理
+# 文本
 
 ## tr
 
@@ -278,9 +353,62 @@ The `expr` utility evaluates expression and writes the result on standard output
           xdigit       <hexadecimal characters>
 ```
 
+
+## expand
+
+> 将制表符转换成空格（expand tabs to spaces）
+
+- `-t tab1,tab2,...`，指定第n个tab代表的字符宽度
 ## wc
 
 > *Word Count*：统计字节 `wc -c`、字符 `wc -m`、单词 `wc -w`、行 `wc -l` 等。
+
+## cat
+
+> 打印文件（concatenate and print files）。可以读取多个文件并按顺序连接，可以用`-`显式指代stdin
+
+- `-n`，显示行号
+- `-b`，显示行号，但跳过空行
+- `-s`，连续空行只显示一行
+- `-v`，显示不可打印字符
+- `-e`，显示不可打印字符，并在行尾显示`$`符号
+- `-t`，显示不可打印字符，并将制表符显示为`^I`
+
+```bash
+# 顺序打印多个文件
+cat file1 file2 file3
+```
+
+## less
+
+> 分页打印文件
+
+- `-N`，显示行号
+- `-s`，连续空行显示为一行
+- `-x <N>`，制表符显示为空格
+- `-o <file>`，输出保存到文件
+- `-i`，搜索时忽略大小写
+- `-m`，显示读取进度百分比
+- `-bn, --buffer=n`，指定缓冲区大小
+- `-E, --QUIT-AT-EOF`，在第一次到达文件末尾自动退出
+- `-e, --quit-at-eof`，在第二次到达文件末尾自动退出
+- `-F, --quit-if-one-screen`
+- `-g, --hilite-search`，只高亮最后一次搜索结果（默认高亮所有匹配结果）
+- `-G, --HILITE-SEARCH`，关闭搜索高亮
+
+## pr
+
+> 按标准打印格式输出文件（printing and pagination filter for text files.）
+
+- `+page`，指定打印的起始页面
+- `-column`，指定每页栏目数
+- `-l lines`，指定每页行数，默认以66行为一页
+- `-h header`，指定页面标题，默认为文件名
+- `-o offset`，指定每行缩进空格数
+- `-n`，显示行号
+- `-F`，使用换页符（默认为多个空白行）来分隔页面
+
+## vis
 
 ## head
 
@@ -295,7 +423,14 @@ The `expr` utility evaluates expression and writes the result on standard output
 
 ## uniq
 
-> 重复行去重。(*report or filter out repeated lines in a file*)
+> 去除相邻的重复行。(*report or filter out repeated lines in a file*)
+
+- `-i`，忽略大小写
+- `-d`，只打印被去掉的行
+- `-u`，只打印未重复的行
+- `-c`，在行头打印重复次数
+- `-f {num}`，做比较时，忽略行的前num个字段（以空白分割）
+- `-s {chars}`，做比较时，忽略行的前chars个字符
 
 ## sort
 
@@ -305,36 +440,34 @@ The `expr` utility evaluates expression and writes the result on standard output
 - `-s`, 稳定排序，即保持重复行的原始顺序；
 - `-m/--merge`: 只合并；
 
+## split
+
+> 将文件切分成多个文件（split a file into pieces）
+
+- `-b byte_count[k|m]`，以文件大小设定切分大小
+- `-l line_count`，以文件行数设定切分大小
+
 ## cut
 
-> 获取输入文本的行段，字节 `cut -b`、字符 `cut -c`。
+> 获取行的部分（cut out selected portions of each line of a file）
 
-cut out selected portions of each line of a file.
+- `-c list`，指定获取的字符位置，如`-b 1-16,26-38`
+- `-b list`，指定获取的字节位置
+- `-d delimiter`，使用分割符切分字段，默认是制表符
+- `-f`，指定使用切割符切割所要保留的字段序号，如`-f 1,3`、`-f1-3`、`-f1-3,6-12`
+- `-s`，忽略输出未经切分过的行
+- `-n`，不切分多字节字符（通过`-b`获取时）
 
-- `-d`，指定行段的分隔符，默认是制表符。
-- `-f`，指定保留的行段序号，多个行段由逗号分隔。
+## col
 
-## column
+## join
 
-> The column utility formats its input into multiple columns.
+## paste
 
-```bash
-echo "
-dkbm:oqyr:qyodd
-lzgv:ortz:zyvf
-" | cut -d : -f 1,3
-# dkbm:qyodd
-# lzgv:zyvf
-```
+> 将多个文件合并为一个文件，默认合并方式为各文件相同行号行合并为一行（merge corresponding or subsequent lines of files）
 
-## less
-
-> 交互式阅读文件，可以搜索、翻页等
-
-- 显示行号：`-N`
-- 连续空行显示为一行：`-s`
-- *tab*显示为空格：`-x <N>`
-- 输出保存到文件：`-o <file>`
+- `-s`，指定合并方式为将每个文件自身合并为一行
+- `-d d1,d2,...`，指定行间合并的分隔符，默认为`\t`
 
 ## sed
 
@@ -380,10 +513,57 @@ sed
 > The `ed` utility is a line-oriented text editor. It is used to create, display, modify and otherwise manipulate text files.
 > ( `red` )
 
-## grep
+# 进程
 
-> The `grep` utility searches any given input files, selecting lines that match one or more patterns.
-> ( `egrep`, `fgrep`, `zgrep`, `zegrep`, `zfgrep` )
+## ps
+
+> *process status*
+
+- `-c`: *command* 列只显示进程的可执行文件，而不是进程启动的完整命令
+- `-d`: 只显示当前会话（用户）启动的进程
+
+- 通过*grep*筛选时不显示*grep*进程本身：`ps aux | grep [n]ginx`, `ps aux | grep nginx | grep -v grep`
+
+## pgrep
+
+> *pgrep, pkill -- find or signal processes by name*
+> 通过进程名称搜索进程，并返回进程ID（*pid*）；或向进程发送信号（*signal*）。
+
+- `<porcess_name>`
+- `-f`: 匹配完整命令（包括参数），如 `pgrep -f 'nginx -c nginx.s1.conf`
+- `-a`: 包含祖先进程
+- `-n`: 只显示最近启动的
+- `-o`: 只显示最早启动的
+- `-v`: 返回未匹配到的
+- `-x`: 需要精确匹配，默认是模糊匹配（*substring*）
+- `-d <delim>`: 指定进程ID的分隔符，默认是换行符
+- `-F <piffile>`: 只搜索pid存在指定文件中的进程
+- `-P <ppid>`: 指定父进程ID（*ppid*）
+- `-u <uid>`: 指定用户ID（*uid*），如 `pgrep -u root nginx`
+
+## pkill
+
+> 向进程发送信号（`kill` 需要知道 *pid*），与`pgrep`部分参数相同。
+
+- `-signal <signal>`: 向进程发送信号
+
+## kill
+
+> *terminate or signal a/some process*，通过 *pid* 向进程发送信号。
+
+- `-signal_name, -s <signal_name>`: 如 `kill -s KILL <pid>`, `kill -KILL <pid>`
+- `-signal_number`: 如 `kill -9 <pid>`
+
+一些信号：
+
+1  HUP (hang up)
+2  INT (interrupt)
+3  QUIT (quit)
+6  ABRT (abort)
+9  KILL (non-catchable, non-ignorable kill)
+14 ALRM (alarm clock)
+15 TERM (software termination signal)
+
 
 <!-- lsvfs(1), quota(1), fstatfs(2), getfsstat(2), statfs(2), getmntinfo(3), compat(5), fstab(5), mount(8), quot(8) -->
 # 硬盘
@@ -399,48 +579,6 @@ sed
 ## quota
 
 > display disk usage and limits
-
-# 文件系统
-
-<!-- file(1), ls(1), lstat(2), readlink(2), stat(2), printf(3), strftime(3) -->
-
-## stat
-
-> display file status. Read, write or execute permissions of the named file are not required, but all directories listed in the path name leading to the file must be searchable.
-
-## readlink
-
-> same as `stat`, but only for the target of the symbolic link.
-
-## file
-
-> determine file type.
-
-## ls
-
-> list directory contents.
-
-- `-a`：包含名称以`.`开始的文件
-- `-l`：长结果
-- `-1`：每项独占一行
-- `-i`：显示inode
-- `-r`: 反向排序
-- `-R`: 递归子目录
-- `-S`：按文件大小排序
-- `-t`：时间排序（默认为修改时间）
-- `-T`：显示完整时间
-- `-u`：用文件访问时间替代修改时间
-- `-U`：用文件创建时间替代修改时间
-- `-c`：用文件上次改变时间替代修改时间
-- `-p`：在目录结尾显示斜杠`/`
-- `-P`：显示软链接，而非其链接的文件
-- `-n`：显示用户ID，而非名字
-- `-F`：在项目后添加额外符号：文件夹`/`、可执行文件`*`、符号链接`@`、Socket`=`、whiteout`%`、FIFO`|`
-- `-w`：强制显示不可打印字符原始值
-
-## lsof
-
-> list open files.
 
 # 进程
 
@@ -459,14 +597,6 @@ sed
 ## kill
 
 > terminate or signal a process.
-
-## uptime
-
-> The uptime utility displays the current time, the length of time the system has been up, the number of users, and the load average of the system over the last 1, 5, and 15 minutes.
-
-## iostat
-
-> report I/O statistics.
 
 # 网络
 
@@ -501,37 +631,6 @@ sed
 ## ndp
 
 > control/diagnose IPv6 neighbor discovery protocol.
-
-# 用户
-
-## w
-
-> display who is logged in and what they are doing.
-
-## who, whoami
-
-> display who is logged in.
-
-## users
-
-> list current users.
-
-## finger
-
-> The finger utility displays information about the system users.
-
-## last
-
-> list the sessions of specified users, ttys, and hosts, in reverse time order.
-
-# 格式化
-
-## strftime
-
-> format date and time.
-
-# 网络工具
-
 ## wget
 
 - `-p`, `--page-requisites`: 把用于显示页面的必要的静态文件也下载，如js/css/图片/音频/视频等
@@ -567,55 +666,17 @@ sed
 - 下载文件并以url中的文件名存储：`curl https://xxx -O`
 - 下载文件并以header中指定的文件名存储：`curl https://xxx -J`
 
-## lsof
+# 格式化
 
-# 进程
+## column
 
-## ps
+> formats its input into multiple columns.
 
-> *process status*
+- `-x`: 优先填充列，默认优先填充行
+- `-s sep1,sep2,...`，指定分隔符，默认是空格
+- `-c columns`，指定行最大字符数
+- `-t`，显示为表格，默认以空格为分隔符，可通过`-s`指定字段分割符
 
-- `-c`: *command* 列只显示进程的可执行文件，而不是进程启动的完整命令
-- `-d`: 只显示当前会话（用户）启动的进程
+## strftime
 
-- 通过*grep*筛选时不显示*grep*进程本身：`ps aux | grep [n]ginx`, `ps aux | grep nginx | grep -v grep`
-
-## pgrep
-
-> *pgrep, pkill -- find or signal processes by name*
-> 通过进程名称搜索进程，并返回进程ID（*pid*）；或向进程发送信号（*signal*）。
-
-- `<porcess_name>`
-- `-f`: 匹配完整命令（包括参数），如 `pgrep -f 'nginx -c nginx.s1.conf`
-- `-a`: 包含祖先进程
-- `-n`: 只显示最近启动的
-- `-o`: 只显示最早启动的
-- `-v`: 返回未匹配到的
-- `-x`: 需要精确匹配，默认是模糊匹配（*substring*）
-- `-d <delim>`: 设置进程ID的分隔符，默认是换行符
-- `-F <piffile>`: 只搜索pid存在指定文件中的进程
-- `-P <ppid>`: 指定父进程ID（*ppid*）
-- `-u <uid>`: 指定用户ID（*uid*），如 `pgrep -u root nginx`
-
-## pkill
-
-> 向进程发送信号（`kill` 需要知道 *pid*），与`pgrep`部分参数相同。
-
-- `-signal <signal>`: 向进程发送信号
-
-## kill
-
-> *terminate or signal a/some process*，通过 *pid* 向进程发送信号。
-
-- `-signal_name, -s <signal_name>`: 如 `kill -s KILL <pid>`, `kill -KILL <pid>`
-- `-signal_number`: 如 `kill -9 <pid>`
-
-一些信号：
-
-1  HUP (hang up)
-2  INT (interrupt)
-3  QUIT (quit)
-6  ABRT (abort)
-9  KILL (non-catchable, non-ignorable kill)
-14 ALRM (alarm clock)
-15 TERM (software termination signal)
+> format date and time.

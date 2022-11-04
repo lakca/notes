@@ -12,6 +12,61 @@ date: 2020-08-27T09:42:26.913Z
 
 ## 命令
 
+### 调用系统脚本
+
+> [`osascript`](https://ss64.com/osx/osascript.html): execute OSA scripts (AppleScript, JavaScript, etc.)
+
+```bash
+osascript -e <script> [-l <language>]
+```
+
+OSX10.4以下使用的是MacRoman编码，unicode需要额外备注:
+
+```bash
+script='display notification ("您好" as unicode text)'
+osascript -e $script
+```
+
+[AppleScript快速入门](https://juejin.cn/post/7055599089081122829)
+
+#### 常见命令
+
+```bash
+# 右上角通知
+# https://developer.apple.com/library/archive/documentation/LanguagesUtilities/Conceptual/MacAutomationScriptingGuide/DisplayNotifications.html
+display notification "hello world!"
+  with title "Greet"
+  subtitle "Everyone"
+  sound name "Frog"
+# 弹窗
+display alert "Alert"
+  message "Hello, ..."
+  as critical
+  buttons {"Don't Continue", "Continue"}
+  default button "Continue"
+  cancel button "Don't Continue"
+display dialog "Dialog"
+  buttons {"Don't Continue", "Continue"}
+  default button "Continue"
+  cancel button "Don't Continue"
+  with icon caution
+  giving up after 5 # 5秒后自动关闭
+# 打开Safari
+tell app "Safari" to activate
+# 关闭Safari
+quit app "safari.app"
+# 调整音量
+set volume input volume 40
+set volume output volume 50
+set volume output muted TRUE
+set volume output muted not (output muted of (get volume settings))
+# 直接关机、重启
+tell app "System Events" to shut down
+tell app "System Events" to restart
+# 延时
+delay 0.5 # 秒
+```
+
 ### 管理服务和进程：launchctl
 
 > `launchd`: System wide and per-user daemon/agent manager.
