@@ -73,13 +73,13 @@ sed是从输入流循环地读取一行处理一轮的，当需要同时处理�
 
 - `y/<src>/<dst>/`: 使用`<dst>`中的字符一一替换遇到的`<src>`中的字符
 
-- `a\<text>`（*append*）: 向行后追加内容`<text>`
+- `a\<NL><text>`（*append*）: 向行尾（即换行符后）追加内容`<text>`。其中`<NL>`表示换行符，另外，GNU扩展可以省略`\<NL>`。
 
-  - 如：`1a\hello\nworld`，在第一行后面追加`hello`和`world`两行
+  - 如：`'1a\'$'\n''hello world'$'\n'`，在第一行尾追加一行`hello world`
 
-- `i\<text>`（*insert*）: 向行前追加内容`<text>`
+- `i\<NL><text>`（*insert*）: 向行首追加内容`<text>`
 
-- `c\<text>`（*change*）: 更改行内容
+- `c\<NL><text>`（*change*）: 更改行内容
 
 - `r <filename>`（*read*）: 向行后追加`<filename>`的内容
 

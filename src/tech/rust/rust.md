@@ -66,16 +66,16 @@ date: 2021-04-19T11:13:31.973Z
 
 # 准备
 
- ## 工具
+## 工具
 
 - [Rust Search Extension](https://rust.extension.sh/)：在浏览器中搜索*Rust*文档、库等的终极解决方案，强烈建议安装。
 
 ## 查阅
 
-### 文档
+### 官方文档
 
-[Learn Rust](https://www.rust-lang.org/learn)
 
+- Rust 学习：[Learn Rust](https://www.rust-lang.org/learn)
 - Rust 教程（*The Book*）：[The Rust Programming Language](https://doc.rust-lang.org/book/)，[中文翻译](https://kaisery.github.io/trpl-zh-cn/)
 - Rust 实例教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
 - Rust 练习式教程（*Rustlings*）：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)
@@ -86,20 +86,24 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 语言术语：[Glossary](https://doc.rust-lang.org/reference/glossary.html)
 - Rust 编译器：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
 - Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- Rust 异步编程：[Asynchronous Programming in Rust](https://rust-lang.github.io/async-book)
 - Rust 语言版本：[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)
-- 如何用 Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
-- 如何用 Rust 和 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
-- 如何用 Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
-- 如何设计 Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines/#rust-api-guidelines)
+- Rust 编程风格：[Rust Style Guidelines](https://doc.rust-lang.org/1.6.0/style/README.html)
+- Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines)
 - Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
 - Rust 社区仓库文档：[documentation host for crates](https://docs.rs/)
 - Rust 仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
 - Rust 编译错误查询文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
+- Rust 非稳定功能：[The Rust Unstable Book](https://doc.rust-lang.org/stable/unstable-book/)
+- Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
+- Rust 和 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
+- Rust 和 WebAssembly：[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
+- Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
+- 如何设计 Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines/#rust-api-guidelines)
 - Cargo：[The Cargo Book](http://localhost/rust/cargo/index.html#the-cargo-book)
 - Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)
-- Rust 和 WebAssembly：[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
 
-### 非官方
+### 其他文档
 
 - [Rust 官方文档中文教程](https://rustwiki.org/)
   - [Rust 程序设计语言](https://rustwiki.org/zh-CN/book)
@@ -115,21 +119,25 @@ date: 2021-04-19T11:13:31.973Z
   - [Rust 编译错误索引表](https://rustwiki.org/zh-CN/error-index)
   - [Rust 规范文档](https://rustwiki.org/wiki)
   - [Rust 语言术语中英文对照表](https://rustwiki.org/wiki/translate/english-chinese-glossary-of-rust)
-- [给初学者的Rust中文教程](https://rustcc.gitbooks.io/rustprimer)
-- [The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html), [Rust宏小册 中文版](https://www.bookstack.cn/read/DaseinPhaos-tlborm-chinese/README.md)
+- Rust 模糊测试：[Rust Fuzz Book](https://rust-fuzz.github.io/book/)
+- Rust 性能手册：[The Rust Performance Book](https://nnethercote.github.io/perf-book/title-page.html)
+- Rust 宏小册：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
+- Rust 宏小册 中文版：[Rust宏小册 中文版](https://www.bookstack.cn/read/DaseinPhaos-tlborm-chinese/README.md)
+- Rust 课程：[Rust Course](https://course.rs)
 
-### 常见速查
+### 常用指南
 
-- [Operators and Symbols](https://doc.rust-lang.org/book/appendix-02-operators.html#appendix-b-operators-and-symbols)
-- [Keywords](https://doc.rust-lang.org/book/appendix-01-keywords.html#appendix-a-keywords)
-- [Derivable Traits](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html#appendix-c-derivable-traits)
-- 交叉编译：[Cross-compilation](https://rust-lang.github.io/rustup/cross-compilation.html#cross-compilation)
-- [Rustc command-line arguments](http://localhost/rust/rustc/command-line-arguments.html#command-line-arguments)
-- [Specifying Dependencies](http://localhost/rust/cargo/reference/specifying-dependencies.html#specifying-dependencies)
-- 链接库：[Linkage](https://doc.rust-lang.org/reference/linkage.html#linkage)
-- 开发工具：[Useful Development Tools](https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html#appendix-d---useful-development-tools)
-- 自动升级项目语言版本：[Transitioning an existing project to a new edition](https://doc.rust-lang.org/edition-guide/editions/transitioning-an-existing-project-to-a-new-edition.html#transitioning-an-existing-project-to-a-new-edition)，[Advanced migration strategies](https://doc.rust-lang.org/edition-guide/editions/advanced-migrations.html#advanced-migration-strategies)
-- 替换crate源：[Crates Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html#source-replacement)
+- 操作符和符号：[Operators and Symbols](https://doc.rust-lang.org/book/appendix-02-operators.html)
+- 关键词：[Keywords](https://doc.rust-lang.org/book/appendix-01-keywords.html)
+- 派生特征：[Derivable Traits](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html)
+- 交叉编译：[Cross-compilation](https://rust-lang.github.io/rustup/cross-compilation.html)
+- 命令参数：[Rustc command-line arguments](http://localhost/rust/rustc/command-line-arguments.html)
+- 引入依赖：[Specifying Dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html)
+- 工作空间：[Workspaces](https://doc.rust-lang.org/stable/cargo/reference/workspaces.html)
+- 链接库：[Linkage](https://doc.rust-lang.org/reference/linkage.html)
+- 开发工具：[Useful Development Tools](https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html)
+- 自动升级项目语言版本：[Transitioning an existing project to a new edition](https://doc.rust-lang.org/edition-guide/editions/transitioning-an-existing-project-to-a-new-edition.html#transitioning-an-existing-project-to-a-new-edition)，[Advanced migration strategies](https://doc.rust-lang.org/edition-guide/editions/advanced-migrations.html)
+- 替换crate源：[Crates Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html)
 
 ## 语言周边
 
@@ -674,7 +682,7 @@ rustup toolchain link my-toolchain path/to/my-toolchain
 
 - 配置名称：`#[cfg(unix)]`
 - 配置键值对：`#[cfg(target_arch="x86_64")]`
-- 配置断言：`#[cfg(any(foo, bar)]`、`#[cfg(all(unix, target_pointer_width = "32"))]
+- 配置断言：`#[cfg(any(foo, bar)]`、`#[cfg(all(unix, target_pointer_width = "32"))]`
 
 #### 添加属性
 
@@ -1750,7 +1758,7 @@ let x = {
 
 ## 控制流程
 
- ### `if`
+### `if`
 
 - 条件的类型必须为 `bool` ；
 

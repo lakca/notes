@@ -6,13 +6,18 @@ date: 2020-08-27T09:42:26.913Z
 
 # MAC OS
 
-## 目录
+## 一些目录
 
-- 应用配置（Preferences）：`~/Library/Preferences`
+| 目录             | 描述                     | `/System/Library/` | `/Library/` | `~/Library/` |
+| ---------------- | ------------------------ | ------------------ | ----------- | ------------ |
+| `Preferences/`   | 存放应用的配置文件       | Y                  | Y           | Y            |
+| `LaunchDaemons/` | 存放系统级进程的配置文件 | Y                  | Y           |              |
+| `LaunchAgents/`  | 存放用户级进程的配置文件 | Y                  | Y           | Y            |
+| `StartupItems/`  | 存放启动项的配置文件     | Y                  | Y           |              |
 
 ## 命令
 
-### 调用系统脚本
+### 调用系统脚本：osascript
 
 > [`osascript`](https://ss64.com/osx/osascript.html): execute OSA scripts (AppleScript, JavaScript, etc.)
 
@@ -67,7 +72,11 @@ tell app "System Events" to restart
 delay 0.5 # 秒
 ```
 
-### 管理服务和进程：launchctl
+#### 获取软件的ID
+
+`osascript -e 'id of app "Visual Studio Code"'`
+
+### 管理进程：launchctl
 
 > `launchd`: System wide and per-user daemon/agent manager.
 
@@ -88,15 +97,21 @@ kernel[OS Kernel]
 	---> ...((""))
 ```
 
-`daemon`: 系统级进程，在系统启动时载入，在活动监视器中可以看到用户为*root*。
+```bash
+# 列出用户进程状态
+launchctl list
+# 列出系统进程状态
+sudo launchctl list
+```
 
-`agent`: 用户级进程，在用户登录时载入，在活动监视器中可以看到用户为当前用户（`whoami`）。
+#### daemon和agent
 
-#### launchd.plist
+- `daemon`: 系统级进程，在系统启动时载入，在活动监视器中可以看到用户为*root*。
+- `agent`: 用户级进程，在用户登录时载入，在活动监视器中可以看到用户为当前用户（`whoami`）。
 
-> *launchd.plist*是*daemon*和*agent*任务的服务配置文件。
+[LaunchAgents与LaunchDaemon](https://www.wuliaole.com/2017/02/19/launchagents_and_launchdaemon_on_mac_osx/)
 
-关于*plist*，可以查看`man plist`, `man launchd.plist`。
+#### 进程配置文件
 
 ```bash
 # 系统自带的系统级进程配置文件
@@ -105,15 +120,19 @@ kernel[OS Kernel]
 /System/Library/LaunchAgents
 # 系统自带的进程间通信进程配置文件
 /System/Library/xpc
-# 第三方（Administrator）提供的系统级进程配置文件
+# 管理员提供的（如安装软件）系统级进程配置文件
 /Library/LaunchDaemons
-# 第三方（Administrator）提供的用户级进程配置文件
+# 管理员提供的用户级进程配置文件
 /Library/LaunchAgents
-# 当前登录用户的用户级进程配置文件
+# 当前登录用户自己的进程配置文件
 ~/Library/LaunchAgents
 ```
 
-[LaunchAgents与LaunchDaemon](https://www.wuliaole.com/2017/02/19/launchagents_and_launchdaemon_on_mac_osx/)
+### 软件配置文件：plist
+
+> *launchd.plist*是*daemon*和*agent*任务的服务配置文件。
+
+关于*plist*，可以查看`man plist`, `man launchd.plist`。
 
 ### 管理内核状态：sysctl
 
@@ -387,6 +406,22 @@ plutil -replace RunAtLoad -bool NO /Library/LaunchAgents/com.microsoft.update.ag
 - [Launchd，如何在Mac上运行服务](https://yishanhe.net/dive-into-launchd/)
 - [launchd.info](https://www.launchd.info/)
 
+### Xcode Command Line Tools
+
+> [Xcode Command Line Tools](https://mac.install.guide/commandlinetools/index.html)：将Xcode的底层功能提供到命令行中，以便脚本脚用和喜欢命令行操作的开发者。
+
+工具目录：
+
+```bash
+ls /Library/Developer/CommandLineTools/usr/bin/
+```
+
+安装：
+
+```bash
+xcode-select --install
+```
+
 ## 技巧
 
 ### 关闭流氓进程
@@ -429,4 +464,30 @@ plutil -remove StartInterval /Library/LaunchAgents/com.microsoft.update.agent.pl
 plutil -replace RunAtLoad -bool NO /Library/LaunchAgents/com.microsoft.update.agent.plist
 # 让系统加载最新的配置
 launchctl load /Library/LaunchAgents/com.microsoft.update.agent.plist
+```
+
+### 通过命令设置文件的默认打开软件
+
+参考：[Set vscode as the default editor for text files on mac](https://www.darraghoriordan.com/2021/09/15/vscode-default-text-files-mac/)
+
+1. 先安装`duti`：
+
+```bash
+brew install duti
+```
+
+2. 设置vscode为默认打开软件
+
+2.1 获取vscode的软件ID（*bundle ID*）
+
+```bash
+osascript -e 'id of app "Code"'
+# 打印: com.microsoft.VSCode
+```
+
+```bash
+while read -d ' ' line; do
+  # program=$(duti -x $line 2>/dev/null | head -1)
+  [[ $line ]] && duti -s com.microsoft.VSCode $line all
+done <<< '.c .cpp .cs .css .go .java .js .sass .scss .less .vue .cfg .json .jsx .log .lua .md .php .pl .py .rb .rs .ts .tsx .txt .conf .yaml .yml .toml'
 ```

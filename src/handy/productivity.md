@@ -65,6 +65,10 @@ date: 2020-09-08T08:54:35.938Z
 
 > [you-get](https://github.com/soimort/you-get): Command-line utility to download media contents (videos, audios, images) from the Web. [Supported Sites](https://github.com/soimort/you-get#supported-sites)
 
+## duti（MAC设置默认程序）
+
+> [duti](https://github.com/moretension/duti): A command-line tool to select default applications for document types and URL schemes on Mac OS X
+
 ## zsh
 
 ### themes
