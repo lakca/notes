@@ -1,3 +1,4 @@
+// @ts-nocheck
 (function() {
 
   const TOUCH_SUPPORT = !!(window.DocumentTouch && document instanceof window.DocumentTouch || window.ontouchstart === null)
@@ -135,9 +136,6 @@
         .page-header .${this.ident('breadcrumb')} span {
           text-decoration: overline;
         }
-        .${this.ident('custom')} code {
-          color: #f72585;
-        }
         .${this.ident('menu')} {
           position: fixed;
           z-index: 999;
@@ -209,31 +207,38 @@
           outline: 1px solid slategrey;
           background-color: #159957;
         }
-        .${this.ident('anchor')} {
+        .${this.ident('bar')} {
           position: fixed;
+          display: flex;
           left: 0;
           bottom: 0;
-          width: 3rem;
-          height: 3rem;
-          line-height: 3rem;
-          font-size: 2rem;
+          height: 2rem;
+          line-height: 2rem;
+          font-size: 1.2rem;
           color: white;
           text-align: center;
-          background: #157c74;
-          border-radius: 50%;
           z-index: 999999;
           cursor: pointer;
           transition: .3s;
           user-select: none;
+          border: solid 1px gray;
+          box-shadow: 0 0 2px gray;
+          color: gray;
+          background: white;
+          border-radius: 0 5px 5px 0;
         }
-        .${this.ident('anchor')}:hover {
-          box-shadow: 0 0 22px #157c74;
+        .${this.ident('bar')} div {
+          width: 2rem;
+          border-right: solid 1px gray;
         }
-        .${this.ident('anchor')}:before {
-          content: "S";
+        .${this.ident('bar')} div:hover {
+          box-shadow: inset 0 0 5px gray;
         }
-        .${this.ident('custom')}.${this.ident('closed')} .${this.ident('anchor')}:before {
-          content: "O";
+        .${this.ident('bar')} [data-btn=switch]:before {
+          content: "关";
+        }
+        .${this.ident('custom')}.${this.ident('closed')} .${this.ident('bar')} [data-btn=switch]:before {
+          content: "开";
         }
         .${this.ident('menu')} .${this.ident('handle')} {
           display: inline-block;
@@ -244,20 +249,16 @@
           border-color: transparent transparent transparent lightgray;
           cursor: pointer;
           transform-origin: center;
+          transform: rotate(90deg);
           transition: .2s;
         }
-        .${this.ident('menu')} .${this.ident('handle')}.${this.ident('active')} {
-          transform: rotate(90deg);
-        }
-        .${this.ident('menu')} .${this.ident('handle')} ~ ul {
+        .${this.ident('menu')} li.${this.ident('close')} > ul {
           height: 0;
           margin: 0;
           overflow: hidden;
         }
-        .${this.ident('menu')} .${this.ident('handle')}.${this.ident('active')} ~ ul {
-          height: auto;
-          margin: 0.5em;
-          overflow: visible;
+        .${this.ident('menu')} li.${this.ident('close')} > .${this.ident('handle')} {
+          transform: rotate(0);
         }
       `
     },
@@ -282,10 +283,34 @@
       el(this.menu).style('left')
       el(document.body).class('-' + this.ident('closed'))
     },
+    clickBar(e) {
+      const btn = e.target.getAttribute('data-btn')
+      switch (btn) {
+        case 'switch':
+          this.toggle()
+          break
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+          for (const ul of this.menu.querySelectorAll('ul')) {
+            const lv = ul.getAttribute('data-lv')
+            if (lv > btn) {
+              ul.parentElement.classList.add(this.ident('close'))
+            } else {
+              ul.parentElement.classList.remove(this.ident('close'))
+            }
+          }
+          break
+        default:
+      }
+    },
     onClickMenu(evt) {
       const classes = evt.target.classList
       if (classes.contains(this.ident('handle'))) {
-        classes.toggle(this.ident('active'))
+        evt.target.parentElement.classList.toggle(this.ident('close'))
       }
     },
     mountStyle() {
@@ -329,7 +354,7 @@
         let end = chain.length - 1
         while (end > start) {
           closeLast(end)
-          closeLast(end - 1, `<ul class="${it.ident('h' + end)}">${chain[end].join('')}</ul>`)
+          closeLast(end - 1, `<ul data-lv="${end}" class="${it.ident('h' + end)}">${chain[end].join('')}</ul>`)
           end > 1 && chain.pop()
           end--
         }
@@ -347,12 +372,16 @@
 
         indexes[lv - 1] = 1 + (indexes[lv - 1] || 0)
         if (plv > lv) indexes.length = lv
-        const span = document.createElement('a')
-        span.textContent = indexes.join('.') + '. '
-        span.href = '#' + h.id
-        h.insertBefore(span, h.childNodes[0])
+        const id = indexes.join('.')
 
-        const html = [`<li>`, `<a href="#${h.id}">${h.innerHTML}</a>`, '</li>']
+        const html = [`<li>`, `<a data-id="${id}" href="#${h.id}">${id} <span style="color:#121212">${h.innerHTML}</span></a>`, '</li>']
+
+        const span = document.createElement('a')
+        span.textContent = id + '. '
+        span.href = '#' + h.id
+        span.setAttribute('data-id', id)
+        span.setAttribute('style', 'font-style:italic;font-size:0.9em;')
+        h.insertBefore(span, h.childNodes[0])
 
         if (plv === lv) {
           closeLast(lv)
@@ -450,22 +479,31 @@
         }
       })
     },
-    mountAnchor() {
+    mountBar() {
       if (TOUCH_SUPPORT) return
-      const anchor = el()
-      .class(this.ident('anchor'))
-      .on('click', () => this.toggle())
+      const bar = el()
+      .class(this.ident('bar'))
+      .html(`
+        <div data-btn="switch"></div>
+        <div data-btn="1">I</div>
+        <div data-btn="2">II</div>
+        <div data-btn="3">III</div>
+        <div data-btn="4">IV</div>
+        <div data-btn="5">V</div>
+        <div data-btn="6">VI</div>
+      `)
+      .on('click', e => this.clickBar(e))
       .mount(document.body)
       .el
 
-      anchor.draggable = true
+      bar.draggable = true
 
-      ondrag(anchor, {
+      ondrag(bar, {
         onend(drag) {
           const h = document.documentElement.clientHeight
-          const ah = anchor.offsetHeight
+          const ah = bar.offsetHeight
           const y = Math.min(Math.max(drag.move.y, ah), h)
-          el(anchor).style('bottom', 100 * (h - y) / h + '%')
+          el(bar).style('bottom', 100 * (h - y) / h + '%')
         }
       })
     },
@@ -478,7 +516,7 @@
         const isCatalog = window.location.pathname[window.location.pathname.length-1] === '/'
         if (!isCatalog) {
           this.mountMenu()
-          this.mountAnchor()
+          this.mountBar()
         }
         return this._mounted = true
       } return false
@@ -494,10 +532,13 @@
       }
     }
   })
+
+  window.requestAnimationFrame(() => {
+
+  })
 }())
 
 ;(function() {
-  // @ts-ignore
   function initMermaid() {
     window.mermaid.initialize({
       startOnLoad: true,
