@@ -341,9 +341,19 @@
           skip--
         }
       }
+      const indexes = []
       for (const h of headers) {
         const lv = +h.tagName[1]
+
+        indexes[lv - 1] = 1 + (indexes[lv - 1] || 0)
+        if (plv > lv) indexes.length = lv
+        const span = document.createElement('a')
+        span.textContent = indexes.join('.') + '. '
+        span.href = '#' + h.id
+        h.insertBefore(span, h.childNodes[0])
+
         const html = [`<li>`, `<a href="#${h.id}">${h.innerHTML}</a>`, '</li>']
+
         if (plv === lv) {
           closeLast(lv)
           chain[lv].push(html)
@@ -354,6 +364,7 @@
           close(lv)
           chain[lv].push(html)
         }
+
         plv = lv
       }
       close()

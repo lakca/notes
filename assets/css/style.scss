@@ -13,21 +13,35 @@
     word-break: break-word;
   }
   h1,h2,h3,h4,h5,h6 {
-    font-family: Baskerville, Adobe KaiTi Std, KaiTi, 楷体, PingFang SC, Microsoft YaHei; 
+    font-family: Baskerville, Adobe KaiTi Std, KaiTi, Kai, 楷体, PingFang SC, Microsoft YaHei;
+  }
+  pre>code {
+    // font-family: Fira Code, Menlo, Consolas, DejaVu Sans Mono, Courier, KAdobe KaiTi Std, aiTi, Kai, 楷体;
+    color: #000000;
+    font-size: 0.8em;
   }
   code {
-    font-family: Fira Code, Menlo, Consolas, DejaVu Sans Mono, Courier, KAdobe KaiTi Std, aiTi, 楷体;
-    font-size: 0.8rem;
+    // font-family: Fira Code, Menlo, Consolas, DejaVu Sans Mono, Courier, KAdobe KaiTi Std, aiTi, Kai, 楷体;
+    font-size: 0.8em;
+    color: #f93d93;
+    margin: 0 5px;
   }
-  blockquote {
-    color: #242424;
+  em {
+    font-size: 0.9em;
+    margin: 0 2px;
+    font-family: Kai, 楷体, Times New Roman, PingFang SC, Microsoft YaHei;
   }
-  color: #121212;
+  a {
+    color: #006bff;
+    margin: 0 2px;
+    font-family: Kai, 楷体, Times New Roman, PingFang SC, Microsoft YaHei;
+  }
+  color: #383838;
   font-size: 1rem;
 }
 body {
-  font-family: Times New Roman, PingFang SC, Microsoft YaHei; 
+  font-family: Times New Roman, PingFang SC, Microsoft YaHei,"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-a {
-  color: #006bff;
+html {
+  font-size: 15px;
 }
