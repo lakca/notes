@@ -1,47 +1,411 @@
----
----
-
-@import "{{ site.theme }}";
+--- --- @import "{{ site.theme }}";
 
 .catalog {
   li {
     list-style: none;
   }
 }
-.main-content {
+
+
+html {
+  font-size: 15px;
+
+  body {
+    font-family: Times New Roman, PingFang SC, Microsoft YaHei, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+
+  .main-content {
+    color: #383838;
+    font-size: 1rem;
+  }
+
   table {
     word-break: break-word;
   }
-  h1,h2,h3,h4,h5,h6 {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: Baskerville, Adobe KaiTi Std, KaiTi, Kai, 楷体, PingFang SC, Microsoft YaHei;
   }
+
+  // https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/token.rb
+  // https://github.com/rouge-ruby/rouge/wiki/List-of-tokens
+  .highlight {
+    border: none;
+    background-color: #282a36;
+    border-radius: .5em;
+
+    pre.highlight {
+      border: none;
+      padding: 1em 1.5em;
+      border-radius: .5em;
+      background-color: #282a36;
+
+      &>code {
+        color: #f8f8f2;
+      }
+    }
+
+    // Keyword
+    .k {
+      color: #ff79c6;
+      font-weight: normal;
+
+      // Declaration
+      &d {
+        color: #ff79c6;
+        font-weight: normal;
+      }
+
+      // Variable
+      &v {
+        color: #ff79c6;
+        font-weight: normal;
+      }
+
+      // Constant
+      &c {
+        color: #bd93f9;
+      }
+
+      // Namespace
+      &n {}
+
+      // Pseudo
+      &p {}
+
+      // Reserved
+      &r {}
+
+      // Type
+      &t {
+        color: #8be9fd;
+        font-weight: normal;
+      }
+    }
+
+    // Comment
+    .c {
+      color: #6272a4;
+
+      // Single
+      &1 {
+        color: #6272a4;
+      }
+
+      // Hashbang
+      &h {}
+
+      // Doc
+      &d {}
+
+      // Multiline
+      &m {}
+
+      // Preproc
+      &p {
+        color: #ff79c6;
+        font-weight: normal;
+      }
+
+      // PreprocFile
+      &pf {}
+
+      // Special
+      &s {}
+    }
+
+    // Number
+    .m {
+      color: #bd93f9;
+
+      // Bin
+      &b {
+        color: #bd93f9;
+      }
+
+      // Integer
+      &i {
+        color: #bd93f9;
+      }
+
+      // Float
+      &f {
+        color: #bd93f9;
+      }
+
+      // Hex
+      &h {
+        color: #bd93f9;
+      }
+
+      // Oct
+      &o {
+        color: #bd93f9;
+      }
+
+      // Other
+      &x {
+        color: #bd93f9;
+      }
+    }
+
+    // (Number) Long
+    .il {}
+
+    // Name
+    .n {
+      color: #f8f8f2;
+
+      // Attribute
+      &a {
+        color: #8be9fd;
+      }
+
+      // Builtin
+      &b {
+        color: #bd93f9;
+      }
+
+      // Class
+      &c {
+        color: #50fa7b;
+        font-weight: normal;
+      }
+
+      // Constant
+      &o {}
+
+      // Entity
+      &i {}
+
+      // Exception
+      &e {}
+
+      // decorator
+      &d {
+        color: #50fa7b;
+        font-weight: normal;
+      }
+
+      // Function
+      &f {
+        color: #50fa7b;
+        font-weight: normal;
+      }
+
+      // Label
+      &l {
+        color: #8be9fd;
+        font-weight: normal;
+      }
+
+      // Namespace
+      &n {
+        color: #8be9fd;
+        font-weight: normal;
+      }
+
+      // Tag
+      &t {}
+
+      // Variable
+      &v {
+        color: #f8f8f2;
+      }
+
+      // Other
+      &x {
+        color: #8be9fd;
+      }
+    }
+
+    // (Name Builtin) Pseudo
+    .bp {}
+
+    // (Name Function) Magic
+    .fm {}
+
+    // (Name) Property
+    .py {
+      color: #8be9fd;
+    }
+
+    // (Name Variable)
+    .v {
+
+      // Class
+      &c {}
+
+      // Global
+      &g {}
+
+      // Instance
+      &i {}
+
+      // Magic
+      &m {}
+    }
+
+    // Generic
+    .g {
+
+      // Deleted
+      &d {}
+
+      // Emph
+      &e {}
+
+      // Error
+      &r {}
+
+      // Heading
+      &h {}
+
+      // Inserted
+      &i {}
+
+      // Output
+      &o {}
+
+      // Prompt
+      &p {}
+
+      // Strong
+      &s {}
+
+      // Subheading
+      &u {}
+
+      // Traceback
+      &t {}
+
+      // Lineno
+      &l {}
+    }
+
+
+    // Operator
+    .o {
+      color: #ff79c6;
+
+      // Word
+      &w {}
+    }
+
+    // Punctuation
+    .p {
+      color: #f8f8f2;
+
+      // Indicator
+      &i {}
+    }
+
+    // String
+    .s {
+      color: #f1fa8c;
+
+      // Single
+      &1 {
+        color: #f1fa8c;
+      }
+
+      // Double
+      &2 {
+        color: #f1fa8c;
+      }
+
+      // Char
+      &c {
+        color: #f1fa8c;
+      }
+
+      // Regex
+      &r {
+        color: #8be9fd;
+      }
+
+      // Affix
+      &a {}
+
+      // Backtick
+      &b {}
+
+      // Doc
+      &d {}
+
+      // Escape
+      &e {}
+
+      // Heredoc
+      &h {}
+
+      // Interpol
+      &i {}
+
+      // Other
+      &x {}
+
+      // Symbol
+      &s {}
+    }
+
+    .d {
+
+      // Delimiter
+      &l {}
+    }
+
+    // Escape
+    .esc {}
+
+    // Error
+    .err {}
+
+    // Other
+    .x {}
+
+    // Whitespace
+    .w {}
+
+
+  }
+
   pre>code {
-    // font-family: Fira Code, Menlo, Consolas, DejaVu Sans Mono, Courier, KAdobe KaiTi Std, aiTi, Kai, 楷体;
+    font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
     color: #000000;
     font-size: 0.8em;
   }
+
   code {
-    // font-family: Fira Code, Menlo, Consolas, DejaVu Sans Mono, Courier, KAdobe KaiTi Std, aiTi, Kai, 楷体;
+    font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
     font-size: 0.8em;
     color: #f93d93;
     margin: 0 5px;
   }
+
   em {
-    font-size: 0.9em;
-    margin: 0 2px;
-    font-family: Kai, 楷体, Times New Roman, PingFang SC, Microsoft YaHei;
+    padding: 0 2px;
+    font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
   }
+
   a {
     color: #006bff;
-    margin: 0 2px;
-    font-family: Kai, 楷体, Times New Roman, PingFang SC, Microsoft YaHei;
+    padding: 0 2px;
+    transition: all 0.3s;
+    text-decoration: none;
+    font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
+
+    &:hover {
+      text-decoration: none;
+      border-radius: 0.1875em;
+      background: #006bff;
+      color: white;
+    }
   }
-  color: #383838;
-  font-size: 1rem;
-}
-body {
-  font-family: Times New Roman, PingFang SC, Microsoft YaHei,"Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-html {
-  font-size: 15px;
 }

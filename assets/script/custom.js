@@ -132,25 +132,7 @@
         }
         .page-header .${this.ident('breadcrumb')} a {
           color: white;
-        }
-        .page-header .${this.ident('breadcrumb')} span {
-          text-decoration: overline;
-        }
-        .${this.ident('menu')} {
-          position: fixed;
-          z-index: 999;
-          left: 0;
-          top: 0;
-          width: 25rem;
-          max-width: 90%;
-          border: solid 1em transparent;
-          margin: 0;
-          box-sizing: border-box;
-          overflow-y: scroll;
-          height: 100%;
-          background: white;
-          bax-shadow: 0 0 1px #999;
-          font-family: Times New Roman, Adobe Kaiti Std;
+          background: unset;
         }
         @media (min-width: 64rem) {
           .${this.ident('custom')}.${this.ident('has-menu')} {
@@ -175,9 +157,6 @@
         .${this.ident('custom')}.${this.ident('closed')} .${this.ident('menu')}{
           left: -30rem;
         }
-        .${this.ident('menu')}.${this.ident('transitionable')}  {
-          transition: left .3s;
-        }
         .${this.ident('h1')} {
           font-size: 1.2em;
         }
@@ -186,10 +165,27 @@
           font-size: .9em;
         }
         .${this.ident('menu')} {
-          padding-inline-start: 1em;
+          position: fixed;
+          z-index: 999;
+          left: 0;
+          top: 0;
+          width: 25rem;
+          max-width: 90%;
+          border: solid 1em transparent;
+          border-bottom-width: 35px;
+          margin: 0;
+          box-sizing: border-box;
+          overflow-y: scroll;
+          height: 100%;
+          background: white;
+          box-shadow: 0 0 1px #999;
+          padding-inline-start: 1.2em;
+        }
+        .${this.ident('menu')}.${this.ident('transitionable')}  {
+          transition: left .3s;
         }
         .${this.ident('menu')} ul {
-          margin: .5em;
+          margin: .5em 0;
           padding-inline-start: 1em;
         }
         .${this.ident('menu')} li {
@@ -197,14 +193,13 @@
         }
         .${this.ident('menu')}::-webkit-scrollbar {
           width: 5px;
+          height: 5px;
         }
         .${this.ident('menu')}::-webkit-scrollbar-track {
           box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
           border-radius: 2px;
         }
         .${this.ident('menu')}::-webkit-scrollbar-thumb {
-          background-color: darkgrey;
-          outline: 1px solid slategrey;
           background-color: #159957;
         }
         .${this.ident('bar')} {
@@ -215,24 +210,23 @@
           height: 2rem;
           line-height: 2rem;
           font-size: 1.2rem;
-          color: white;
           text-align: center;
           z-index: 999999;
           cursor: pointer;
           transition: .3s;
           user-select: none;
-          border: solid 1px gray;
-          box-shadow: 0 0 2px gray;
-          color: gray;
-          background: white;
+          box-shadow: 0 0 10px #159957;
+          color: white;
+          background: #159957;
           border-radius: 0 5px 5px 0;
         }
         .${this.ident('bar')} div {
           width: 2rem;
-          border-right: solid 1px gray;
+          transition: all .3s;
         }
         .${this.ident('bar')} div:hover {
-          box-shadow: inset 0 0 5px gray;
+          box-shadow: inset 0 0 2px #159957;
+          background: white;
         }
         .${this.ident('bar')} [data-btn=switch]:before {
           content: "关";
