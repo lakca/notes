@@ -1,5 +1,5 @@
 // @ts-nocheck
-(function() {
+(function () {
 
   const TOUCH_SUPPORT = !!(window.DocumentTouch && document instanceof window.DocumentTouch || window.ontouchstart === null)
 
@@ -23,7 +23,7 @@
       },
       style(prop, value) {
         let style = el.getAttribute('style') || ''
-        style = style.replace(new RegExp(prop+'\s*:.*?(;|$)', 'g'), '')
+        style = style.replace(new RegExp(prop + '\s*:.*?(;|$)', 'g'), '')
         if (value !== void 0) {
           style += prop + ':' + value + ';'
         }
@@ -56,21 +56,21 @@
         this.move = null
       }
     }
-    ele.addEventListener('touchstart', function(e) {
+    ele.addEventListener('touchstart', function (e) {
       e.stopPropagation()
       if (touch.start) return
       touch.start = { x: e.touches[0].clientX, y: e.touches[0].clientY }
       cb.onstart && cb.onstart.call(this, touch, e)
     }, { passive: false })
     if (cb.onmove)
-    ele.addEventListener('touchmove', function(e) {
-      e.stopPropagation()
-      if (touch.start) {
-        touch.move = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-        cb.onmove.call(this, touch, e)
-      }
-    }, { passive: false })
-    ele.addEventListener('touchend', function(e) {
+      ele.addEventListener('touchmove', function (e) {
+        e.stopPropagation()
+        if (touch.start) {
+          touch.move = { x: e.touches[0].clientX, y: e.touches[0].clientY }
+          cb.onmove.call(this, touch, e)
+        }
+      }, { passive: false })
+    ele.addEventListener('touchend', function (e) {
       e.stopPropagation()
       cb.onend && cb.onend.call(this, touch, e)
       cb.reset && cb.reset()
@@ -88,22 +88,22 @@
         this.move = null
       }
     }
-    ele.addEventListener('dragstart', function(e) {
+    ele.addEventListener('dragstart', function (e) {
       if (drag.start) return
       drag.start = { x: e.clientX, y: e.clientY }
       cb.onstart && cb.onstart.call(this, drag, e)
     }, { passive: false })
-    ele.addEventListener('dragover', function(e) {
+    ele.addEventListener('dragover', function (e) {
       cb.ondragover ? cb.ondragover.call(this, drag, e) : e.preventDefault()
     })
     if (cb.ondrag)
-    ele.addEventListener('drag', function(e) {
-      cb.ondrag ? cb.ondrag.call(this, drag, e) : e.preventDefault()
-      if (drag.start) {
-        drag.move = { x: e.clientX, y: e.clientY }
-      }
-    }, { passive: false })
-    ele.addEventListener('dragend', function(e) {
+      ele.addEventListener('drag', function (e) {
+        cb.ondrag ? cb.ondrag.call(this, drag, e) : e.preventDefault()
+        if (drag.start) {
+          drag.move = { x: e.clientX, y: e.clientY }
+        }
+      }, { passive: false })
+    ele.addEventListener('dragend', function (e) {
       drag.move = { x: e.clientX, y: e.clientY }
       cb.reset && cb.reset()
       cb.onend && cb.onend.call(this, drag, e)
@@ -144,15 +144,6 @@
           .${this.ident('custom')}.${this.ident('closed')}{
             padding-left: 0;
           }
-        }
-        .${this.ident('custom')} .main-content h1,
-        .${this.ident('custom')} .main-content h2,
-        .${this.ident('custom')} .main-content h3,
-        .${this.ident('custom')} .main-content h4,
-        .${this.ident('custom')} .main-content h5,
-        .${this.ident('custom')} .main-content h6 {
-          padding-top: 3rem;
-          margin-top: -1rem;
         }
         .${this.ident('custom')}.${this.ident('closed')} .${this.ident('menu')}{
           left: -30rem;
@@ -227,6 +218,7 @@
         .${this.ident('bar')} div:hover {
           box-shadow: inset 0 0 2px #159957;
           background: white;
+          color: #159957;
         }
         .${this.ident('bar')} [data-btn=switch]:before {
           content: "关";
@@ -307,6 +299,39 @@
         evt.target.parentElement.classList.toggle(this.ident('close'))
       }
     },
+    onScroll() {
+      const headers = this.content.querySelectorAll('h1,h2,h3,h4,h5,h6')
+      const menus = this.menu.querySelectorAll('a[data-id]')
+      let scrollTop = document.documentElement.scrollTop
+      let hoveredMenu = null
+      const onFrame = function () {
+        if (Math.abs(document.documentElement.scrollTop - scrollTop) > 40) {
+          scrollTop = document.documentElement.scrollTop
+          let last = headers[0]
+          for (const header of headers) {
+            const top = header.getBoundingClientRect().top
+            if (top < 200) {
+              last = header
+            } else {
+              break
+            }
+          }
+          if (!hoveredMenu || hoveredMenu.getAttribute('data-id') !== last.getAttribute('data-id')) {
+            for (const menu of menus) {
+              if (menu.getAttribute('data-id') === last.getAttribute('data-id')) {
+                menu.classList.add('hover')
+                menu.scrollIntoView()
+                hoveredMenu = menu
+              } else {
+                menu.classList.remove('hover')
+              }
+            }
+          }
+        }
+        window.requestAnimationFrame(onFrame)
+      }
+      window.requestAnimationFrame(onFrame)
+    },
     mountStyle() {
       el('style').html(this.style).mount(document.head)
     },
@@ -324,8 +349,8 @@
       }
       items.splice(1, 1) // delete root src
       el().class(this.ident('breadcrumb'))
-      .html(items.join(' / '))
-      .mount(this.header)
+        .html(items.join(' / '))
+        .mount(this.header)
     },
     generateMenu() {
       const it = this
@@ -368,13 +393,14 @@
         if (plv > lv) indexes.length = lv
         const id = indexes.join('.')
 
-        const html = [`<li>`, `<a data-id="${id}" href="#${h.id}">${id} <span style="color:#121212">${h.innerHTML}</span></a>`, '</li>']
+        const html = [`<li>`, `<a data-id="${id}" href="#${h.id}">${id} ${h.innerHTML}</a>`, '</li>']
 
         const span = document.createElement('a')
         span.textContent = id + '. '
         span.href = '#' + h.id
         span.setAttribute('data-id', id)
-        span.setAttribute('style', 'font-style:italic;font-size:0.9em;')
+        span.setAttribute('style', 'margin-right:.5rem')
+        h.setAttribute('data-id', id)
         h.insertBefore(span, h.childNodes[0])
 
         if (plv === lv) {
@@ -476,8 +502,8 @@
     mountBar() {
       if (TOUCH_SUPPORT) return
       const bar = el()
-      .class(this.ident('bar'))
-      .html(`
+        .class(this.ident('bar'))
+        .html(`
         <div data-btn="switch"></div>
         <div data-btn="1">I</div>
         <div data-btn="2">II</div>
@@ -486,9 +512,9 @@
         <div data-btn="5">V</div>
         <div data-btn="6">VI</div>
       `)
-      .on('click', e => this.clickBar(e))
-      .mount(document.body)
-      .el
+        .on('click', e => this.clickBar(e))
+        .mount(document.body)
+        .el
 
       bar.draggable = true
 
@@ -507,11 +533,12 @@
         el(document.body).class(this.ident('custom'))
         this.mountStyle()
         this.mountBreadcrumb()
-        const isCatalog = window.location.pathname[window.location.pathname.length-1] === '/'
+        const isCatalog = window.location.pathname[window.location.pathname.length - 1] === '/'
         if (!isCatalog) {
           this.mountMenu()
           this.mountBar()
         }
+        this.onScroll()
         return this._mounted = true
       } return false
     },
@@ -526,31 +553,27 @@
       }
     }
   })
-
-  window.requestAnimationFrame(() => {
-
-  })
 }())
 
-;(function() {
-  function initMermaid() {
-    window.mermaid.initialize({
-      startOnLoad: true,
-      theme: "forest",
-      flowchart:{
-        useMaxWidth: true,
-        htmlLabels: true
-      }
-    })
-    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
-  }
-  if (window.mermaid) {
-    initMermaid()
-  } else {
-    for (const script of document.scripts) {
-      if (/mermaid/.test(script.src)) {
-        script.onload = initMermaid
+  ; (function () {
+    function initMermaid() {
+      window.mermaid.initialize({
+        startOnLoad: true,
+        theme: "forest",
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true
+        }
+      })
+      window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
+    }
+    if (window.mermaid) {
+      initMermaid()
+    } else {
+      for (const script of document.scripts) {
+        if (/mermaid/.test(script.src)) {
+          script.onload = initMermaid
+        }
       }
     }
-  }
-}())
+  }())

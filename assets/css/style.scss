@@ -1,4 +1,7 @@
---- --- @import "{{ site.theme }}";
+---
+---
+
+@import "{{ site.theme }}";
 
 .catalog {
   li {
@@ -18,19 +21,21 @@ html {
   .main-content {
     color: #383838;
     font-size: 1rem;
+
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体, PingFang SC, Microsoft YaHei;
+      font-weight: bold;
+      color: #006bff;
+    }
   }
 
   table {
     word-break: break-word;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    font-family: Baskerville, Adobe KaiTi Std, KaiTi, Kai, 楷体, PingFang SC, Microsoft YaHei;
   }
 
   // https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/token.rb
@@ -378,11 +383,11 @@ html {
 
   pre>code {
     font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
-    color: #000000;
+    color: #f8f8f2;
     font-size: 0.8em;
   }
 
-  code {
+  code, .main-content code {
     font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
     font-size: 0.8em;
     color: #f93d93;
@@ -401,7 +406,7 @@ html {
     text-decoration: none;
     font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
 
-    &:hover {
+    &:hover, &.hover {
       text-decoration: none;
       border-radius: 0.1875em;
       background: #006bff;
