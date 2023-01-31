@@ -1,4 +1,0 @@
-- [......]()<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-21 18:37</span></span>
-- [Mac](mac)<span style="font-size:.8em;float:right"><span style="color:orange">M</span><span style="padding-left:2em;color:gray;">2022-10-28 16:43</span></span>
-- [Productivity](productivity)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Rapid](rapid)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>

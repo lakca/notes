@@ -2,5 +2,6 @@
   "baseFontSize": 15,
   "theme": "moonstone",
   "translucency": false,
-  "cssTheme": "fork Blue Topaz"
+  "cssTheme": "fork Blue Topaz",
+  "accentColor": ""
 }

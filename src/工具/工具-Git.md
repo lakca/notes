@@ -880,8 +880,8 @@ git remote
     (add [-t <branch>] [-m <master>] [-f] [--[no--]tags] [--mirror])
   ]
 git remote
-  show 
-    [-n] # 不查询远程信息 
+  show
+    [-n] # 不查询远程信息
     <name>
   add <name> <url>
   rename <oldname> <newname>
@@ -1248,7 +1248,7 @@ git log --log-size
 - Author (Committer, a => c)
 	- name: `%an`, `%aN`
 	- email: `%ae`, `%aE`, `%al`, `%aL`
-	- date: 
+	- date:
 		- `%ah` (human)`%as` (YYYY-MM-DD), `%aI` (ISO 8601), `%ai` (ISO 8601), `%at` (UNIX), `%ar` (relative), `%aD` (RFC2822), `%ad` (Fri, 24 Dec 2021 16:11:27 +0800)
 
 ```bash
@@ -1657,3 +1657,9 @@ git update-index --skip-worktree/--no-skip-worktree <file>
 
 
 [officialDoc]: https://www.git-scm.com/docs
+
+# 常见问题
+
+## `git status`中文显示成了一段数字（字符编码）：
+
+`git config --global core.quotepath false`

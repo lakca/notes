@@ -9,7 +9,7 @@
         "state": {
           "type": "markdown",
           "state": {
-            "file": "CIS/nodejs/packages.md",
+            "file": "tech/rust/rust.md",
             "mode": "preview",
             "source": true
           }
@@ -55,12 +55,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "CIS/nodejs/packages.md"
+                "file": "tech/rust/rust.md"
               }
             }
           }
         ],
-        "currentTab": 1
+        "currentTab": 2
       }
     ],
     "direction": "horizontal",
@@ -80,7 +80,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "CIS/nodejs/packages.md",
+                "file": "tech/rust/rust.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -97,7 +97,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "CIS/nodejs/packages.md",
+                "file": "tech/rust/rust.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -132,6 +132,7 @@
   },
   "active": "f55650eec773180f",
   "lastOpenFiles": [
+    "tech/rust/rust.md",
     "CIS/nodejs/packages.md",
     "CIS/nodejs/npm.md",
     "CIS/web/frameworks.md",
@@ -140,7 +141,6 @@
     "Headmore.md",
     "CIS/WebRTC.md",
     "CIS/WebAssembly.md",
-    "crates.io.md",
-    "headmore.excalidraw"
+    "crates.io.md"
   ]
 }
