@@ -1,5 +1,5 @@
 ---
-title: Qt
+title: qt
 date: 2021-04-09T06:20:32.077Z
 ---
 

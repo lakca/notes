@@ -1,6 +1,6 @@
 ---
 date: 2022-01-27T18:54:46+08:00
-title: Awesome
+title: awesome
 ---
 
 ≤# Rust awesome crates

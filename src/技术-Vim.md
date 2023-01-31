@@ -1,5 +1,5 @@
 ---
-title: 技术 Vim
+title: 技术-Vim
 date: 2020-10-09T07:22:16.283Z
 ---
 

@@ -1,5 +1,5 @@
 ---
-title: Python
+title: python
 date: 2021-05-08T09:01:36.275Z
 ---
 

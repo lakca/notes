@@ -1,5 +1,5 @@
 ---
-title: Type
+title: type
 date: 2020-09-14T07:20:33.458Z
 ---
 

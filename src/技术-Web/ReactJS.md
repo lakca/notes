@@ -1,5 +1,5 @@
 ---
-title: React JS
+title: ReactJS
 date: 2021-06-26T14:11:24.429Z
 ---
 

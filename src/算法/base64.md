@@ -1,6 +1,6 @@
 ---
 date: 2022-07-05T14:59:01+08:00
-title: Base 64
+title: base64
 ---
 
 # Base64

@@ -1,5 +1,5 @@
 ---
-title: Set
+title: set
 date: 2020-10-10T06:57:14.375Z
 ---
 

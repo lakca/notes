@@ -72,7 +72,7 @@ for (const file of traverse(SRC_ROOT)) {
     const { meta, content } = extractFile(file)
     const stat = fileStat(file)
     if (!meta.date) meta.date = getBirthtime(file)
-    meta.title = startCase(path.basename(file, '.md'))
+    meta.title = path.basename(file, '.md')
     const relPath = path.relative(SRC_ROOT, file)
     if (gitStatus[relPath]) {
       meta.gitStatus = gitStatus[relPath]

@@ -1,5 +1,5 @@
 ---
-title: Rust
+title: rust
 date: 2021-04-19T11:13:31.973Z
 ---
 
