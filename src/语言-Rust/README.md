@@ -1,5 +1,5 @@
-- [......]()<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-21 18:37</span></span>
-- [Untitled](Untitled)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Awesome](awesome)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Lib](lib)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Rust](rust)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
+- [......]()<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-11-04 23:24</span></span>
+- [Untitled](Untitled)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Awesome](awesome)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Lib](lib)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Rust](rust)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2023-01-18 17:54</span></span>

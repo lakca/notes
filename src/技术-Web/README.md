@@ -1,10 +1,9 @@
-- [......]()<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-21 18:37</span></span>
-- [CSS](CSS-Snippet)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
-- [React JS](ReactJS)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-07-18 14:26</span></span>
-- [CSS](CSS)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [DOM](DOM)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Frameworks](frameworks)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Mime](mime)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Svg](svg)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Toolchain](toolchain)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
-- [Uikit](uikit)<span style="font-size:.8em;float:right"><span style="color:orange"></span><span style="padding-left:2em;color:gray;">2022-10-20 14:32</span></span>
+- [......]()<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-11-04 23:24</span></span>
+- [CSS](CSS-Snippet)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-23 23:49</span></span>
+- [React JS](ReactJS)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-07-23 23:49</span></span>
+- [CSS](CSS)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [DOM](DOM)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Frameworks](frameworks)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Svg](svg)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Toolchain](toolchain)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
+- [Uikit](uikit)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2022-10-19 23:07</span></span>
