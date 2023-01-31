@@ -340,10 +340,11 @@
       let pathname = window.location.pathname
       // @ts-ignore
       while (pathname = pathname.match(/(.*\/)(.+?)(?=\/?$)/)) {
+        const name = decodeURIComponent(pathname[2]).toUpperCase()
         if (items.length) {
-          items.unshift(`<a href="${pathname[0]}">${pathname[2].toUpperCase()}</a>`)
+          items.unshift(`<a href="${pathname[0]}">${name}</a>`)
         } else {
-          items.unshift(`<span>${pathname[2].toUpperCase()}</span>`)
+          items.unshift(`<span>${name}</span>`)
         }
         pathname = pathname[1]
       }

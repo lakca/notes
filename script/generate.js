@@ -109,7 +109,7 @@ function readFolder(fileInfo, cb, level = 0) {
   fs.readdirSync(fileInfo.filepath).map(file => {
     return new FileInfo(path.join(fileInfo.filepath, file), fileInfo.relRoot, level)
   }).sort((info1, info2) => {
-    return info1.rank === info2.rank ? info1.stat.birthtimeMs - info2.stat.birthtimeMs : info1.rank - info2.rank
+    return info1.name.localeCompare(info2.name)
   }).forEach(info => {
     if (!level && info.file === INDEX_FILE) return
     if (info.stat.isFile() && ['.md', '.html'].includes(info.ext)) {
@@ -133,6 +133,7 @@ function renderTocItem(fileInfo, level) {
     `<span style="font-size:.8em;float:right">` +
     `<span style="color:${LATEST_COMMITTED[fileInfo.relName] === 'A' ? 'green' : 'orange'}">${LATEST_COMMITTED[fileInfo.relName] || ''}</span>` +
     `<span style="padding-left:2em;color:gray;">${date(fileInfo.stat.mtime)}</span>` +
+    `<span style="padding-left:2em;color:lightgray;">${date(fileInfo.stat.birthtime)}</span>` +
     `</span>` +
     '\n'
 }
