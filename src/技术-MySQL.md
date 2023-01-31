@@ -1,6 +1,6 @@
 ---
 date: 2022-03-31T18:29:47+08:00
-title: Mysql
+title: 技术 My SQL
 ---
 
 # 阅读

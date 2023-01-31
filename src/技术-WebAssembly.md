@@ -1,6 +1,6 @@
 ---
 date: 2022-03-15T18:42:34+08:00
-title: Web Assembly
+title: 技术 Web Assembly
 ---
 
 # 资源

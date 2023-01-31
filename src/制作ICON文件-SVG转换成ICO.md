@@ -1,5 +1,5 @@
 ---
-title: 通过SV G等创建logo文件（ico文件）
+title: 制作ICON文件 SVG转换成ICO
 date: 2021-04-14T07:51:27.822Z
 ---
 

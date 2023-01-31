@@ -1,5 +1,5 @@
 ---
-title: Vim
+title: 技术 Vim
 date: 2020-10-09T07:22:16.283Z
 ---
 
@@ -1237,4 +1237,3 @@ type:
 
 - [Learn Vim](https://github.com/iggredible/Learn-Vim)
 - [vim-galore](https://github.com/mhinz/vim-galore/blob/master/PLUGINS.md)
-

@@ -1,6 +1,6 @@
 ---
 date: 2022-03-18T18:46:49+08:00
-title: Web RTC
+title: 技术 Web RTC
 ---
 
 ```mermaid

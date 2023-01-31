@@ -1,6 +1,6 @@
 ---
-title: Mac
-wehujdf:
+title: Mac OS深度使用
+wehujdf: 
 date: 2020-08-27T09:42:26.913Z
 ---
 

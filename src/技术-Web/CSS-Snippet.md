@@ -1,5 +1,5 @@
 ---
-title: CSS
+title: CSS Snippet
 date: 2021-06-22T03:21:09.055Z
 ---
 
