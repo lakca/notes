@@ -549,6 +549,7 @@ git commit [<options>] [--] <pathspec>...
 修改任意历史提交：
 
 1. 针对目标提交创建修改提交：
+
 ```bash
 # 仅修改提交信息
 --fixup=reword:<commit>
@@ -565,6 +566,7 @@ git commit [<options>] [--] <pathspec>...
 # 如，修改d48a90d
 > git commit --fixup=d48a90d
 ```
+
 2. 通过 *rebase* 合并修改提交：
 
 ```bash
@@ -582,11 +584,13 @@ git commit [<options>] [--] <pathspec>...
 
 其他钩子，如*post-commit*，
 没有内置选项可以绕过，但可以通过变通，比如在脚本里面加入环境变量做判断，比如：
+
 ```bash
 # post-commit
 [ $SKIP_POST_COMMIT ] && exit 0
 ...
 ```
+
 ```bash
 > SKIP_POST_COMMIT=1 git commit -m '...'
 ```
@@ -720,10 +724,12 @@ git rebase master~2 topic
 ```bash
 --onto <newbase>
 ```
+
 ```bash
 --fork-point
 --no-fork-point
 ```
+
 ```bash
 --keep-base
 
@@ -1329,6 +1335,7 @@ git diff <path> <path> # 当path不都同属于一个git项目时，--no-index�
 ```
 
 只对比子目录中的文件：
+
 ```bash
 git diff --relative[=<path>]
 ```
@@ -1376,6 +1383,7 @@ git diff -S<string> --pickaxe-regex # 将string看作扩展POSIX正则表达式
 ```
 
 格式化：
+
 ```bash
 --shortstat
 # 9 files changed, 141 insertions(+), 73 deletions(-)
@@ -1418,6 +1426,7 @@ blame指定的文件行：
 ```bash
 > git daemon --export-all --base-path=. --verbose
 ```
+
 ```bash
 > git remote add git://<ip>/<repo_name>
 ```
