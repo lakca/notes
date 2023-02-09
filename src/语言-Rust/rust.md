@@ -6,63 +6,63 @@ date: 2021-04-19T11:13:31.973Z
 # 语言
 
 - 现代语言
-	- [开源](https://github.com/rust-lang)
-	- [社区驱动](https://www.rust-lang.org/governance)
-	- [定期更新](#工具链版本)
-	- 优秀的[官方文档](#文档)
-	- 丰富的[标准库](https://doc.rust-lang.org/std/)
-	- 活跃的[开源社区](https://www.rust-lang.org/community)
-	- 强大的[官方工具链](#版本和工具链管理-Rustup)
-		- 编译
-		- 测试
-		- 文档
-		- 包管理
-		- 代码质量
-		- 离线文档
-		- 交叉编译
-		- 工具链升级
-		- 命令行补全
-		- 语言服务器
-		- ...
-	- [集中包注册源-crates.io](https://crates.io)
-	- [集中包文档-docs.rs](https://docs.rs)
-	- [语言服务器协议](https://github.com/rust-analyzer/rust-analyzer)（[*LSP*](https://microsoft.github.io/language-server-protocol/)）
-	- 无GC的[智能内存管理](#内存管理)
-	- 增强型[模块化](#模块系统)
-		- 文件内模块化能力
-		- 模块内部对外默认不可见
-		- 统一规范的模块组织结构
-		- 命名空间式（区别于文件路径引用）的模块引用
-	- 组合大于继承
-		- 没有类（~~*class*~~）和继承概念，取而代之的是特征描述（`trait`）。
-	- [元编程](#元编程)
-		- 种类丰富的[宏（*Macros*）](#宏)
+  - [开源](https://github.com/rust-lang)
+  - [社区驱动](https://www.rust-lang.org/governance)
+  - [定期更新](#工具链版本)
+  - 优秀的[官方文档](#文档)
+  - 丰富的[标准库](https://doc.rust-lang.org/std/)
+  - 活跃的[开源社区](https://www.rust-lang.org/community)
+  - 强大的[官方工具链](#版本和工具链管理-Rustup)
+    - 编译
+    - 测试
+    - 文档
+    - 包管理
+    - 代码质量
+    - 离线文档
+    - 交叉编译
+    - 工具链升级
+    - 命令行补全
+    - 语言服务器
+    - ...
+  - [集中包注册源-crates.io](https://crates.io)
+  - [集中包文档-docs.rs](https://docs.rs)
+  - [语言服务器协议](https://github.com/rust-analyzer/rust-analyzer)（[*LSP*](https://microsoft.github.io/language-server-protocol/)）
+  - 无GC的[智能内存管理](#内存管理)
+  - 增强型[模块化](#模块系统)
+    - 文件内模块化能力
+    - 模块内部对外默认不可见
+    - 统一规范的模块组织结构
+    - 命名空间式（区别于文件路径引用）的模块引用
+  - 组合大于继承
+    - 没有类（~~*class*~~）和继承概念，取而代之的是特征描述（`trait`）。
+  - [元编程](#元编程)
+    - 种类丰富的[宏（*Macros*）](#宏)
 - 语言特性
-	- 没有反射（~~*Reflection*~~）
-	- 文件内模块化能力
-	- 内存安全、智能内存管理
-		- 所有权（*Ownership*）
-		- 借用（*Borrowing*）
-		- 生命周期（*Lifetime*）
-	- 没有类(~~*Class*~~)，描述和组合大于实现和继承（`trait`和*Macros*）
-	- 变量遮蔽（*Variable Shadowing*）
-	- 严格的数据可变性（*Mutability*）
-	- 表达式编程（*Everywhere Expressions*）
-		- **非**用于项目声明作用的块`{}`都是表达式（声明作用的块如`struct Foo {}`），可以返回值（返回最后一个表达式）
-		- 函数自动`return`(最后一个表达式)
-	- 元编程（*Meta Programing*）
-		- 宏（*Macros*）：Rust的宏不是简单的字符串替换，而是和函数一样具有丰富的高阶编程能力和自定义返回值。有：
-			- 声明宏（*Declarative Macros*），匹配Rust提供的特定语法结构以执行相应代码，如`vec!`
-			- 过程宏（*Procedural Macros*），解析属性备注的字符流（`TokenStream`）并执行代码
-				- 派生宏（*Derive*），如`#[derive(Clone)]`
-				- 类属性宏（*Attribute-Like*），如`#[route(GET, "/")]`
-				- 类函数宏（*Function-Like*），如`html! { <h1>{ "Hello World" }</h1> }`
-	- 闭包（*Closure*）
-	- 运算符重载（*Overload*）
-	- 强大的模式匹配（*Pattern Matching*）
-	- 内联的工具链
-		- 内联测试：依托宏强大的表达能力，测试代码可以直接写在源文件中
-		- 备注文档：直接由代码备注生成文档，发布包时自动集成在[社区文档网站](https://docs.rs)中，页面格式统一、功能齐全。
+  - 没有反射（~~*Reflection*~~）
+  - 文件内模块化能力
+  - 内存安全、智能内存管理
+    - 所有权（*Ownership*）
+    - 借用（*Borrowing*）
+    - 生命周期（*Lifetime*）
+  - 没有类(~~*Class*~~)，描述和组合大于实现和继承（`trait`和*Macros*）
+  - 变量遮蔽（*Variable Shadowing*）
+  - 严格的数据可变性（*Mutability*）
+  - 表达式编程（*Everywhere Expressions*）
+    - **非**用于项目声明作用的块`{}`都是表达式（声明作用的块如`struct Foo {}`），可以返回值（返回最后一个表达式）
+    - 函数自动`return`(最后一个表达式)
+  - 元编程（*Meta Programing*）
+    - 宏（*Macros*）：Rust的宏不是简单的字符串替换，而是和函数一样具有丰富的高阶编程能力和自定义返回值。有：
+      - 声明宏（*Declarative Macros*），匹配Rust提供的特定语法结构以执行相应代码，如`vec!`
+      - 过程宏（*Procedural Macros*），解析属性备注的字符流（`TokenStream`）并执行代码
+        - 派生宏（*Derive*），如`#[derive(Clone)]`
+        - 类属性宏（*Attribute-Like*），如`#[route(GET, "/")]`
+        - 类函数宏（*Function-Like*），如`html! { <h1>{ "Hello World" }</h1> }`
+  - 闭包（*Closure*）
+  - 运算符重载（*Overload*）
+  - 强大的模式匹配（*Pattern Matching*）
+  - 内联的工具链
+    - 内联测试：依托宏强大的表达能力，测试代码可以直接写在源文件中
+    - 备注文档：直接由代码备注生成文档，发布包时自动集成在[社区文档网站](https://docs.rs)中，页面格式统一、功能齐全。
 
 # 准备
 
@@ -143,7 +143,9 @@ date: 2021-04-19T11:13:31.973Z
 
 ### 吉祥物
 
-> [Ferris](https://www.rustacean.net/): ![Ferris](https://rustacean.net/assets/rustacean-orig-noshadow.svg)
+[Ferris](https://www.rustacean.net/):
+
+![Ferris](https://rustacean.net/assets/rustacean-orig-noshadow.svg#h200)
 
 ### 语言习惯
 
@@ -515,27 +517,27 @@ license-file = "LICENSE.txt"
 version = "1.0.0"
 # include会覆盖exclude
 include = [
-	"**/*.rs",
-	"Cargo.toml",
-	"LICENSE",
+  "**/*.rs",
+  "Cargo.toml",
+  "LICENSE",
 ]
 exclude = [
-	"assets/*",
+  "assets/*",
 ]
 ```
 
 - `cargo package`：打包项目文件（*.crate*），等同于`cargo publish --dry-run`。
-	- [ctates.io](https://crates.io) 限制一个包最大*10MB*，可通过`cargo package --list`命令查看打包后的文件列表，确认是否包含了必要和多余文件。
-	- 打包前会自动执行一些检查，比如检测本地代码是否提交、*Cargo.toml*的规范性验证等。
-	- 打包完成后还会自动解压到临时目录执行一次编译验证。
+  - [ctates.io](https://crates.io) 限制一个包最大*10MB*，可通过`cargo package --list`命令查看打包后的文件列表，确认是否包含了必要和多余文件。
+  - 打包前会自动执行一些检查，比如检测本地代码是否提交、*Cargo.toml*的规范性验证等。
+  - 打包完成后还会自动解压到临时目录执行一次编译验证。
 
 - `cargo login/logout`：
 
 - `cargo publish`
 
 - `cargo yank`：撤销已发布版本。
-	- 该命令不会删除任何源文件（所以若上传了密码等机密信息只能重置它们）。
-	- 如果撤销的版本已经在其他项目的*Cargo.lock*（可以看到*checksum*字段）中存在，这些项目仍将使用撤销的版本。
+  - 该命令不会删除任何源文件（所以若上传了密码等机密信息只能重置它们）。
+  - 如果撤销的版本已经在其他项目的*Cargo.lock*（可以看到*checksum*字段）中存在，这些项目仍将使用撤销的版本。
 
 ```bash
 cargo yank --vers 1.1.0
@@ -543,8 +545,8 @@ cargo yank --vers 1.1.0 --undo # 取消撤回操作
 ```
 
 - `cargo owner`：管理包的拥有人（可以多个）。
-	- Owner可以发布和撤销包版本，必须是Github用户（`cargo owner --add <github_user>`）或团队（`cargo owner --add github:<org>:<team>`）。
-	- 只有用户Owner可以添加和删除Owner。
+  - Owner可以发布和撤销包版本，必须是Github用户（`cargo owner --add <github_user>`）或团队（`cargo owner --add github:<org>:<team>`）。
+  - 只有用户Owner可以添加和删除Owner。
 
 #### 其他
 
@@ -612,9 +614,7 @@ Rust官方工具链对外发布有三种[渠道（*channel*）](https://doc.rust
 查看已安装的版本：
 
 ```bash
-rustup toolchain list
-```
-```plain
+> rustup toolchain list
 stable-x86_64-apple-darwin (default)
 ```
 
@@ -712,13 +712,13 @@ rustup toolchain link my-toolchain path/to/my-toolchain
 ```rust
 #![allow(unused)]
 fn main() {
-	let machine_kind = if cfg!(unix) {
-	  "unix"
-	} else if cfg!(windows) {
-	  "windows"
-	} else {
-	  "unknown"
-	};
+  let machine_kind = if cfg!(unix) {
+    "unix"
+  } else if cfg!(windows) {
+    "windows"
+  } else {
+    "unknown"
+  };
 }
 ```
 
@@ -747,9 +747,7 @@ rustc --target=aarch64-apple-ios
 查看*rustc*支持的目标平台：
 
 ```bash
-rustc --print target-list
-```
-```plain
+> rustc --print target-list
 aarch64-apple-darwin
 aarch64-apple-ios
 ...
@@ -760,9 +758,7 @@ aarch64-apple-ios
 查看所有可用平台（标准库）：
 
 ```bash
-rustup target list
-```
-```plain
+> rustup target list
 aarch64-apple-darwin
 aarch64-apple-ios
 ...
@@ -770,9 +766,7 @@ x86_64-apple-darwin (installed)
 ...
 ```
 ```bash
-rustup target list --installed
-```
-```plain
+> rustup target list --installed
 x86_64-apple-darwin (installed)
 ```
 
@@ -806,7 +800,8 @@ rustflags = [...]
 > 再比如，并非所有的编译目标都是直接运行在原始平台上，如*WebAssembly*是运行在虚拟机，所以我们可以看到*Rust*提供的wasm三值如`wasm32-wasi`并没有厂商和操作系统信息。
 
 通过`rustc --print=cfg`命令可以查看当前平台特征信息，比如：
-```plain
+```bash
+> rustc --print=cfg
 debug_assertions
 target_arch="x86_64"
 target_endian="little"
@@ -982,57 +977,35 @@ println!("{}", a);
 
 ## 所有权（Ownership）
 
-> 与手动释放内存（*manully free*）或垃圾回收（*Garbage Collection*）不同，Rust 通过在**编译时的所有权（*Ownership*）检查机制**来保证能够在运行时自动释放内存，这种机制没有任何运行时的额外开销。
-> *In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*
+> 在内存回收上，Rust既无需手动释放（~~Manully Free~~），也没有垃圾回收器（~~Runtime Garbage Collector~~），而是通过在**编译时**的**所有权检查**机制进行标记（*Clear Ownership at Compiling*）来保证内存在调用结束后自动销毁，而没有运行时的额外开销（~~如引用计数、线程暂停等~~）。
+> （*In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*）
 
-![ownership](./ownership.svg)
+所有权规则为：
 
-如图，在*Rust*中所有值（*Value*）**都有且只有一个**所有者（*Owner*）标记。
-
-与C语言等的传统指针不同的是，所有者指针是强单向绑定的，即指针指向的内存（语言规范，由编译器限制）必须依赖指针而存在，一旦指针生命周期结束了（作用域失效了），该块内存便被释放，这一机制是由编译器保障的。
+1. 每个值都有一个变量对应着，这个变量即**所有者（Owner）**；
+2. 每个值同一时刻只有一个所有者；
+3. 当所有者的作用域结束时，值便被自动销毁；
 
 ```rust
 fn main() {
-	{
-		let x = 1;
-	}
-}
-```
-```rust{3}
-fn main() {
-	{
-		let x = 1;
-		drop();
-	}
+  {
+    let x = 1;
+    // drop();
+  }
 }
 ```
 
-1. 所有者（*Owner*），就是指向该值的变量（*Variable*）。
-
-2. 值（*Value*）的所有者（*Owner*）是可以改变（*Move*）的，比如变量间赋值、作为参数给函数调用、以及函数返回等；
-
-3. 值（*Value*）同时刻只有一个所有者（*Owner*），即当存在上述所有权的移交（*Move*）的操作时，移交前的变量将会失去指向。如果后续在该变量未被再次赋值前调用，为了安全考虑，编译器将会报错而不是返回空指针。
-
-4. 当所有者（*Owner*）的作用域结束时，若值（*Value*）没被移交（*Move*），其值（*Value*）便会被自动 *Drop*。
-（*the memory is automatically returned once the variable that owns it goes out of scope.*）。
-
-所有权规则：
-
-- 在 *Rust* 中所有 *value* 都有一个表示其 *owner* 的变量；
-
-- 任何时刻都只有一个 *owner* ；
-
-- 当 *Owner* 超出其 *Scope* 时，*Value* 会被删除；
+![ownership](./ownership.svg#h200)
 
 ### 移交（Move）
 
+当执行**赋值操作**时，值的所有权将被转移：
+
 - 变量赋值
-- 传入函数
+- 函数传参
 - 函数返回
 - 模式匹配（`match`，`if let`等）
 - ......
-
-P.S. 函数可以理解为调用和结束时有两个赋值操作，调用时值传入给内部变量并转入所有权，结束时可以返回值（交出所有权）。
 
 ```rust
 fn main() {
@@ -1101,33 +1074,6 @@ println!("{}", c);
 \* 被 *借用* 是一个引用是 *有效引用* 的条件：
 
 创建引用时，我们在栈中存储了一个指针指向一个值（*Value*），该指针在未被使用前，即没有操作柄（*Handle*），无法改变最终指向的值（*Value*），反之，值（*Value*）被其他 操作柄（*Handle*）改变时，就该指针而言也没有可影响的操作柄（*Handle*），此时该指针不是有效存在的。只有在该指针被使用（*Value Borrowed*）后，双方的操作柄（*Handle*）才会互相影响。
-
-## 引用（Reference）
-
-### 悬空引用（Dangling Reference）
-
-> 所谓悬空引用（*dangling reference*），即引用的变量的作用域结束后，该引用仍被使用。
-> 注意，这是一个错误的用法。
-
-```rust
-fn demo() -> &String {
-  let s = String::from("hello");
-  &s // 错误，引用在这里被借调（borrowing）给其他作用域，但此时所引用的变量 s 的作用域随函数结束而结束了，从而无法编译通过
-}
-
-// 可以通过 move 来实现值的返回：
-fn demo() -> String {
-  let s = String::from("hello");
-  s
-}
-
-// 当然，也可以使用静态生命周期：
-fn demo() -> &'static str {
-  let s = String::from("hello");
-  let s = Box::leak(s.into_boxed_str()); // 转换为拥有静态生命的 str 引用
-  s
-}
-```
 
 ## 生命周期（Lifetime）
 
@@ -1290,15 +1236,23 @@ let e_err = a[10]; // exit with error
 
 ## 引用（`&`）
 
-> 引用，一种借用（不拥有但使用）数据的手段。
+> 引用，一种借用（不转移所有权但可使用）数据的手段。
+> *A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
 
-[![reference](./reference.svg)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
+[![reference](./reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
 
-根据[所有权](#所有权)章节我们知道，直接赋值会转移（*Move*）数据的所有权（*Ownership*），使原变量失效。
+根据[所有权](#所有权ownership)章节我们知道，直接赋值（*assign value*）会转移（*Move*）数据的所有权（*Ownership*），使原变量失效。
+
 但在有些时候这样做会产生很多不便，比如在调用函数时传入数据，如果当前作用域仍想继续调用该数据，则需要函数返回该数据来实现，或在与数据地址无关的调用（不要求源数据）情况下通过数据克隆实现。
 很显然，这些方法很重，前者上下文关联性强，为函数引入了额外逻辑（返回源数据），后者则引入了额外的时空损失。因而 *Rust* 提供了引用（*Reference*）类型。
+比如传入函数：
 
-*A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
+```rust
+fn add() {
+}
+fn main() {
+}
+```
 
 - 引用分为可变引用（`&mut`, `ref mut`）和不可变引用（`&`, `ref`）。（*You can get one by using the `&` or `&mut` operators on a value, or by using a `ref` or `ref mut` pattern.*）
 
@@ -1376,11 +1330,45 @@ fn demo(a: &mut String) {
 }
 ```
 
-### 借用
+```rust
+fn main() {
+    let mut a = "hello";
+    let mut b = &mut a;
+    *b = "world";
+    assert_eq!(a, "world");
+}
+```
+
+### 借用（Borrow）
 
 > 引用实现了就叫做借用（*Borrow*），与转移（*Move*）所有权相对应。
 
 若一个变量只是被赋值了一个引用，而该变量并没有被调用（借用），那么这个变量相当于无效变量，引用也是一个无效的引用。
+
+### 悬空引用（Dangling Reference）
+
+> 所谓悬空引用（*dangling reference*），即引用的变量的作用域结束后，该引用仍被使用。
+> 注意，这是一个错误的用法。
+
+```rust
+fn demo() -> &String {
+  let s = String::from("hello");
+  &s // 错误，引用在这里被借调（borrowing）给其他作用域，但此时所引用的变量 s 的作用域随函数结束而结束了，从而无法编译通过
+}
+
+// 可以通过 move 来实现值的返回：
+fn demo() -> String {
+  let s = String::from("hello");
+  s
+}
+
+// 当然，也可以使用静态生命周期：
+fn demo() -> &'static str {
+  let s = String::from("hello");
+  let s = Box::leak(s.into_boxed_str()); // 转换为拥有静态生命的 str 引用
+  s
+}
+```
 
 ## 切片（`Slice`）
 
@@ -1388,7 +1376,7 @@ fn demo(a: &mut String) {
 
 Slices are a view into a block of memory represented as a pointer and a length.
 
-[![slice](./slice.svg)](http://doc.rust-lang.org/book/ch04-03-slices.html#string-slices)
+[![slice](./slice.svg#h300)](http://doc.rust-lang.org/book/ch04-03-slices.html#string-slices)
 
 ### 字符串切片（`&str`）
 
@@ -1503,7 +1491,7 @@ assert_eq!(None, scores.get("Yellow"));
 
 ```rust
 fn hello(word: &str) {
-	println!("{}", word);
+  println!("{}", word);
 }
 
 let word = "hello";
@@ -1542,55 +1530,55 @@ mod external;
 // mod-rs:
 
 mod inline {
-	#[path="x.rs"]
-	pub mod x; // inline/x.rs
+  #[path="x.rs"]
+  pub mod x; // inline/x.rs
 }
 
 // non-mod-rs: other.rs
 
 mod inline {
-	#[path="x.rs"]
-	pub mod x; // other/inline/x.rs
+  #[path="x.rs"]
+  pub mod x; // other/inline/x.rs
 }
 ```
 使用模块：
 ```rust
 mod inline {
-	pub mod a {
-		fn hello() {
-			println!("hello world!");
-		}
-		pub fn hi() {
-			self::hello(); // 访问同模块
-			// 或直接访问
-			hello();
-		}
-	}
-	pub mod b {
-		pub fn hi() {
-			super::a::hi(); // 访问父模块
-		}
-	}
+  pub mod a {
+    fn hello() {
+      println!("hello world!");
+    }
+    pub fn hi() {
+      self::hello(); // 访问同模块
+      // 或直接访问
+      hello();
+    }
+  }
+  pub mod b {
+    pub fn hi() {
+      super::a::hi(); // 访问父模块
+    }
+  }
 }
 
 fn main() {
-	inline::a::hi();
-	inline::b::hi();
+  inline::a::hi();
+  inline::b::hi();
 
-	// 如果当前文件为：main.rs, lib.rs
-	crate::inline::a::hi();
-	// 如果当前文件为：foo/mod.rs
-	crate::foo::inline::a::hi();
+  // 如果当前文件为：main.rs, lib.rs
+  crate::inline::a::hi();
+  // 如果当前文件为：foo/mod.rs
+  crate::foo::inline::a::hi();
 
-	// 引入命名空间
-	use inline::a;
-	a::hi();
+  // 引入命名空间
+  use inline::a;
+  a::hi();
 
-	use inline::a::{hi as hello};
-	hello();
+  use inline::a::{hi as hello};
+  hello();
 
-	use inline::b::*;
-	hi();
+  use inline::b::*;
+  hi();
 }
 ```
 
@@ -1601,18 +1589,18 @@ fn main() {
 分为五种类型：
 
 -   [标准库预导入包（Standard library prelude）](http://localhost/rust/reference/names/preludes.html#standard-library-prelude)
-	- [`std::prelude::v1`](http://localhost/rust/std/prelude/index.html)（使用`no_std`会改变该行为，详见[The `no_std` attribute](http://localhost/rust/reference/names/preludes.html#the-no_std-attribute)）
+  - [`std::prelude::v1`](http://localhost/rust/std/prelude/index.html)（使用`no_std`会改变该行为，详见[The `no_std` attribute](http://localhost/rust/reference/names/preludes.html#the-no_std-attribute)）
 -   [外部预导入包（Extern prelude）](http://localhost/rust/reference/names/preludes.html#extern-prelude)
-	- 核心包：[`core`](http://localhost/rust/core/index.html)
-	- 编译时链接的外部包（`rustc --extern xxx`）
-	- 项目根模块中引入的外部包（`extern crate xxx`）
+  - 核心包：[`core`](http://localhost/rust/core/index.html)
+  - 编译时链接的外部包（`rustc --extern xxx`）
+  - 项目根模块中引入的外部包（`extern crate xxx`）
 -  [语言预导入包（Language prelude）](http://localhost/rust/reference/names/preludes.html#language-prelude)
-	- 布尔值、数字、文本（`char`, `str`）等内置类型
-	- 内置属性，详见[Built-in attributes index](http://localhost/rust/reference/attributes.html#built-in-attributes-index)
+  - 布尔值、数字、文本（`char`, `str`）等内置类型
+  - 内置属性，详见[Built-in attributes index](http://localhost/rust/reference/attributes.html#built-in-attributes-index)
 -   [`macro_use` prelude](http://localhost/rust/reference/names/preludes.html#macro_use-prelude)
-	- 通过`#[macro_use]`属性修饰`extern crate xxx`引入的外库宏，例如[The `macro_use` attribute](http://localhost/rust/reference/macros-by-example.html#the-macro_use-attribute)
+  - 通过`#[macro_use]`属性修饰`extern crate xxx`引入的外库宏，例如[The `macro_use` attribute](http://localhost/rust/reference/macros-by-example.html#the-macro_use-attribute)
 -   [工具预导入包（Tool prelude）](http://localhost/rust/reference/names/preludes.html#tool-prelude)
-	- 如目前*rustc*识别的*rustfmt*, *clippy*等工具，详见[tool attributes](http://localhost/rust/reference/attributes.html#tool-attributes)。如`#[rustfmt::skip]`
+  - 如目前*rustc*识别的*rustfmt*, *clippy*等工具，详见[tool attributes](http://localhost/rust/reference/attributes.html#tool-attributes)。如`#[rustfmt::skip]`
 
 #### 外链库（Extern Crate）
 
@@ -1623,7 +1611,7 @@ fn main() {
 extern crate hello; // rust2018开始不再需要，见备注
 
 fn main() {
-	hello::public_fn();
+  hello::public_fn();
 }
 ```
  > Note: [No more `extern crate`](https://doc.rust-lang.org/edition-guide/rust-2018/path-changes.html#no-more-extern-crate)
@@ -1731,12 +1719,12 @@ fn main() { }
 ```rust
 // error: 未赋值，应该返回空元组
 {
-	1
+  1
 };
 
 // pass: 返回 ()
 {
-	()
+  ()
 };
 
 // pass: 返回 ()
@@ -1746,7 +1734,7 @@ fn main() { }
 
 // paas
 let x = {
-	1
+  1
 };
 ```
 
@@ -2485,7 +2473,7 @@ import { greet } from "./hello_world";
 greet("World!");
 ```
 
-# Others
+# 其他
 
 ```rust
 // 获取数据的类型名称
