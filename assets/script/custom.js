@@ -181,6 +181,7 @@
         }
         .${this.ident('menu')} li {
           list-style: none;
+          padding: 5px 0;
         }
         .${this.ident('menu')}::-webkit-scrollbar {
           width: 5px;

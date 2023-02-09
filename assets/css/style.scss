@@ -15,415 +15,449 @@ html {
 
   body {
     font-family: Times New Roman, PingFang SC, Microsoft YaHei, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
 
+    em {
+      padding: 0 2px;
+      font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
+    }
 
-  .main-content {
-    color: #383838;
-    font-size: 1rem;
-
-    h1,
-    h2,
-    h3,
-    h4,
-    h5,
-    h6 {
-      font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体, PingFang SC, Microsoft YaHei;
-      font-weight: bold;
+    a {
       color: #006bff;
-    }
-  }
+      padding: 0 2px;
+      transition: all 0.3s;
+      text-decoration: none;
+      font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
 
-  table {
-    word-break: break-word;
-  }
-
-  // https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/token.rb
-  // https://github.com/rouge-ruby/rouge/wiki/List-of-tokens
-  .highlight {
-    border: none;
-    background-color: #282a36;
-    border-radius: .5em;
-
-    pre.highlight {
-      border: none;
-      padding: 1em 1.5em;
-      border-radius: .5em;
-      background-color: #282a36;
-
-      &>code {
-        color: #f8f8f2;
+      &:hover, &.hover {
+        text-decoration: none;
+        border-radius: 0.1875em;
+        background: #006bff;
+        color: white;
       }
     }
 
-    // Keyword
-    .k {
-      color: #ff79c6;
-      font-weight: normal;
+    ul {
+      li {
+        padding: 5px;
+        border-radius: 4px;
+        &:not(:has(ul)):hover {
+          background: #eee;
+        }
+      }
+    }
 
-      // Declaration
-      &d {
+    img {
+      &[src*="#w50"] {
+        width: 50%;
+      }
+      &[src*="#w100"] {
+        width: 100%;
+      }
+      &[src*="#h100"] {
+        height: 100px;
+      }
+      &[src*="#h200"] {
+        height: 200px;
+      }
+      &[src*="#h300"] {
+        height: 300px;
+      }
+    }
+
+    table {
+      word-break: break-word;
+    }
+
+    .main-content {
+      color: #383838;
+      font-size: 1rem;
+
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体, PingFang SC, Microsoft YaHei;
+        font-weight: bold;
+        color: #006bff;
+      }
+
+      h1 {
+        font-size: 2em;
+      }
+
+      h2 {
+        font-size: 1.7em;
+      }
+
+      h3 {
+        font-size: 1.55em;
+      }
+
+      h4 {
+        font-size: 1.35em;
+      }
+
+      h5 {
+        font-size: 1.2em;
+      }
+
+      h6 {
+        font-size: 1em;
+      }
+
+      code {
+        @at-root html code, & {
+          font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
+          color: #f93d93;
+          margin: 0 5px;
+        }
+      }
+
+      pre {
+        code {
+          color: #f8f8f2;
+          font-size: 0.8em;
+        }
+        &.highlight, &:has(code) {
+          border: none;
+          padding: 1em 1.5em;
+          border-radius: .5em;
+          background-color: #282a36;
+        }
+      }
+    }
+
+    // https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/token.rb
+    // https://github.com/rouge-ruby/rouge/wiki/List-of-tokens
+    .highlight {
+
+      // Keyword
+      .k {
         color: #ff79c6;
         font-weight: normal;
+
+        // Declaration
+        &d {
+          color: #ff79c6;
+          font-weight: normal;
+        }
+
+        // Variable
+        &v {
+          color: #ff79c6;
+          font-weight: normal;
+        }
+
+        // Constant
+        &c {
+          color: #bd93f9;
+        }
+
+        // Namespace
+        &n {}
+
+        // Pseudo
+        &p {}
+
+        // Reserved
+        &r {}
+
+        // Type
+        &t {
+          color: #8be9fd;
+          font-weight: normal;
+        }
       }
 
-      // Variable
-      &v {
-        color: #ff79c6;
-        font-weight: normal;
-      }
-
-      // Constant
-      &c {
-        color: #bd93f9;
-      }
-
-      // Namespace
-      &n {}
-
-      // Pseudo
-      &p {}
-
-      // Reserved
-      &r {}
-
-      // Type
-      &t {
-        color: #8be9fd;
-        font-weight: normal;
-      }
-    }
-
-    // Comment
-    .c {
-      color: #6272a4;
-
-      // Single
-      &1 {
+      // Comment
+      .c {
         color: #6272a4;
+
+        // Single
+        &1 {
+          color: #6272a4;
+        }
+
+        // Hashbang
+        &h {}
+
+        // Doc
+        &d {}
+
+        // Multiline
+        &m {}
+
+        // Preproc
+        &p {
+          color: #ff79c6;
+          font-weight: normal;
+        }
+
+        // PreprocFile
+        &pf {}
+
+        // Special
+        &s {}
       }
 
-      // Hashbang
-      &h {}
-
-      // Doc
-      &d {}
-
-      // Multiline
-      &m {}
-
-      // Preproc
-      &p {
-        color: #ff79c6;
-        font-weight: normal;
-      }
-
-      // PreprocFile
-      &pf {}
-
-      // Special
-      &s {}
-    }
-
-    // Number
-    .m {
-      color: #bd93f9;
-
-      // Bin
-      &b {
+      // Number
+      .m {
         color: #bd93f9;
+
+        // Bin
+        &b {
+          color: #bd93f9;
+        }
+
+        // Integer
+        &i {
+          color: #bd93f9;
+        }
+
+        // Float
+        &f {
+          color: #bd93f9;
+        }
+
+        // Hex
+        &h {
+          color: #bd93f9;
+        }
+
+        // Oct
+        &o {
+          color: #bd93f9;
+        }
+
+        // Other
+        &x {
+          color: #bd93f9;
+        }
       }
 
-      // Integer
-      &i {
-        color: #bd93f9;
-      }
+      // (Number) Long
+      .il {}
 
-      // Float
-      &f {
-        color: #bd93f9;
-      }
-
-      // Hex
-      &h {
-        color: #bd93f9;
-      }
-
-      // Oct
-      &o {
-        color: #bd93f9;
-      }
-
-      // Other
-      &x {
-        color: #bd93f9;
-      }
-    }
-
-    // (Number) Long
-    .il {}
-
-    // Name
-    .n {
-      color: #f8f8f2;
-
-      // Attribute
-      &a {
-        color: #8be9fd;
-      }
-
-      // Builtin
-      &b {
-        color: #bd93f9;
-      }
-
-      // Class
-      &c {
-        color: #50fa7b;
-        font-weight: normal;
-      }
-
-      // Constant
-      &o {}
-
-      // Entity
-      &i {}
-
-      // Exception
-      &e {}
-
-      // decorator
-      &d {
-        color: #50fa7b;
-        font-weight: normal;
-      }
-
-      // Function
-      &f {
-        color: #50fa7b;
-        font-weight: normal;
-      }
-
-      // Label
-      &l {
-        color: #8be9fd;
-        font-weight: normal;
-      }
-
-      // Namespace
-      &n {
-        color: #8be9fd;
-        font-weight: normal;
-      }
-
-      // Tag
-      &t {
-        color: #FFFF7F;
-      }
-
-      // Variable
-      &v {
+      // Name
+      .n {
         color: #f8f8f2;
+
+        // Attribute
+        &a {
+          color: #8be9fd;
+        }
+
+        // Builtin
+        &b {
+          color: #bd93f9;
+        }
+
+        // Class
+        &c {
+          color: #50fa7b;
+          font-weight: normal;
+        }
+
+        // Constant
+        &o {}
+
+        // Entity
+        &i {}
+
+        // Exception
+        &e {}
+
+        // decorator
+        &d {
+          color: #50fa7b;
+          font-weight: normal;
+        }
+
+        // Function
+        &f {
+          color: #50fa7b;
+          font-weight: normal;
+        }
+
+        // Label
+        &l {
+          color: #8be9fd;
+          font-weight: normal;
+        }
+
+        // Namespace
+        &n {
+          color: #8be9fd;
+          font-weight: normal;
+        }
+
+        // Tag
+        &t {
+          color: #FFFF7F;
+        }
+
+        // Variable
+        &v {
+          color: #f8f8f2;
+        }
+
+        // Other
+        &x {
+          color: #8be9fd;
+        }
       }
 
-      // Other
-      &x {
-        color: #8be9fd;
-      }
-    }
+      // (Name Builtin) Pseudo
+      .bp {}
 
-    // (Name Builtin) Pseudo
-    .bp {}
+      // (Name Function) Magic
+      .fm {}
 
-    // (Name Function) Magic
-    .fm {}
-
-    // (Name) Property
-    .py {
-      color: #8be9fd;
-    }
-
-    // (Name Variable)
-    .v {
-
-      // Class
-      &c {}
-
-      // Global
-      &g {}
-
-      // Instance
-      &i {}
-
-      // Magic
-      &m {}
-    }
-
-    // Generic
-    .g {
-
-      // Deleted
-      &d {}
-
-      // Emph
-      &e {}
-
-      // Error
-      &r {}
-
-      // Heading
-      &h {}
-
-      // Inserted
-      &i {}
-
-      // Output
-      &o {}
-
-      // Prompt
-      &p {}
-
-      // Strong
-      &s {}
-
-      // Subheading
-      &u {}
-
-      // Traceback
-      &t {}
-
-      // Lineno
-      &l {}
-    }
-
-
-    // Operator
-    .o {
-      color: #ff79c6;
-
-      // Word
-      &w {}
-    }
-
-    // Punctuation
-    .p {
-      color: #f8f8f2;
-
-      // Indicator
-      &i {}
-    }
-
-    // String
-    .s {
-      color: #f1fa8c;
-
-      // Single
-      &1 {
-        color: #f1fa8c;
-      }
-
-      // Double
-      &2 {
-        color: #f1fa8c;
-      }
-
-      // Char
-      &c {
-        color: #f1fa8c;
-      }
-
-      // Regex
-      &r {
+      // (Name) Property
+      .py {
         color: #8be9fd;
       }
 
-      // Affix
-      &a {}
+      // (Name Variable)
+      .v {
 
-      // Backtick
-      &b {}
+        // Class
+        &c {}
 
-      // Doc
-      &d {}
+        // Global
+        &g {}
+
+        // Instance
+        &i {}
+
+        // Magic
+        &m {}
+      }
+
+      // Generic
+      .g {
+
+        // Deleted
+        &d {}
+
+        // Emph
+        &e {}
+
+        // Error
+        &r {}
+
+        // Heading
+        &h {}
+
+        // Inserted
+        &i {}
+
+        // Output
+        &o {}
+
+        // Prompt
+        &p {}
+
+        // Strong
+        &s {}
+
+        // Subheading
+        &u {}
+
+        // Traceback
+        &t {}
+
+        // Lineno
+        &l {}
+      }
+
+
+      // Operator
+      .o {
+        color: #ff79c6;
+
+        // Word
+        &w {}
+      }
+
+      // Punctuation
+      .p {
+        color: #f8f8f2;
+
+        // Indicator
+        &i {}
+      }
+
+      // String
+      .s {
+        color: #f1fa8c;
+
+        // Single
+        &1 {
+          color: #f1fa8c;
+        }
+
+        // Double
+        &2 {
+          color: #f1fa8c;
+        }
+
+        // Char
+        &c {
+          color: #f1fa8c;
+        }
+
+        // Regex
+        &r {
+          color: #8be9fd;
+        }
+
+        // Affix
+        &a {}
+
+        // Backtick
+        &b {}
+
+        // Doc
+        &d {}
+
+        // Escape
+        &e {}
+
+        // Heredoc
+        &h {}
+
+        // Interpol
+        &i {}
+
+        // Other
+        &x {}
+
+        // Symbol
+        &s {}
+      }
+
+      .d {
+
+        // Delimiter
+        &l {}
+      }
 
       // Escape
-      &e {}
+      .esc {}
 
-      // Heredoc
-      &h {}
-
-      // Interpol
-      &i {}
+      // Error
+      .err {}
 
       // Other
-      &x {}
+      .x {}
 
-      // Symbol
-      &s {}
-    }
-
-    .d {
-
-      // Delimiter
-      &l {}
-    }
-
-    // Escape
-    .esc {}
-
-    // Error
-    .err {}
-
-    // Other
-    .x {}
-
-    // Whitespace
-    .w {}
+      // Whitespace
+      .w {}
 
 
-  }
-
-  pre>code {
-    font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
-    color: #f8f8f2;
-    font-size: 0.8em;
-  }
-
-  code, .main-content code {
-    font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
-    // font-size: 0.8em;
-    color: #f93d93;
-    margin: 0 5px;
-  }
-
-  em {
-    padding: 0 2px;
-    font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
-  }
-
-  a {
-    color: #006bff;
-    padding: 0 2px;
-    transition: all 0.3s;
-    text-decoration: none;
-    font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
-
-    &:hover, &.hover {
-      text-decoration: none;
-      border-radius: 0.1875em;
-      background: #006bff;
-      color: white;
-    }
-  }
-
-  ul {
-    margin: 10px 0 20px 0;
-    li {
-      padding: 5px 5px 5px 0;
-      border-radius: 4px;
-      &:hover {
-        background: #eee;
-      }
     }
   }
 }
