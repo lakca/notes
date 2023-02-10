@@ -9,13 +9,18 @@
   }
 }
 
+li:not(:has(ul)):hover {
+  background: #eee;
+}
 
 html {
   font-size: 15px;
 
-  body {
-    font-family: Times New Roman, PingFang SC, Microsoft YaHei, "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  .toast-success {
+    background-color: #030303;
+  }
 
+  body {
     em {
       padding: 0 2px;
       font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
@@ -23,7 +28,6 @@ html {
 
     a {
       color: #006bff;
-      padding: 0 2px;
       transition: all 0.3s;
       text-decoration: none;
       font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
@@ -36,15 +40,10 @@ html {
       }
     }
 
-    ul {
       li {
         padding: 5px;
         border-radius: 4px;
-        &:not(:has(ul)):hover {
-          background: #eee;
-        }
       }
-    }
 
     img {
       &[src*="#w50"] {
@@ -66,11 +65,22 @@ html {
 
     table {
       word-break: break-word;
+      margin: 1em 0;
     }
 
     .main-content {
       color: #383838;
       font-size: 1rem;
+
+      blockquote {
+        color: #8590a6;
+        background-color: #f6f6f6;
+        margin-left: 0;
+        margin-right: 0;
+        border: solid 1px #f5f5f5;
+        padding: 10px 1em;
+        border-left: 0.3rem solid #006bff;
+      }
 
       h1,
       h2,
@@ -108,17 +118,31 @@ html {
       }
 
       code {
+        border: solid 1px #eee;
+        background: none;
+        cursor: pointer;
         @at-root html code, & {
-          font-family: Operator Mono, Fira Code, DejaVu Sans Mono, Source Code Pro, Menlo, Consolas;
           color: #f93d93;
           margin: 0 5px;
         }
       }
 
       pre {
+        position: relative;
+        .fa-copy {
+          position: absolute;
+          right: 1em;
+          top: 1em;
+          color: white;
+          cursor: pointer;
+        }
         code {
           color: #f8f8f2;
-          font-size: 0.8em;
+          font-size: 0.9em;
+          margin: 0;
+          border: none;
+          background: none;
+          cursor: unset;
         }
         &.highlight, &:has(code) {
           border: none;

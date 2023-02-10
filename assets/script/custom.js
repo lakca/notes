@@ -149,11 +149,7 @@
           left: -30rem;
         }
         .${this.ident('h1')} {
-          font-size: 1.2em;
-        }
-        .${this.ident('h2')}, .${this.ident('h3')},
-        .${this.ident('h4')}, .${this.ident('h5')}, .${this.ident('h6')} {
-          font-size: .9em;
+          font-size: 1.1em;
         }
         .${this.ident('menu')} {
           position: fixed;
@@ -176,12 +172,12 @@
           transition: left .3s;
         }
         .${this.ident('menu')} ul {
-          margin: .5em 0;
           padding-inline-start: 1em;
         }
         .${this.ident('menu')} li {
           list-style: none;
-          padding: 5px 0;
+          margin: 6px 0;
+          padding: 0;
         }
         .${this.ident('menu')}::-webkit-scrollbar {
           width: 5px;
@@ -395,7 +391,7 @@
         if (plv > lv) indexes.length = lv
         const id = indexes.join('.')
 
-        const html = [`<li>`, `<a data-id="${id}" href="#${h.id}">${id} ${h.innerHTML}</a>`, '</li>']
+        const html = [`<li>`, `<a data-id="${id}" href="#${h.id}"><span style="font-size:0.5em">${id}</span> ${h.innerHTML}</a>`, '</li>']
 
         const span = document.createElement('a')
         span.textContent = id + '. '
@@ -578,4 +574,33 @@
         }
       }
     }
+
+    document.body.addEventListener('click', async e => {
+      if (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE') {
+        await navigator.clipboard.writeText(e.target.textContent)
+        window.toastr && window.toastr.success(e.target.textContent, 'Copied!')
+      } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.tagName === 'PRE') {
+        await navigator.clipboard.writeText(e.target.parentElement.textContent)
+        window.toastr && window.toastr.success('Copied!')
+      }
+    })
+    window.toastr.options = {
+      escapeHtml: true,
+      positionClass: 'toast-bottom-right',
+      timeOut: 1500,
+      extendedTimeOut: 1000,
+      showMethod: 'slideDown',
+      hideMethod: 'slideUp',
+      closeMethod: 'fadeOut',
+      showDuration: 100,
+      hideDuration: 300,
+      closeDuration: 300,
+      closeEasing: 'swing',
+    }
+
+    Array.from(document.body.querySelectorAll('pre.highlight')).forEach(e => {
+      const icon = document.createElement('div')
+      icon.classList.add('fa', 'fa-copy')
+      e.appendChild(icon)
+    })
   }())
