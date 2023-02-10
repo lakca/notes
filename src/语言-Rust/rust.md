@@ -74,7 +74,6 @@ date: 2021-04-19T11:13:31.973Z
 
 ### 官方文档
 
-
 - Rust 学习：[Learn Rust](https://www.rust-lang.org/learn)
 - Rust 教程（*The Book*）：[The Rust Programming Language](https://doc.rust-lang.org/book/)，[中文翻译](https://kaisery.github.io/trpl-zh-cn/)
 - Rust 实例教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
@@ -93,7 +92,7 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
 - Rust 社区仓库文档：[documentation host for crates](https://docs.rs/)
 - Rust 仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
-- Rust 编译错误查询文档：[Rust Compiler Error Index](https://doc.rust-lang.org/error-index.html)
+- Rust 错误代码查询文档：[Rust error codes index](https://doc.rust-lang.org/error_codes/error-index.html)，阅读该文档对深入理解编程语言和Rust都非常有用。
 - Rust 非稳定功能：[The Rust Unstable Book](https://doc.rust-lang.org/stable/unstable-book/)
 - Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
 - Rust 和 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
@@ -150,9 +149,7 @@ date: 2021-04-19T11:13:31.973Z
 ### 语言习惯
 
 - 类型名用 *PascalCase* ；
-
 - 常量用 *UPPER_SNAKE_CASE* ；
-
 - 变量名、函数名、属性名等一般标识符使用 *lower_snake_case* ；
 
 ### Rustacean
@@ -382,7 +379,6 @@ git = "https://example.com/path/to/repo"
 #### 工具
 
 - `cargo install/uninstall`：安装可执行文件（命令）
-
 - `cargo vendor`：（下载）创建本地注册源目录
 
 #### 创建
@@ -395,7 +391,6 @@ edition = "2021" # 设置rustc大版本
 ```
 
 - `cargo new`：创建（新目录）项目
-
 - `cargo init`：初始化（当前目录）项目；
 
 #### 依赖
@@ -437,21 +432,17 @@ native = { path = "native/x86_64" }
 ```
 
 - `cargo search`
-
 - `cargo fetch`：从网络下载项目依赖包到本地（用于离线编译）
-
 - `cargo update`
 
 #### 开发
 
 - `cargo run`：直接运行代码（编译+运行可执行文件）；（如果没有提前下载）会自动下载依赖。
-
 - `cargo clean`：清理Cargo生成的工件；
 
 #### 测试
 
 - `cargo test`：执行测试代码；
-
 - `cargo bench`： 性能测试；
 
 #### 质量
@@ -530,11 +521,8 @@ exclude = [
   - [ctates.io](https://crates.io) 限制一个包最大*10MB*，可通过`cargo package --list`命令查看打包后的文件列表，确认是否包含了必要和多余文件。
   - 打包前会自动执行一些检查，比如检测本地代码是否提交、*Cargo.toml*的规范性验证等。
   - 打包完成后还会自动解压到临时目录执行一次编译验证。
-
 - `cargo login/logout`：
-
 - `cargo publish`
-
 - `cargo yank`：撤销已发布版本。
   - 该命令不会删除任何源文件（所以若上传了密码等机密信息只能重置它们）。
   - 如果撤销的版本已经在其他项目的*Cargo.lock*（可以看到*checksum*字段）中存在，这些项目仍将使用撤销的版本。
@@ -907,63 +895,13 @@ rustc --help | grep '\--emit'
 -   `tls-models` — List of Thread Local Storage models supported. The model may be selected with the `-Z tls-model=val` flag.
 -   `native-static-libs` — This may be used when creating a `staticlib` crate type. If this is the only flag, it will perform a full compilation and include a diagnostic note that indicates the linker flags to use when linking the resulting static library. The note starts with the text `native-static-libs:` to make it easier to fetch the output.
 
-# 变量
-
-- *Immutable*: 变量默认是不可变的；
-
-- *Infer*: 变量类型可由初始化值推断；
-
-- *Shadowing*: 变量可遮蔽，即可声明同名变量（覆盖旧有变量）；
-
-- 声明类型后，变量可不初始化；
-
-```rust
-// 完整声明变量
-let foo: &str = "hello";
-
-// 初始化不是必要的
-let mut bar: &str;
-
-// 也可由初始化自动推断类型
-let x;
-x = 1; // i32
-
-let foo = 1; // i32
-
-// 变量遮蔽（Shadowing）：声明同名变量
-let foo = foo.len(); // usize
-
-// 变量默认不可变
-let foo = 1;
-
-// 可变变量（Mutable）
-let mut foo = 2;
-
-```
-
-# 常量
-
-```rust
-// 必须声明类型
-const MAX: u8 = 100;
-```
-
-- 常量在编译时确定；
-
-- 可在任意域声明，包括全局域；
-
-- 必须是常量表达式，不能是运行时返回的值；
-
-- 存活于程序运行全程；
-
-# 内存管理（Memory Management）
+# 内存管理
 
 ## 有效性
 
 > 有效性决定了变量是否失效、数据是否会被回收。
 
 - 数据（*Value*, *Rvalue*, *右值*）的有效范围就是变量（*Variable*, *LValue*, *左值*, *Owner*）的有效范围。
-
 - 变量的有效域：从变量在作用域（*Block Scope*: `{}`）中出现开始，到该变量最后一次被调用。
 
 由上，我们可以在同一个作用域中声明同名变量，即 *Shadowing*：
@@ -1130,16 +1068,14 @@ let s = "hello".to_string();
 ## 数字
 
 - 默认整型为 `i32` ，默认浮点型为 `f64`。
-
 - 支持运算符： `+-*/%` ;
-
 - 若赋值超出声明的类型范围，如 `i8` 范围为 `0 ~ 255`，发布编译（`--release`）的执行时不会检查报错，而是遵循 *two’s complement wrapping* 规则，进行溢出偏移，如 `let i: i8 = 260; assert_eq!(i, 4)`；非发布编译则会报错，若溢出偏移为程序正常设计，可通过 `#![allow(overflowing_literals)]` 声明来允许该功能；
 
 数字字面量（`Number Literals`）:
 
 ```rust
 // 整型字面量可以使用 _ 分隔符增强可读性
-let i = 1_000_000；
+let i = 1_000_000;
 // 后缀声明类型
 let i = 10u8;
 
@@ -1160,7 +1096,6 @@ let i = b'a'; // 等价 let i = 97
 `char` is a ‘Unicode scalar value’, which is similar to, but not the same as, a ‘Unicode code point’.
 
 - 字符范围：*U+0000* ~ *U+D7FF* 和 *U+E000* ~ *U+10FFFF* 。
-
 - 字符用单引号 `''` 标注。
 
 ```rust
@@ -1204,11 +1139,8 @@ tup.0 = 12;
 > *array*：一组类型相同（*homogenous type*）、长度固定（*fixed length*）的序列（*sequence*）值。（相对地，变长数组见 `Vector` ）
 
 - 元素类型相同；
-
 - 长度固定；
-
 - 存于栈（*Stack*）上；
-
 - 只能访问范围内的元素；
 
 定义：
@@ -1255,21 +1187,13 @@ fn main() {
 ```
 
 - 引用分为可变引用（`&mut`, `ref mut`）和不可变引用（`&`, `ref`）。（*You can get one by using the `&` or `&mut` operators on a value, or by using a `ref` or `ref mut` pattern.*）
-
 - 引用也是一个变量（广义左值），其有效作用域（有效存在）开始于引用声明，结束于该引用最后一次使用。（*A reference’s scope starts from where it is introduced and continues through the last time that reference is used.*）
-
 - 在不造成数据竞争（*Date Races*）的情况下，引用可以同时存在多个：
-
    - 同时 *有效存在* 多个不可变引用；
-
    - 同时 *有效存在* 多个可变引用；
-
    - 不可~~同时 *有效存在* 可变和不可变引用~~；
-
 - 引用比较的是地址，不是值。（*Reference equality by address, instead of comparing the values pointed to.*）
-
 - 动态引用可以转换成静态引用。（*`&mut T` references can be freely coerced into `&T` references with the same referent type*）
-
 - 长周期引用可以转换成短周期引用。（*references with longer lifetimes can be freely coerced into references with shorter ones.*）
 
 > Note: *Historically, Rust kept the borrow alive until the end of scope, so these examples might fail to compile with older compilers. Also, there are still some corner cases where Rust fails to properly shorten the live part of the borrow and fails to compile even when it looks like it should. These'll be solved over time. [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
@@ -1474,18 +1398,13 @@ assert_eq!(Some(&20), scores.get("Blue"));
 assert_eq!(None, scores.get("Yellow"));
 ```
 
-
-# 空和错误
-
-# 语言基础
-
-## 变量和项目
+# 变量和项目
 
 >[项目](http://localhost/rust/reference/items.html)，是程序文件的一部分，在编译期确定并编译入程序文件，在程序执行期间常驻于内存中，通常是只读内存。如`struct`,`trait`,`const`等。为可在模块（*Modules*）全局范围内出现的任何声明。
 >
 >[变量](https://doc.rust-lang.org/reference/variables.html)，是执行栈帧的一部分，在执行期间建立，用于指向内存数据。包括函数的命名参数（*named function parameter*）、局部命名变量（*named local variable*，`let`声明）、[匿名临时变量](https://doc.rust-lang.org/reference/expressions.html#temporaries)（*annoymous temporary*，表达式中的字面量或中间值可能是在执行时临时分配的）。
 
-### 变量（Variable）
+## 变量（Variable）
 
 > [变量](https://doc.rust-lang.org/reference/variables.html)
 
@@ -1497,18 +1416,94 @@ fn hello(word: &str) {
 let word = "hello";
 ```
 
-### 项目（Item）
+- *Immutable*: 变量默认是不可变的；
+- *Infer*: 变量类型可由初始化值推断；
+- *Shadowing*: 变量可遮蔽，即可声明同名变量（覆盖旧有变量）；
+- 声明类型后，变量可不初始化；
+
+```rust
+// 完整声明变量
+let foo: &str = "hello";
+
+// 初始化不是必要的
+let mut bar: &str;
+
+// 也可由初始化自动推断类型
+let x;
+x = 1; // i32
+
+let foo = 1; // i32
+
+// 变量遮蔽（Shadowing）：声明同名变量
+let foo = foo.len(); // usize
+
+// 变量默认不可变
+let foo = 1;
+
+// 可变变量（Mutable）
+let mut foo = 2;
+
+```
+
+### 临时变量
+
+> 关于临时变量，可以查看错误码[E0716](https://doc.rust-lang.org/stable/error_codes/E0716.html)
+
+临时变量，有固定的销毁机制，通常在*封闭语句（Enclosing Statement）*的末尾销毁：
+
+```rust
+fn foo() -> i8 { 1 }
+fn bar(s: &i8) -> &i8 { s }
+```
+```rust
+let a = bar(&foo()); // bar()执行完后销毁&foo()
+println!("{}", a); // 销毁后调用，导致引用错误
+```
+```rust
+println!("{}", bar(&foo())); // 正常调用，println!()执行完后销毁&foo()
+```
+
+除非：
+
+1. 将临时变量存储到变量中，如：
+
+```rust
+let n = &foo();
+let a = bar(n);
+println!("{}", a);
+```
+
+2. 将临时变量存储到聚合结构中，如元组、结构体等：
+
+```rust
+let n = (&foo(),);
+println!("{}", *n.0);
+```
+
+### 常量
+
+```rust
+// 必须声明类型
+const MAX: u8 = 100;
+```
+
+- 常量在编译时确定；
+- 可在任意域声明，包括全局域；
+- 必须是常量表达式，不能是运行时返回的值；
+- 存活于程序运行全程；
+
+## 项目（Item）
 
 > [项目](https://doc.rust-lang.org/reference/items.html)
 
-#### 模块（Module）
+### 模块（Module）
 
-> [模块](http://localhost/rust/reference/items/modules.html)，是多[[#项目（ Item ）]]的容器，用于项目的访问性隔离。*A module is a container for zero or more [items](http://localhost/rust/reference/items.html).*
+> [模块](http://localhost/rust/reference/items/modules.html)，是多[[#项目item]的容器，用于项目的访问性隔离。*A module is a container for zero or more [items](http://localhost/rust/reference/items.html).*
 
 - 同名模块不能声明多次（不支持遮蔽和扩展）
 - 模块与[[#类型系统]]共享命名空间，且不能遮蔽
 - 文件模块有*mod-rs*和*non-mod-rs*两种类型，其中*mod-rs*，包括根模块*main.rs*和*lib.rs*, 以及目录模块*mod.rs*
-- *Cargo.toml*中声明的依赖，以及外链库（`rustc --extern`）是不需要单独加载的，这些属于[预导入包（Preludes）](#预导入包（Preludes）)。
+- *Cargo.toml*中声明的依赖，以及外链库（`rustc --extern`）是不需要单独加载的，这些属于[预导入包（Preludes）](#预导入包Preludes)。
 
 ```rust
 // 内联模块：
@@ -1582,7 +1577,7 @@ fn main() {
 }
 ```
 
-##### 预导入包（Preludes）
+#### 预导入包（Preludes）
 
 > [Preludes](http://localhost/rust/reference/names/preludes.html#extern-prelude): 是一组被自动引入到所有模块的名称。但这些名称并不属于这些模块（不能通过`self::xxx`的方式调用）。
 
@@ -1602,7 +1597,7 @@ fn main() {
 -   [工具预导入包（Tool prelude）](http://localhost/rust/reference/names/preludes.html#tool-prelude)
   - 如目前*rustc*识别的*rustfmt*, *clippy*等工具，详见[tool attributes](http://localhost/rust/reference/attributes.html#tool-attributes)。如`#[rustfmt::skip]`
 
-#### 外链库（Extern Crate）
+### 外链库（Extern Crate）
 
 > [外链库](http://localhost/rust/reference/items/extern-crates.html)，在编译时链接的其他（二进制文件）库（*ABI*, *Application Binary Interface*）。尤其用于与其他语言进行交互（*[FFI](https://rustcc.cn/article?id=3b8241d0-c4ca-4f49-8e07-0a5142b00f59)*, *Foregin Function Interface*）
 
@@ -1627,7 +1622,7 @@ cargo引入：
 hello = { path: "path/to/hello" }
 ```
 
-## 表达式和语句
+# 表达式和语句
 
 > Rust主要是一门[表达式语言](https://doc.rust-lang.org/reference/statements-and-expressions.html)，绝大多数计算值或执行副作用的计算式都是表达式，一般地，表达式结尾加上分号即形成了语句。
 
@@ -1660,29 +1655,29 @@ hello = { path: "path/to/hello" }
 
 - 当表达式没有明确返回值的时候，返回的是空元组（`()`）。
 
-### 语句（Statement）
+## 语句（Statement）
 
 > [语句](https://doc.rust-lang.org/reference/statements.html)：
 
 除了项目的声明语句（*Item Declaration Statement*）外，如声明结构：`struct Foo {}`，语句通常以分号`;`结尾。
 
-#### 声明语句（Declaration Statement）
+### 声明语句（Declaration Statement）
 
-##### 项目声明语句（Item Declaration）
+#### 项目声明语句（Item Declaration）
 
-##### 变量声明语句（Variable Declaration）
+#### 变量声明语句（Variable Declaration）
 
-#### 表达式语句（Expression Statement）
+### 表达式语句（Expression Statement）
 
-### 表达式（Expression）
+## 表达式（Expression）
 
-#### 字面量表达式（Literal）
+### 字面量表达式（Literal）
 
 > [字面量](https://doc.rust-lang.org/reference/tokens.html#literals)，不需要名称（如变量）引用，直接表达一个值的量。
 
 [主要有](https://doc.rust-lang.org/reference/tokens.html#literals)数字字面量、布尔值字面量、字符字面量、字符串字面量。
 
-#### 路径表达式（Path）
+### 路径表达式（Path）
 
 > [路径](https://doc.rust-lang.org/reference/paths.html)：由命名空间限定符`::`逻辑分隔的一个或多个路径分段序列，用于返回变量（*Variable*）或项目（*Item*）。
 
@@ -1709,7 +1704,7 @@ macro_rules! inc {
 fn main() { }
 ```
 
-#### 块表达式（Block）
+### 块表达式（Block）
 
 > [块](https://doc.rust-lang.org/reference/expressions/block-expr.html)：包括控制流（如`if {}`）表达式，和独立存在的匿名命名空间（`{}`）。
 > (A _block expression_, or _block_, is a control flow expression and anonymous namespace scope for items and variable declarations.)
@@ -1738,18 +1733,17 @@ let x = {
 };
 ```
 
-## 类型系统
+# 类型系统
 
-### 内置类型（Built-in Types）
+## 内置类型（Built-in Types）
 
 
 
-## 控制流程
+# 控制流程
 
-### `if`
+## `if`
 
 - 条件的类型必须为 `bool` ；
-
 - 条件不要求必须有 `else`（*may incomprehensive*）；
 
 ```rust
@@ -1762,7 +1756,7 @@ if true {
 let x = if true { 1 } else { 2 }; // 注意返回值必须类型相同，因为 Rust 是静态类型，类型在编译时就确定。
 ```
 
-### `while`
+## `while`
 
 - 条件的类型必须为 `bool` ；
 
@@ -1770,13 +1764,13 @@ let x = if true { 1 } else { 2 }; // 注意返回值必须类型相同，因为 
 while x {}
 ```
 
-### `for`
+## `for`
 
 ```rs
 for x in iter {}
 ```
 
-### `loop`
+## `loop`
 
 > 无条件循环。
 
@@ -1813,7 +1807,9 @@ loop {
 let a = loop { break 1 }
 ```
 
-## 指针
+# 空和错误
+
+# 指针
 
 > *Raw, unsafe pointers, `*const T`, and `*mut T`.*
 
@@ -1853,9 +1849,7 @@ fn add(x: i32, y: i32) -> i32 {
 > *Struct*: 用以创建特定结构的类型。实际上是一组有名字的值（*Fields*）的模版（*Template*）。
 
 - *fields* 的类型不必相同;
-
 - *fields* 没有顺序；
-
 - *struct* 不支持单独定义 *fields* 的可变性（*mutability*），只能够在实例化时定义实例的可变性；
 
 \* *struct* 写法和 *Javascript ES6* 对象相似，均支持点表示法、简写属性、展开语法等，但要注意其中的区别。
@@ -2086,11 +2080,8 @@ match result {
 > 使用 `match` 表达式通过一系列的匹配模式（*Patterns*）来比对（*Matching*）值。
 
 - 匹配到后就返回，不会继续向下匹配；(*the first arm matched, no other arms are compared.*)
-
 - 匹配分支必须完全，尤其是 `Option<T>` 别忘添加 `None` 的匹配;（*Matches Are Exhaustive*）
-
 - 可以使用占位符下划线 `_` 来匹配任意值。（*The _ pattern will match any value.*）
-
 - 匹配的模式可以是字面量、变量名、通配符以及其他等等，具体可见 *Pattern* 章节；
 
 ```rust
@@ -2150,7 +2141,6 @@ let x = if let Coin::Penny = m {
 > 包（*Package*）是一个包含包配置文件（*Cargo.toml*）和库（*Crates*）的文件夹。（*A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.*）
 
 - 一个包（*package*）只可以包含一个库资源文件（*crate library*）树；
-
 - 一个包（*package*）可以包含多个库可执行文件（*crate binary*）树；
 
 ## 库
@@ -2167,9 +2157,7 @@ let x = if let Coin::Penny = m {
 *Cargo* 约定：
 
 - *src/main.rs* 作为 *package* 同名 *crate binary* 的入口文件；
-
 - *src/lib.rs* 作为 *package* 同名 *crate library* 的入口文件；
-
 - *src/bin* 作为一个存放其他 *crate binary* 的文件夹；
 
 ## 路径
@@ -2196,9 +2184,7 @@ std::io::stdout();
 实际上可以把模块（*module*）理解为一个具名的作用域（*named scope*），特殊之处是在该作用域中可以手动控制其内部资源的暴露并通过特殊方式访问。所以默认情况下，模块有作用域同样的规则：
 
 - 模块内部对模块父域（*parent scope*）默认不可见，通过 `pub` 暴露；
-
 - 同级域的资源（*siblings*）互相可见；
-
 - 父域（*parent scope*）对其中的模块（*module in the scope*）可见；
 
 具体用法：
@@ -2373,9 +2359,7 @@ pub fn eat_at_restaurant() {
 > 通过 `use` 在当前域（*current scope*）中引入路径（*paths*）。相当于在当前域（*current scope*）中给指定路径（*paths*）创建了一个软链接/别名。如 `use std::io; let s = io::stdout();`。(*Adding `use` and a path in a scope is similar to creating a symbolic link in the filesystem. *)
 
 - \* 在 *Rust* 代码中不存在引入（*import*）包一说，只要注册到 *Rust* 或者 *Cargo*（*dependencies*）的 *Crate* 都可以直接调用，如 `std::io::stdout();`。使用 `use` 只是为了清晰代码依赖结构和简便书写 `use std::io; let s = io.stdout();`，
-
 - `use` 默认是绝对路径；
-
 - `use` 支持 *glob* 通配符；
 
 1. 引入当前 *crate* 的 *paths* ：
