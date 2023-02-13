@@ -24,6 +24,12 @@ html {
     em {
       padding: 0 2px;
       font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
+      cursor: pointer;
+    }
+
+    b, strong {
+      border-bottom: solid 1px;
+      cursor: pointer;
     }
 
     a {

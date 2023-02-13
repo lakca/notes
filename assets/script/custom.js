@@ -576,7 +576,7 @@
     }
 
     document.body.addEventListener('click', async e => {
-      if (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE') {
+      if (['EM', 'B', 'STRONG'].includes(e.target.tagName) || (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE')) {
         await navigator.clipboard.writeText(e.target.textContent)
         window.toastr && window.toastr.success(e.target.textContent, 'Copied!')
       } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.tagName === 'PRE') {
