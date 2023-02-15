@@ -579,8 +579,8 @@
       if (['EM', 'B', 'STRONG'].includes(e.target.tagName) || (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE')) {
         await navigator.clipboard.writeText(e.target.textContent)
         window.toastr && window.toastr.success(e.target.textContent, 'Copied!')
-      } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.tagName === 'PRE') {
-        await navigator.clipboard.writeText(e.target.parentElement.textContent)
+      } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.classList.contains('highlight')) {
+        await navigator.clipboard.writeText(e.target.parentElement.querySelector('pre').textContent)
         window.toastr && window.toastr.success('Copied!')
       }
     })
@@ -599,8 +599,10 @@
     }
 
     Array.from(document.body.querySelectorAll('pre.highlight')).forEach(e => {
-      const icon = document.createElement('div')
-      icon.classList.add('fa', 'fa-copy')
-      e.appendChild(icon)
+      if (e.parentElement.classList.contains('highlight')) {
+        const icon = document.createElement('div')
+        icon.classList.add('fa', 'fa-copy')
+        e.parentElement.appendChild(icon)
+      }
     })
   }())

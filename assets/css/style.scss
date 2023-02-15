@@ -46,10 +46,10 @@ html {
       }
     }
 
-      li {
-        padding: 5px;
-        border-radius: 4px;
-      }
+    li {
+      padding: 5px;
+      border-radius: 4px;
+    }
 
     img {
       &[src*="#w50"] {
@@ -72,6 +72,18 @@ html {
     table {
       word-break: break-word;
       margin: 1em 0;
+    }
+
+    .highlight:has(>pre) {
+      position: relative;
+
+      .fa-copy {
+        position: absolute;
+        right: 1em;
+        top: 1em;
+        color: white;
+        cursor: pointer;
+      }
     }
 
     .main-content {
@@ -134,14 +146,6 @@ html {
       }
 
       pre {
-        position: relative;
-        .fa-copy {
-          position: absolute;
-          right: 1em;
-          top: 1em;
-          color: white;
-          cursor: pointer;
-        }
         code {
           color: #f8f8f2;
           font-size: 0.9em;
