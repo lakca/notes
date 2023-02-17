@@ -288,7 +288,7 @@ date: 2020-10-09T07:22:16.283Z
 | `'<`, `'>`             | `` `< ``, `` `> ``           |              | **Goto** the first/last line or character of last selected Visual area                 |
 | `'(`, `')`             | `` `( ``, `` `) ``, `(`, `)` |              | **Goto** the start/end of current sentence                                             |
 | `'{`, `'}`             | `` `{ ``, `` `} ``, `{`, `}` |              | **Goto** the start/end of current paragraph                                            |
-| `''`                   | ` `` `                       |              | **Goto** the position before the latest jump                                           |
+| `''`                   | ``` `` ```                   |              | **Goto** the position before the latest jump                                           |
 | `'"`                   | `` `" ``                     |              | **Goto** the cursor position when last exiting the current buffer                      |
 | `'^`                   | `` `^ ``                     |              | **Goto** the position where the cursor was the last time when Insert mode was stopped. |
 | `'.`                   | `` `. ``                     |              | **Goto** the position where the last change was made                                   |
@@ -654,13 +654,14 @@ date: 2020-10-09T07:22:16.283Z
 
 - 通过在命令后面加上`?`，获取命令值，如 `:set number?`
 
-## 常用命令：
+## 常用命令
 
-| `command` |     |
-| --------- | --- |
-| `:retab`  |     |
+| Command      |              |
+| ------------ | ------------ |
+| `:retab`     |              |
+| `:Ex(plore)` | 浏览当前目录 |
 
-## 常用配置：
+## 常用配置
 
 | `:set ...`       |                          |
 | ---------------- | ------------------------ |
@@ -734,7 +735,7 @@ date: 2020-10-09T07:22:16.283Z
 
 显示坐标轴：`set cursorline/cul/nocursorline/nocul`，`set cursorcolumn/cuc/nocursorcolumn/nocuc`
 
-## marks
+## 标记（marks）
 
 - 列出标记：`:marks`
 
@@ -890,12 +891,16 @@ type:
 
 `:set paste`
 
+## 显示搜索结果的数量
+
+`set shortmess-=S`
+
 # 键名查询
 
 - 获取所有按键代码（名称）: `:h keycodes`
 
 | notation             | meaning                                                                               | equivalent | decimal          | value(s) ~                    |
-| -                    | -                                                                                     | -          | -                | -                             |
+| -------------------- | ------------------------------------------------------------------------------------- | ---------- | ---------------- | ----------------------------- |
 | `<Nul>`              | zero                                                                                  | `CTRL-@`   | 0 (stored as 10) | *`<Nul>`*                     |
 | `<BS>`               | backspace                                                                             | `CCTRL-H`  | 8                | *backspace*                   |
 | `<Tab>`              | tab                                                                                   | `CCTRL-I`  | 9                | *tab* *Tab*  *linefeed*       |
@@ -924,7 +929,7 @@ type:
 | `<C-Left>`           | control-cursor-left                                                                   |            |                  |                               |
 | `<C-Right>`          | control-cursor-right                                                                  |            |                  |                               |
 | `<F1>` - `<F12>`     | function keys 1 to 12                                                                 |            |                  | *function_key* *function-key* |
-| `<S-F1>` - `<S-F12>` | shift-function keys 1 to 12                                                           |            |                  | *`<S-F1>`*
+| `<S-F1>` - `<S-F12>` | shift-function keys 1 to 12                                                           |            |                  | *`<S-F1>`*                    |
 | `<Help>`             | help key                                                                              |            |                  |                               |
 | `<Undo>`             | undo key                                                                              |            |                  |                               |
 | `<Insert>`           | insert key                                                                            |            |                  |                               |

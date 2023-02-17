@@ -1076,7 +1076,7 @@ log = false
 git log [<options>] [<revision range>] [[--] <path>...]
 ```
 
-指定文件：
+### 指定文件
 
 ```bash
 <path>
@@ -1102,28 +1102,7 @@ git log [<options>] [<revision range>] [[--] <path>...]
 > git log -L /echo/,+10:test.sh # 查找test.sh有修改从匹配正则表达式/echo/的行开始总共10行的log
 ```
 
-对比分支不同：
-
-```bash
-# 不存在于A的parents中，但存在于B的parents中的提交
-git log <A>..<B>
-# 相当于
-git log ^<A> <B>
-
-> git log develop..master
-# 等价于：
-> git log develop ^master
-
-> git log HEAD ^HEAD~
-# 等同于：
-> git log -1
-```
-
-```bash
-git log <A>...<B> # 同时存在于A和B的parents中的提交
-# 或
-git log A B --not $(git merge-base --all A B)
-```
+### 日志数量
 
 限制日志数量：
 
@@ -1137,15 +1116,7 @@ git log A B --not $(git merge-base --all A B)
 --skip=<number>
 ```
 
-匹配文本内容：
-
-```bash
--S<string>
--G<regex>
--S<string> --pickaxe-regex
-```
-
-匹配提交人/作者：
+### 指定提交人
 
 ```bash
 # 指定作者/提交人
@@ -1153,7 +1124,7 @@ git log A B --not $(git merge-base --all A B)
 --committer=<pattern>
 ```
 
-制定提交时间范围：
+### 指定提交时间
 
 ```bash
 # 指定时间：
@@ -1161,7 +1132,7 @@ git log A B --not $(git merge-base --all A B)
 --until=, --before=
 ```
 
-匹配提交信息（*commit message*）：
+### 匹配提交信息
 
 ```bash
 # 匹配 commit message，其中pattern可以且默认为正则表达式：
@@ -1180,7 +1151,15 @@ git log A B --not $(git merge-base --all A B)
 --all-match
 ```
 
-匹配提交信息（*message*）：
+### 匹配提交内容
+
+```bash
+-S<string>
+-G<regex>
+-S<string> --pickaxe-regex
+```
+
+### 指定分支
 
 ```bash
 # 指定refs：
@@ -1236,26 +1215,30 @@ git log A B --not $(git merge-base --all A B)
 --submodule[=short|log|diff]
 ```
 
-其他：
+### 对比分支
 
 ```bash
-# 显示 bytes of commit message
-git log --log-size
+# 不存在于A的parents中，但存在于B的parents中的提交
+git log <A>..<B>
+# 相当于
+git log ^<A> <B>
+
+> git log develop..master
+# 等价于：
+> git log ^develop master
+
+> git log HEAD ^HEAD~
+# 等同于：
+> git log -1
 ```
-
-格式化：
-
-[PRETTY FORMATS](https://git-scm.com/docs/git-log)
 
 ```bash
---format=<format-string>
+git log <A>...<B> # 同时存在于A和B的parents中的提交
+# 或
+git log A B --not $(git merge-base --all A B)
 ```
 
-- Author (Committer, a => c)
-	- name: `%an`, `%aN`
-	- email: `%ae`, `%aE`, `%al`, `%aL`
-	- date:
-		- `%ah` (human)`%as` (YYYY-MM-DD), `%aI` (ISO 8601), `%ai` (ISO 8601), `%at` (UNIX), `%ar` (relative), `%aD` (RFC2822), `%ad` (Fri, 24 Dec 2021 16:11:27 +0800)
+### 格式化
 
 ```bash
 # 指定每条日志的整体格式：
@@ -1295,6 +1278,29 @@ git log --log-size
 --output-indicator-old=<char>
 --output-indicator-context=<char>
 
+```
+
+[PRETTY FORMATS](https://git-scm.com/docs/git-log)
+
+```bash
+--format=<format-string>
+```
+
+| 内容               | 占位符                                                                                                                                                                          |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 换行               | `%n`                                                                                                                                                                            |
+| 切换颜色           | `%Cred`,`%Cgreen`,`%Cblue`,`%Creset`                                                                                                                                            |
+| 提交哈希值         | `%h`, `%H`                                                                                                                                                                      |
+| 提交信息           | *Subject*：`%s`；*Body*：`%b`, `%B`；*Note*：`%N`                                                                                                                               |
+| （*Author*）作者名 | `%an`, `%aN`（*Committer*相应地改成`%cn`, `%cN`，下同）                                                                                                                         |
+| 作者提交时间       | `%ah` (*human*), `%as` (*YYYY-MM-DD*), `%aI` (*ISO 8601*), `%ai` (*ISO 8601*), `%at` (*UNIX*), `%ar` (*relative*), `%aD` (*RFC2822*), `%ad` (*Fri, 24 Dec 2021 16:11:27 +0800*) |
+| 作者邮箱           | `%ae`, `%aE`, `%al`, `%aL`                                                                                                                                                      |
+
+### 其他
+
+```bash
+# 显示 bytes of commit message
+git log --log-size
 ```
 
 ## diff（对比）
