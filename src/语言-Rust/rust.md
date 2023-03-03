@@ -2297,16 +2297,6 @@ fn demo() -> &'static str {
 }
 ```
 
-#### 原始指针（Raw Pointer）
-
-#### 函数指针（Function Pointer）
-
-### 特征对象（Trait Object）
-
-### 部署特征（Impl Trait）
-
-## 复杂数据类型
-
 ### 向量（Vector）
 
 > *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
@@ -2376,15 +2366,151 @@ assert_eq!(Some(&20), scores.get("Blue"));
 assert_eq!(None, scores.get("Yellow"));
 ```
 
-# 面向对象
+## 泛型（Generic）
 
-## 特征
+> Rust通过在编译时对使用泛型的代码进行*单态化（monomorphization）*，所以在使用泛型时不会比使用具体类型时运行得更慢。
+
+函数：
+
+```rust
+fn largest<T>(list: &[T]) -> T {
+  // ...
+}
+```
+
+结构体：
+
+```rust
+struct Point<T> {
+  x: T,
+  y: T,
+}
+
+impl<T> Point<T> {
+  fn x(&self) -> &T {
+    &self.x
+  }
+}
+
+// 可以只在局部类型上面实现方法
+impl Point<f32> {
+  fn distance_from_origin(&self) -> f32 {
+    (self.x.powi(2) + self.y.powi(2)).sqrt()
+  }
+}
+```
+
+枚举：
+
+```rust
+enum Option<T> {
+  Some(T),
+  None,
+}
+```
+
+## 特征（Trait）
+
+> 特征即拥有共同特性的类型的特性集合，即抽象类型，在其他语言中通常称为*接口（Interface）*。
+
+特征具有一些特点：
+
+- 方法可以有默认实现；
+- 无法通过代码调用默认实现；
+- 伴有[*特征对象（Trait Object）*](#特征对象trait-object)以提供独立表达动态类型的能力；
+
+定义特征：
+
+```rust
+pub trait Summary {
+  fn summarize(&self) -> String；
+  // 默认实现
+  fn summarize_author(&self) -> String {
+    format!("@{}", self.username)
+  }
+}
+```
+
+部署特征：
+
+```rust
+impl Summary for NewsArticle {
+  fn summarize(&self) -> String {
+    format!("{}, by {} ({})", self.headline, self.author, self.location)
+  }
+}
+impl Summary for Tweet {
+  fn summarize(&self) -> String {
+    format!("(Read more from {}...)", self.summarize_author())
+  }
+}
+```
+
+### 用作参数类型
+
+```rust
+pub fn notify(item: &impl Summary) { /**... */ }
+```
+
+使用`+`组合多个特征：
+
+```rust
+pub fn notify(item: &(impl Summary + Display)) { /**... */ }
+```
+
+#### 特征绑定（Trait Bound）
+
+> 在作为类型时，可以使用`impl Trait`语法用于简单的情况，*特征绑定（trait bound）*则使用更为普遍。
+
+```rust
+pub fn notify<T: Summary>(item1: &T, item2: &T) { /**... */ }
+```
+```rust
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32 { /**... */ }
+```
+
+使用`where`语句声明复合特征：
+
+```rust
+fn some_function<T, U>(t: &T, u: &U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{ /* ... */ }
+```
+
+### 静态调度（`impl Trait`）和动态调度（`dyn Trait`）
+
+> 当代码涉及多态性时，需要有一种机制来确定实际运行的是哪个具体的版本。这就是所谓的**调度（Dispatch）**。
+
+> 所谓**静态调度（Static Dispatch）**，在编译期确定调用类型。如前述的泛型会在编译期间单态化，这种静态分发的优势，是没有运行时的性能损耗，但函数无法返回多种类型。所以Rust也支持通过[*特征对象（Trait Object）*](#特征对象trait-object)来实现**动态调度（Dynamic Dispatch）**。
+
+### 特征对象（Trait Object）
+
+> 同其他语言的接口一样，*特征（Trait）*代表的是不定类型（不定大小），无法用作值类型（如函数返回值），要想使用，就需要包装成确定大小类型（如指针），在Rust中这个特殊类型就是**特征对象（Trait Object）**。
+
+特征对象的类型为`Box<Trait>`，如下：
+
+```rust
+fn returns_summarizable(switch: bool) -> Box<dyn Summary> {
+  if switch {
+    Box::new(NewsArticle { /* ... */ })
+  } else {
+    Box::new(Tweet { /* ... */ })
+  }
+}
+```
+
+其中，`dyn`为特征对象的标识符（以与特征进行区分），`Box`为装箱类型存储实质类型的指针。
+
+> 装箱类型（`Box`）可以封装不定大小数据（不定类型），在无需确切知道具体类型的上下文中实现动态数据的调用。具体地，`Box`将封装的数据存储在堆上，并在栈中保留一个指向数据的*智能指针（smart pointer）*）
+
+## 生命周期（Lifetime）
 
 # 模式匹配
 
 ## `Option`
 
-> *Option Enum* 是 *Rust* 标准库自带的一个枚举类型，用来处理空值的情况。可以直接使用，不需要代码中引入。（*Type Option represents an optional value: every Option is either Some and contains a value, or None, and does not.*）
+> *Option Enum* 是 *Rust* 标准库自带的一个枚举类型，用来处理空值的情况。可以直接使用，不需要代码中引入。
 
 为了显式地将空值 *null* 表达出来，*Rust* 使用 `Option` 来修饰值的类型：`Option<T>`（其中 `T` 为泛型）。这样在任何非 `Option<T>` 的地方，都可以不用考虑值为 *null* 的情况。这一设计旨在限制 *null* 的普遍性并提高代码的安全性。
 

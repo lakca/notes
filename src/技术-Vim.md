@@ -20,9 +20,9 @@ date: 2020-10-09T07:22:16.283Z
 | `dd`                       |               | `[count]dd`                            | **Cut** [count] lines into register                             |
 | `D`                        | `d$`          | `[count]D`                             | **Cut** to end of [count] lines into register                   |
 | `J`                        |               | `[count]J`                             | **Join** [count] lines, replacing indent with 2 spaces          |
-| `gJ`                       |               | `[count]gJ`                            | **Join** [count] lines                                          |
+| `gJ`                       |               | `[count]gJ`                            | **Join** [count] lines, reserving whitespaces.                                          |
 | `:j`                       |               | `:[range]j[oin]`                       | **Join** [range] lines, replacing indent with 2 spaces          |
-|                            |               | `:[range]j[oin]!`                      | **Join** [range] lines                                          |
+|                            |               | `:[range]j[oin]!`                      | **Join** [range] lines, reserving whitespaces.                                          |
 
 ### Delete and Insert (Replace)
 
@@ -453,7 +453,7 @@ date: 2020-10-09T07:22:16.283Z
 > 以逗号`,`隔开时，紧随的行说明符匹配光标行之后的行；
 > 以分号`;`隔开时，紧随的行说明符匹配上一个行说明符所在行之后的行；
 
-| Line Specifiers |       |                                                       |
+| Line Specifiers | Synnonym      |                                                       |
 | --------------- | ----- | ----------------------------------------------------- |
 | `{number}`      |       | an absolute line number                               |
 | `.`             |       | current line number                                   |
@@ -494,12 +494,12 @@ date: 2020-10-09T07:22:16.283Z
 | `"`      | regardless of specific register, always filled with text deleted with `d`, `c`, `s`, `x`, or yank with `y` |
 | `0`      | **yank** register                                                                                          |
 | `1`      | **delete** register (no less than one line)                                                                |
-| `.`      | last inserted text                                                                                         |
-| `+`, `*` | clipboard contents                                                                                         |
-| `%`      | file name                                                                                                  |
-| `#`      | alternate file name                                                                                        |
-| `/`      | last search pattern                                                                                        |
-| `:`      | last command-line                                                                                          |
+| `.`      | **last inserted** text                                                                                         |
+| `+`, `*` | **clipboard** contents                                                                                         |
+| `%`      | **filename**                                                                                                  |
+| `#`      | alternate filename                                                                                        |
+| `/`      | **last search pattern**                                                                                        |
+| `:`      | **last command-line**                                                                                          |
 | `=`      | expression register                                                                                        |
 
 ## Pattern
