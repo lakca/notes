@@ -134,7 +134,7 @@
           color: white;
           background: unset;
         }
-        @media (min-width: 64rem) {
+        @media (max-width: 104rem) {
           .${this.ident('custom')}.${this.ident('has-menu')} {
             padding-left: 25rem;
           }

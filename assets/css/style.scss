@@ -14,21 +14,22 @@ li:not(:has(ul)):hover {
 }
 
 html {
-  font-size: 15px;
+  font-size: 16px;
 
   .toast-success {
     background-color: #030303;
   }
 
   body {
+
     em {
-      padding: 0 2px;
-      font-family: Adobe KaiTi Std, KaiTi, Kai, 楷体;
+      margin-right: 3px;
+      border-bottom: solid 1px;
       cursor: pointer;
     }
 
     b, strong {
-      border-bottom: solid 1px;
+      border-bottom: solid 2px;
       cursor: pointer;
     }
 
@@ -47,7 +48,6 @@ html {
     }
 
     li {
-      padding: 5px;
       border-radius: 4px;
     }
 
@@ -88,7 +88,12 @@ html {
 
     .main-content {
       color: #383838;
-      font-size: 1rem;
+      font-size: 1rem
+      line-height: 2em;
+
+      p {
+        margin: 2em 0;
+      }
 
       blockquote {
         color: #8590a6;
@@ -136,12 +141,12 @@ html {
       }
 
       code {
-        border: solid 1px #eee;
+        // border: solid 1px #eee;
         background: none;
         cursor: pointer;
         @at-root html code, & {
           color: #f93d93;
-          margin: 0 5px;
+          // margin: 0 5px;
         }
       }
 
