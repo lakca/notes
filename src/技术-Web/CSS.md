@@ -3,102 +3,6 @@ date: 2021-09-17T18:31:10+08:00
 title: CSS
 ---
 
-- [`@`规则](#规则)
-  - [普通规则](#普通规则)
-    - [`@charset`](#charset)
-    - [`@import`](#import)
-    - [`@namespace`](#namespace)
-  - [内联规则](#内联规则)
-    - [`@page`](#page)
-    - [`@font-face`](#font-face)
-    - [`@keyframes`](#keyframes)
-    - [`@counter-style`](#counter-style)
-    - [`@property`](#property)
-    - [条件分组规则](#条件分组规则)
-      - [`@media`](#media)
-      - [`@supports`](#supports)
-- [选择器权重](#选择器权重)
-- [选择器](#选择器)
-  - [命名空间](#命名空间)
-  - [属性选择器](#属性选择器)
-    - [`[attr]`,`[attr=]`, `[attr^=]`, `[attr$=]`, `[attr*=]`, `[attr~=]`, `[attr|=]`](#attrattr-attr-attr-attr-attr-attr)
-    - [`[attr operator value i]`, `[attr operator value s]`](#attr-operator-value-i-attr-operator-value-s)
-  - [兄弟元素](#兄弟元素)
-    - [`~`](#)
-    - [`+`](#-1)
-  - [伪元素](#伪元素)
-    - [`::after`, `::before`](#after-before)
-    - [`::backdrop`](#backdrop)
-    - [`::cue`, `::cue-region`](#cue-cue-region)
-    - [`::first-letter`, `::first-line`](#first-letter-first-line)
-    - [`::file-selector-button`](#file-selector-button)
-    - [`::marker`](#marker)
-    - [`::part()`](#part)
-    - [`::placeholder`](#placeholder)
-    - [`::selection`](#selection)
-    - [`::target-text`](#target-text)
-  - [伪类](#伪类)
-    - [语言](#语言)
-      - [`:lang()`](#lang)
-    - [定位](#定位)
-      - [`:visited`, `:link`, `:any-link`](#visited-link-any-link)
-      - [`:target`](#target)
-      - [`:scope`](#scope)
-    - [用户动作](#用户动作)
-      - [`:hover`](#hover)
-      - [`:active`](#active)
-      - [`:focus`, `:focus-visible`, `:focus-within`](#focus-focus-visible-focus-within)
-    - [表单元素](#表单元素)
-      - [`:autofill`](#autofill)
-      - [`:enabled`, `:disabled`](#enabled-disabled)
-      - [`:read-only`,`:read-write`](#read-onlyread-write)
-      - [`:placeholder-shown`](#placeholder-shown)
-      - [`:default`](#default)
-      - [`:checked`](#checked)
-      - [`:indeterminate`](#indeterminate)
-      - [`:valid`, `:invalid`, `:user-invalid`, `:in-range`, `:out-of-range`, `:required`, `:optional`](#valid-invalid-user-invalid-in-range-out-of-range-required-optional)
-    - [树结构](#树结构)
-      - [`:root`](#root)
-      - [`:empty`](#empty)
-      - [`:only-child`, `:only-of-type`](#only-child-only-of-type)
-      - [`:nth-child()`,`:nth-last-child()`,`:first-child`,`:last-child`,`:nth-of-type()`,`:nth-last-of-type()`,`:first-of-type`,`:last-of-type`](#nth-childnth-last-childfirst-childlast-childnth-of-typenth-last-of-typefirst-of-typelast-of-type)
-      - [`:has()`](#has)
-      - [`:is()`, `:not()`, `:where()`](#is-not-where)
-    - [影子元素](#影子元素)
-      - [`:host`](#host)
-      - [`:host()`](#host-1)
-      - [`:host-context()`](#host-context)
-    - [时间维度](#时间维度)
-      - [`:current`](#current)
-      - [`:future`](#future)
-      - [`:past`](#past)
-    - [资源状态](#资源状态)
-      - [`:playing`](#playing)
-      - [`:paused`](#paused)
-      - [`:picture-in-picture`](#picture-in-picture)
-    - [打印](#打印)
-      - [`:left`, `:right`, `:first`](#left-right-first)
-    - [其他](#其他)
-      - [`:fullscreen`](#fullscreen)
-      - [`:defined`](#defined)
-- [数据类型](#数据类型)
-- [背景](#背景)
-  - [`backdrop-filter`](#backdrop-filter)
-  - [`backface-visibility`](#backface-visibility)
-  - [`background-blend-mode`](#background-blend-mode)
-  - [`background-clip`](#background-clip)
-  - [`background-attachment`](#background-attachment)
-  - [`background-image`](#background-image)
-  - [`background-origin`](#background-origin)
-  - [`background-position`](#background-position)
-  - [`background-repeat`](#background-repeat)
-  - [`background-size`](#background-size)
-- [边框](#边框)
-  - [`border-image-slice`](#border-image-slice)
-- [滚动条](#滚动条)
-  - [`scroll-snap-type`](#scroll-snap-type)
-
-
 # `@`规则
 > 用来指示CSS如何表现。
 
@@ -273,7 +177,78 @@ window.CSS.registerProperty({
 
 #### `@media`
 
-> 媒体查询。
+> [媒体查询](https://developer.mozilla.org/en-US/docs/Web/CSS/Media_Queries)，支持 `and`, `not`, `only`, `or`（或`,`）
+
+媒体类型：
+
+- `all`,
+- `print`
+- `screen`
+
+媒体特征：
+
+- [`any-hover`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/any-hover)
+- [`any-pointer`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/any-pointer)
+- [`aspect-ratio`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/aspect-ratio)
+- [`color`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/color)
+- [`color-gamut`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/color-gamut)
+- [`color-index`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/color-index)
+- [`device-aspect-ratio`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/device-aspect-ratio)
+- [`device-height`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/device-height)
+- [`device-width`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/device-width)
+- [`display-mode`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/display-mode)
+- [`display`](https://developer.mozilla.org/zh-CN/docs/Web/Manifest#display)
+- [`dynamic-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/dynamic-range)
+- [`forced-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/forced-colors)
+- [`grid`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/grid)
+- [`height`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/height)
+- [`hover`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/hover)
+- [`inverted-colors`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/inverted-colors)
+- [`monochrome`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/monochrome)
+- [`orientation`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/orientation)
+- [`overflow-block`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/overflow-block)
+- [`overflow-inline`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/overflow-inline)
+- [`pointer`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/pointer)
+- [`prefers-color-scheme`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/prefers-color-scheme)：检测用户是否有将系统的主题色设置为亮色或者暗色，值`no-preference`, `dark`, `light`
+- [`prefers-contrast`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/prefers-contrast)：检测用户的系统是否被开启了动画减弱功能，值`no-preference`, `reduce`
+- [`prefers-reduced-motion`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/prefers-reduced-motion)
+- [`resolution`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/resolution)
+- [`scripting`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/scripting)：检测脚本（例如 JavaScript）是否可用，值`none`, `enabled`, `initial-only`
+- [`update`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/update-frequency)
+- [`video-dynamic-range`](https://developer.mozilla.org/en-US/docs/Web/CSS/@media/video-dynamic-range)
+- [`width`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/@media/width)：视口的宽度，包括纵向滚动条的宽度。
+
+可以通过`window.matchMedia()`测试（和监听）媒体查询的状态：
+
+```js
+// 创建查询列表
+const mediaQueryList = window.matchMedia("(orientation: portrait)");
+
+if (mediaQueryList.matches) {
+  /* 设备的旋转方向为纵向 portrait */
+} else {
+  /* 设备的旋转方向不是纵向，也就是横向 landscape */
+}
+
+// 定义回调函数
+function handleOrientationChange(evt) {
+  if (evt.matches) {
+    /* The viewport is currently in portrait orientation */
+  } else {
+    /* The viewport is currently in landscape orientation */
+  }
+}
+
+
+// 先运行一次回调函数
+handleOrientationChange(mediaQueryList);
+
+// 为查询列表注册监听器，同时将回调函数传给监听器
+mediaQueryList.addListener(handleOrientationChange);
+
+mediaQueryList.removeListener(handleOrientationChange);
+```
+
 #### `@supports`
 
 > 浏览器CSS特性支持查询。支持 `and`, `or`, `not`, `selector()`
