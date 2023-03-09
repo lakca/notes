@@ -56,13 +56,13 @@
 - [`logicalSurface`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/logicalSurface)：是否允许用户选择对应的（数组）共享屏幕的不可见部分（如被遮蔽、缓冲区、超出屏幕范围等）
 - [`suppressLocalAudioPlayback`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackConstraints/suppressLocalAudioPlayback)：捕获选项卡时，选项卡中播放的音频是否将继续通过用户的本地扬声器播放
 
-## 获取客户端所支持的输入输出设备列表（`enumerateDevices`）
+## 获取客户端支持的输入输出设备列表（`enumerateDevices`）
 
 ```typescript
 const enumerator: MediaDeviceInfo[] = navigator.mediaDevices.enumerateDevices();
 ```
 
-## 获取客户端所支持的媒体设备选项（`getSupportedConstraints`）
+## 获取客户端支持的媒体设备选项（`getSupportedConstraints`）
 
 > [`getSupportedConstraints(): MediaTrackSupportedConstraints`](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaDevices/getSupportedConstraints)，[`MediaTrackSupportedConstraints`](https://developer.mozilla.org/en-US/docs/Web/API/MediaTrackSupportedConstraints)中的选项可能应用在不同的媒体类型（`audio`、`video`等）。
 
@@ -99,17 +99,21 @@ navigator.mediaDevices.getUserMedia(constraints)
 });
 ```
 
-## 捕获屏幕（`getDisplayMedia`）
+## 获取多媒体输出（`getDisplayMedia`）
 
-> [`getDisplayMedia(MediaStreamConstraints): MediaStream`](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)，提示用户选择捕获显示器或显示器的一部分（例如窗口）。
+> [`getDisplayMedia(MediaStreamConstraints): MediaStream`](https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices/getDisplayMedia)，提示用户选择捕获扬声器、显示器或显示器的一部分（例如窗口）等等。
 
 ```typescript
 const captureStream: MediaStream = await navigator.mediaDevices.getDisplayMedia({ video: true });
 ```
 
-## 监听输入输出设备连接或移除
+## 监听输入输出设备的连接或移除（`devicechange`）
 
-`devicechange`
+```javascript
+window.navigator.mediaDevices.addEventListener('devicechange', async e => {
+    console.log(Array.from(await e.target.enumerateDevices()))
+})
+```
 
 ## 选择音频输出设备（`selectAudioOutput`）
 
@@ -118,3 +122,9 @@ const captureStream: MediaStream = await navigator.mediaDevices.getDisplayMedia(
 ```js
 await navigator.mediaDevices.selectAudioOutput({ deviceId: '...' })
 ```
+
+## 多媒体流（`MediaStream`）
+
+> [多媒体流](https://developer.mozilla.org/zh-CN/docs/Web/API/Media_Capture_and_Streams_API)：
+> 一个 [MediaStream](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStream) 包含零个或更多的 [MediaStreamTrack](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStreamTrack) 对象，代表着各种的声轨和视频轨。
+> 每一个 MediaStreamTrack 可能有一个或更多的通道。这个通道代表着媒体流的最小单元，比如一个音频信号对应着一个对应的扬声器，像是在立体声音轨中的左通道或右通道。
