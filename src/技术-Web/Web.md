@@ -128,3 +128,7 @@ await navigator.mediaDevices.selectAudioOutput({ deviceId: '...' })
 > [多媒体流](https://developer.mozilla.org/zh-CN/docs/Web/API/Media_Capture_and_Streams_API)：
 > 一个 [MediaStream](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStream) 包含零个或更多的 [MediaStreamTrack](https://developer.mozilla.org/zh-CN/docs/Web/API/MediaStreamTrack) 对象，代表着各种的声轨和视频轨。
 > 每一个 MediaStreamTrack 可能有一个或更多的通道。这个通道代表着媒体流的最小单元，比如一个音频信号对应着一个对应的扬声器，像是在立体声音轨中的左通道或右通道。
+
+# 在 web 应用程序中使用文件
+
+> [在 web 应用程序中使用文件](https://developer.mozilla.org/zh-CN/docs/Web/API/File_API/Using_files_from_web_applications#example.3a_using_object_urls_to_display_images)
