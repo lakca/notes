@@ -130,9 +130,14 @@
           font-size: 1.5rem;
           margin: 1rem 0 -1rem 0;
         }
-        .page-header .${this.ident('breadcrumb')} a {
+        .page-header .${this.ident('breadcrumb')} .btn:hover {
           color: white;
           background: unset;
+        }
+        .page-header .${this.ident('breadcrumb')} .btn.current {
+          color: white;
+          background: unset;
+          font-weight: bold;
         }
         @media (max-width: 104rem) {
           .${this.ident('custom')}.${this.ident('has-menu')} {
@@ -189,6 +194,7 @@
         }
         .${this.ident('menu')}::-webkit-scrollbar-thumb {
           background-color: #159957;
+          background-image: linear-gradient(180deg, #00f2ff, #006bff);
         }
         .${this.ident('bar')} {
           position: fixed;
@@ -203,10 +209,10 @@
           cursor: pointer;
           transition: .3s;
           user-select: none;
-          box-shadow: 0 0 10px #159957;
           color: white;
-          background: #159957;
-          border-radius: 0 5px 5px 0;
+          border-radius: 0 2px 2px 0;
+          background-color: #159957;
+          background-image: linear-gradient(120deg, #155799, #159957);
         }
         .${this.ident('bar')} div {
           width: 2rem;
@@ -339,9 +345,9 @@
       while (pathname = pathname.match(/(.*\/)(.+?)(?=\/?$)/)) {
         const name = decodeURIComponent(pathname[2]).toUpperCase()
         if (items.length) {
-          items.unshift(`<a href="${pathname[0]}">${name}</a>`)
+          items.unshift(`<a class="btn" href="${pathname[0]}">${name}</a>`)
         } else {
-          items.unshift(`<span>${name}</span>`)
+          items.unshift(`<span class="btn current">${name}</span>`)
         }
         pathname = pathname[1]
       }
