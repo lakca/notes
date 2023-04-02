@@ -1,0 +1,54 @@
+# 1. segments separated by whitespace in line
+# 2. first segment is always a field name
+# 3. level alignment, no strict indentation
+
+# null
+- null null
+
+# Number
+
+- number 1
+
+# Boolean
+- boolean false
+- boolean true
+
+# String
+# 1. `""` wraps a string if necessary
+
+- string a_string
+
+- string " a string containing whitespace "
+
+# Array
+# 1. `*` is claiming an array
+
+- *array 1
+
+# Array, elements in one line
+- *array 1 2 3
+
+# Array, elements in multiple lines
+
+- *array 1 2
+- *array 3 4 5
+- *array 6
+
+# Object
+# 1. `:` is claiming an object
+
+# Object, fields in a same line
+- :object f1:1 f2:2
+
+# Object, fields in multiple lines
+
+- :object f1:1 f2:2
+  - f3 3 31 # f3: "3 31"
+  - *f4 4 # f4: [4]
+
+
+# Complete Examples
+
+# 1. numberArray: [1, 2, 3]
++*numberArray 1 2 "3"
+*+numberArray 1 2 "3"

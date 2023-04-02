@@ -120,6 +120,9 @@
     ident(str) {
       return `${str}-${this.id}`
     },
+    get themes() {
+      return ['light', 'dark']
+    },
     get style() {
       return `
         html, body {
@@ -515,6 +518,9 @@
         <div data-btn="4">IV</div>
         <div data-btn="5">V</div>
         <div data-btn="6">VI</div>
+        <select onChange="document.documentElement.setAttribute('theme', event.target.value)" style="background: transparent; outline: none;">
+          ${this.themes.map(theme => `<option value="${theme}">${theme}</option>`)}
+        </select>
       `)
         .on('click', e => this.clickBar(e))
         .mount(document.body)
@@ -532,6 +538,9 @@
       })
     },
     mount() {
+      const params = new URLSearchParams(window.location.search)
+      this.themes.forEach(theme => params.has(theme) && document.documentElement.setAttribute('theme', theme))
+      document.body.addEventListener('keyup', e => (e.key === 'Escape') && this.toggle())
       if (!this._mounted) {
         TOUCH_SUPPORT && el(document.body).class(this.ident('touch-support'))
         el(document.body).class(this.ident('custom'))
@@ -559,56 +568,56 @@
   })
 }())
 
-  ; (function () {
-    function initMermaid() {
-      window.mermaid.initialize({
-        startOnLoad: true,
-        theme: "forest",
-        flowchart: {
-          useMaxWidth: true,
-          htmlLabels: true
-        }
-      })
-      window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
-    }
-    if (window.mermaid) {
-      initMermaid()
-    } else {
-      for (const script of document.scripts) {
-        if (/mermaid/.test(script.src)) {
-          script.onload = initMermaid
-        }
-      }
-    }
-
-    document.body.addEventListener('click', async e => {
-      if (['EM', 'B', 'STRONG'].includes(e.target.tagName) || (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE')) {
-        await navigator.clipboard.writeText(e.target.textContent)
-        window.toastr && window.toastr.success(e.target.textContent, 'Copied!')
-      } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.classList.contains('highlight')) {
-        await navigator.clipboard.writeText(e.target.parentElement.querySelector('pre').textContent)
-        window.toastr && window.toastr.success('Copied!')
+; (function () {
+  function initMermaid() {
+    window.mermaid.initialize({
+      startOnLoad: true,
+      theme: "forest",
+      flowchart: {
+        useMaxWidth: true,
+        htmlLabels: true
       }
     })
-    window.toastr.options = {
-      escapeHtml: true,
-      positionClass: 'toast-bottom-right',
-      timeOut: 1500,
-      extendedTimeOut: 1000,
-      showMethod: 'slideDown',
-      hideMethod: 'slideUp',
-      closeMethod: 'fadeOut',
-      showDuration: 100,
-      hideDuration: 300,
-      closeDuration: 300,
-      closeEasing: 'swing',
-    }
-
-    Array.from(document.body.querySelectorAll('pre.highlight')).forEach(e => {
-      if (e.parentElement.classList.contains('highlight')) {
-        const icon = document.createElement('div')
-        icon.classList.add('fa', 'fa-copy')
-        e.parentElement.appendChild(icon)
+    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
+  }
+  if (window.mermaid) {
+    initMermaid()
+  } else {
+    for (const script of document.scripts) {
+      if (/mermaid/.test(script.src)) {
+        script.onload = initMermaid
       }
-    })
-  }())
+    }
+  }
+
+  document.body.addEventListener('click', async e => {
+    if (['EM', 'B', 'STRONG'].includes(e.target.tagName) || (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE')) {
+      await navigator.clipboard.writeText(e.target.textContent)
+      window.toastr && window.toastr.success(e.target.textContent, 'Copied!')
+    } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.classList.contains('highlight')) {
+      await navigator.clipboard.writeText(e.target.parentElement.querySelector('pre').textContent)
+      window.toastr && window.toastr.success('Copied!')
+    }
+  })
+  window.toastr.options = {
+    escapeHtml: true,
+    positionClass: 'toast-bottom-right',
+    timeOut: 1500,
+    extendedTimeOut: 1000,
+    showMethod: 'slideDown',
+    hideMethod: 'slideUp',
+    closeMethod: 'fadeOut',
+    showDuration: 100,
+    hideDuration: 300,
+    closeDuration: 300,
+    closeEasing: 'swing',
+  }
+
+  Array.from(document.body.querySelectorAll('pre.highlight')).forEach(e => {
+    if (e.parentElement.classList.contains('highlight')) {
+      const icon = document.createElement('div')
+      icon.classList.add('fa', 'fa-copy')
+      e.parentElement.appendChild(icon)
+    }
+  })
+}())
