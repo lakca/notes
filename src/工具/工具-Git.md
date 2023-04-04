@@ -442,7 +442,6 @@ git stash drop [<stash=stash@{0}>]
 git stash clear
 ```
 
-<<<<<<< Updated upstream
 列出已被清理的 stash：
 
 ```bash
@@ -451,8 +450,6 @@ grep commit | cut -d\  -f3 |
 xargs git log --merges --no-walk --grep=WIP
 ```
 
-=======
->>>>>>> Stashed changes
 ## commit（提交）
 
 > 创建一个提交对象，即向版本库中存储一个新的项目快照。

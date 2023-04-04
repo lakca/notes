@@ -1022,10 +1022,10 @@ let a = "ha"; // 声明新 a 的时候，Rust 会将旧 a 销毁
 
 ## 数据所有权（Ownership）
 
-> *Rust*没有垃圾回收器（~~Runtime Garbage Collector~~），一般情况下也无需手动释放（~~Manully Free~~）内存。通过在**编译时**检查**所有权机制**，对变量和数据进行绑定标记，来保证内存在调用结束后自动进行销毁。
+> *Rust*没有垃圾回收器（~~Runtime Garbage Collector~~），一般情况下也无需手动释放（~~Manully Free~~）内存。通过在**编译时**检查**所有权机制**，对变量和数据进行绑定标记，来保证内存*用完即毁*。
 > *Rust*的这一自动销毁机制是在编译时确定的，没有运行时的额外开销（~~如引用计数、线程暂停~~等）。
 
-> （*In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*）
+> *In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*
 
 所有权规则为：
 
@@ -1054,9 +1054,9 @@ fn main() {
 
 ### 数据所有权转移（Move）
 
-> 当把存储**复杂值**的变量赋值给其他变量时，*Rust*默认执行转移（*Move*）操作。
+> 当把存储**对象**的变量赋值给其他变量时，*Rust*默认执行转移（*Move*）操作。
 
-> 所谓**复杂值**，即在运行时进行分配，存储在堆（*heap*）中，由指针进行调用的值，包括除了字面量和标量类型以外的所有类型的值。
+> 所谓**对象**，即在运行时进行分配，存储在堆（*heap*）中，由指针进行调用的值，包括除了字面量和标量类型以外的所有类型的值。
 
 ```rust
 let s1 = String::from("hello");
@@ -1068,9 +1068,9 @@ println!("{}", s1); // error[E0382]: borrow of moved value: `s1`
 
 ### 数据复制（Copy）
 
-> 当把存储**简单值**的变量赋值给其他变量时，*Rust*默认执行数据复制（*Copy*）操作。
+> 当把存储**标量**的变量赋值给其他变量时，*Rust*默认执行数据复制（*Copy*）操作。
 
-> 所谓**简单值**，即在编译时便已分配好，存储在栈（*stack*）中直接调用的值，包括字面量和标量类型的值。
+> 所谓**标量**，即在编译时便已分配好，存储在栈（*stack*）中直接调用的值，包括字面量和标量类型的值。
 
 ![data-copy](./data-copy.svg#h200)
 
@@ -1086,21 +1086,7 @@ assert_eq!(s1, s2);
 
 ### 数据借用（Borrow）
 
-> 通过借用机制，可以在不转移所有权的情况下，实现对数据进行调用。
-
-\* 以下所提及的 **赋值** 都是指的广义的赋值，包括等号赋值（*assignment*）、传递函数参数（*argument passing*）、函数返回（*function returning*）、模式匹配（*matching*）等涉及到内存拷贝的操作。
-
-**赋值** 操作的对象有两个值，即等号左边的 **左值**（此处左值是狭义的，仅指代被赋值的值） 和等号右边的 **右值**（此处右值是狭义的，仅指代赋值的值）。执行 **赋值** 即将右值的内存拷贝（*Copy*）给左值，其中既包括栈内存（存储对象的指针信息，或者存储非对象的值）又包括堆内存（存储对象的值）。
-
-对于对象来说，它的结构比较复杂：因为对象的动态性，其各属性值并不是在堆中连续存储的，每个属性都需要根据指针在堆中寻址找到其值的位置、根据容量来确定值的内存边界等等。如果我们在赋值对象的时候拷贝堆内存相比于栈将会非常耗时，而很多时候在程序中操作对象时，我们关心的是它的值的内容，并不关心值存储在了内存中的什么位置，尤其是当我们打开外部对象时（如文件），我们的操作一般都是针对原对象的，因而我们可以想到，在很多时候，赋值时若不拷贝堆内存将会是一个非常完美的选择，既可以节省赋值操作的时间，又可以直接操作原对象。因此，就有了 *拷贝栈内存，不拷贝堆内存* 的操作。
-
-但此时将会有个问题：赋值后将会有两个变量（栈内存）同时指向该值（堆内存）。如果我们在不同的地方（函数、线程等等）分别对两个变量进行修改操作，将会操作到同一个对象值上面去，即产生了数据竞争（*Data Races*）。若我们在操作一个值时不能明确知道该值会否被其他地方修改，将会增加编程复杂度，并使操作结果变得不可预期，从而影响程序的安全性。因而，为了程序的安全性，*Rust* 将会在赋值后销毁（*Drop*）源变量（即右值的栈内存）。
-
-以上就是 *Rust* 中值的 *Move*（*Move Ownership*）策略，简单来说就是赋值时拷贝变量（栈），不拷贝值（堆），并将源变量销毁。
-
-与之相对应的，对于非对象赋值（栈拷贝）或者我们就想对某数据类型的对象赋值时也拷贝值（堆拷贝），就是所谓的 *Copy* 策略。
-
-因为 *Rust* 要实现 *“用完即毁”* 的内存释放策略，所以在赋值完成后右值。
+> 通过[引用](#引用reference)，可以在不转移数据所有权的情况下，实现对数据的调用。
 
 ```rust
 let mut a = String::from("hello");
@@ -1108,10 +1094,6 @@ let b = &mut a; // b 是一个无效引用，所以并不影响 c
 let c = &a;
 println!("{}", c);
 ```
-
-\* 被 *借用* 是一个引用是 *有效引用* 的条件：
-
-创建引用时，我们在栈中存储了一个指针指向一个值（*Value*），该指针在未被使用前，即没有操作柄（*Handle*），无法改变最终指向的值（*Value*），反之，值（*Value*）被其他 操作柄（*Handle*）改变时，就该指针而言也没有可影响的操作柄（*Handle*），此时该指针不是有效存在的。只有在该指针被使用（*Value Borrowed*）后，双方的操作柄（*Handle*）才会互相影响。
 
 ## 生命周期（Lifetime）
 
@@ -1140,27 +1122,32 @@ let word = "hello";
 - 声明类型后，变量可不初始化；
 
 ```rust
-// 完整声明变量
-let foo: &str = "hello";
+// 先声明后初始化
+let a;
+a = true;
+let b: bool;
+b = true;
 
-// 初始化不是必要的
-let mut bar: &str;
+// 声明并初始化
+let c: &'static str = "hello";
 
-// 也可由初始化自动推断类型
-let x;
-x = 1; // i32
+// 根据初始化值自动推断类型
+let d = true;
+let e;
+e = true;
 
-let foo = 1; // i32
+// 变量默认不可变（Immutable）
+let f = 1;
 
-// 变量遮蔽（Shadowing）：声明同名变量
-let foo = foo.len(); // usize
+// 声明可变变量
+let mut g;
+g = 'g';
+let mut h: char;
+h = 'h';
+let mut i = 'i';
 
-// 变量默认不可变
-let foo = 1;
-
-// 可变变量（Mutable）
-let mut foo = 2;
-
+// 变量遮蔽
+let c = c.len(); // usize
 ```
 
 ### 临时变量
@@ -2258,7 +2245,7 @@ fn main() {
 ## 函数指针（Function Pointer）
 
 > 函数指针在编译时不一定知道其标识的函数，可以通过函数项（*function item*）或非捕获闭包（*non-capturing closure*）来创建。
-> （*Function pointers are pointers that point to code, not data.*）
+> *Function pointers are pointers that point to code, not data.*
 
 如下例，`add`是一个*函数项*，`bo`是一个*函数指针*，其类型是`Binop`：
 
@@ -2276,7 +2263,70 @@ x = bo(5,7);
 
 ## 闭包（Closure）
 
-> 闭包：一个可以捕获其被创建时所处环境的值的匿名函数，可以存储为变量及作为函数参数进行传递。
+> 闭包：一个可以捕获它所处环境信息的匿名函数。
+
+# 类型系统
+
+> [类型系统](https://doc.rust-lang.org/reference/type-system.html)
+
+- *标量类型（Scalar Type）*：只表示单个值的类型。
+- *复合类型（Compound Type）*：将多个值聚合到一起表示成一种类型。
+
+| 分类               | 类型名称           | 类型或表示                                    |
+| ------------------ | ------------------ | --------------------------------------------- |
+| Scalar Types       | *signed integer*   | `i8`,`i16`,`i32`（默认）,`i64`,`i128`,`isize` |
+|                    | *unsigned integer* | `u8`,`u16`,`u32`,`u64`,`u128`,`usize`         |
+|                    | *floating point*   | `f32`,`f64`（默认）                           |
+|                    | *character*        | `char`                                        |
+|                    | *boolean*          | `bool`                                        |
+|                    | *never*            | `!`                                           |
+| Sequence Types     | *tuple*            | `(T,...)`                                     |
+|                    | *array*            | `[T; S]`                                      |
+|                    | *slice*            | `[T]`                                         |
+| User-defined Types | *struct*           | `struct`                                      |
+|                    | *enumerated*       | `enum`                                        |
+|                    | *union*            | `union`                                       |
+| Function Types     | *function item*    | `fn`                                          |
+|                    | *closure*          | `Fn`, `FnMut`, `FnOnce`                       |
+| Pointer Types      | *reference*        | `&T`, `&mut T`                                |
+|                    | *raw pointer*      | `*const T`, `*mut T`                          |
+|                    | *function pointer* | `fn`                                          |
+| Trait Types        | *trait object*     | `trait`                                       |
+|                    | *impl trait*       | `impl`                                        |
+
+## 动态大小类型（DST）
+
+> 如果一个类型的大小不能在编译期确定，那么就称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#切片slice)和[特征对象](#特征对象trait-object)。
+
+> *A type with a size that is known only at run-time is called a dynamically sized type (DST) or, informally, an unsized type.*
+
+动态大小类型只能在以下场景调用：
+
+1. 通过*指针*调用，比如[切片引用](#切片)；
+2. 作为具有`?Sized`绑定的*范型*的参数；
+3. 作为*结构体*的最后一个字段；
+
+## 基础数据类型
+
+### 无（Never）
+
+> 用 `!` 表示，代表没有值。(*`!` represents the type of computations which never resolve to any value at all.*)
+
+### 布尔（Boolean）
+
+### 数字（Numeric）
+
+Rust提供的数字类型包括：
+
+- 整型（Integer）：`i8`,`i16`,`i32`（默认）,`i64`,`i128`,`isize`、`u8`,`u16`,`u32`,`u64`,`u128`,`usize`
+- 浮点型（Floating-Point）：`f32`,`f64`（默认）
+
+若数字类型变量赋值时超出声明类型范围（如 `i8` 范围为 `0 ~ 255`）：
+
+- 在进行发布编译（`--release`）及其生成文件执行时均不会报错，而是遵循 *two’s complement wrapping* 规则，进行溢出偏移（如 `let i: i8 = 260; assert_eq!(i, 4)`）。
+- 在非发布编译时，则会报错，若溢出偏移为程序正常设计，可通过 `#![allow(overflowing_literals)]` 属性进行声明来允许该功能。
+
+#### 数字字面量
 
 ```rust
 let k = 10;
@@ -2289,7 +2339,19 @@ assert_eq!(None.unwrap_or_else(|| 2 * k), 20);
 let add_one_v1 = |x: u32| -> u32 { x + 1 };
 ```
 
-> 闭包类型可以由上下文自动推断
+### 切片（Slice）
+
+> [切片](http://doc.rust-lang.org/reference/types/slice.html)是**动态尺寸**的**连续的**同构类型的**数据块**。
+
+> 换句话说，切片是**序列值（Sequence）**（如数组、向量）的一个不定区间。
+
+> *A slice is a dynamically sized type representing a 'view' into a sequence of elements of type `T`. The slice type is written as `[T]`.*
+
+切片是[动态大小类型](#动态大小类型dst)，只能通过指针类型来实例化，如：
+
+1. **共享切片（引用）**: 通常简称为**切片**，即`&[T]`
+2. **可变切片（引用）**: `&mut [T]`
+3. **装箱切片**: `Box<[T]>`
 
 ```rust
 let add_one_v2 = |x| { x + 1 };
@@ -2611,6 +2673,200 @@ impl Message {
 }
 let m = Message::Write(String::from("hello"));
 m.call();
+```
+
+获取绑定值：
+
+```rust
+match home {
+  V4(a, b, c, d) => a,
+  V6(a) => a,
+}
+```
+
+### 指针（Pointer）
+
+> *Raw, unsafe pointers, `*const T`, and `*mut T`.*
+
+#### 引用（Reference）
+
+> [引用](http://doc.rust-lang.org/std/primitive.reference.html)是**一种对齐的、非空的、保证指向某个类型有效值的指针**。
+
+> *A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
+
+通过引用，可以实现在不转移所有权的情况下调用对象，即*借用（Borrowing）*：
+
+[![reference](./reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
+
+```rust
+// 不可变引用
+let s = String::from("hello");
+let s1 = &s; // 写法一
+let s2 = ref s; // 写法二
+assert_eq!(*s1, s);
+
+// 可变引用
+let mut s= String::from("hello");
+let s1 = &mut s; // 写法一
+let s2 = ref mut s; // 写法二
+s1.push_str(" world");
+assert_eq!(s, "hello world");
+```
+
+- 在不造成数据竞争（*Date Races*）的情况下，引用可以同时存在多个；
+- 动态引用可以转换成静态引用。（*`&mut T` references can be freely coerced into `&T` references with the same referent type*）
+- 长周期引用可以转换成短周期引用。（*references with longer lifetimes can be freely coerced into references with shorter ones.*）
+
+```rust
+let mut s = String::from("hello");
+
+let s1 = &s;
+let s2 = &s;
+assert_eq!(s1, s2); // 同时有效存在多个不可变引用
+
+let s3 = &mut s; // s1 和 s2 已失效
+s3.push_str('!');
+
+let s4 = &mut s; // s3 已失效
+```
+
+> Note: *Historically, Rust kept the borrow alive until the end of scope, so these examples might fail to compile with older compilers. Also, there are still some corner cases where Rust fails to properly shorten the live part of the borrow and fails to compile even when it looks like it should. These'll be solved over time. [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
+
+##### 借用（Borrow）
+
+> 借用（*Borrowing*）就是调用引用。
+
+若一个变量只是被赋值了一个引用，而该变量并没有被调用（借用），那么这个变量相当于无效变量，引用也是一个无效的引用。
+
+##### 悬空引用（Dangling Reference）
+
+> 引用不会延长数据的生命周期，若在引用的变量被销毁后，该引用仍被使用，则该引用为悬空引用（*dangling reference*）。
+> 注意，这是一个错误的用法。
+
+```rust
+fn demo() -> &String {
+  let s = String::from("hello");
+  &s // 错误，引用在这里返回，但此时所引用的变量 s 的作用域只存在于函数内，结束即被销毁
+}
+
+// 可以通过延长引用生命周期来返回：
+fn demo() -> &'static str {
+  let s = String::from("hello");
+  let s = Box::leak(s.into_boxed_str());
+  s
+}
+```
+
+### 向量（Vector）
+
+> *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
+
+- *homogenous*
+
+```rust
+/// 创建空数组
+let mut v: Vec<i32> = Vec::new();
+let mut v: Vec<i32> = vec![]; /// 字面量
+let mut v: Vec<i32> = Vec::with_capacity(3); /// 带有容量声明（可以避免在push数据时需要重新分配内存）
+
+/// 带有初始化的数组
+let mut v = vec![1, 2, 3];
+let mut v = vec![1; 3]; /// 容量为3，元素为1
+```
+
+```rust
+let mut v = vec![0, 1, 2];
+
+assert_eq!(&3, &v.len());
+assert_eq!(&3, &v.capacity());
+
+assert_eq!(&0, &v[0]);
+assert!(std::panic::catch_unwind(|| { &v[10] }).is_err()); // * 这里用到了匿名函数
+
+assert_eq!(&Some(&0), &v.get(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&Some(&mut 0), &v.get_mut(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&(), &v.push(1));
+assert_eq!(&Some(1), &v.pop());
+```
+
+### 字典（HashMap）
+
+- *homogenous*
+
+`HashMap` 没有预先引入（*prelude*）：
+
+```rust
+use std::collections::HashMap;
+```
+
+```rust
+// 标准创建
+let mut scores: HashMap<String, i32> = HashMap::new();
+
+// 推断创建
+let mut scores = HashMap::new();
+
+// 通过 key 和 value 集合间接创建
+let teams = vec![String::from("Blue")];
+let initial_scores = vec![10];
+// collect() 可以返回不同的数据结构，使用 HashMap<_, _> 后可以指定为 HashMap
+// 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
+let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
+```
+
+```rust
+scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
+scores.insert(String::from("Blue"), 20);
+scores.entry(String::from("Blue")).or_insert(30); // only add
+assert_eq!(Some(&20), scores.get("Blue"));
+assert_eq!(None, scores.get("Yellow"));
+```
+
+## 泛型（Generic）
+
+> Rust通过在编译时对使用泛型的代码进行*单态化（monomorphization）*，所以在使用泛型时不会比使用具体类型时运行得更慢。
+
+函数：
+
+```rust
+fn largest<T>(list: &[T]) -> T {
+  // ...
+}
+```
+
+结构体：
+
+```rust
+struct Point<T> {
+  x: T,
+  y: T,
+}
+
+impl<T> Point<T> {
+  fn x(&self) -> &T {
+    &self.x
+  }
+}
+
+// 可以只在局部类型上面实现方法
+impl Point<f32> {
+  fn distance_from_origin(&self) -> f32 {
+    (self.x.powi(2) + self.y.powi(2)).sqrt()
+  }
+}
+```
+
+枚举：
+
+```rust
+enum Option<T> {
+  Some(T),
+  None,
+}
 ```
 
 ## 特征（Trait）

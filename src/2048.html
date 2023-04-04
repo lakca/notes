@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2048</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      display: grid;
+      justify-content: center;
+      flex-direction: column;
+      color: #e0bf00;
+    }
+
+    .header {
+      justify-self: flex-start;
+    }
+  </style>
+  <style id="dynamic"></style>
+  <script>
+    const sheet = document.getElementById('dynamic')
+    const ndarray = {
+      /**
+       * @template T
+       * @param {() => T} fill
+       * @return T[][]
+       */
+      new(rows, cols, fill) {
+        /** @type Ceil[][] */
+        return new Array(rows).fill(null).map((_, row) => {
+          return new Array(cols).fill(null).map((_, col) => fill ? fill(row, col) : null)
+        })
+      },
+      /**
+       * @template T
+       * @param {T[][]} nda
+       * @param {(value: T, row: number, col: number, rows: number, cols: number) => any} each
+       * @return T[][]
+       */
+      ndarraySome(nda, each) {
+        for (let row = 0, rows = nda.length; row < rows; row++) {
+          for (let col = 0, cols = nda[row].length; col < cols; col++) {
+            const flag = each(nda[row][col], row, col, rows, cols)
+            if (flag) return flag
+          }
+        }
+      },
+      /**
+       * @template T
+       * @param {T[][]} nda
+       * @param {1|-1|2} direction
+       * @return T[][]
+       */
+      ndarrayRotate(nda, rotate) {
+        rotate %= 4
+        const rotated = []
+        ndarray.ndarraySome(nda, (value, row, col, rows, cols) => {
+          rows--
+          cols--
+          switch (rotate) {
+            case 1:
+            case -3:
+              rotated[col] = rotated[col] || []
+              rotated[col][rows - row] = value
+              break
+            case -1:
+            case 3:
+              rotated[cols - col] = rotated[cols - col] || []
+              rotated[cols - col][row] = value
+              break
+            case 2:
+            case -2:
+              rotated[rows - row] = rotated[rows - row] || []
+              rotated[rows - row][cols - col] = value
+              break
+            default:
+              rotated[row] = rotated[row] || []
+              rotated[row][col] = value
+          }
+        })
+        return rotated
+      }
+    }
+
+    class Ceil {
+      constructor() {
+        /** @type number */
+        this.value = null
+        /** @type number */
+        this.count = 0
+        /** @type number */
+        this.value_next = null
+        this.el = document.createElement('div')
+        this.el.classList.add('ceil')
+      }
+      reset() {
+        this.value_next = this.value
+        return this
+      }
+    }
+
+    function Two048(target, options) {
+      options = Object.assign({
+        size: 100,
+        gap: 14,
+        rows: 4,
+        cols: 4,
+        factor: 2,
+        color: ['#ccc1b4', '#d7cec1'],
+        blockColors: new Array(12).fill(0).map((_, i) => `hsl(30, 100%, ${80 - i * 5}%)`),
+      }, options)
+      const { size, gap, rows, cols, factor, color, blockColors } = options
+      const gap2 = gap / 2
+      const history = []
+      const board = createBoard()
+      const ceils = createCeils()
+      let dynamicCeils = ceils
+      let empty = rows * cols
+      ndarray.ndarraySome(ceils, ceil => {
+        board.appendChild(ceil.el)
+      })
+      createStyle()
+      createEvent()
+      target.appendChild(board)
+      giveCeil()
+      giveCeil()
+      return {
+        toString,
+        remove,
+        ceils,
+        dynamicCeils,
+      }
+      function toString(raw = false) {
+        return (raw ? ceils : dynamicCeils).map(e => e.map(e => e.value || '-').join('\t')).join('\n')
+      }
+      function remove() {
+        board.remove()
+        sheet.innerHTML = ''
+      }
+      function giveCeil() {
+        let step = Math.ceil(empty * Math.random())
+        return ndarray.ndarraySome(dynamicCeils, (ceil, row, col) => {
+          if (ceil.value === null && !(--step)) {
+            ceil.value = factor
+            ceil.count = 1
+            renderCeil(ceil, row, col)
+            empty -= 1
+            return ceil
+          }
+        }) || alert('Game Overed!')
+      }
+      function move(direction) {
+        const rotate = [0, -1, -2, -3][direction - 1]
+        if (rotate == null) throw `Invalid Direction: ${direction}`
+        const newCeils = ndarray.ndarrayRotate(dynamicCeils, rotate)
+        let movable = false
+        for (let row = 0; row < newCeils.length; row++) {
+          const stack = newCeils[row]
+          const fullStack = []
+          const emptyStack = []
+          let last = null
+          let openMovable = false
+          for (let col = 0; col < stack.length; col++) {
+            const ceil = stack[col].reset()
+            if (ceil.value === null) {
+              emptyStack.push(ceil)
+              openMovable = true
+            } else {
+              // collapsed!
+              if (openMovable) {
+                movable = true
+              }
+              if (last) {
+                if (last.value === ceil.value) {
+                  ceil.value_next = last.value + ceil.value
+                  ceil.count += 1
+                  fullStack.push(ceil)
+                  last.value_next = null
+                  emptyStack.push(last)
+                  last = null
+                  // merged!
+                  movable = true
+                } else {
+                  fullStack.push(last)
+                  last = ceil
+                }
+              } else {
+                last = ceil
+              }
+            }
+          }
+          if (last) {
+            fullStack.push(last)
+          }
+          const newStack = fullStack.concat(emptyStack)
+          newCeils[row] = newStack
+        }
+        if (movable) {
+          dynamicCeils = ndarray.ndarrayRotate(newCeils, -rotate)
+          commit(direction)
+          giveCeil()
+        } else {
+          console.warn('No collapsed spaces or merged numbers!')
+        }
+      }
+      function commit(direction) {
+        empty = 0
+        ndarray.ndarraySome(dynamicCeils, (ceil, row, col) => {
+          if (ceil.value_next === null) empty += 1
+          ceil.value_prev = ceil.value
+          ceil.value = ceil.value_next
+          renderCeil(ceil, row, col)
+        })
+      }
+      function createBoard() {
+        const board = document.createElement('div')
+        board.classList.add('board')
+        board.tabIndex = 1
+        return board
+      }
+      function createCeils() {
+        return ndarray.new(rows, cols, (row, col) => {
+          const ceil = new Ceil()
+          renderCeil(ceil, row, col)
+          return ceil
+        })
+      }
+      function createStyle() {
+        const styles = [
+          `.board {
+              position: relative;
+              outline: none;
+              border-radius: 4px;
+              overflow: hidden;
+              background: ${color[1]};
+              width: ${size * cols + gap * cols}px;
+              height: ${size * rows + gap * rows}px;
+              border: solid ${gap2}px ${color[0]};
+              transition: .3s;
+            }
+            .board:before {
+              position: absolute;
+              top: 0;
+              left: 0;
+              content: '';
+              display: block;
+              width: 100%;
+              height: 100%;
+              background:
+                -webkit-linear-gradient(
+                  top,
+                  ${color[0]} 0px, ${color[0]} ${gap2}px, transparent ${gap2}px,
+                  transparent ${size + gap2}px, ${color[0]} ${size + gap2}px,  ${color[0]} ${size + gap}px
+                  ),
+                -webkit-linear-gradient(
+                  left,
+                  ${color[0]} 0px, ${color[0]} ${gap2}px, transparent ${gap2}px,
+                  transparent ${size + gap2}px, ${color[0]} ${size + gap2}px,  ${color[0]} ${size + gap}px
+                  )
+                ;
+              background-size: ${size + gap}px ${size + gap}px;
+            }
+            .board:hover, .board:focus, .board.hover {
+              filter: brightness(1.1);
+              box-shadow: 0 0 10px #989898, 0 0 100px #989898;
+            }
+            .board .ceil {
+              position: absolute;
+              width: ${size}px;
+              height: ${size}px;
+              margin: ${gap / 2}px;
+              color: black;
+              font-size: xxx-large;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              font-weight: bold;
+              border-radius: 4px;
+            }
+            .board .ceil[state=appear] {
+              transition: .2s;
+              transition-property: left, top;
+              animation: .38s ease-in-out 0s 1 alternate forwards appear;
+            }
+            .board .ceil[state=grow] {
+              transition: .2s;
+              transition-property: left, top;
+              animation: .08s linear .10s 2 alternate forwards grow;
+            }
+            .board .ceil[state=grow2] {
+              transition: .2s;
+              transition-property: left, top;
+              animation: .08s linear .10s 2 alternate forwards grow2;
+            }
+            @keyframes appear {
+              0% { transform: scale(0.1); }
+              100% { transform: scale(1); }
+            }
+            @keyframes grow {
+              0% { transform: scale(1); }
+              100% { transform: scale(1.3); }
+            }
+            @keyframes grow2 {
+              0% { transform: scale(1); }
+              100% { transform: scale(1.3); }
+            }
+          `,
+        ].concat(blockColors.map((e, i) => `
+          [number='${i + 1}'] {
+            background-color: ${e}
+          }
+        `))
+        sheet.innerHTML = styles.join('\n')
+      }
+      function createEvent() {
+        board.addEventListener('mouseenter', () => {
+          board.focus()
+          board.classList.add('hover')
+        })
+        board.addEventListener('mouseleave', () => {
+          board.blur()
+          board.classList.remove('hover')
+        })
+        board.addEventListener('keyup', e => {
+          console.log(e.key)
+          switch (e.key) {
+            case 'ArrowLeft':
+              move(1)
+              break
+            case 'ArrowUp':
+              move(2)
+              break
+            case 'ArrowRight':
+              move(3)
+              break
+            case 'ArrowDown':
+              move(4)
+              break
+          }
+        })
+      }
+      function getLoc(row, col) {
+        return [row * (size + gap) + 'px', col * (size + gap) + 'px']
+      }
+      /**
+       * @param {Ceil} ceil
+       */
+      function renderCeil(ceil, row, col) {
+        [ceil.el.style.top, ceil.el.style.left] = getLoc(row, col)
+        if (ceil.value !== null) {
+          if (ceil.value_prev === null) {
+            ceil.el.setAttribute('state', 'appear')
+          } else if (ceil.value_prev !== ceil.value) {
+            const grow = ceil.el.getAttribute('state')
+            ceil.el.setAttribute('state', grow === 'grow' ? 'grow2' : 'grow')
+          }
+          ceil.el.textContent = ceil.value
+          ceil.el.setAttribute('number', ceil.count)
+        } else {
+          ceil.el.textContent = ''
+          ceil.el.removeAttribute('state')
+          ceil.el.removeAttribute('number')
+        }
+      }
+    }
+
+    function start() {
+      two048.remove()
+      const inputs = [...document.querySelectorAll('input')]
+      two048 = new Two048(document.body, {
+        rows: +inputs[0].value,
+        cols: +inputs[1].value,
+        factor: +inputs[2].value,
+      })
+    }
+  </script>
+</head>
+
+<body>
+  <div class="header">
+    行：<input type="number" onInput="start()" value="4"/>
+    列：<input type="number" onInput="start()" value="4"/>
+    基数：<input type="number" onInput="start()" value="2"/>
+    <button onClick="start()">Reset</button>
+  </div>
+</body>
+<script>
+  let two048 = new Two048(document.body)
+</script>
+
+</html>

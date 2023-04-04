@@ -1,6 +1,6 @@
 ---
 title: MacOS深度使用
-wehujdf: 
+wehujdf:
 date: 2020-08-27T09:42:26.913Z
 ---
 
@@ -17,7 +17,7 @@ date: 2020-08-27T09:42:26.913Z
 
 ## 命令
 
-### 调用系统脚本：osascript
+### 调用系统脚本（`osascript`）
 
 > [`osascript`](https://ss64.com/osx/osascript.html): execute OSA scripts (AppleScript, JavaScript, etc.)
 
@@ -76,7 +76,7 @@ delay 0.5 # 秒
 
 `osascript -e 'id of app "Visual Studio Code"'`
 
-### 管理进程：launchctl
+### 管理进程（`launchctl`）
 
 > `launchd`: System wide and per-user daemon/agent manager.
 
@@ -128,13 +128,13 @@ sudo launchctl list
 ~/Library/LaunchAgents
 ```
 
-### 软件配置文件：plist
+### 软件配置文件（`plist`）
 
 > *launchd.plist*是*daemon*和*agent*任务的服务配置文件。
 
 关于*plist*，可以查看`man plist`, `man launchd.plist`。
 
-### 管理内核状态：sysctl
+### 管理内核状态（`sysctl`）
 
 > `sysctl`: get or set kernel state.
 
@@ -148,7 +148,7 @@ sysctl vm.swapusage
 # vm.swapusage: total = 0.00M used = 0.00M free = 0.00M (encrypted)
 ```
 
-### 管理Spotlight索引：mdutil
+### 管理Spotlight索引（`mdutil`）
 
 管理建立*Spotlight*索引的服务（进程名称：`mds_stores`）
 
@@ -161,7 +161,7 @@ mdutil -a -i off
 mdutil -a -i on
 ```
 
-### 管理磁盘和卷：diskutil
+### 管理磁盘和卷（`diskutil`）
 
 > `diskutil`: Utility to manage local disks and volumes.
 
@@ -172,7 +172,13 @@ diskutil list
 diskutil info <disk>
 ```
 
-### 控制系统睡眠：caffeinate
+### 开关系统（`shutdown`）
+
+- 系统睡眠（*sleep*）：`shutdown -s`
+- 系统关机（*halted*）：`shutdown -h`
+- 将非超级用户用户踢下线（*kick*）：`shutdown -k`
+
+### 控制系统睡眠（`caffeinate`）
 
 > `caffeinate`: prevent the system from sleeping on behalf of a utility.
 
@@ -236,7 +242,7 @@ pmset repeat cancel
 pmset relative [wake | poweron] <seconds>
 ```
 
-### 管理plist文件：plutil
+### 管理plist文件（`plutil`）
 
 > `plutil`: can be used to check the syntax of property list files, or convert a plist file from one format to another. Specifying - as an input file reads from stdin.
 

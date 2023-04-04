@@ -1,32 +1,31 @@
 ---
-title: swift
+title: Swift
 date: 2020-09-08T08:54:35.929Z
 ---
 
-> v5.3 Guide
-
-> Test on v4.2.1
-
-[Swift Guide](SwiftGuide)
-
 # 语言
+
+> 安全、快速、交互式（提供解释器）、富有表现力的具有工业品质的编程语言。
 
 ## 特性
 
 - 不直接暴露指针/内存，但提供了标准库进行支持
 - 数据传递策略是引用还是复制在类型实现（值类型和引用类型）时已经决定
-- 通过严格的引用计数（*Deterministic Reference Counting*）自动进行内存回收，没有垃圾回收对进程的干预
-- Unicode编码
+- 自动管理内存，通过严格的引用计数（*Deterministic Reference Counting*）自动进行内存回收，没有垃圾回收对进程的干预
+- 完全的Unicode编码
 - 强类型（编译时确定类型）
 - 静态类型（不可在~~使用中改变变量类型~~）
-- 不支持名称遮蔽（~~二次声明~~）
-- 支持自动推断类型（*Type Inference*）
-- 强制显式处理空值（*Optional*）
+- 禁止变量遮蔽（*~~Shadowing~~*）
+- 变量须初始化后调用
+- 整型溢出检测
+- 自动推断类型（*Type Inference*）
+- 显式处理空值（*Optional*）
+- 禁止越界索引（*Out-of-Bounds Errors*）
 - 支持元组（*Tuple*）
 - 支持多值返回（*Multiple Return Values*）
-- 支持泛型（*Generics*）
-- 支持协议（*Protocols*）(类似*Rust Trait*)
-- 支持类型扩展（*Extensions*）（类似*Rust derive*）
+- 支持[泛型](#泛型generics)（*Generics*）
+- 支持[协议](#协议protocol)（*Protocols*）
+- 支持类型[扩展](#扩展extension)，包括基本类型（*Extensions*）
 - 支持运算符重载（*Operator Overloading*）
 - 支持[字符串插值](#插值string-interpolation)（*String Interpolation*）
 - 支持[闭包](#闭包表达式)（*Closure*）
@@ -38,6 +37,7 @@ date: 2020-09-08T08:54:35.929Z
 - 支持错误捕获，*catch*非必需（`try`、 `catch`、`throw`）
 - 常量没有严格的值不可变，对于引用类型只存储引用地址，属性仍然是可变的（类似*Javascript*的常量对象）
 - 句尾分号可选 ~~`;`~~（同*Javascript*，换行符和分号均为语句分隔符）
+- 等号（`=`）两侧必须同时有或没有空格
 
 ## 约定
 
@@ -51,9 +51,18 @@ date: 2020-09-08T08:54:35.929Z
 - 协议（*Protocol*）
 - 行为体（*Actor*）
 
-## 约定
+## 文档
 
-- 标识符使用*camelCase*（变量、函数等）和*PascalCase*（类、结构、枚举等）命名方式
+- [Getting Started](https://www.swift.org/getting-started/)
+- [A Swift Tour][guidedtour]
+- [Swift Programming Language](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/)
+- [Swift Language Reference][aboutthelanguagereference]
+- [Swift Standard Library](https://developer.apple.com/documentation/swift/swift-standard-library)
+- [API Design Guidelines](https://www.swift.org/documentation/api-design-guidelines/)
+
+## 工具
+
+- [Swift-DocC](https://www.swift.org/documentation/docc)：为你的Swift项目生成文档
 
 # 变量和常量
 
@@ -131,20 +140,15 @@ let b = 2, c = 3
 print(type(of: "hello"))
 ```
 
-## 值类型（Value Types）
+## 值类型和引用类型（Value Types & Reference Types）
 
-> 所谓[值类型](https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html#ID88)，即在其被传递时，如赋值给变量、常量或者作为参数传入函数等，会复制出新的副本。（*A _value type_ is a type whose value is _copied_ when it’s assigned to a variable or constant, or when it’s passed to a function.*）
+> [值类型（Value Types）][Structures-and-Enumerations-Are-Value-Types]在其被传递时（如赋值给变量、常量或者作为参数传入函数等）会复制数据。[**包括结构（*Structures*）和枚举（*Enumerations*）。**][Structures-and-Enumerations-Are-Value-Types]
 
-**所有结构（*structures*）和枚举（*enumerations*）都是值类型。**
+> 与值类型相对，[引用类型（Reference Types）][Classes-Are-Reference-Types]在其被传递时只会创建引用，而不会复制数据，前后均指向同一个实例。[**包括类（*Classes*）和行为体（*Actors*）。**][Classes-Are-Reference-Types]
 
-> **基础类型（*Basic Types*）在底层都是通过结构（*structures*）来实现的**，所以都是值类型，包括数字（`Int`, `Double`）、布尔值（`Bool`）、字符串（`String`）、数组（`Array`）、集合（`Set`）、字典（`Dictionary`）等。(*In fact, all of the basic types in Swift—integers, floating-point numbers, Booleans, strings, arrays and dictionaries—are value types, and are implemented as structures behind the scenes.*)
-> \* 标准库定义的集合类型如数组、字典和字符串等，为了优化性能，只有在数据被修改前才会被复制。
+**基础类型（Basic Types）在底层都是通过结构（Structures）来实现的，故均是值类型（Value Types）**。包括数字（`Int`, `Double`）、布尔值（`Bool`）、字符串（`String`）、数组（`Array`）、集合（`Set`）、字典（`Dictionary`）等。(*In fact, all of the basic types in Swift—integers, floating-point numbers, Booleans, strings, arrays and dictionaries—are value types, and are implemented as structures behind the scenes.*)
 
-## 引用类型（Reference Types）
-
-> [引用类型](https://docs.swift.org/swift-book/LanguageGuide/ClassesAndStructures.html#ID89)
-
-**引用类型包括类（*classes*）、行为体（*actors*）。**
+*为了优化性能，在标准库中定义的集合类型（如数组、字典和字符串等）在传递时不会立即复制，只有在数据被修改前才会被复制。*
 
 ## 基本类型（Basic Types）
 
@@ -424,22 +428,22 @@ if 1 {} // error
 ### 元组（Tuples）
 
 ```swift
-// a tuple of type (Int, String)
+// 匿名元素
 let http404Error = (404, "Not Found")
 print(http404Error.0) // 404
-```
 
-解构（*decompose*）元组：
+let a = 1, b = 2
+let c = (a, b)
+print(c) // (1, 2)
 
-```swift
-let (statusCode, statusMessage) = http404Error
-```
-
-命名组内元素：
-
-```swift
+// 具名元素
 let http200Status = (statusCode: 200, description: "OK")
 print(http404Error.statusCode) // 200
+
+// 解构（*decompose*）元组
+let (statusCode, statusMessage) = http404Error
+// 解构无需同名
+let (code, msg) = http404Error
 ```
 
 ### 集合类型（Collection）
@@ -620,32 +624,27 @@ let arr = [String](dict.keys)
 let arr = [String](dict.values.sorted())
 ```
 
-## 或有类型（Optional）
+## 可空类型（Optional）
 
 > *Optional* 表示某类型不是一直都存在值。一般用于变量声明、类型转换的返回值等。
 
 在类型后添加`?`表示或有类型：
 
 ```swift
-let a: Int? = 1
+var a: Int?
+print(a) // nil
 print(type(of: a)) // Optional(Int)
-```
-
-或有值在使用前必须强制解包（*force unwrapping*）以获取其具体值，在值后添加`!`可以解包：
-
-```swift
-let a: Int? = 1
-print(a!) // 1
 ```
 
 ### 空值（nil）
 
 > `nil` 只用于赋值或有类型或与之比较等。`nil`不是一个空指针，单纯是在语法层面表示值不存在。
 
-或有类型的变量不初始化即为`nil`
+可空类型的变量不初始化即为`nil`
 
 ```swift
-let a: Int?
+var a: Int?
+print(a) // nil
 ```
 
 `nil`只能与或有类型进行比较：
@@ -654,38 +653,40 @@ let a: Int?
 if (1 == nil) {} // error
 ```
 
-### 或有绑定（Optional Binding）
+### 可空绑定（Optional Binding）
 
-> 或有绑定，是先判断或有值是否存在，如果存在则将其值存于临时变量中。一般出现在控制流语句，如`if`, `guard` 和 `while`。
+> 可空绑定，是先判断或有值是否存在，如果存在则将其值存于临时变量中执行条件语句。一般出现在控制流语句，如`if`, `switch`, `guard`, `while`。
 
 ```swift
-if let actualNumber = Int(possibleNumber) {
+var possibleNumber: Int? = 1
+if let actualNumber = possibleNumber {
     print("The string \"\(possibleNumber)\" has an integer value of \(actualNumber)")
-}
-```
-
-```swift
-let actualNumber = Int(possibleNumber)
-if let myNumber {
-    print("My number is \(myNumber)")
+    // The string "Optional(1)" has an integer value of 1
 }
 ```
 
 ### 强制解包（Implicitly Force Unwrapping）
 
-> 有的情况下，我们知道一个或有值是一定存在值的，这时候再使用控制语句来判断其值存在性就显得冗余，故提供了强制解包的快捷方式。
+> 有的情况下，我们知道一个可空值是一定存在值的，这时候再使用控制语句来判断其值存在性就显得冗余，故提供了强制解包的快捷方式。
 
 ```swift
-let a: Int? = 1
+var a: Int? = 1
 print(a!) // 1 // use exclamation point(!) as postfix.
 ```
 
-### Implicitly Unwrapped Optionals
+### 声明隐式解包可空类型（Implicitly Unwrapped Optionals）
+
+> 声明*隐式解包可空类型*后，变量在调用时可以被当作非空类型直接使用，而无需解包。
 
 ```swift
-let a: Int! = 1
+var a: Int! = 1 // 用 ! 替代 ?
 print(a) // Optional(1)
+if a == 1 {
+  print("a is 1")
+}
 ```
+
+### 可空链式调用（）
 
 ## 类型别名（Type Alias）
 
@@ -781,7 +782,7 @@ do {
 
 # 操作符
 
-> Swift支持重载操作符方法，以及自定义新的操作符。
+> Swift支持重载操作符方法，以及自定义操作符。
 
 ## 标准操作符
 
@@ -985,84 +986,385 @@ for e in 1... {
 
 # 控制流程
 
+> [控制流程][controlflow]
+
 ## `for...in`
 
 > 用于自动迭代实现了序列（`Sequence`）协议的数据，如区间、字符串、数组、字典等等。
 
 ```swift
-for i in 1...5
-for e in [1, 2, 3]
+// 区间
+for i in 1...5 { <#statements#> }
+// 数组
+for e in [1, 2, 3] { <#statements#> }
+// 字典（注意，字典本身是无序的）
+for (animalName, legCount) in ["spider": 8, "ant": 6, "cat": 4] { <#statements#> }
+```
+
+忽略迭代项：
+
+```swift
+for _ in 1...5 { <#statements#> }
+```
+
+通过`where`实现条件迭代：
+
+```swift
+for i in 1...5 where 1 % 3 == 0 { <#statements#> }
 ```
 
 ## `while`
 
+```swift
+while <#condition#> {
+   <#statements#>
+}
+```
+
 ## `repeat...while`
 
-- like do...while in C
+```swift
+repeat {
+   <#statements#>
+} while <#condition#>
+```
+
+## `if`
+
+```swift
+if <#condition#> { <#statements#> }
+if <#condition#> { <#statements#> } else { <#statements#> }
+if <#condition#> { <#statements#> } else if <#condition#> { <#statements#> }
+if case 10...16 = age {}
+if case 10...16 = age, age > 25 {}
+```
 
 ## `switch`
 
-- no implicit fallthrough: flow will be finished once first matching completed except states a `fallthrough` keyword.
+- 一旦匹配到，就不再继续匹配
+- 必须有`default`分支
+- 不允许存在空分支，可以用`break`语句填充
 
-- `break` is not required.
-
-- doesn't allow empty case. (`break` is a good fill)
-
-### interval matching
 ```swift
-case 1...5:
-```
-```swift
-case 1..<5:
-```
-
-### tuple
-```swift
-case (let x, 0):
-```
-```swift
-case let (x, y):
+switch <#expression#> {
+  case <#expression#>:
+    <#statements#>
+  // 多个匹配项
+  case <#expression#>, <#expression#>:
+    <#statements#>
+  // switch不允许空的执行语句，可以使用`break`填充
+  case <#expression#>:
+    break
+  // 默认项
+  default:
+    <#statements#>
+}
 ```
 
-### where
+### 穿透相邻分支（`fallthrough`）
+
+> `fallthrough`：立即退出当前分支的执行，并跳入下个相邻的分支（不检查分支条件）继续执行。
+
 ```swift
+let integerToDescribe = 5
+var description = "The number \(integerToDescribe) is"
+switch integerToDescribe {
+  case 1...:
+    description += " greater than 1, and also"
+    fallthrough
+  case 10...:
+    description += " greater than 10, and also"
+    fallthrough
+  default:
+    description += " an integer."
+}
+print(description) // The number 5 is greater than 1, and also greater than 10, and also an integer.
+```
+
+### 匹配值区间（Interval Matching）
+
+```swift
+case 5...10:
+  <#statements#>
+case 1..<5, 11...20:
+  <#statements#>
+```
+
+### 通过元组测试多个值
+
+```swift
+let somePoint = (1, 1)
+switch somePoint {
+  case (0, 0):
+      print("\(somePoint) is at the origin")
+  case (_, 0):
+      print("\(somePoint) is on the x-axis")
+  case (0, _):
+      print("\(somePoint) is on the y-axis")
+  case (-2...2, -2...2):
+      print("\(somePoint) is inside the box")
+  default:
+      print("\(somePoint) is outside of the box")
+}
+```
+
+### 值绑定（Value Bindings）
+
+```swift
+switch (2, 0) {
+  case (let x, 0):
+      print("on the x-axis with an x value of \(x)")
+  case (0, let y):
+      print("on the y-axis with a y value of \(y)")
+  case let (x, y):
+      print("somewhere else at (\(x), \(y))")
+}
+```
+```swift
+indirect enum ArithmeticExpression {
+  case number(Int)
+  case addition(ArithmeticExpression, ArithmeticExpression)
+  case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
+func evaluate(_ expression: ArithmeticExpression) -> Int {
+  switch expression {
+  case let .number(value):
+    return value
+  case let .addition(left, right):
+    return evaluate(left) + evaluate(right)
+  case let .multiplication(left, right):
+    return evaluate(left) * evaluate(right)
+  }
+}
+```
+
+### 通过`where`细化匹配条件：
+
+```swift
+let yetAnotherPoint = (1, -1)
+switch yetAnotherPoint {
 case let (x, y) where x == y:
-```
-- value bindings are available in where clause
-
-### fallthrough
-```swift
-case 1:
-  fallthrough
+    print("(\(x), \(y)) is on the line x == y")
+case let (x, y) where x == -y:
+    print("(\(x), \(y)) is on the line x == -y")
+case let (x, y):
+    print("(\(x), \(y)) is just some arbitrary point")
+}
 ```
 
 - fallthrough doesn't check the case condition of it causes execution fall into
 
 - value bindings are available in the fallen into
 
-## labeled statement
+## `guard...else`
 
-## guard...else
+> 如果`guard`语句的条件不满足时，执行`else`语句并提前退出当前域的执行。
 
-- value bindings in guard statement are available in the rest of code block guard statement appears in.
+- `guard...else`语句类似生产模式下的`assert`
+- `Optional`变量经过`guard`语句审查后后续可以在所在域直接使用
+- `else`分支必须转移所在域的控制权（`return`, `break`, `continue`, `throw`, `fatalError`...）
 
-- else branch must transfer control to exit the code block guard appears in. such as `return`, `break`, `continue`, `throw`, `fatalError`...
+```swift
+func greet(person: [String: String]) {
+  guard let name = person["name"] else {
+    return
+  }
 
-- like a production mode `assert`
+  print("Hello \(name)!")
 
-# 函数
+  guard let location = person["location"] else {
+    print("I hope the weather is nice near you.")
+    return
+  }
 
-[Function](https://docs.swift.org/swift-book/LanguageGuide/Functions.html#)
+  print("I hope the weather is nice in \(location).")
+}
+```
+
+## 标签（labeled statement）
+
+```swift
+<#label#>: while <#condition#> {
+   <#statements#>
+}
+```
+
+## 检查平台和版本
+
+`#available`
+
+```swift
+#available(<#platform name#> <#version#>, <#...#>, *)
+```
+
+```swift
+// `*` 表示其他平台
+if #available(iOS 10, macOS 10.12, *) {
+    // Use iOS 10 APIs on iOS, and use macOS 10.12 APIs on macOS
+} else {
+    // Fall back to earlier iOS and macOS APIs
+}
+```
+
+`#unavailable`
+
+```swift
+if #unavailable(iOS 10) {
+    // Fallback code
+}
+```
+
+在`guard...else`中使用：
+
+```swift
+@available(macOS 10.12, *)
+struct ColorPreference {
+    var bestColor = "blue"
+}
+
+func chooseBestColor() -> String {
+    guard #available(macOS 10.12, *) else {
+       return "gray"
+    }
+    let colors = ColorPreference()
+    return colors.bestColor
+}
+```
+
+# 函数（Functions）
 
 ```swift
 func [functionName]([parameterLabel|_] [parameter: type] = [defaultValue] ...) [throws] [-> type] { }
 ```
 
-function varies in `parameter label`, `parameter type`, and `return type`.
+> [函数][functions] varies in `parameter label`, `parameter type`, and `return type`.
 
-## (v5.1) implicit return
+```swift
+// 无返回值（即返回`Void`，即空元组`()`）
+func a () {}
+func a2 () -> Void {}
+func a3 () -> () {}
 
-> If the entire body of the function is a single expression, the function implicitly returns that expression.
+// 有返回值
+func b() -> Int { return 1 }
+
+// 通过元组可以返回多个值
+func r() -> (Int, Int) { return (1, 2) }
+print(f()) // (1, 2)
+func r2() -> (x: Int, y: Int) { return (3, 4) }
+print(g()) // (x: 1, y: 2)
+
+// 函数参数
+// - 函数调用时参数默认需要具名（带参数标签）传递
+// - 函数参数默认是常量
+func p(a: Int) -> Int { return a + 1 }
+p(a: 1)
+
+// 修改参数标签，即调用函数时所使用的参数名称
+func pl(x a: Int) -> Int { return a + 1 }
+pl(x: 1)
+
+// 省略参数标签，可以实现匿名传参
+func pa(_ a: Int) -> Int { return a + 1 }
+pa(1)
+
+// 参数默认值，有默认值的参数不要求放在后面
+func pd(a: Int = 1, b: Int) -> Int { return a + b }
+pd(b: 1)
+
+// 不定参数，在函数体中当作数组提供
+func pv(a: Int...) {}
+
+// 多个不定参数，需要在不定参数的第一个参数加上参数标签以区分
+func pv2(a: Int..., b: Int...) {}
+pv2(a: 1, 2)
+pv2(a: 1, 2, b: 3, 4)
+```
+
+## 可变参数 (`inout`)
+
+> 函数的参数默认是常量，如果要修改，需要声明参数类型为可`inout`类型，并在调用函数时传入引用值（`&`）。
+
+可变参数实际是在调用函数时传入了参数副本，并在函数结束后将副本赋值给原变量，故：
+
+- `inout`参数不能有~~默认值~~，也不能是~~不定参数~~
+- `inout`参数必须传入变量，不能传入~~常量~~和~~字面量~~
+
+```swift
+func swap(_ a: inout Int, _ b: inout Int) {
+  (a, b) = (b, a)
+}
+var x = 3, y = 107
+swap(&x, &y)
+print("x is now \(x), and y is now \(y)")
+// Prints "x is now 107, and y is now 3"
+```
+
+由于Swift编译器为了优化性能，在处理的时候传入的是引用，故：
+
+- 作为`inout`参数传入的变量不能在多线程的时候直接访问
+- 同一个变量不能同时作为多个`inout`参数传入
+
+```swift
+func multithreadedFunction(queue: DispatchQueue, x: inout Int) {
+  // Make a local copy and manually copy it back.
+  var localX = x
+  defer { x = localX }
+
+  // Operate on localX asynchronously, then wait before returning.
+  queue.async { someMutatingOperation(&localX) }
+  queue.sync {}
+}
+```
+
+## 函数类型
+
+> 函数类型由函数参数类型和函数返回值类型共同决定。
+
+```swift
+func a(_ x: Int) -> String { "" }
+print(type(of: a)) // (Int) -> String
+```
+
+### 函数变量
+
+通过函数类型可以定义函数变量，以动态调用函数：
+
+```swift
+var mathFunction: (Int, Int) -> Int = addTwoInts
+```
+
+### 高阶函数
+
+通过将参数或返回值定义为函数类型可以定义高阶函数：
+
+```swift
+func printMathResult(_ mathFunction: (Int, Int) -> Int, _ a: Int, _ b: Int) {
+    print("Result: \(mathFunction(a, b))")
+}
+```
+
+```swift
+func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+    return backward ? stepBackward : stepForward
+}
+```
+
+## 内联函数
+
+> 函数内可以定义内联函数，内联函数可以直接使用所在函数中的项目，并可以作为返回值被返回。
+
+```swift
+func chooseStepFunction(backward: Bool) -> (Int) -> Int {
+    func stepForward(input: Int) -> Int { return input + 1 }
+    func stepBackward(input: Int) -> Int { return input - 1 }
+    return backward ? stepBackward : stepForward
+}
+```
+
+## (v5.1) 隐式返回（implicit return）
+
+> 如果函数体只有一个表达式，则可以省略`return`.（If the entire body of the function is a single expression, the function implicitly returns that expression.）
 
 ```swift
 func greet(name: String) -> String {
@@ -1070,152 +1372,59 @@ func greet(name: String) -> String {
 }
 ```
 
-## 形参（Parameter）
+# 闭包（Closures）
 
-### 参数默认值
+> [闭包][closures]：捕获并可*持续*（即使这些变量的原始上下文已经不存在了）读取外部变量的*自包含功能块*（即函数，区别于与普通代码块）。
+> （*Closures are self-contained blocks of functionality that can be passed around and used in your code. Closures can capture and store references to any constants and variables from the context in which they’re defined.*）
 
-```swift
-func greet(_ who: String = "Everyone") -> String {
-  return greet(name) // Hi! ...
-}
-```
+闭包有三种，其中*函数（Functions）* 和 *内联函数（Nested Functions）*是两种特殊闭包，第三种即**闭包（表达式）**。
 
-### 不定参数 (Variadic Parameter)
+## 闭包表达式（Closure Expressions）
 
-```swift
-func greet(name: String...) {
-  for e in name { print(greet(e)) }
-}
-greet(name: "Lucky", "Lily")
-```
+> 闭包表达式实际是被Swift针对性地做了些简化的匿名闭包，以方便使用，如：
 
-### 可修改参数 (In-Out Parameter)
+- 通过上下文自动推导参数类型（*Inferring parameter and return value types from context*）
+- 单表达式可以省略`return`（*Implicit returns from single-expression closures*）
+- 通过魔术变量省略参数定义（*Shorthand Argument Names*）
+- 尾随闭包语法（*Trailing closure syntax*）
 
-> 函数参数默认是常量，当需要修改时，需要声明形参类型为可输入输出（`inout`）类型，并传入引用值（`&`）。
+需要注意的是：
 
-- 可输入输出的参数没有~~默认值~~，也不能是~~不定参数~~。
+- 闭包参数不能有默认值
 
 ```swift
-func swap(a: inout Int, b: inout Int) {
-  let x = a
-  a = b
-  b = a
-}
-var (a, b) = (1, 2)
-swap(&a, &b) // place a ampersand (`&`,) before a variable to indicate it can be modified.
-print(a, b) // 2, 1
-```
-
-## 实参标签（Argument Label）
-
-> 实参标签在调用函数时作为实参的名称。
-
-```swift
-func greet(from hometown: String) -> String {
-  "Glad you could visit from \(hometown)."
-}
-greet(from: "China")
-```
-> 不声明时其默认与参数名称相同。
-```swift
-// 默认标签
-func greet(hometown: String) -> String {
-  "Glad you could visit from \(hometown)."
-}
-greet(hometown: "China")
-```
-> 省略标签用`_`代替。
-```swift
-func greet(_ name: String) -> String {
-  "Hi! \(name)"
-}
-greet("world")
-```
-
-## 返回多个值 (Return Tuple)
-
-```swift
-func extent(arr: [Int]) -> (min: Int, max: Int) {
-  var last: Int, max = arr[0], min = arr[0]
-  for e in arr[1..<arr.count] {
-    if e > last { max = e }
-    if e < last { min = e }
-  }
-  return (min, max)
-}
-print(extent([1,2,3,4,5])) // (min: 1, max: 5)
-```
-> return optional tuple types (`?`)
-```swift
-func extent(_ arr: [Int]) -> (min: Int, max: Int)? {
-  if arr.isEmpty { return nil }
-  return extent(arr: arr)
-}
-print(extent([]) as Any) // nil
-```
-
-## 忽略返回值 (`_`)
-
-```swift
-_ = greet("Lucky")
-greet("Lucky") // warning: result of call to 'test()' is unused
-```
-
-# 闭包表达式
-
-> [闭包](https://docs.swift.org/swift-book/LanguageGuide/Closures.html#)：捕获并可*持续*（即使这些变量的原始上下文已经不存在了）读取外部变量的*自包含功能块*（即函数，区别于与普通代码块）。故，嵌套函数是一种具名的闭包。（*Closures are self-contained blocks of functionality that can be passed around and used in your code. Closures can capture and store references to any constants and variables from the context in which they’re defined.*）
-
-闭包表达式（*Closure Expression*）语法：
-
-```swift
-{ (parameters) -> return type in
-    statements
+{ (<#parameters#>) -> <#return type#> in
+   <#statements#>
 }
 ```
 
 ```swift
 let names = ["Chris", "Alex", "Ewa", "Barry", "Daniella"]
+
+// 完整闭包写法
 names.sorted(by: { (a: String, b: String) -> Bool in return a > b })
-```
 
-通过上下文自动推导参数类型（*Inferring Type From Context*）
-
-```swift
+// 通过上下文自动推导参数类型（*Inferring Type From Context*）
 names.sorted(by: { (a, b) -> Bool in a > b })
-```
 
-单表达式可以省略`return`（*Implicit Returns from Single-Expression Closures*）
+names.sorted(by: { a, b -> Bool in a > b })
 
-```swift
+// 单表达式可以省略`return`（*Implicit Returns from Single-Expression Closures*）
 names.sorted(by: { (a: String, b: String) -> Bool in a > b })
-```
 
-通过魔术变量省略形参定义（*Shorthand Argument Names*）
-
-```swift
+// 通过魔术变量省略参数定义（*Shorthand Argument Names*）
 names.sorted(by: { $0 > $1 })
-```
 
-直接使用操作符方法（*Operator Methods*）
-
-```swift
+// 直接使用操作符方法（*Operator Methods*）
 names.sorted(by: >)
 ```
 
-## 尾随闭包（Trailing Closure）
+## 尾随闭包（Trailing Closures）
 
-> 如果闭包作为函数最后一个或多个参数，则该闭包可以紧写在函数调用的括号外。
+> 如果闭包作为函数最后一个或多个参数，则该闭包可以写在函数调用的括号外，其中，第一个尾随闭包可以不用参数标签标注。
 
 ```swift
 names.sorted() { $0 > $1 }
-```
-```swift
-// 多个尾随闭包
-loadPicture(from: someServer) { picture in
-    someView.currentPicture = picture
-} onFailure: {
-    print("Couldn't download the next picture.")
-}
 ```
 
 > 如果函数仅有该闭包一个参数，则可以省略函数调用的括号`()`。
@@ -1224,7 +1433,24 @@ loadPicture(from: someServer) { picture in
 names.sorted { $0 > $1 }
 ```
 
-## 逃逸闭包（Escaping Closure）
+> 尾随闭包可以有多个，但除了第一个外，其余均须使用参数标签标注。
+
+```swift
+func loadPicture(from server: Server, completion: (Picture) -> Void, onFailure: () -> Void) {
+    if let picture = download("photo.jpg", from: server) {
+        completion(picture)
+    } else {
+        onFailure()
+    }
+}
+loadPicture(from: someServer) { picture in
+    someView.currentPicture = picture
+} onFailure: {
+    print("Couldn't download the next picture.")
+}
+```
+
+## 逃逸闭包（Escaping Closures）
 
 > 传入了函数但在函数返回后才会调用的闭包。（*A closure is said to escape a function when the closure is passed as an argument to the function, but is called after the function returns.*）
 
@@ -1253,7 +1479,7 @@ class SomeClass {
 }
 ```
 
-## 自动闭包（Autoclosure）
+## 自动闭包（Autoclosures）
 
 > 一种自动创建的闭包：如果一个闭包没有参数的话，可以省略参数声明部分，只写闭包体部分（`{ statement }`），会被自动创建成闭包。(*An autoclosure is a closure that’s automatically created to wrap an expression that’s being passed as an argument to a function. It doesn’t take any arguments, and when it’s called, it returns the value of the expression that’s wrapped inside of it.*)
 
@@ -1275,15 +1501,64 @@ func serve(customer customerProvider: @autoclosure () -> String) {
 serve(customer: customersInLine.remove(at: 0))
 ```
 
-# 枚举
+## 捕获列表（Capturing List）
 
-> [枚举（Enumerations）](https://docs.swift.org/swift-book/LanguageGuide/Enumerations.html)：（*An enumeration defines a common type for a group of related values and enables you to work with those values in a type-safe way within your code.*）
+> 当闭包产生[强引用循环][Strong-Reference-Cycles-for-Closures]（如在类中通过闭包定义方法，方法中对实例进行引用）时，可通过定义捕获列表的手段，定义闭包对实例（或属性、方法）的弱引用或非拥有关系。
 
-- 枚举的原始值类型可以是字符串、字符、整数、浮点数；
-- 可以定义案例关联值；
-- 可以定义计算属性；
-- 可以定义方法；
-- 可以定义初始化器；
+- `unowned`，非拥有引用：实例和闭包同时释放；
+- `weak`，弱引用：闭包可以存续更久，引用可能为空`nil`；
+
+```swift
+lazy var someClosure = {
+        [unowned self, weak delegate = self.delegate]
+        (index: Int, stringToProcess: String) -> String in
+    // closure body goes here
+}
+// 当闭包没有参数和返回值时：
+lazy var someClosure2 = {
+        [unowned self, weak delegate = self.delegate] in
+    // closure body goes here
+}
+```
+
+例如：
+
+```swift
+class HTMLElement {
+
+    let name: String
+    let text: String?
+
+    lazy var asHTML: () -> String = {
+            [unowned self] in
+        if let text = self.text {
+            return "<\(self.name)>\(text)</\(self.name)>"
+        } else {
+            return "<\(self.name) />"
+        }
+    }
+
+    init(name: String, text: String? = nil) {
+        self.name = name
+        self.text = text
+    }
+
+    deinit {
+        print("\(name) is being deinitialized")
+    }
+
+}
+```
+
+# 枚举（Enumerations）
+
+> [枚举（Enumerations）][enumerations]：（*An enumeration defines a common type for a group of related values and enables you to work with those values in a type-safe way within your code.*）
+
+- 可以定义[枚举项原始值](#枚举项原始值raw-value)
+- 可以定义[枚举项关联值](#枚举项关联值associated-values)；
+- 可以定义[初始化器](#初始化initializations)；
+- 可以定义[计算属性](#计算属性computed-attributes)；
+- 可以定义[方法](#方法methods)；
 - 可以[扩展](#扩展extension)原始实现；
 - 可以声明符合[协议](#协议protocol)以提供标准功能；
 
@@ -1294,38 +1569,28 @@ enum CompassPoint {
   case west
   case north
 }
-// 枚举案例写在一行
+```
+
+多个枚举项可以写在一行
+
+```swift
 enum CompassPoint {
   case east, south, west, north
 }
+```
+
+当已知变量枚举类型时，可以简写枚举项赋值：
+
+```swift
 var point = CompassPoint.east
-// 已知类型为CompassPoint，可以直接用点表示法赋值
 point = .south
 ```
 
-## 关联值（Associated Values）
+## 枚举项原始值（Raw Values）
 
-```swift
-enum Barcode {
-  case upc(Int, Int, Int, Int)
-  case qrCode(String)
-}
-let goodBarcode = Barcode.upc(1,2,3,4)
-goodBarcode = Barcode.qrCode("qrCodeInformation")
-```
+> 原始值是枚举项所对应的固定值，用以静态存储数据。
 
-## 可迭代（Iterable Cases）
-
-```swift
-enum CompassPoint: CaseIterable {
-  case east, south, west, north
-}
-for beverage in Beverage.allCases {
-    print(beverage)
-}
-```
-
-## 原始值（Raw Value）
+枚举的原始值类型可以是字符串、字符、整数、浮点数；
 
 ```swift
 enum Weekday: Int {
@@ -1337,7 +1602,7 @@ enum Weekday: Int {
 }
 ```
 
-### 隐式原始值（Implicit Raw Value）
+隐式原始值（Implicit Raw Values）
 
 > `Integer` and `String` have implicit raw value, while Integer is one more than previous case value, and String is the case name.
 
@@ -1351,92 +1616,379 @@ enum Weekday: Int {
 }
 ```
 
-### 通过原始值初始化（Initializing from Raw Value）
-
-> instance is a Optional.
+使用原始值初始化枚举（Initializing from Raw Values），生成的枚举是`Optional`
 
 ```swift
 let day = WeekDay(rawValue: 1) // Optional(WeekDay.monday)
 let day2 = WeekDay(rawValue: 5) // nil
 ```
 
+## 枚举项关联值（Associated Values）
+
+> 与原始值相对地，通过关联值可以在枚举项动态存储数据。
+
+```swift
+enum Barcode {
+  case upc(Int, Int, Int, Int)
+  case qrCode(String)
+}
+```
+
+可以通过`switch`语句审查枚举，并解包关联值：
+
+```swift
+switch productBarcode {
+  case .upc(let numberSystem, let manufacturer, let product, let check):
+  // 若所有解包值的可变性相同，还可以写成：
+  // case let .upc(numberSystem, manufacturer, product, check):
+    print("UPC: \(numberSystem), \(manufacturer), \(product), \(check).")
+  case .qrCode(let productCode):
+    print("QR code: \(productCode).")
+}
+```
+
+## 可迭代枚举项（Iterable Cases）
+
+通过部署`CaseIterable`[协议](#协议protocol)，可以实现枚举项的迭代。
+
+```swift
+enum CompassPoint: CaseIterable {
+  case east, south, west, north
+}
+for beverage in Beverage.allCases {
+    print(beverage)
+}
+```
+
 ## 递归枚举（Recursive Enumerations）
 
-> enumeration or case is identified with `indirect` prefix.
-
 ```swift
-enum Arithmetic {
+enum ArithmeticExpression {
   case number(Int)
-  indirect case addition(Arithmetic, Arithmetic)
-  indirect case multiplication(Arithmetic, Arithmetic)
-}
-```
-```swift
-indirect enum Arithmetic {
-  case number(Int)
-  case addition(Arithmetic, Arithmetic)
-  case multiplication(Arithmetic, Arithmetic)
+  indirect case addition(ArithmeticExpression, ArithmeticExpression)
+  indirect case multiplication(ArithmeticExpression, ArithmeticExpression)
 }
 ```
 
-# 结构（Structure）和类（Class）
-
-> 结构和类在定义、调用等方面基本相同，可以定义属性、方法、初始化器、扩展默认实现、实现协议等，也都是通过下标调用值。
-
-相同点：
-
-- 可以定义属性；
-- 可以定义方法；
-- 可以定义初始化器；
-- 可以定义[下标方法](#下标方法subscript)（类似getter/setter）；
-- 可以[扩展](#扩展extension)原始实现；
-- 可以声明符合[协议](#协议protocol)以提供标准功能；
-
-区别：
-
-- 结构是值类型，而类是引用类型；
-- 类可以定义反初始化器；
-- 类可以继承；
-- 类实例可以在运行时进行类型判断和解释；
-- 类是引用类型，故类实例可以被多次引用；
-
-## 结构
+或
 
 ```swift
+indirect enum ArithmeticExpression {
+  case number(Int)
+  case addition(ArithmeticExpression, ArithmeticExpression)
+  case multiplication(ArithmeticExpression, ArithmeticExpression)
+}
+```
+
+# 结构（Structures）和类（Classes）
+
+> [结构（Structure）和类（Class）][classesandstructures]在定义、调用等方面基本相同，可以定义属性、方法、初始化器、扩展默认实现、实现协议等，也都是通过下标调用值。
+
+*结构（Structure）和类（Class）*的相同点：
+
+- *结构（Structure）和类（Class）*均可以定义[属性（Attributes）](#属性attributes)；
+- *结构（Structure）和类（Class）*均可以定义方法[（Methods）](#方法methods)；
+- *结构（Structure）和类（Class）*均可以定义[初始化器（Initializers）](#初始化initializations)；
+- *结构（Structure）和类（Class）*均可以定义[下标方法（Subscript Methods）](#下标方法subscript)；
+- *结构（Structure）和类（Class）*均可以[扩展（Extensions）](#扩展extension)原始实现；
+- *结构（Structure）和类（Class）*均可以声明符合[协议（Protocols）](#协议protocol)以提供标准功能；
+
+*类（Class）*还有一些额外特性：
+
+- *类（Class）*可以定义[反初始化器（Deinitializers）](#反初始化deinitializations)；
+- *类（Class）*可以[继承（Inheritance）](#继承inheritance)；
+- *类（Class）*实例可以在运行时进行类型判断和解释（*Type Casting*）；
+- *类（Class）*是[引用类型](#值类型和引用类型value-types--reference-types)，实例可以被多次引用（*Reference Type*）；
+
+[选择结构还是类？](https://developer.apple.com/documentation/swift/choosing-between-structures-and-classes)
+
+```swift
+// 定义
+// - 属性可以设置默认值
 struct Resolution {
-    var width = 0
-    var height = 0
+  var width = 0
+  var height = 0
 }
-```
-
-> 创建实例
-```swift
-let unknown = Resolution()
-```
-
-> 默认初始化器，结构默认有一个初始化所有成员属性的初始化器
-```swift
-let vga = Resolution(width: 640, height: 480)
-```
-
-## 类
-
-```swift
 class VideoMode {
-    var resolution = Resolution()
-    var interlaced = false
-    var frameRate = 0.0
-    var name: String?
+  var resolution = Resolution()
+  var interlaced = false
+  var frameRate = 0.0
+  var name: String?
+}
+
+// 创建实例
+let someResolution = Resolution()
+let someVideoMode = VideoMode()
+
+// 结构具有生成所有成员属性的默认构造器，类则没有
+let vga = Resolution(width: 640, height: 480)
+
+// 访问属性
+print(someResolution.width)
+print(someVideoMode.resolution.width)
+```
+
+# 属性（Properties）
+
+> [属性（Properties）][properties]用以向[类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)关联数据。
+
+- 属性遵循[访问控制](#访问控制access-control)；
+
+## 存储属性（Stored Properties）
+
+> [存储属性][Stored-Properties]是存储在[类（Classes）](#结构structures和类classes)或[结构（Structures）](#结构structures和类classes)的实例中的变量（*variable stored property*）或常量（*constant stored property*）。
+
+```swift
+struct FixedLengthRange {
+  var firstValue: Int
+  let length: Int
+}
+class DataImporter {
+  var filename = "data.txt"
+  let mode = "r"
+}
+
+// - 由于结构是值类型，故想要修改属性，实例也必须是常量
+var rangeOfThreeItems = FixedLengthRange(firstValue: 0, length: 3)
+rangeOfThreeItems.firstValue = 6
+// 以下则会报错：
+let rangeOfFourItems = FixedLengthRange(firstValue: 0, length: 4)
+rangeOfFourItems.firstValue = 6 // error: cannot assign to property: 'rangeOfFourItems' is a 'let' constant
+
+// - 类是引用类型，故没有这个限制：
+let dataFile = DataImporter()
+dataFile.filename = "data_2.txt"
+```
+
+### 懒加载存储属性（Lazy Stored Properties）
+
+> 直到第一次使用时才计算初始值的属性。
+
+需要注意的是，如果懒加载属性被多个线程访问，不能保证其只会被初始化一次。
+
+```swift
+class DataManager {
+  lazy var importer = DataImporter()
+  var data: [String] = []
+}
+let manager = DataManager()
+print(manager.importer.filename) // 此时importer才被初始化
+```
+
+## 计算属性（Computed Properties）
+
+> [计算属性](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Computed-Properties)提供`getter`和`setter`方法，可以定义在[类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)中。
+
+```swift
+struct EEE {
+  var text = "e"
+  var length: Int {
+    get { return text.count }
+    set(n) { text = String(repeating: "e", count: n) }
+  }
 }
 ```
 
-## 下标方法（Subscript）
+编译器不会对计算属性的函数体自动推断，即使它明显是个常量，故：
+- 必须声明计算属性为变量（`var`）
+- 必须声明计算属性类型
+
+```swift
+struct EEE {
+  <#statements#>
+  var target: Character { "e" }
+}
+```
+
+> **Getter简写（Shorthand Getter Declaration）**：同函数一样，如果Getter只有一个表达式，可以省略`return`
+
+> **Setter简写（Shorthand Setter Declaration）**：Setter参数默认为`newValue`
+
+```swift
+struct EEE {
+  <#statements#>
+  var len: Int {
+    get { text.count }
+    set(newValue) { text = String(repeating: "e", count: newValue) }
+  }
+}
+```
+
+> **只读属性（Read-Only Computed Properties）**：如果只有Getter，可以简写如下
+
+```swift
+struct EEE {
+  <#statements#>
+  var count: Int { text.count }
+}
+```
+
+## 属性监视器（Property Observers）
+
+> [属性监视器](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Property-Observers)监视并响应属性的变化，即使属性赋予前后是同一个值。
+
+监视方法有`willSet`, `didSet`，并可在以下场景下监视属性：
+
+- 定义存储属性
+- 继承存储属性
+- 继承计算属性
+
+```swift
+class StepCounter {
+  var totalSteps: Int = 0 {
+    willSet(newTotalSteps) {
+      print("About to set totalSteps to \(newTotalSteps)")
+    }
+    // - 和Setter一样，旧值既可以自定义参数名，也有默认的参数名`oldValue`
+    didSet {
+      if totalSteps > oldValue  {
+        print("Added \(totalSteps - oldValue) steps")
+      }
+    }
+  }
+}
+```
+
+由于`inout`参数的*copy-In copy-out*机制，若将属性传给`inout`参数，`willSet`和`didSet`会在函数调用后执行一遍：
+
+```swift
+func count(_ step: inout Int) {
+  step += 1
+}
+var counter = StepCounter()
+count(&counter.totalSteps)
+// About to set totalSteps to 1
+// Added 1 steps
+```
+
+## 属性包装器（Property Wrappers）
+
+> [属性包装器](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Property-Wrappers)的作用类似某些编程语言中的装饰器，但专门针对于属性。
+
+定义属性包装器：
+
+- 根据需要定义一个[结构](#结构structures和类classes)、[类](#结构structures和类classes)或[枚举](#枚举enumerations)属性包装器，以`@propertyWrapper`修饰；
+- 定义一个名为`wrappedValue`的计算属性代理将被修饰的属性；
+
+```swift
+// 一个限制Int值不大于12的结构属性包装器
+@propertyWrapper
+struct TwelveOrLess {
+  private var number = 0
+  var wrappedValue: Int {
+    get { number }
+    set { number = min(newValue, 12) }
+  }
+}
+```
+
+通过在属性前面加上`@<#propertyWrapperName#>`语法应用属性包装器：
+
+```swift
+struct SmallRectangle {
+  @TwelveOrLess var height: Int
+  @TwelveOrLess var width: Int
+}
+
+var rectangle = SmallRectangle()
+print(rectangle.height)
+// Prints "0"
+
+rectangle.height = 10
+print(rectangle.height)
+// Prints "10"
+
+rectangle.height = 24
+print(rectangle.height)
+// Prints "12"
+```
+
+属性包装器本身是某个结构数据（结构、类、枚举等），只是具有特殊的语法约定，故也可以当作普通类型使用：
+
+```swift
+struct SmallRectangle {
+  private var _height = TwelveOrLess()
+  private var _width = TwelveOrLess()
+  var height: Int {
+    get { return _height.wrappedValue }
+    set { _height.wrappedValue = newValue }
+  }
+  var width: Int {
+    get { return _width.wrappedValue }
+    set { _width.wrappedValue = newValue }
+  }
+}
+```
+
+### 设置被包装属性的初始值（Setting Initial Values for Wrapped Properties）
+
+> 通过定义属性包装器的初始化函数可以为不同的被包装属性设置初始化值。
+
+```swift
+@propertyWrapper
+struct SmallNumber {
+  private var maximum: Int
+  private var number: Int
+  var wrappedValue: Int {
+    get { return number }
+    set { number = min(newValue, maximum) }
+  }
+  init() {
+    maximum = 12
+    number = 0
+  }
+  init(wrappedValue: Int) {
+    maximum = 12
+    number = min(wrappedValue, maximum)
+  }
+  init(wrappedValue: Int, maximum: Int) {
+    self.maximum = maximum
+    number = min(wrappedValue, maximum)
+  }
+}
+struct SomeNumbers {
+  // 应用 init() 初始化器
+  @SmallNumber var a: Int
+  // 应用 init(wrappedValue:) 初始化器
+  @SmallNumber var b: Int = 1
+  @SmallNumber(wrappedValue: 1) var c: Int
+  // 应用 init(wrappedValue:maximum:) 初始化器
+  @SmallNumber(maximum: 2) var d: Int = 3
+  @SmallNumber(wrappedValue: 3, maximum: 2) var e: Int
+}
+var n = SomeNumbers()
+assert(n.a == 0)
+assert(n.b == 1)
+assert(n.c == 1)
+assert(n.d == 2)
+assert(n.e == 2)
+```
+
+# 方法（Methods）
+
+# 下标方法（Subscripts）
+
+# 初始化（Initializations）
+
+# 反初始化（Deinitializations）
+
+# 继承（Inheritance）
 
 # 扩展（Extension）
 
 > 阔扩展是给已存在的结构、类、枚举或协议等添加新的功能；
 
 # 协议（Protocol）
+
+# 泛型（Generics）
+
+# 并发（Concurrency）
+
+# 可选链（Optional Chaining）
+
+> 无需解包（unwrapping）以直接访问可空值的成员。
+
+# 访问控制（Access Control）
 
 # 错误处理（Error Handling）
 
@@ -1496,76 +2048,15 @@ do {
 let ret = try? vend() // "Success" or nil.
 ```
 
-# *Swift Doc Toc Generator
-
-```js
-;(function() {
-  const tags = ['h1', 'h2', 'h3', 'h4', 'h5']
-  const str = []
-  const toc = []
-  ;[].forEach.call(document.querySelector('article').querySelectorAll(tags.join(',')), e => {
-    let text = '', link = ''
-    const level = tags.indexOf(e.tagName.toLowerCase())
-    for (const el of e.childNodes) {
-      if (el.nodeType === 3) text += el.nodeValue
-      if (el.tagName === 'A') link = el.getAttribute('href')
-    }
-    str.push("\t".repeat(level) + text)
-    toc.push(
-      `<div style="padding-left: ${level}em; white-space: nowrap">
-      <a title="${text}" href="${link}">${text}</a></div>`
-    );
-  })
-  console.log(str.join('\n'))
-  let ele = document.getElementById("toc")
-  let newEle
-  if (!ele) {
-    newEle = true
-    ele = document.createElement('div')
-    ele.id = "toc"
-  }
-  ele.setAttribute("style", `
-    position: fixed; z-index: 9999; top: 50px; right: 20px;
-    font-size: 14px; background: white;
-    width: 220px; max-height: calc(100vh - 100px); overflow: auto`)
-  ele.innerHTML = toc.join("")
-  if (newEle) {
-    document.body.appendChild(ele);
-  }
-
-  if ('LAST_ACTIVE_HEAD' in window) {
-    return
-  }
-  const script = `
-  (function() {
-    let LAST_ACTIVE_HEAD = null
-    const headers = document.querySelector('article').querySelectorAll('${tags.join(",")}')
-    for (const e of headers) {
-      e.setAttribute('data-href', e.querySelector('a').getAttribute('href'))
-    }
-    window.addEventListener('scroll', e => {
-      let last
-      for (const e of headers) {
-        const top = e.getBoundingClientRect().top
-        if (top < 200) {
-          last = e.getAttribute('data-href')
-        }
-        if (top > 200) {
-          break
-        }
-      }
-      if (last && last !== LAST_ACTIVE_HEAD) {
-        // console.log(last, LAST_ACTIVE_HEAD)
-        if (last) document.querySelector('#toc [href="' + last + '"]').setAttribute('style', 'color: red;font-size: 1.5em')
-        if (LAST_ACTIVE_HEAD) document.querySelector('#toc [href="' + LAST_ACTIVE_HEAD + '"]').setAttribute('style', '')
-        LAST_ACTIVE_HEAD = last
-      }
-    })
-  })()`
-  const sc = document.createElement("script")
-  sc.innerHTML = script
-  document.body.appendChild(sc)
-})();
-```
-
-[SwiftGuide]: https://docs.swift.org/swift-book/LanguageGuide/TheBasics.html
+[guidedtour]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/guidedtour/
+[aboutthelanguagereference]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/aboutthelanguagereference
+[Structures-and-Enumerations-Are-Value-Types]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures#Structures-and-Enumerations-Are-Value-Types
+[Classes-Are-Reference-Types]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures#Classes-Are-Reference-Types
+[controlflow]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/controlflow
+[functions]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/functions
+[closures]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/closures
+[Strong-Reference-Cycles-for-Closures]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/automaticreferencecounting/#Strong-Reference-Cycles-for-Closures
+[enumerations]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/enumerations
+[classesandstructures]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures
+[properties]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties
+[Stored-Properties]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Stored-Properties
