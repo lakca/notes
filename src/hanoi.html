@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hanoi</title>
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #handles {
+      margin: 60px;
+    }
+
+    #hanoi {
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .block {
+      height: 100%;
+      position: relative;
+      float: left;
+      transition: .3s;
+    }
+
+    .block:before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 50%;
+      width: 2px;
+      height: 100%;
+      margin-left: -1px;
+      background-color: #7000d8b3;
+    }
+
+    .block:after {
+      content: '';
+      display: block;
+      width: 100%;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #7000d8b3;
+      bottom: -25px;
+      position: absolute;
+      box-shadow: 0 0 20px gray, inset 0 0 48px gray;
+    }
+
+    .plate {
+      background: linear-gradient(to top, #7000d8b3, #974adfab);
+      transition: 500ms ease-in;
+      color: white;
+      z-index: 2;
+    }
+
+    .plate.active .plate-after {
+      box-shadow: 0 5px 10px #c500a7, 0 10px 40px #c500a7, 0 50px 100px #c500a7;
+    }
+
+    .plate:before {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      transform: translateY(-15px);
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(to top, #ac53ff, #7b17d9);
+      border-radius: 50%;
+      z-index: 1;
+    }
+
+    .plate .plate-after {
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      transform: translateY(15px);
+      width: 100%;
+      height: 30px;
+      background: linear-gradient(to top, #ad55ff, #7000d8);
+      border-radius: 50%;
+      text-align: center;
+      z-index: 1;
+      user-select: none;
+      transition: 500ms;
+    }
+
+  </style>
+</head>
+
+<body>
+</body>
+<script>
+  const params = new URLSearchParams(location.search)
+  const config = {
+    w: 200,
+    h: 400,
+    gap: 40,
+    ph: 30,
+    n: Math.max(isNaN(+params.get('n')) ? 8 : Math.ceil(params.get('n')), 2),
+    t: Math.max(isNaN(+params.get('t')) ? 500 : Math.ceil(params.get('t')), 100),
+  }
+
+  function later() {
+    return Promise.resolve()
+  }
+
+  function sleep(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms))
+  }
+
+  let pendingBatchRender = false
+  let useAnimate = true
+  let useProxy = true
+
+  const data = {
+    from: proxy(new Array(config.n).fill(null).map((e, i) => i).reverse()),
+    mid: proxy([]),
+    to: proxy([]),
+  }
+
+  const hanoi = document.createElement('div')
+  hanoi.id = 'hanoi'
+  hanoi.style.width = config.w * 3 + config.gap * 2 + 'px'
+  hanoi.style.height = config.h + 'px'
+  hanoi.style.position = 'relative'
+  document.body.appendChild(hanoi)
+
+  const handles = document.createElement('div')
+  handles.id = 'handles'
+  handles.innerHTML = `
+  <button>Auto</button>
+  <button>Reset</button>
+  <button>Pause</button>
+  <button>Play</button>
+  `
+  document.body.appendChild(handles)
+
+  const counter = document.createElement('button')
+  handles.appendChild(counter)
+
+  let active = null
+  const blocks = Object.fromEntries(['from', 'mid', 'to'].map((key, i) => {
+    const div = document.createElement('div')
+    div.tabIndex = i
+    div.classList.add('block', key)
+    div.style.width = `${config.w}px`
+    document.getElementById('hanoi').appendChild(div)
+    div.addEventListener('click', async () => {
+
+      if (autoRun.doing) return
+      if (animate.doing) return
+
+      const currentStack = data[key]
+      if (active) {
+        const activeStack = data[active.key]
+        if (key === active.key) {
+          plates[active.value].classList.remove('active')
+          active = null
+        } else if (!currentStack.length || activeStack[activeStack.length - 1] < currentStack[currentStack.length - 1]) {
+          await move(activeStack, currentStack)
+          active = null
+        } else {
+          plates[active.value].classList.remove('active')
+          const value = currentStack[currentStack.length - 1]
+          plates[value].classList.add('active')
+          active = { key, value }
+        }
+      } else if (currentStack.length) {
+        const value = currentStack[currentStack.length - 1]
+        plates[value].classList.add('active')
+        active = { key, value }
+      }
+    })
+    return [key, div]
+  }))
+
+  const plates = Object.fromEntries(data.from.map(v => {
+    const div = document.createElement('div')
+    div.classList.add('plate')
+    div.setAttribute('number', v)
+    const w = config.w * (0.3 + 0.07 * v)
+    const h = config.ph
+    div.style.width = `${w}px`
+    div.style.height = `${h}px`
+    div.style.position = 'absolute'
+    div.style.marginLeft = (config.w - w) / 2 + 'px'
+    div.style.transition = `${config.t}ms`
+    div.pos = [0, data.from.length - 1 - v]
+    div.style.left = '0px'
+    div.style.bottom = config.ph * div.pos[1] + 'px'
+    div.innerHTML = `<div class="plate-after">${v + 1}</div>`
+    hanoi.appendChild(div)
+    return [v, div]
+  }))
+
+  async function move(fromStack, toStack) {
+    if (fromStack.length) {
+      const value = fromStack.pop()
+      const plate = plates[value]
+      Object.values(plates).forEach(plate => plate.classList.remove('active'))
+      plate.classList.add('active')
+      toStack.push(value)
+      if (autoRun.doing) {
+        autoRun.counter += 1
+      }
+      await later()
+      await render.runner
+      plate.classList.remove('active')
+    }
+  }
+
+  async function render() {
+    render.runner = new Promise((rsv) => render.resolve = rsv)
+    const keys = Object.keys(data)
+    for (let i = keys.length; i--;) {
+      const key = keys[i]
+      for (let j = data[key].length; j--;) {
+        const idx = data[key][j]
+        const plate = plates[idx]
+        const posOld = [...plate.pos]
+        const pos = [i, j]
+        plate.pos = pos
+        await animate(plate, pos, posOld)
+      }
+    }
+    // console.log('rendered', new Date().toLocaleTimeString())
+    render.resolve()
+  }
+
+  async function applyAnimate(plate) {
+    if (useAnimate) {
+      plate.style.transition = `${config.t}ms`
+      await sleep(config.t - 10)
+    }
+  }
+
+  async function animate(plate, pos, posOld) {
+    if (pos[0] === posOld[0] && pos[1] === posOld[1]) return
+    animate.doing = true
+    if (pos[0] === posOld[0]) {
+      plate.style.bottom = config.ph * pos[0] + 'px'
+      await applyAnimate(plate)
+    } else {
+      plate.style.bottom = config.h + 'px'
+      await applyAnimate(plate)
+      plate.style.left = (config.w + config.gap) * pos[0] + 'px'
+      await applyAnimate(plate)
+      plate.style.bottom = config.ph * pos[1] + 'px'
+      await applyAnimate(plate)
+    }
+    animate.doing = false
+  }
+
+  function proxy(data) {
+    return new Proxy(data, {
+      get(target, property, receiver) {
+        return target[property]
+      },
+      set(target, property, value, receiver) {
+        target[property] = value
+        if (useProxy) {
+          pendingBatchRender = true
+          later().then(() => {
+            pendingBatchRender && render()
+            pendingBatchRender = false
+          })
+        }
+        return true
+      }
+    })
+  }
+
+  render()
+
+  async function breakpoint() {
+    if (!autoRun.doing) {
+      return true
+    }
+    if (autoRun.paused) {
+      await new Promise((resolve) => {
+        autoRun.resume = resolve
+      })
+    }
+  }
+
+  async function runHanoi(from, to, mid, n) {
+    let broken = await breakpoint()
+    if (broken) return
+    if (n > 2) {
+      await runHanoi(from, mid, to, n - 1)
+      await move(from, to)
+      broken = await breakpoint()
+      if (broken) return
+      await runHanoi(mid, to, from, n - 1)
+    } else if (n === 2) {
+      await move(from, mid)
+      broken = await breakpoint()
+      if (broken) return
+      await move(from, to)
+      broken = await breakpoint()
+      if (broken) return
+      await move(mid, to)
+      broken = await breakpoint()
+      if (broken) return
+    }
+  }
+
+  async function reset() {
+    if (reset.doing) return false
+    reset.doing = true
+    autoRun.doing = false
+    useProxy = false
+    useAnimate = false
+    play()
+    await autoRun.runner
+    data.from.splice(0, data.from.length, ...new Array(config.n).fill(null).map((e, i) => i).reverse())
+    data.to.splice(0)
+    data.mid.splice(0)
+    await render()
+    useProxy = true
+    useAnimate = true
+    reset.doing = false
+    autoRun.paused = false
+    autoRun.counter = 0
+    console.log('reset done')
+    return true
+  }
+
+  async function pause() {
+    if (autoRun.paused) return
+    if (autoRun.doing) {
+      autoRun.paused = true
+      await render.runner
+      console.log('pause done')
+    }
+  }
+
+  function play() {
+    autoRun.paused = false
+    autoRun.resume && autoRun.resume()
+    autoRun.resume = null
+    console.log('resume done')
+  }
+
+  async function autoRun() {
+    if (await reset()) {
+      autoRun.doing = true
+      play()
+      autoRun.counter = 0
+      autoRun.runner = runHanoi(data.from, data.to, data.mid, data.from.length)
+      console.log('auto run')
+    }
+  }
+
+  handles.addEventListener('click', e => {
+    switch (e.target.textContent.trim()) {
+      case 'Auto': autoRun(); break
+      case 'Reset': reset(); break
+      case 'Pause': pause(); break
+      case 'Play': play(); break
+    }
+  })
+
+  Object.defineProperty(autoRun, 'counter', {
+    get() {
+      return this._counter
+    },
+    set(v) {
+      this._counter = v
+      counter.textContent = v
+    },
+  })
+
+</script>
+
+</html>

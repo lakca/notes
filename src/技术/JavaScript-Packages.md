@@ -201,6 +201,10 @@ Smooth (CLI) operator 🎶. It enables default commands, git-like subcommands, o
 
 Git-style sub commands. Auto-generated usage information. Determines type of option by checking type of default value (e.g. ['hi'] => <list>). Automatically suggests a similar option, if the user entered an unknown one
 
+## `shellwords`
+
+Manipulate strings according to the word parsing rules of the UNIX Bourne shell.
+
 ## spinner
 
 #### `ora`: Elegant terminal spinner.

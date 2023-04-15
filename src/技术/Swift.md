@@ -15,28 +15,27 @@ date: 2020-09-08T08:54:35.929Z
 - 完全的Unicode编码
 - 强类型（编译时确定类型）
 - 静态类型（不可在~~使用中改变变量类型~~）
-- 禁止变量遮蔽（*~~Shadowing~~*）
-- 变量须初始化后调用
-- 整型溢出检测
-- 自动推断类型（*Type Inference*）
+- 支持类型推断（*Type Inference*）
+- （变量或常量）调用前初始化即可（*Initialization Before Used*）
+- 整型溢出检测（*Integer Bounds*）
 - 显式处理空值（*Optional*）
+- 禁止变量遮蔽（*~~Shadowing~~*）
 - 禁止越界索引（*Out-of-Bounds Errors*）
-- 支持元组（*Tuple*）
-- 支持多值返回（*Multiple Return Values*）
+- 支持元组（*Tuple*）、多值返回（*Multiple Return Values*）
 - 支持[泛型](#泛型generics)（*Generics*）
 - 支持[协议](#协议protocol)（*Protocols*）
 - 支持类型[扩展](#扩展extension)，包括基本类型（*Extensions*）
-- 支持运算符重载（*Operator Overloading*）
-- 支持[字符串插值](#插值string-interpolation)（*String Interpolation*）
-- 支持[闭包](#闭包表达式)（*Closure*）
-- 支持单独定义[实参标签](#实参标签argument-label)（形参和实参可以不同名称）
-- 支持[不定参数](#不定参数-variadic-parameter)
-- 支持[函数传入和修改引用](#可修改参数-in-out-parameter)
-- 支持枚举关联值（*Enumeration Playload*）
+- 支持重载，包括方法、运算符和下标等等（*Overloading*）
+- 支持字符串插值（*String Interpolation*）
+- 支持[闭包](#闭包closures)（*Closure*）
+- 支持实参标签（形参和实参可以不同名称）
+- 支持不定参数
+- 支持[修改函数参数](#可修改参数-inout)
+- 支持枚举荷载（*Enumeration Playload*）
 - 支持模式匹配（*Pattern Matching*）
-- 支持错误捕获，*catch*非必需（`try`、 `catch`、`throw`）
+- 支持错误捕获、冒泡和断言
 - 常量没有严格的值不可变，对于引用类型只存储引用地址，属性仍然是可变的（类似*Javascript*的常量对象）
-- 句尾分号可选 ~~`;`~~（同*Javascript*，换行符和分号均为语句分隔符）
+- 句尾分号可选`;`（同*Javascript*，换行符和分号均为语句分隔符）
 - 等号（`=`）两侧必须同时有或没有空格
 
 ## 约定
@@ -66,73 +65,38 @@ date: 2020-09-08T08:54:35.929Z
 
 # 变量和常量
 
+- 声明时须确定类型；
 - 使用前必须声明；
-
-- Swift是强类型语言，量在声明时必须确定类型：
-
+- 使用前初始化即可；
 - 不支持名称遮蔽（二次声明）；
-
-- 命名支持*unicode*字符，但不支持空白字符、数学符号、箭头、[线框字符](https://en.wikipedia.org/wiki/Box-drawing_character)、[私域字符](https://en.wikipedia.org/wiki/Private_Use_Areas)等字符。（*Constant and variable names can’t contain whitespace characters, mathematical symbols, arrows, private-use Unicode scalar values, or line- and box-drawing characters. Nor can they begin with a number, although numbers may be included elsewhere within the name.*）
-
-- 变量名可以使用语言关键字，用反引号（<code>``</code>）包裹即可，但不建议。
-
-## 变量（Variables）
-
-声明时必须确定类型：
+- 命名可以使用语言关键字，需反引号（<code>``</code>）包裹，但不建议；
+- 命名支持*Unicode*字符，但不支持空白字符、数学符号、箭头、[线框字符](https://en.wikipedia.org/wiki/Box-drawing_character)、[私域字符](https://en.wikipedia.org/wiki/Private_Use_Areas)等字符。（*Constant and variable names can’t contain whitespace characters, mathematical symbols, arrows, private-use Unicode scalar values, or line- and box-drawing characters. Nor can they begin with a number, although numbers may be included elsewhere within the name.*）
+- 常量可在全局或局部声明；
+- 常量不影响结构等复合类型（*Compound Types*）内部属性的可变性；
 
 ```swift
-var a: Int = 10
-```
+// 声明时须确定类型：
+var a: Int = 1
+let A: Int = 1;
 
-初始化不是必须：
-
-```swift
+// 初始化只要求在使用前即可：
 var b: Int
+var B: Int
+b = 1
+B = 1
+
+// 但初始化可自动推断类型：
+var c = 1
+let C = 1
+
+// 可以在同一行声明多个变量：
+var d = 2, e = 3
+var f, g: Int
+let d = 2, e = 3
+let f, g: Int
 ```
 
-但初始化可自动推断类型：
-
-```swift
-var b = 1
-```
-
-可以在同一行声明多个变量：
-
-```swift
-var c = 2, d = 3
-var e, f, g: Int
-```
-
-## 常量（Constants）
-
-声明时必须确定类型：
-
-```swift
-let a: Int = 1;
-```
-
-全局声明时必须初始化（*Globally declared with initialized*）：
-
-```swift
-let a = 1;
-```
-
-局部声明只需在调用前初始化即可（*Scoped initialized before being read*）：
-
-```
-let
-```
-
-常量可在全局或局部声明（*Globally or Scoped*），且不影响结构等复合类型（*Compound Types*）内属性的可变性：
-
-
-```swift
-// 全局范围内常量必须初始化
-let a = 1
-let b = 2, c = 3
-```
-
-# 类型
+# 类型（Types）
 
 获取数据类型：
 
@@ -140,11 +104,17 @@ let b = 2, c = 3
 print(type(of: "hello"))
 ```
 
+## 类型别名（Type Alias）
+
+```swift
+typealias Audio = Int8
+```
+
 ## 值类型和引用类型（Value Types & Reference Types）
 
-> [值类型（Value Types）][Structures-and-Enumerations-Are-Value-Types]在其被传递时（如赋值给变量、常量或者作为参数传入函数等）会复制数据。[**包括结构（*Structures*）和枚举（*Enumerations*）。**][Structures-and-Enumerations-Are-Value-Types]
+> [值类型（Value Types）][Structures-and-Enumerations-Are-Value-Types]在其被传递时（如赋值给变量、常量或者作为参数传入函数等）会复制数据。包括[结构（Structures）和枚举（Enumerations）][Structures-and-Enumerations-Are-Value-Types]
 
-> 与值类型相对，[引用类型（Reference Types）][Classes-Are-Reference-Types]在其被传递时只会创建引用，而不会复制数据，前后均指向同一个实例。[**包括类（*Classes*）和行为体（*Actors*）。**][Classes-Are-Reference-Types]
+> 与值类型相对，[引用类型（Reference Types）][Classes-Are-Reference-Types]在其被传递时只会创建引用，而不会复制数据，前后均指向同一个实例。包括[类（Classes）][Classes-Are-Reference-Types]和[行为体（Actors）](#行为体actor)。
 
 **基础类型（Basic Types）在底层都是通过结构（Structures）来实现的，故均是值类型（Value Types）**。包括数字（`Int`, `Double`）、布尔值（`Bool`）、字符串（`String`）、数组（`Array`）、集合（`Set`）、字典（`Dictionary`）等。(*In fact, all of the basic types in Swift—integers, floating-point numbers, Booleans, strings, arrays and dictionaries—are value types, and are implemented as structures behind the scenes.*)
 
@@ -293,8 +263,8 @@ phrase.removeSubrange(
 	phrase.index(after: phrase.startIndex)..<phrase.endIndex) // a
 
 // 前缀/后缀
-print("hello world".hasPrefix("hello")) // true
-print("hello world!".hasSuffix("!")) // true
+assert("hello world".hasPrefix("hello"))
+assert("hello world!".hasSuffix("!"))
 ```
 
 #### Swift字符范围：扩展字符簇（Extended Grapheme Clusters）
@@ -324,92 +294,41 @@ print("the number of characters in \(word) is \(word.count)")
 
 ### 数字（Number）
 
-类型有：
+> `Int`（32bit/64bit）、`Int16`、`Int32`、`Int64`；`UInt`（32bit/64bit）、`UInt16`、`UInt32`、`UInt64`、`Float`（32bit）、`Double`（64bit）
 
-- `Int`（32bit/64bit）、`Int16`、`Int32`、`Int64`；`UInt`（32bit/64bit）、`UInt16`、`UInt32`、`UInt64`
-- `Float`（32bit）、`Double`（64bit）
-
-通过类构造可以进行类型转换：
+- 禁止溢出；
+- 支持字面量格式化；
 
 ```swift
-let a = 100
-let b = Int8(a)
-let c = 1.2
-let d = Int(c) // 1
-```
+// 整数默认类型为`Int`：
+assert(type(of: 1) == Int.self)
 
-整数字面量自动推断为`Int`：
+// 浮点数默认类型为`Double`：
+assert(type(of: 1.0) == Double.self)
 
-```swift
-let a = 1
-print(type(of: a)) // Int
-```
+// 类型转换：
+assert(type(of: Int8(1.1)) == Int8.self)
 
-浮点数字面量自动推断为`Double`：
+// 数字字面量兼容所有数字类型：
+let c: Float = 1 // 不需要写成1.0
 
-```swift
-let a = 1.0
-print(type(of: a)) // Double
-```
+// 字面量支持补`0`和`_`分隔符进行格式化：
+assert(1_000_000 == 1000000)
+assert(00.1200 == 0.12)
 
-数字字面量没有具体类型，也即其兼容所有数字类型（*Numeric Literals don't have an explicit type, so combining of literals won't cause a mixed-type error.*）：
-
-```swift
-let a: Int = 1
-let b: UInt = 1
-let c: Float = 1
-let d: Double = 1
-let e: Float = 1.2
-let f: Double = 1.2
-
-print(e + 1) // 2.2
-print(f + 1) // 2.2
-```
-
-#### 数字字面量
-
-字面量支持补`0`和`_`分隔符进行格式化（*Numeric Literals can contain extra formatting (zero and underscore) for easily read.*）：
-
-```swift
-print(1_000_000) // 1000000
-print(00.1200) // 0.12
-```
-
-二进制（`0b`）、八进制（`0o`）、十六进制（`0x`）：
-
-```swift
+// 二进制（`0b`）、八进制（`0o`）、十六进制（`0x`）：
 print(31, 0b11111, 0o37, 0x1f)
-```
 
-十进制科学计数法：
+// 十进制科学计数法：
+assert(1.2e2 == 1.2e-2)
 
-```swift
-print(1.2e2, 1.2e-2) // 120.0, 0.012
-```
+// 十六进制（浮点数必须使用）科学计数法（十六进制科学计数法以2为底数）：
+assert(0x1.2p2 == 4.5) // (1 + 2 * 16^-1) * 2^2
+assert(0x1.2p-2 == 0.28125) // (1 + 2 * 16^-1) * 2^-2
 
-十六进制（浮点数必须使用）科学计数法：
-
-```swift
-// 十六进制科学计数法以2为底数
-print(0x1.2p2) // 4.5 = (1 + 2 * 16^-1) * 2^2
-print(0x1.2p-2) // 0.28125 = (1 + 2 * 16^-1) * 2^-2
-```
-
-#### 数字常量
-
-整数最大值、最小值：
-
-```swift
-print(Int.max, Int.min, UInt.max, UInt.min)
-print(Int8.max, Int8.min, UInt8.max, UInt8.min)
-// ...
-```
-
-#### 数字方法
-
-```swift
-// 幂运算
-pow(2, 10)
+// 最大值、最小值：
+assert(Int8.max == 127)
+assert(Int8.min == -128)
 ```
 
 ### 布尔（Boolean）
@@ -419,7 +338,7 @@ let orangesAreOrange: Bool = true
 let turnipsAreDelicious = false
 ```
 
-Swift是类型安全的，不允许非布尔值替代（自动转换成）布尔值：
+> Swift是类型安全的，不允许非布尔值替代（自动转换成）布尔值。
 
 ```swift
 if 1 {} // error
@@ -427,20 +346,26 @@ if 1 {} // error
 
 ### 元组（Tuples）
 
+匿名元组：
+
 ```swift
-// 匿名元素
 let http404Error = (404, "Not Found")
-print(http404Error.0) // 404
+assert(http404Error.0 == 404)
 
 let a = 1, b = 2
 let c = (a, b)
-print(c) // (1, 2)
+assert(c == (1, 2))
+```
 
-// 具名元素
+具名元组：
+
+```swift
 let http200Status = (statusCode: 200, description: "OK")
-print(http404Error.statusCode) // 200
+```
 
-// 解构（*decompose*）元组
+解构元组：
+
+```swift
 let (statusCode, statusMessage) = http404Error
 // 解构无需同名
 let (code, msg) = http404Error
@@ -624,7 +549,7 @@ let arr = [String](dict.keys)
 let arr = [String](dict.values.sorted())
 ```
 
-## 可空类型（Optional）
+# 可空类型（Optional）
 
 > *Optional* 表示某类型不是一直都存在值。一般用于变量声明、类型转换的返回值等。
 
@@ -632,30 +557,23 @@ let arr = [String](dict.values.sorted())
 
 ```swift
 var a: Int?
-print(a) // nil
-print(type(of: a)) // Optional(Int)
+assert(type(of: a) == Optional<Int>.self)
 ```
 
-### 空值（nil）
+### 空值（`nil`）
 
-> `nil` 只用于赋值或有类型或与之比较等。`nil`不是一个空指针，单纯是在语法层面表示值不存在。
+> `nil`不是一个空指针，单纯是语法层面表示值不存在。
 
-可空类型的变量不初始化即为`nil`
+可空类型默认值为`nil`
 
 ```swift
 var a: Int?
-print(a) // nil
-```
-
-`nil`只能与或有类型进行比较：
-
-```swift
-if (1 == nil) {} // error
+assert(a == nil)
 ```
 
 ### 可空绑定（Optional Binding）
 
-> 可空绑定，是先判断或有值是否存在，如果存在则将其值存于临时变量中执行条件语句。一般出现在控制流语句，如`if`, `switch`, `guard`, `while`。
+> 判断并存储非空值于临时变量中并执行条件语句。一般出现在控制语句中，如`if`, `switch`, `guard`, `while`。
 
 ```swift
 var possibleNumber: Int? = 1
@@ -667,52 +585,86 @@ if let actualNumber = possibleNumber {
 
 ### 强制解包（Implicitly Force Unwrapping）
 
-> 有的情况下，我们知道一个可空值是一定存在值的，这时候再使用控制语句来判断其值存在性就显得冗余，故提供了强制解包的快捷方式。
+> 在明确知道可空值不为空的时候，可以使用强制解包获取值。
 
 ```swift
 var a: Int? = 1
-print(a!) // 1 // use exclamation point(!) as postfix.
+assert(a == Optional(1))
+assert(a! == 1)
 ```
 
-### 声明隐式解包可空类型（Implicitly Unwrapped Optionals）
+### 自动解包可空类型（Implicitly Unwrapped Optionals）
 
-> 声明*隐式解包可空类型*后，变量在调用时可以被当作非空类型直接使用，而无需解包。
+> 声明为**自动解包可空类型**的变量在获取值时无需显式解包。
 
 ```swift
-var a: Int! = 1 // 用 ! 替代 ?
-print(a) // Optional(1)
-if a == 1 {
-  print("a is 1")
+var a: Int! = 1
+// a 仍然是Optional
+assert(a == Optional(1))
+// 但可以无需解包直接使用：
+let b: Int = a
+```
+
+### 可空链（Optional Chaining）
+
+> 当遇见空值时中断后续执行并返回`nil`，从而无需[解包（Forced Unwrapping）](#强制解包implicitly-force-unwrapping)以直接访问可空值的成员（属性、方法等）。
+
+```swift
+if let firstRoomName = john.residence?[0].name {
+    print("The first room name is \(firstRoomName).")
+}
+if let johnsStreet = john.residence?.address?.street {
+    print("John's street name is \(johnsStreet).")
+}
+if let buildingIdentifier = john.residence?.address?.buildingIdentifier() {
+    print("John's building identifier is \(buildingIdentifier).")
 }
 ```
 
-### 可空链式调用（）
+# 断言（Assertion）
 
-## 类型别名（Type Alias）
+> 断言失败将直接退出程序。
 
 ```swift
-typealias Audio = Int8
+// 普通断言仅在调试模式（选项`-Onone`）生效。（选项`-O`开启时会跳过，选项`-Ounchecked`开启时条件始终编译为`true`）。
+assert(
+    _ condition: @autoclosure () -> Bool,
+    _ message: @autoclosure () -> String = String(),
+    file: StaticString = #file,
+    line: UInt = #line
+)
+assertionFailure(
+    _ message: @autoclosure () -> String = String(),
+    file: StaticString = #file,
+    line: UInt = #line
+)
+
+// 先决断言在发布模式（选项`-O`）也生效。（`-Ounchecked`选项开启时条件始终编译为`true`）。
+precondition(
+    _ condition: @autoclosure () -> Bool,
+    _ message: @autoclosure () -> String = String(),
+    file: StaticString = #file,
+    line: UInt = #line
+)
+preconditionFailure(
+    _ message: @autoclosure () -> String = String(),
+    file: StaticString = #file,
+    line: UInt = #line
+) -> Never
+
+// 所有模式下均生效（比如用在还未部署的功能作为占位和提示`fatalError("Unimplemented")`）。
+fatalError(
+    _ message: @autoclosure () -> String = String(),
+    file: StaticString = #file,
+    line: UInt = #line
+) -> Never
 ```
 
-# 错误和断言
+# 错误处理（Error Handling）
 
-> building: `assert`, `assertFailure`
+> 所有错误必须遵循`Error`协议。
 
-> production: `precondition`, `preconditionFailure`
-
-- terminate your app while false condition met.
-
-- used to detect the condition that is certain to prevent program from proceeding.
-
-## 错误处理
-
-[Error Handling](https://docs.swift.org/swift-book/LanguageGuide/ErrorHandling.html)
-
-- 在Swift中，所有错误都遵循`Error`协议。
-
-- 为了避免大量性能消耗，Swift错误处理不会解开调用栈（~~unwinding call stack~~）。
-
-枚举非常适合定义一系列有关的错误：
+- 为了避免大量性能消耗，Swift错误处理不会解开调用栈（~~unwinding call stack~~）；
 
 ```swift
 enum VendingMachineError: Error {
@@ -720,67 +672,64 @@ enum VendingMachineError: Error {
     case insufficientFunds(coinsNeeded: Int)
     case outOfStock
 }
+```
 
+## 抛出错误（`throw`）
+
+> 通过`throw`关键字抛出错误。
+
+```swift
 throw VendingMachineError.insufficientFunds(coinsNeeded: 5)
 ```
 
-## 抛出函数（Throwing Functions）
+## 错误处理
 
-> 抛出函数（throwing functions）：可以主动抛出错误，其内部产生的错误可以自动传播给（*propagate*）它的调用者，而无需处理（`catch`）。**如果一个函数不是抛出函数，则其无法主动抛出错误，内部抛出的错误必须处理。**
+### 错误冒泡（`throws`）
 
-```swift
-func canThrowErrors() throws {
-  //
-}
-```
+> 通过`throws`关键字声明可抛错函数。
 
 ```swift
-func throwing() throws {
-  throw Error
-}
+func canThrowErrors() throws -> String
 
-func canThrowErrors() throws {
-  try throwing()
-}
-
-func shouldCatchErrors() {
-  do {
-    try canThrowAnError()
-  } catch {
-    print("catched")
-  }
-}
+func cannotThrowErrors() -> String
 ```
 
-捕获错误：
+### 直接处理（`do...catch`）
+
+> 没有声明为可抛错的函数均须处理错误。
 
 ```swift
 do {
-    try canThrowAnError()
-    // no error was thrown
+    try <#expression#>
+    <#statements#>
+} catch <#pattern 1#> {
+    <#statements#>
+} catch <#pattern 2#> where <#condition#> {
+    <#statements#>
+} catch <#pattern 3#>, <#pattern 4#> where <#condition#> {
+    <#statements#>
 } catch {
-    // an error was thrown
+    <#statements#>
 }
 ```
 
-捕获多种类型错误：
+### 转成可空值（`try?`）
+
+> 通过`try?`关键字执行函数，返回Optional（在抛错时返回`nil`）。
 
 ```swift
-func makeASandwich() throws {
-    // ...
-}
-
-do {
-    try makeASandwich()
-    eatASandwich()
-} catch SandwichError.outOfCleanDishes {
-    washDishes()
-} catch SandwichError.missingIngredients(let ingredients) {
-    buyGroceries(ingredients)
-}
+let ret = try? vend() // "Success" or nil.
 ```
 
-# 操作符
+### 错误断言（`try!`）
+
+> 通过`try!`关键字执行函数，断言错误不会发生（抛错时将得到运行时错误）。
+
+```swift
+let photo = try! loadImage(atPath: "./Resources/John Appleseed.jpg")
+```
+
+# 操作符（Operators）
 
 > Swift支持重载操作符方法，以及自定义操作符。
 
@@ -984,7 +933,7 @@ for e in 1... {
 
 > `!`, `&&`, `||`
 
-# 控制流程
+# 控制流程（Control Flow）
 
 > [控制流程][controlflow]
 
@@ -1181,7 +1130,30 @@ func greet(person: [String: String]) {
 }
 ```
 
-## 标签（labeled statement）
+## `defer`
+
+> [defer](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/errorhandling#Specifying-Cleanup-Actions)语句在作用域结束前调用。
+
+- `defer`语句可以有多个，并按倒序执行；
+- `defer`语句中不能有~~转移控制语句（如`return`, `break`）~~；
+- `defer`语句中不能~~抛错~~；
+
+```swift
+func processFile(filename: String) throws {
+    if exists(filename) {
+        let file = open(filename)
+        defer {
+            close(file)
+        }
+        while let line = try file.readline() {
+            // Work with the file.
+        }
+        // close(file) is called here, at the end of the scope.
+    }
+}
+```
+
+## 语句标签（label）
 
 ```swift
 <#label#>: while <#condition#> {
@@ -1189,7 +1161,7 @@ func greet(person: [String: String]) {
 }
 ```
 
-## 检查平台和版本
+## 检查环境
 
 `#available`
 
@@ -1281,7 +1253,7 @@ pv2(a: 1, 2)
 pv2(a: 1, 2, b: 3, 4)
 ```
 
-## 可变参数 (`inout`)
+## 可修改参数 (`inout`)
 
 > 函数的参数默认是常量，如果要修改，需要声明参数类型为可`inout`类型，并在调用函数时传入引用值（`&`）。
 
@@ -1492,7 +1464,7 @@ func serve(customer customerProvider: () -> String) {
 serve(customer: customer)
 ```
 
-通过在闭包类型前声明`@autoclosure`，可以省略闭包体~~标识符（`{}`）~~：
+> 通过在闭包类型前声明`@autoclosure`，可以省略闭包体~~标识符（`{}`）~~：
 
 ```swift
 func serve(customer customerProvider: @autoclosure () -> String) {
@@ -1554,10 +1526,10 @@ class HTMLElement {
 
 > [枚举（Enumerations）][enumerations]：（*An enumeration defines a common type for a group of related values and enables you to work with those values in a type-safe way within your code.*）
 
-- 可以定义[枚举项原始值](#枚举项原始值raw-value)
+- 可以定义[枚举项原始值](#枚举项原始值raw-values)
 - 可以定义[枚举项关联值](#枚举项关联值associated-values)；
 - 可以定义[初始化器](#初始化initializations)；
-- 可以定义[计算属性](#计算属性computed-attributes)；
+- 可以定义[计算属性](#计算属性computed-properties)；
 - 可以定义[方法](#方法methods)；
 - 可以[扩展](#扩展extension)原始实现；
 - 可以声明符合[协议](#协议protocol)以提供标准功能；
@@ -1686,19 +1658,19 @@ indirect enum ArithmeticExpression {
 
 *结构（Structure）和类（Class）*的相同点：
 
-- *结构（Structure）和类（Class）*均可以定义[属性（Attributes）](#属性attributes)；
-- *结构（Structure）和类（Class）*均可以定义方法[（Methods）](#方法methods)；
-- *结构（Structure）和类（Class）*均可以定义[初始化器（Initializers）](#初始化initializations)；
-- *结构（Structure）和类（Class）*均可以定义[下标方法（Subscript Methods）](#下标方法subscript)；
-- *结构（Structure）和类（Class）*均可以[扩展（Extensions）](#扩展extension)原始实现；
-- *结构（Structure）和类（Class）*均可以声明符合[协议（Protocols）](#协议protocol)以提供标准功能；
+- 定义[属性（Properties）](#属性properties)；
+- 定义[方法（Methods）](#方法methods)；
+- 定义[初始化器（Initializers）](#初始化initializations)；
+- 定义[下标方法（Subscript Methods）](#下标方法subscript)；
+- 支持[扩展（Extensions）](#扩展extension)；
+- 支持部署[协议（Protocols）](#协议protocol)；
 
 *类（Class）*还有一些额外特性：
 
-- *类（Class）*可以定义[反初始化器（Deinitializers）](#反初始化deinitializations)；
-- *类（Class）*可以[继承（Inheritance）](#继承inheritance)；
-- *类（Class）*实例可以在运行时进行类型判断和解释（*Type Casting*）；
-- *类（Class）*是[引用类型](#值类型和引用类型value-types--reference-types)，实例可以被多次引用（*Reference Type*）；
+- 定义[反初始化器（Deinitializers）](#反初始化deinitializations)；
+- 支持[继承（Inheritance）](#继承inheritance)；
+- 实例可以在运行时进行类型判断和解释（*Type Casting*）；
+- 类是[引用类型](#值类型和引用类型value-types--reference-types)，实例可以被多次引用（*Reference Type*）；
 
 [选择结构还是类？](https://developer.apple.com/documentation/swift/choosing-between-structures-and-classes)
 
@@ -1730,13 +1702,19 @@ print(someVideoMode.resolution.width)
 
 # 属性（Properties）
 
-> [属性（Properties）][properties]用以向[类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)关联数据。
+> [类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)均可以定义[属性（Properties）][properties]。
 
 - 属性遵循[访问控制](#访问控制access-control)；
+- 支持变量属性`var`和常量属性`let`；
+- 通过`static`前缀关键字定义类型属性（*Type Properties*）；
+- 通过`lazy`前缀关键字定义懒加载属性（*Lazy Properties*）；
+- 支持定义计算属性（*Computed Properties*）；
+- 支持定义属性观察器（*Property Observers*）；
+- 支持定义属性包装器（*Property Wrappers*）（即属性装饰器）；
 
 ## 存储属性（Stored Properties）
 
-> [存储属性][Stored-Properties]是存储在[类（Classes）](#结构structures和类classes)或[结构（Structures）](#结构structures和类classes)的实例中的变量（*variable stored property*）或常量（*constant stored property*）。
+> [类（Classes）](#结构structures和类classes)或[结构（Structures）](#结构structures和类classes)可以定义[存储属性][Stored-Properties]，以在实例中存储变量（*variable stored property*）或常量（*constant stored property*）。
 
 ```swift
 struct FixedLengthRange {
@@ -1760,11 +1738,9 @@ let dataFile = DataImporter()
 dataFile.filename = "data_2.txt"
 ```
 
-### 懒加载存储属性（Lazy Stored Properties）
+## 懒加载属性（`lazy`）
 
-> 直到第一次使用时才计算初始值的属性。
-
-需要注意的是，如果懒加载属性被多个线程访问，不能保证其只会被初始化一次。
+> **懒加载属性（Lazy Stored Property）**直到第一次使用时才计算初始值。需要注意的是，如果懒加载属性被多个线程访问，不能保证其只会被初始化一次。
 
 ```swift
 class DataManager {
@@ -1777,7 +1753,7 @@ print(manager.importer.filename) // 此时importer才被初始化
 
 ## 计算属性（Computed Properties）
 
-> [计算属性](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Computed-Properties)提供`getter`和`setter`方法，可以定义在[类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)中。
+> [类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)均可以定义[计算属性][Computed-Properties]，提供`getter`和`setter`方法。
 
 ```swift
 struct EEE {
@@ -1823,11 +1799,11 @@ struct EEE {
 }
 ```
 
-## 属性监视器（Property Observers）
+## 属性观察器（Property Observers）
 
-> [属性监视器](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Property-Observers)监视并响应属性的变化，即使属性赋予前后是同一个值。
+> [属性观察器][Property-Observers]监视并响应属性的变化，即使赋值前后是同一个值。
 
-监视方法有`willSet`, `didSet`，并可在以下场景下监视属性：
+观察方法有`willSet`, `didSet`，并可在以下场景下监视属性：
 
 - 定义存储属性
 - 继承存储属性
@@ -1861,9 +1837,9 @@ count(&counter.totalSteps)
 // Added 1 steps
 ```
 
-## 属性包装器（Property Wrappers）
+## 属性包装器（`@propertyWrapper`）
 
-> [属性包装器](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Property-Wrappers)的作用类似某些编程语言中的装饰器，但专门针对于属性。
+> [属性包装器][Property-Wrappers]的作用类似某些编程语言中的装饰器，但专门针对于属性。
 
 定义属性包装器：
 
@@ -1966,13 +1942,387 @@ assert(n.e == 2)
 
 # 方法（Methods）
 
-# 下标方法（Subscripts）
+> [类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)均可以定义[方法](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/methods)，包括*实例方法（instance methods）*和*类型方法（type methods）*。
+
+- 方法就是关联到某个类型的函数（*Associated Functions*），故方法和函数写法完全一致，包括不定参数、参数标签、默认值等等;
+- 通过`static`前缀关键字声明类型方法（*Type Methods*）；
+- 方法支持重载（*Overloading*）；
+- 方法内部通过`self`指代当前实例（或类型）；
+- 方法内部可以（不通过`self.`）直接调用实例（或类型）属性和实例（或类型）方法；
+
+```swift
+class Counter {
+    var count = 0
+    func increment() {
+        count += 1
+    }
+    // 重载
+    func increment(by amount: Int) {
+        count += amount
+    }
+    func reset() {
+        count = 0
+    }
+}
+```
+
+类型方法：
+
+```swift
+struct LevelTracker {
+    static var highestUnlockedLevel = 1
+    var currentLevel = 1
+
+    static func unlock(_ level: Int) {
+        if level > highestUnlockedLevel { highestUnlockedLevel = level }
+    }
+
+    static func isUnlocked(_ level: Int) -> Bool {
+        return level <= highestUnlockedLevel
+    }
+
+    @discardableResult
+    mutating func advance(to level: Int) -> Bool {
+        if LevelTracker.isUnlocked(level) {
+            currentLevel = level
+            return true
+        } else {
+            return false
+        }
+    }
+}
+```
+
+> [类（Classes）](#结构structures和类classes)可以用`class`关键字代替`static`。
+
+```swift
+class SomeClass {
+    class func someTypeMethod() {
+        // type method implementation goes here
+    }
+}
+```
+
+## 通过方法修改值类型实例（`mutating`）
+
+> 因为[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)是值类型，所以实例及其属性在默认情况下是不能通过普通方法修改的，需要在方法前显式地增加`mutating`关键字声明。
+
+```swift
+struct Point {
+    var x = 0.0, y = 0.0
+    // 修改实例属性
+    mutating func moveBy(x deltaX: Double, y deltaY: Double) {
+        x += deltaX
+        y += deltaY
+    }
+    // 甚至可以修改实例本身
+    mutating func replaceBy(x: Double, y: Double) {
+        self = Point(x: x, y: y)
+    }
+}
+// 即使声明了`mutating`，要想修改仍需要声明为变量才可以：
+var somePoint = Point(x: 1.0, y: 1.0)
+somePoint.moveBy(x: 2.0, y: 3.0)
+```
+
+## 下标方法（`subscript`）
+
+> [类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)均可以定义[下标方法](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/subscripts/)，用于快速访问序列类型数据元素。
+
+- 通过`subscript`关键字定义下标方法；
+- 下标方法支持重载（*Overloading*）;
+- 除了无法定义~~in-out~~参数，下标方法和普通函数一样；
+- 通过`static`关键字定义类型下标方法（*Type Subscripts*）；
+
+```swift
+subscript(index: Int) -> Int {
+    get {
+        // Return an appropriate subscript value here.
+    }
+    set(newValue) {
+        // Perform a suitable setting action here.
+    }
+}
+```
+
+只有`getter`的下标方法：
+
+```swift
+subscript(index: Int) -> Int {
+    // Return an appropriate subscript value here.
+}
+```
+
+不定参数（*Variadic Parameters*）和参数默认值（*Default Parameter Values*）：
+
+```swift
+struct Matrix {
+    let rows: Int, columns: Int
+    var grid: [Double]
+    init(rows: Int, columns: Int) {
+        self.rows = rows
+        self.columns = columns
+        grid = Array(repeating: 0.0, count: rows * columns)
+    }
+    func indexIsValid(row: Int, column: Int) -> Bool {
+        return row >= 0 && row < rows && column >= 0 && column < columns
+    }
+    subscript(row: Int, column: Int) -> Double {
+        get {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            return grid[(row * columns) + column]
+        }
+        set {
+            assert(indexIsValid(row: row, column: column), "Index out of range")
+            grid[(row * columns) + column] = newValue
+        }
+    }
+}
+var matrix = Matrix(rows: 2, columns: 2)
+matrix[0, 1] = 1.5
+```
 
 # 初始化（Initializations）
 
-# 反初始化（Deinitializations）
+## 初始化器（`init`）
+
+> [类（Classes）](#结构structures和类classes)、[结构（Structures）](#结构structures和类classes)和[枚举（Enumerations）](#枚举enumerations)均可以定义[初始化器](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/initialization)，用于初始化[存储属性](#存储属性stored-properties)。
+
+- 初始化器是一个名为`init`的[方法](#方法methods)，不返回值；
+- 初始化器支持重载（*Overloading*）；
+- 初始化器中可以初始化常量`let`属性；
+
+```swift
+class SurveyQuestion {
+    let text: String
+    var response: String?
+    init(text: String) {
+        // 初始化常量
+        self.text = text
+    }
+    func ask() {
+        print(text)
+    }
+}
+```
+
+## 默认初始化器（Default Initializer）
+
+> 当所有存储属性都无需初始化时，[类（Classes）](#结构structures和类classes)和[结构（Structures）](#结构structures和类classes)具有一个*默认初始化器（Default Initializer）*；
+
+```swift
+class ShoppingListItem {
+    var name: String?
+    var quantity = 1
+    var purchased = false
+    /* init() {} */
+}
+var item = ShoppingListItem()
+```
+
+> 在定义初始化器后，默认初始化器将失效。如有必要，可以定义显式一个空的初始化器代替；
+
+```swift
+class ShoppingListItem {
+    var name: String?
+    init() {}
+    init(name: String) {
+      self.name = name
+    }
+}
+```
+
+> [结构（Structures）](#结构structures和类classes)具有一个默认初始化所有存储属性的*成员初始化器（Memberwise Initializer）*；
+
+```swift
+struct Size {
+    var width = 0.0, height = 0.0
+}
+let twoByTwo = Size(width: 2.0, height: 2.0)
+let zeroByTwo = Size(height: 2.0)
+let zeroByZero = Size()
+```
+
+## 初始化器委托（Initializer Delegation）
+
+> **初始化器委托**可以让你在一个初始化器中调用其他（包括重载的和继承的）初始化器。
+
+对于*值类型（Value Types）*（结构和枚举）而言，可以直接交叉调用初始化器：
+
+```swift
+struct Rect {
+    var origin = Point()
+    var size = Size()
+    init() {}
+    init(origin: Point, size: Size) {
+        self.origin = origin
+        self.size = size
+    }
+    init(center: Point, size: Size) {
+        let originX = center.x - (size.width / 2)
+        let originY = center.y - (size.height / 2)
+        self.init(origin: Point(x: originX, y: originY), size: size)
+    }
+}
+```
+
+对于[类](#结构structures和类classes)而言，要想调用其他平行的初始化器，则必须通过`convenience`前缀关键字声明**便利初始化器（Convenience Initializers）**：
+
+```swift
+class Food {
+    var name: String
+    init(name: String) {
+        self.name = name
+    }
+    convenience init() {
+        self.init(name: "[Unnamed]")
+    }
+}
+class RecipeIngredient: Food {
+    var quantity: Int
+    init(name: String, quantity: Int) {
+        self.quantity = quantity
+        super.init(name: name)
+    }
+    override convenience init(name: String) {
+        self.init(name: name, quantity: 1)
+    }
+}
+```
+
+## 可失败的初始化器（`init?`）
+
+> 调用**可失败初始化器（Failable Initializer）**返回的实例是可空的（*Optional*）的，即可失败初始化器可以返回`nil`。
+
+通过`init?`（或`init!`）声明可失败初始化器：
+
+```swift
+struct Animal {
+    let species: String
+    init?(species: String) {
+        if species.isEmpty { return nil }
+        self.species = species
+    }
+}
+let someCreature = Animal(species: "Giraffe")
+// someCreature is of type Animal?, not Animal
+
+if let giraffe = someCreature {
+    print("An animal was initialized with a species of \(giraffe.species)")
+}
+```
+
+> 可失败初始化器可以被（子类）正常初始化器覆盖，反之则不行。
+
+```swift
+class Document {
+    var name: String?
+    // this initializer creates a document with a nil name value
+    init() {}
+    // this initializer creates a document with a nonempty name value
+    init?(name: String) {
+        if name.isEmpty { return nil }
+        self.name = name
+    }
+}
+class UntitledDocument: Document {
+    override init() {
+        super.init(name: "[Untitled]")!
+    }
+}
+```
+
+## 必须的初始化器（`required`）
+
+> 对于[类](#结构structures和类classes)而言，可以通过`required`前缀关键字强制子类必须实现该初始化器。（子类的该初始化器如果是继承而来，则无需显式声明。）
+
+```swift
+class SomeClass {
+    required init() {
+    }
+}
+// 子类中也必须声明为`required`
+class SomeSubclass: SomeClass {
+    required init() {
+    }
+}
+```
+
+## 通过闭包或函数声明属性默认值
+
+> 闭包执行时实例还未初始化，故闭包中无法调用任何实例属性或方法。
+
+```swift
+class SomeClass {
+    let someProperty: SomeType = {
+        // create a default value for someProperty inside this closure
+        // someValue must be of the same type as SomeType
+        return someValue
+    }()
+}
+```
+
+## 反初始化（Deinitializations）
+
+> [类](#结构structures和类classes)可以定义反初始化器。
+
+Swift是自动内存管理的，反初始化器只是实例被销毁前一个必定会被自动执行的钩子函数。
+
+```swift
+class Bank {
+    static var coinsInBank = 10_000
+    static func distribute(coins numberOfCoinsRequested: Int) -> Int {
+        let numberOfCoinsToVend = min(numberOfCoinsRequested, coinsInBank)
+        coinsInBank -= numberOfCoinsToVend
+        return numberOfCoinsToVend
+    }
+    static func receive(coins: Int) {
+        coinsInBank += coins
+    }
+}
+class Player {
+    var coinsInPurse: Int
+    init(coins: Int) {
+        coinsInPurse = Bank.distribute(coins: coins)
+    }
+    func win(coins: Int) {
+        coinsInPurse += Bank.distribute(coins: coins)
+    }
+    deinit {
+        Bank.receive(coins: coinsInPurse)
+    }
+}
+```
 
 # 继承（Inheritance）
+
+> [类（Classes）](#结构structures和类classes)支持继承。
+
+- 子类可以向继承的所有属性添加[属性观察器](#属性观察器property-observers)；
+- 子类可以通过`super`访问超类；
+- 子类通过`override`前缀关键字覆盖超类定义的属性或方法；
+- 通过`final`前缀关键字可以防止属性或方法被覆盖；
+
+```swift
+class Car: Vehicle {
+    // gear 无法被子类覆盖
+    final var gear = 1
+    // 覆盖属性：通过定义setter和getter实现
+    override var description: String {
+        return super.description + " in gear \(gear)"
+    }
+    // 覆盖方法
+    override func makeNoise() {
+        print("Choo Choo")
+    }
+    // 属性观察器
+    override var currentSpeed: Double {
+        didSet {
+            gear = Int(currentSpeed / 10.0) + 1
+        }
+    }
+}
+```
 
 # 扩展（Extension）
 
@@ -1982,71 +2332,250 @@ assert(n.e == 2)
 
 # 泛型（Generics）
 
+# 特性（Attributes）
+
+> [特性](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/attributes/)向*声明（Declaration）*或*类型（Type）*附加信息，用于改变编译器的默认行为，类似*Rust*中的*Attribute Macro*。
+
 # 并发（Concurrency）
 
-# 可选链（Optional Chaining）
+> Swift原生支持异步（*Asynchronous*）和并行（*Parallel*），并统称为[并发（Concurrency）](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency)。
 
-> 无需解包（unwrapping）以直接访问可空值的成员。
+## 异步（`async`）
+
+> **异步**是使异步任务在代码层面实现同步化调用的一种手段。
+
+```swift
+func listPhotos(inGallery name: String) async throws -> [String] {
+    try await Task.sleep(until: .now + .seconds(2), clock: .continuous)
+    return ["IMG001", "IMG99", "IMG0404"]
+}
+func downloadPhoto(named name: String) async {
+  try? await Task.sleep(nanoseconds: 3_000_000_000)
+  print("downloaded:" + name)
+}
+```
+
+异步函数可被调用（`await`）的位置：
+
+- 异步上下文（`async`）内部；
+- 被`@main`标记的结构、类或枚举的`main()`静态函数内部；
+- [非结构化并发](#非结构化并发unstructured-concurrency)任务内部；
+
+```swift
+print(try! await listPhotos(inGallery: "Summer Vacation"))
+print(try! await listPhotos(inGallery: "Summer Vacation")[0])
+```
+
+> 通过`async let`创建子任务，以支持异步函数**并行调用**。
+
+```swift
+async let firstPhoto = listPhotos(inGallery: "Summer Vacation")[0]
+async let secondPhoto = listPhotos(inGallery: "Summer Vacation")[1]
+async let thirdPhoto = listPhotos(inGallery: "Summer Vacation")[2]
+let photos = try! await [firstPhoto, secondPhoto, thirdPhoto]
+assert(photos == ["IMG001", "IMG99", "IMG0404"])
+```
+
+> Swift的异步是多线程调度，所有异步任务都可能在不同线程执行，从而可能会产生数据竞争问题。
+
+```swift
+var a = 0
+func setValue(v: Int) async {
+  try? await Task.sleep(nanoseconds: 1_000_000_000)
+  // error: main actor-isolated var 'a' can not be mutated from a non-isolated context
+  a = v
+}
+```
+
+为了解决多线程可能出现的数据竞争问题，Swift引入了一个异步上下文：[行为体（Actors）](#行为体actor)。
+
+### 异步序列（`AsyncSequence`）
+
+> 异步序列实现了`AsyncSequence`协议。通过`for-await-in`可以遍历异步序列。
+
+```swift
+import Foundation
+
+let handle = FileHandle.standardInput
+for try await line in handle.bytes.lines {
+    print(line)
+}
+```
+
+## 任务（Task）
+
+> [任务（Task）](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency#Tasks-and-Task-Groups)：是程序中的异步执行单元。所有的异步代码都是在任务中真正实现调用的。
+
+### 结构化并发（Structured Concurrency）
+
+**任务组（Task Group）**由根任务和后代任务组成的具有层级结构的任务集合。
+
+> 通过任务组的方式部署的并发称为**结构化并发（Structured Concurrency）**。
+
+结构化并发（或者说层级结构）的特点：
+
+- 子任务生命周期不会超过父任务；
+- 取消某个任务，其后代任务均会被取消；
+- 错误可以自动冒泡到父任务；
+- 子任务默认继承父任务的优先级；
+- 拥有本地数据；
+
+> 通过`async let`创建**并发子任务**
+
+- 子任务在创建后立刻执行；
+
+```swift
+async let firstPhoto = downloadPhoto(named: "IMG001")
+async let secondPhoto = downloadPhoto(named: "IMG002")
+async let thirdPhoto = downloadPhoto(named: "IMG003")
+try! await [firstPhoto, secondPhoto, thirdPhoto]
+// downloaded:IMG001
+// downloaded:IMG0404
+// downloaded:IMG99
+```
+
+> 通过`withTaskGroup()`和`withThrowingTaskGroup()`显式创建*任务组*
+
+```swift
+await withTaskGroup(of: Void.self, returning: Void.self) { groupTask in
+  let photoNames = ["IMG001", "IMG99", "IMG0404"]
+
+  for name in photoNames {
+    // `addTask`添加子任务
+    groupTask.addTask { await downloadPhoto(named: name) }
+  }
+}
+// downloaded:IMG001
+// downloaded:IMG0404
+// downloaded:IMG99
+```
+
+### 非结构化并发（Unstructured Concurrency）
+
+> （没有父任务的）独立任务实现的并发称为**非结构化并发（Unstructured Concurrency）**。
+
+- 通过`Task.init(priority:operation:)`创建在当前上下文执行的任务。
+- 通过`Task.detached(priority:operation:)`创建隔离于当前上下文的任务（不继承当前上下文的优先级、数据等）。
+
+```swift
+// parentTask是非结构化任务
+let parentTask = Task {
+  async let test: () = downloadPhoto(named: "IMG001")
+  await test
+}
+await parentTask.value
+// downloaded:IMG001
+```
+
+### 取消任务（Task Cancellation）
+
+任务可以通过以下三种方式取消：
+
+- 抛出`CancellationError`错误；
+- 返回`nil`或空集合；
+- 返回部分完成的任务；
+
+```swift
+func noAwaitAsynclet() async {
+  print("begin noAwaitAsynclet")
+  try? await Task.sleep(nanoseconds: 10_000_000_000)
+  Task.isCancelled ? print("noAwaitAsynclet is cancelled") : print("end noAwaitAsynclet")
+}
+
+func testAsynclet() async {
+  let parentTask = Task {
+    async let test: () = noAwaitAsynclet()
+    await test
+  }
+  parentTask.cancel() // 取消任务，sleep也跟着取消了
+  await parentTask.value
+  print("parentTask finished!")
+}
+
+await testAsynclet()
+// begin noAwaitAsynclet
+// noAwaitAsynclet is cancelled
+// parentTask finished!
+```
+
+## 行为体（Actor）
+
+> [行为体](https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency#Actors)通过构建**独立的异步上下文**，让异步任务之间实现安全的数据共享。
+
+具体地，行为体通过将数据作为其内部状态进行维护，并通过*消息盒（mailbox）*（一个异步任务队列）和*串行调度*来避免数据竞争。故行为体具有以下特点：
+
+- 同一时刻只有一个任务可以改变其内部状态；
+- 在行为体外部调用行为体内部状态均需要进入异步队列等待执行（`await`）；
+- 行为体内部的调用是有在行为体内部调用行为体内部状态可以直接调用；
+
+在语法形式上，除了不支持继承以外，行为体和类相似，且都是[引用类型](#值类型和引用类型value-types--reference-types)。
+
+示例参考-[Swift 新并发框架之 actor](https://juejin.cn/post/7076738494869012494)
+```swift
+actor BankAccount {
+  // 行为体状态
+  static var timestamp: Int64 = 0
+  let accountNumber: Int
+  var balance: Double
+
+  enum BankAccountError: Error {
+    case insufficientBalance(Double)
+    case authorizeFailed
+  }
+  // 除了无法继承，行为体同类一样
+  init(accountNumber: Int, initialDeposit: Double) {
+    self.accountNumber = accountNumber
+    self.balance = initialDeposit
+  }
+  // 对于行为体内部方法来说，在串行机制的保障下，可以直接调用行为体状态
+  func deposit(amount: Double) {
+    assert(amount >= 0)
+    balance = balance + amount
+  }
+  // 行为体内部定义异步方法也是可以的：
+  func withdraw(amount: Double) async throws -> Double {
+    guard balance >= amount else {
+      throw BankAccountError.insufficientBalance(balance)
+    }
+    // 调用异步方法或属性
+    guard await authorize() else {
+      throw BankAccountError.authorizeFailed
+    }
+    balance -= amount
+    return balance
+  }
+  private func authorize() async -> Bool {
+    try? await Task.sleep(nanoseconds: 1_000_000_000)
+    return true
+  }
+}
+let ba = BankAccount(accountNumber: 10000, initialDeposit: 100)
+// 对于行为体外部的调用来说，（数据是隔离的*isolated*）都会进入异步队列等待执行，故所有调用均需要等待（await）
+await ba.deposit(amount: 100)
+// 变量亦是
+print(await ba.balance)
+// 常量是不可变的状态，故不需要
+print(ba.accountNumber)
+// 静态变量也不需要
+print(ba.timestamp)
+```
+
+> 有时内部调用确实是同步的，多余的异步排队调用会拉低性能，为了优化，Swift5.5提供了`nonisolated`关键字（没有访问隔离数据）由开发者保证安全调用告诉编译器可以跳过异步队列。
+
+```swift
+extension BankAccount {
+  // 在该方法内部只引用了 let accountNumber，故不存在 Data races
+  // 也就可以用 nonisolated 修饰
+  nonisolated func safeAccountNumberDisplayString() -> String {
+    let digits = String(accountNumber)
+    return String(repeating: "X", count: digits.count - 4) + String(digits.suffix(4))
+  }
+}
+// 由于nonisolated的修饰，可以直接调用
+ba.safeAccountNumberDisplayString()
+```
 
 # 访问控制（Access Control）
-
-# 错误处理（Error Handling）
-
-## Representing
-
-- Enumeration is well suited to modeling a group of related error conditions.
-
-```swift
-enum VendingError: Error {
-  case invalidSelection
-  case insufficientFunds(coinsNeeded: Int)
-  case outOfStock
-}
-```
-
-## Throwing Errors
-
-```swift
-throw VendingError.outOfStock
-throw VendingError.insufficientFunds(coinsNeeded: 10)
-```
-
-## Propagating Errors (Using Throwing Function)
-
-```swift
-func canThrowErrors() throws {}
-func canThrowErrors() throws -> String {}
-struct Test {
-  init() throws {}
-}
-func vend() throws -> String {
-  if {
-    throw VendingError.outOfStock
-  }
-  return "Success"
-}
-```
-
-## Handler Errors Using `do...catch`
-
-```swift
-do {
-  try vend()
-} catch VendingError.insufficientFunds(let coinsNeeded) {
-  print(conisNeeded)
-} catch VendingError.invalidSelection, VendingError.outOfStock {
-} catch pattern4 where condition {
-} catch is VendingError {
-} catch {
-  print(error) // no pattern catch will have the local constant 'error'
-}
-```
-
-## Converting Errors to Optional
-
-```swift
-let ret = try? vend() // "Success" or nil.
-```
 
 [guidedtour]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/guidedtour/
 [aboutthelanguagereference]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/aboutthelanguagereference
@@ -2060,3 +2589,7 @@ let ret = try? vend() // "Success" or nil.
 [classesandstructures]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/classesandstructures
 [properties]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties
 [Stored-Properties]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Stored-Properties
+
+[Computed-Properties]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Computed-Properties
+[Property-Observers]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Property-Observers
+[Property-Wrappers]: https://docs.swift.org/swift-book/documentation/the-swift-programming-language/properties#Property-Wrappers
