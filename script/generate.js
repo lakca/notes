@@ -52,7 +52,6 @@ function capitalize(str) {
 }
 
 function titlize(str) {
-  if (str.toLowerCase() === 'readme') return '......'
   return str.split(/\s+|-/).map(capitalize).join(' ')
 }
 
@@ -94,7 +93,7 @@ class FileInfo {
     const info = this.stat.isFile() && parseMeta(fs.readFileSync(filepath).toString().trim()) || null
     this.meta = info?.meta
     this.h1 = info?.h1
-    this.title = this.meta?.title || this.h1 || titlize(this.name)
+    this.title = titlize(this.name)
   }
 }
 
@@ -128,6 +127,7 @@ function renderTocItem(fileInfo, level) {
   const collapse = fileInfo.level - level
   const relName = collapse ? fileInfo.relName.split(path.sep).slice(collapse + 1).join(path.sep) : fileInfo.relName
   const relUrl = IS_GITHUB ? noext(relName, true).replace(/README$/, '') : relName
+  if (['readme'].includes(fileInfo.name.toLowerCase())) return
   return '  '.repeat(level) +
     `- [${fileInfo.title}](${encodeURI(relUrl)})` +
     `<span style="font-size:.8em;float:right">` +
@@ -167,6 +167,7 @@ readFolder(new FileInfo(SRC_ROOT, ROOT, 0), (fileInfo) => {
     }
     if (levelArr[level]) {
       if (tocArr[level] && tocArr[level].length) {
+        tocArr[level].sort((a, b) => a.localeCompare(b))
         fs.writeFileSync(path.join(levelArr[level].filepath, INDEX_FILE),
           tocArr[level].join(''))
       }
