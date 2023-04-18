@@ -1,5 +1,0 @@
-#!/bin/bash
-# Prepare for contribution.
-
-echo '[ $nopostcommit] || npm run generate -- github commit' > .git/hooks/post-commit
-

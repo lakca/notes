@@ -1,0 +1,157 @@
+{
+  "main": {
+    "id": "643c4a7531948d6e",
+    "type": "split",
+    "children": [
+      {
+        "id": "b24a991764796848",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "f55650eec773180f",
+            "type": "leaf",
+            "state": {
+              "type": "empty",
+              "state": {}
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "7580e2e88bcec992",
+    "type": "split",
+    "children": [
+      {
+        "id": "fd8b0f829115a6bb",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "b45390570bcad043",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "210e3adc398cf691",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical"
+              }
+            }
+          },
+          {
+            "id": "90ef956d93414886",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 2
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "98cb26ade0858107",
+    "type": "split",
+    "children": [
+      {
+        "id": "8cfe0769f3a5ccc8",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "0861bcc9c388eb4d",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "e37e40b2924b3ad3",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              }
+            }
+          },
+          {
+            "id": "1283cde75786544f",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true
+              }
+            }
+          },
+          {
+            "id": "7c99b5d7b3bd3107",
+            "type": "leaf",
+            "state": {
+              "type": "advanced-tables-toolbar",
+              "state": {}
+            }
+          }
+        ],
+        "currentTab": 1
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "obsidian-excalidraw-plugin:New Excalidraw drawing": false,
+      "switcher:Open quick switcher": false,
+      "graph:Open graph view": false,
+      "canvas:Create new canvas": false,
+      "command-palette:Open command palette": false,
+      "markdown-importer:Open format converter": false,
+      "workspaces:Manage workspace layouts": false
+    }
+  },
+  "active": "f55650eec773180f",
+  "lastOpenFiles": [
+    "tech/rust/rust.md",
+    "CIS/nodejs/packages.md",
+    "CIS/nodejs/npm.md",
+    "CIS/web/frameworks.md",
+    "CIS/web/uikit.md",
+    "CIS/web/toolchain.md",
+    "Headmore.md",
+    "CIS/WebRTC.md",
+    "CIS/WebAssembly.md",
+    "crates.io.md"
+  ]
+}

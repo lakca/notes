@@ -17,10 +17,11 @@
     "marked": "^1.2.9"
   },
   "scripts": {
+    "prepare": "echo '[[ $nopostcommit ]] || npm run generate -- github commit' > .git/hooks/post-commit",
     "generate": "node script/generate.js",
     "html": "node script/html.js",
     "view": "node script/view.js",
-    "post": "touch src/posts/`date +%Y%m%d%H%M%S`.md"
+    "post": "touch _posts/posts/`date +%Y%m%d%H%M%S`.md"
   },
   "repository": {
     "type": "git",

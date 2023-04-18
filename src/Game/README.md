@@ -1,2 +1,0 @@
-- [2048](2048)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2023-04-04 18:21</span><span style="padding-left:2em;color:lightgray;">2023-04-03 15:32</span></span>
-- [Hanoi](hanoi)<span style="font-size:.8em;float:right"><span style="color:orange">R100</span><span style="padding-left:2em;color:gray;">2023-04-07 17:01</span><span style="padding-left:2em;color:lightgray;">2023-04-05 15:30</span></span>

@@ -11,3 +11,11 @@ mermaid:
   src: /assets/script/mermaid.min.js
 
 timezone: Asia/Shanghai
+
+github:
+  show: false
+
+show_downloads: false
+excerpt_separator: <!--more-->
+
+source: _posts

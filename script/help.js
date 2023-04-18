@@ -45,7 +45,7 @@ module.exports = {
     return root
   },
   get SRC() {
-    return 'src'
+    return '_posts'
   },
   get HTML() {
     return 'html'

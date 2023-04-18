@@ -4,7 +4,7 @@ const path = require('path')
 const moment = require('moment')
 const startCase = require('lodash.startcase')
 const { execSync } = require('child_process')
-const SRC_ROOT = path.join(__dirname, '../src')
+const { SRC_ROOT } = require('./help')
 
 function gitList(cmd) {
   return execSync(cmd).toString().trim().split(/\r\n|\n|\r/)
@@ -71,8 +71,8 @@ for (const file of traverse(SRC_ROOT)) {
   if (path.extname(file) === '.md') {
     const { meta, content } = extractFile(file)
     const stat = fileStat(file)
-    if (!meta.date) meta.date = getBirthtime(file)
-    meta.title = path.basename(file, '.md')
+    meta.date = meta.date || getBirthtime(file)
+    meta.title = meta.title || path.basename(file, '.md')
     const relPath = path.relative(SRC_ROOT, file)
     if (gitStatus[relPath]) {
       meta.gitStatus = gitStatus[relPath]

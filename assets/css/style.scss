@@ -9,6 +9,11 @@
   }
 }
 
+.site-footer {
+  padding: 1rem 6rem;
+  margin: 0;
+}
+
 li:not(:has(ul)):hover {
   background: #eee;
 }
