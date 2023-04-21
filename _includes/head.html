@@ -14,17 +14,22 @@
   <meta charset="UTF-8">
 
   {% seo %}
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link rel="preload" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap" as="style"
-    type="text/css" crossorigin>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#157878">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="preconnect" href="https://fonts.gassets.com">
+  <link rel="stylesheet" href="{{'/assets/css/fonts.css' | relative_url}}">
   <link rel="stylesheet" href="{{ '/assets/css/style.css?v=' | append: site.github.build_revision | relative_url }}">
-  <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" integrity="sha256-eZrrJcwDc/3uDhsdt61sL2oOBY362qM3lon1gyExkL0=" crossorigin="anonymous">
-  <script defer src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-  <script defer src="//cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+  <link rel="stylesheet" href="{{'/assets/css/toastr.min.css' | relative_url}}">
+  <link rel="stylesheet" href="{{'/assets/css/font-awesome.min.css' | relative_url}}">
+  <link rel="stylesheet" href="{{'/assets/css/katex.min.css' | relative_url}}">
+  <script src="{{'/assets/script/data.js' | relative_url}}"></script>
+  <!-- The loading of KaTeX is deferred to speed up page rendering -->
+  <script defer src="{{'/assets/script/katex.min.js' | relative_url}}"></script>
+  <!-- To automatically render math in text elements, include the auto-render extension: -->
+  <script defer src="{{'/assets/script/auto-render.min.js' | relative_url}}" onload="renderMathInElement(document.body);"></script>
+  <script defer src="{{'/assets/script/jquery.min.js' | relative_url}}"></script>
+  <script defer src="{{'/assets/script/toastr.min.js' | relative_url}}"></script>
   <script defer src="{{'/assets/script/mermaid.min.js' | relative_url}}"></script>
   <script defer src="{{'/assets/script/custom.js' | relative_url}}"></script>
 </head>

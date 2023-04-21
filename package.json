@@ -18,9 +18,9 @@
   },
   "scripts": {
     "prepare": "echo '[[ $nopostcommit ]] || npm run generate -- github commit' > .git/hooks/post-commit",
-    "generate": "node script/generate.js",
-    "html": "node script/html.js",
-    "view": "node script/view.js",
+    "generate": "node _script/generate.js",
+    "html": "node _script/html.js",
+    "view": "node _script/view.js",
     "post": "touch _posts/posts/`date +%Y%m%d%H%M%S`.md"
   },
   "repository": {

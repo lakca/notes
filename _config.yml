@@ -8,7 +8,7 @@ plugins:
   - jekyll-seo-tag
 
 mermaid:
-  src: /assets/script/mermaid.min.js
+  src: /static/script/mermaid.min.js
 
 timezone: Asia/Shanghai
 
@@ -19,3 +19,7 @@ show_downloads: false
 excerpt_separator: <!--more-->
 
 source: _posts
+
+markdown: kramdown
+kramdown:
+    math_engine: katex

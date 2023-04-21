@@ -29,12 +29,20 @@
         el.setAttribute('style', style)
         return this
       },
+      attr(k, v) {
+        el.setAttribute(k, v)
+        return this
+      },
       on(event, listener, options) {
         el.addEventListener(event, listener, options)
         return this
       },
       mount(ele) {
         ele.appendChild(el)
+        return this
+      },
+      append(e) {
+        el.appendChild(e.el || e)
         return this
       },
     }
@@ -121,7 +129,10 @@
         return `${str}-${this.id}`
       },
       get themes() {
-        return ['light', 'dark']
+        return [['light', '🌔'], ['dark', '🌘']]
+      },
+      get levels() {
+        return [[1, '1️⃣'], [2, '2️⃣'], [3, '3️⃣'], [4, '4️⃣'], [5, '5️⃣'], [6, '6️⃣']]
       },
       get style() {
         return `
@@ -129,15 +140,14 @@
             min-width: 100%;
             min-height: 100%;
           }
-          .page-header .${this.ident('breadcrumb')} {
-            font-size: 1.5rem;
-            margin: 1rem 0 -1rem 0;
-          }
-          .page-header .${this.ident('breadcrumb')} .btn:hover {
+          .${this.ident('breadcrumb')} a {
             color: white;
+            font-size: 1.5rem;
+          }
+          .${this.ident('breadcrumb')} .btn:hover {
             background: unset;
           }
-          .page-header .${this.ident('breadcrumb')} .btn.current {
+          .${this.ident('breadcrumb')} .btn.current {
             color: white;
             background: unset;
             font-weight: bold;
@@ -167,7 +177,7 @@
             width: 25rem;
             max-width: 90%;
             border: solid 1em transparent;
-            border-bottom-width: 35px;
+            border-bottom-width: 70px;
             margin: 0;
             box-sizing: border-box;
             overflow-y: scroll;
@@ -186,51 +196,6 @@
             list-style: none;
             margin: 6px 0;
             padding: 0;
-          }
-          .${this.ident('menu')}::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-          }
-          .${this.ident('menu')}::-webkit-scrollbar-track {
-            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
-            border-radius: 2px;
-          }
-          .${this.ident('menu')}::-webkit-scrollbar-thumb {
-            background-color: #159957;
-            background-image: linear-gradient(180deg, #00f2ff, #006bff);
-          }
-          .${this.ident('bar')} {
-            position: fixed;
-            display: flex;
-            left: 0;
-            bottom: 0;
-            height: 2rem;
-            line-height: 2rem;
-            font-size: 1.2rem;
-            text-align: center;
-            z-index: 999999;
-            cursor: pointer;
-            transition: .3s;
-            user-select: none;
-            color: white;
-            border-radius: 0 2px 2px 0;
-            background-color: #159957;
-            background-image: linear-gradient(120deg, #155799, #159957);
-          }
-          .${this.ident('bar')} div {
-            width: 2rem;
-            transition: all .3s;
-          }
-          .${this.ident('bar')} div:hover {
-            box-shadow: inset 0 0 2px #159957;
-            background: white;
-            color: #159957;
-          }
-          .${this.ident('bar')} [data-btn=switch]:before {
-            content: "关";
-          }
-          .${this.ident('custom')}.${this.ident('closed')} .${this.ident('bar')} [data-btn=switch]:before {
-            content: "开";
           }
           .${this.ident('menu')} .${this.ident('handle')} {
             display: inline-block;
@@ -251,6 +216,129 @@
           }
           .${this.ident('menu')} li.${this.ident('close')} > .${this.ident('handle')} {
             transform: rotate(0);
+          }
+          .${this.ident('bar')} {
+            position: fixed;
+            z-index: 999;
+            left: 20px;
+            bottom: 20px;
+            color: #006bff;
+            display: flex;
+          }
+          .${this.ident('bar')} > * {
+            height: 40px;
+            outline: none;
+            border: none;
+            appearance: none;
+            border-radius: 50%;
+            box-shadow: 0 0 5px #b1b1b1, 0 0 30px #b1b1b1;
+            width: 40px;
+            margin-right: 5px;
+            text-align: center;
+            line-height: 40px;
+            user-select: none;
+            -webkit-user-select: none;
+          }
+          .${this.ident('bar')} .handle:before {
+            content: "🐵";
+          }
+          .${this.ident('custom')}.${this.ident('closed')} .${this.ident('bar')} .handle:before {
+            content: "🙈";
+          }
+          .${this.ident('custom')}.${this.ident('closed')} .${this.ident('bar')} .level {
+            display: none;
+          }
+          .${this.ident('global-nav')} {
+            position: relative;
+          }
+          .${this.ident('global-nav')}:before, .${this.ident('global-nav')}:after {
+            content: '';
+            width: 40%;
+            height: 40%;
+            border-radius: 50%;
+            background-color: #006bff;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            transition: all 0.3s;
+          }
+          .${this.ident('global-nav')}:after {
+            width: 0%;
+            height: 0%;
+            background-color: white;
+          }
+          .${this.ident('global-nav')}:hover:before {
+            width: 100%;
+            height: 100%;
+          }
+          .${this.ident('global-nav')}:hover:after {
+            width: 40%;
+            height: 40%;
+          }
+          .${this.ident('global-nav')} > div > div {
+            display: flex;
+            align-items: center;
+          }
+          .${this.ident('global-nav')} > div > div > div {
+            margin-right: 10px;
+          }
+          .${this.ident('global-nav')} input {
+            outline: none;
+            border-radius: 2px;
+            padding: 2px;
+            text-align: center;
+            border: none;
+            border-bottom: solid 1px;
+            color: #006bff;
+            font-weight: bold;
+            font-family: Optima;
+            font-size: 1.4em;
+          }
+          .${this.ident('global-nav')} ul {
+            transition: 0.3s;
+            list-style: none;
+            padding: 0px 20px;
+            text-align: left;
+            line-height: normal;
+          }
+          .${this.ident('global-nav')}:hover > div {
+            transform: scale(1);
+          }
+          .${this.ident('global-nav')} > div {
+            position: absolute;
+            left: 100%;
+            bottom: 0;
+            transform-origin: left bottom;
+            transform: scale(0);
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 0 5px #b1b1b1, 0 0 30px #b1b1b1;
+            border: solid 10px transparent;
+            border-width: 20px 10px;
+          }
+          .${this.ident('global-nav')} > div > ul {
+            max-height: 80vh;
+            overflow-y: auto;
+          }
+          .${this.ident('global-nav')} li {
+            white-space: nowrap;
+            transition: .3s;
+          }
+          .${this.ident('menu')}::-webkit-scrollbar-thumb,
+          .${this.ident('global-nav')} > div > ul ::-webkit-scrollbar-thumb {
+            background-image: linear-gradient(180deg, #00f2ff, #006bff);
+          }
+          .${this.ident('menu')}::-webkit-scrollbar,
+          .${this.ident('global-nav')} > div > ul ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+            border-radius: 2px;
+          }
+          .${this.ident('menu')}::-webkit-scrollbar-track,
+          .${this.ident('global-nav')} > div > ul ::-webkit-scrollbar-track {
+            box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
           }
         `
       },
@@ -297,6 +385,16 @@
             }
             break
           default:
+        }
+      },
+      collapse(level) {
+        for (const ul of this.menu.querySelectorAll('ul')) {
+          const lv = ul.getAttribute('data-lv')
+          if (lv > level) {
+            ul.parentElement.classList.add(this.ident('close'))
+          } else {
+            ul.parentElement.classList.remove(this.ident('close'))
+          }
         }
       },
       onClickMenu(e) {
@@ -353,9 +451,9 @@
         while (pathname = pathname.match(/(.*\/)(.+?)(?=\/?$)/)) {
           const name = decodeURIComponent(pathname[2]).toUpperCase()
           if (items.length) {
-            items.unshift(`<a class="btn" href="${pathname[0]}">${name}</a>`)
+            items.unshift(`<a href="${pathname[0]}">${name}</a>`)
           } else {
-            items.unshift(`<span class="btn current">${name}</span>`)
+            items.unshift(`<span class="current">${name}</span>`)
           }
           pathname = pathname[1]
         }
@@ -364,7 +462,7 @@
           .html(items.join(' / '))
           .mount(this.header)
       },
-      generateMenu() {
+      renderMenu() {
         const it = this
         if (!this.content) return ''
         const headers = this.content.querySelectorAll('h1,h2,h3,h4,h5,h6')
@@ -436,7 +534,7 @@
         el('ul').class(this.ident('menu'))
           .class(this.ident('h1'))
           .class(this.ident('transitionable'))
-          .html(this.generateMenu())
+          .html(this.renderMenu())
           .mount(document.body)
           .on('click', (e) => this.onClickMenu(e))
 
@@ -515,32 +613,90 @@
         if (TOUCH_SUPPORT) return
         const bar = el()
           .class(this.ident('bar'))
-          .html(`
-          <div data-btn="switch"></div>
-          <div data-btn="1">I</div>
-          <div data-btn="2">II</div>
-          <div data-btn="3">III</div>
-          <div data-btn="4">IV</div>
-          <div data-btn="5">V</div>
-          <div data-btn="6">VI</div>
-          <select onChange="document.documentElement.setAttribute('theme', event.target.value)" style="background: transparent; outline: none;">
-            ${this.themes.map(theme => `<option value="${theme}">${theme}</option>`)}
-          </select>
-        `)
+          .append(el('div')
+            .class('handle')
+            .on('click', e => this.toggle())
+          )
+          .append(el('select')
+            .class('level')
+            .html(this.levels.map(level => `<option value="${level[0]}">${level[1]}</option>`))
+            .on('change', e => this.collapse(e.target.value))
+          )
+          .append(el('select')
+            .class('theme')
+            .html(this.themes.map(theme => `<option value="${theme[0]}">${theme[1]}</option>`))
+            .on('change', (e) => document.documentElement.setAttribute('theme', e.target.value))
+          )
+          .append(el('div')
+            .class(this.ident('global-nav'))
+            .append(this.renderGlobalNav())
+          )
           .on('click', e => this.clickBar(e))
           .mount(document.body)
           .el
 
-        bar.draggable = true
+        // bar.draggable = true
 
-        ondrag(bar, {
-          onend(drag) {
-            const h = document.documentElement.clientHeight
-            const ah = bar.offsetHeight
-            const y = Math.min(Math.max(drag.move.y, ah), h)
-            el(bar).style('bottom', 100 * (h - y) / h + '%')
+        // ondrag(bar, {
+        //   onend(drag) {
+        //     const h = document.documentElement.clientHeight
+        //     const ah = bar.offsetHeight
+        //     const y = Math.min(Math.max(drag.move.y, ah), h)
+        //     el(bar).style('bottom', 100 * (h - y) / h + '%')
+        //   }
+        // })
+      },
+      renderGlobalNav() {
+        const files = window?.site_data?.files || []
+        const nav = { el: document.createDocumentFragment(), children: {} }
+        const baseUrl = '/notes'
+        for (file of files) {
+          let parent = nav
+          const last = file.segments[file.segments.length - 1]
+          let path = [baseUrl]
+          for (const name of file.segments) {
+            path.push(name)
+            if (parent.children[name]) {
+              parent = parent.children[name]
+            } else {
+              if (!parent.wrap) {
+                parent.wrap = document.createElement('ul')
+                parent.el.appendChild(parent.wrap)
+              }
+              const item = { el: document.createElement('li'), children: {} }
+              const link = document.createElement('a')
+              link.href = path.join('/').replace(/\.md$/, '')
+              link.textContent = last === name ? file.title : name
+              item.el.appendChild(link)
+              parent.wrap.appendChild(item.el)
+              parent.children[name] = item
+              parent = item
+            }
           }
-        })
+        }
+        const list = Array.from(nav.el.querySelectorAll('a')).filter(e => !e.nextElementSibling)
+        const wrap = el('div')
+          .append(el('div')
+            .append(el('div').append(document.createTextNode('🔍')))
+            .append(el('input')
+            // .attr('placeholder', '搜索文章')
+            .on('input', (event) => {
+              const val = event.target.value.toLowerCase()
+              list.forEach(el => {
+                if (el.textContent.toLowerCase().indexOf(val) > -1) {
+                  el.parentElement.style.maxHeight = '2em'
+                } else {
+                  el.parentElement.style.maxHeight = '0'
+                }
+              })
+            }))
+          )
+          .append(nav.el).el
+
+        document.querySelector('.bar-1fc7ed35')?.querySelector('.global-nav-1fc7ed35')?.remove()
+        document.querySelector('.bar-1fc7ed35').appendChild(
+          el('div').class('global-nav-1fc7ed35').append(wrap).el)
+        return wrap
       },
       mount() {
         const params = new URLSearchParams(window.location.search)
@@ -561,7 +717,7 @@
         } return false
       },
     }
-    if (document.body.classList.contains('post')) {
+    if (document.body.classList.contains('page') || document.body.classList.contains('post')) {
       menu.mount()
     }
   }());
@@ -607,7 +763,7 @@
         e.parentElement.appendChild(icon)
       }
     })
-  });
+  }());
 
   window.toastr.options = {
     escapeHtml: true,
