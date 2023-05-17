@@ -51,8 +51,8 @@ date: 2021-04-19T11:13:31.973Z
 - 描述和组合取代实现和继承（`trait`和`struct`）
 - 元编程（*Meta Programing*）
   - 宏（*Macros*）：Rust的宏不是简单的字符串替换，而是和函数一样具有丰富的高阶编程能力和自定义返回值。
-    - 声明宏（*Declarative Macros*），匹配Rust提供的特定语法结构以执行相应代码，如`vec!`
-    - 过程宏（*Procedural Macros*），解析属性备注的字符流（`TokenStream`）并执行代码
+    - 声明式宏（*Declarative Macros*），匹配Rust提供的特定语法结构以执行相应代码，如`vec!`
+    - 过程式宏（*Procedural Macros*），解析属性备注的字符流（`TokenStream`）并执行代码
       - 派生宏（*Derive*），如`#[derive(Clone)]`
       - 类属性宏（*Attribute-Like*），如`#[route(GET, "/")]`
       - 类函数宏（*Function-Like*），如`html! { <h1>{ "Hello World" }</h1> }`
@@ -843,7 +843,7 @@ rustc --help | grep '\--crate-type'
 - `dylib`：*Rust*规范的动态库文件（`.so`,`.dylib`,`.dll`）
 - `cdylib`：*C*语言规范的动态库，适用于跨语言调用（`.so`,`.dylib`,`.dll`）
 - `staticlib`：*C*语言规范的静态库，适用于跨语言调用（`.a`,`.lib`）
-- `proc-macro`：*Rust*过程宏库
+- `proc-macro`：*Rust*过程式宏库
 
 关于库文件详见：[Linkage - The Rust Reference](https://doc.rust-lang.org/reference/linkage.html)
 
@@ -1101,9 +1101,7 @@ println!("{}", c);
 
 ### 生命周期省略规则（Lifetime Elision）
 
-# 变量和项
-
-## 变量（Variable）
+# 变量（Variables）
 
 > [变量](https://doc.rust-lang.org/reference/variables.html)，是执行栈帧的一部分，在执行期间建立，用于指向内存数据。包括函数具名参数（*named function parameter*）、局部具名变量（*named local variable*，`let`声明）、[匿名临时变量](https://doc.rust-lang.org/reference/expressions.html#temporaries)（*annoymous temporary*，表达式中的字面量或中间值可能是在执行时临时分配的）。
 
@@ -1150,7 +1148,7 @@ let mut i = 'i';
 let c = c.len(); // usize
 ```
 
-### 临时变量
+## 临时变量
 
 > 关于临时变量，可以查看错误码[E0716](https://doc.rust-lang.org/stable/error_codes/E0716.html)
 
@@ -1185,7 +1183,7 @@ let n = (&foo(),);
 println!("{}", *n.0);
 ```
 
-### 常量
+## 常量
 
 ```rust
 // 必须声明类型
@@ -1197,13 +1195,14 @@ const MAX: u8 = 100;
 - 必须是常量表达式，不能是运行时返回的值；
 - 存活于程序运行全程；
 
-## 项（Item）
+# 项（Items）
 
-> [项](http://localhost/rust/reference/items.html)，是程序文件的一部分，在编译期确定并编译入程序文件，在程序执行期间常驻于内存中，通常是只读内存，**包括可在模块（*Modules*）全局范围内出现的任何声明**。如`struct`,`trait`,`const`,函数（`fn`）等。
+> [项](http://localhost/rust/reference/items.html)，是程序文件的一部分，在编译期确定并编译入程序文件，在程序执行期间常驻于内存中，通常是只读内存，
+> **包括可在模块（*Modules*）全局范围内出现的任何声明**，如`struct`、`trait`、`const`、函数（`fn`）等。
 
-### 模块（Module）
+## 模块（Module）
 
-> [模块](http://localhost/rust/reference/items/modules.html)，是多[项](#项item)的容器，用于项的访问性隔离。*A module is a container for zero or more [items](http://localhost/rust/reference/items.html).*
+> [模块](http://localhost/rust/reference/items/modules.html)，是多[项](#%E9%A1%B9items)的容器，用于项的访问性隔离。*A module is a container for zero or more [items](http://localhost/rust/reference/items.html).*
 
 - 同名模块不能声明多次（不支持遮蔽和扩展）
 - 模块与类型系统共享命名空间，且不能遮蔽
@@ -1282,7 +1281,7 @@ fn main() {
 }
 ```
 
-#### 预导入包（Preludes）
+### 预导入包（Preludes）
 
 > [Preludes](http://localhost/rust/reference/names/preludes.html#extern-prelude): 是一组被自动引入到所有模块的名称。但这些名称并不属于这些模块（不能通过`self::xxx`的方式调用）。
 
@@ -1302,7 +1301,7 @@ fn main() {
 -   [工具预导入包（Tool prelude）](http://localhost/rust/reference/names/preludes.html#tool-prelude)
   - 如目前*rustc*识别的*rustfmt*, *clippy*等工具，详见[tool attributes](http://localhost/rust/reference/attributes.html#tool-attributes)。如`#[rustfmt::skip]`
 
-### 外链库（Extern Crate）
+## 外链库（Extern Crate）
 
 > [外链库](http://localhost/rust/reference/items/extern-crates.html)，在编译时链接的其他（二进制文件）库（*ABI*, *Application Binary Interface*）。尤其用于与其他语言进行交互（*[FFI](https://rustcc.cn/article?id=3b8241d0-c4ca-4f49-8e07-0a5142b00f59)*, *Foregin Function Interface*）
 
@@ -1326,6 +1325,10 @@ cargo引入：
 [dependencies]
 hello = { path: "path/to/hello" }
 ```
+
+# 属性（Attributes）
+
+# 模式（Patterns）
 
 # 表达式和语句
 
@@ -2958,7 +2961,7 @@ fn notify(item: &(impl Summary + Display));
 fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32;
 ```
 
-使用`where`语句简化特征绑定：
+#### `where`语句简化特征绑定
 
 ```rust
 fn some_function<T, U>(t: &T, u: &U) -> i32 where T: Display + Clone, U: Clone + Debug;
@@ -2994,6 +2997,71 @@ fn returns_summarizable(switch: bool) -> Box<dyn Summary> {
 > 装箱类型（`Box`）可以封装不定大小数据（不定类型），在无需确切知道具体类型的上下文中实现动态数据的调用。具体地，`Box`将封装的数据存储在堆上，并在栈中保留一个指向数据的*智能指针（smart pointer）*）
 
 ## 生命周期（Lifetime）
+
+> [生命周期（Lifetime）](http://localhost/rust/book/ch10-03-lifetime-syntax.html)规则用以保证*引用*的存活时间符合我们的需要。
+> 简单情况下，引用的生命周期可以被编译器正确推导，复杂的情况下则需要我们主动进行[生命周期标注](#生命周期标注)。
+
+```rust
+// error[E0106]: missing lifetime specifier
+// help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+
+### 生命周期标注（`'a`）
+
+> 当多个引用传入作用域时，可能会引起生命周期歧义，这时，我们需要对这些引用的生命周期进行明确标注，以使编译器可以顺利地遵循Rust的内存管理规则来保障内存安全。
+> *需要注意的是，引用的生命周期在其声明时便已确定，标注并不会改变引用的生命周期，标注是为了在编译器不清楚的时候告知编译器以保证借用的规则。*
+
+```rust
+&i32        // a reference
+&'a i32     // a reference with an explicit lifetime
+&'a mut i32 // a mutable reference with an explicit lifetime
+```
+
+#### 生命周期泛型（generic lifetime parameters）
+
+```rust
+// 函数
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+// 结构
+struct ImportantExcerpt<'a> { // ImportantExcerpt实例的存活时间不会晚于part字段的存活时间
+    part: &'a str,
+}
+```
+
+> 生命周期泛型标注的含义是：被标注的引用的生命周期不短于该标注泛型来源引用所具有的生命周期，如果来源有多个，则不短于其中最短的一个。
+
+```rust
+fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str()); // error[E0597]: `string2` does not live long enough
+    }
+    println!("The longest string is {}", result); // 由于result生命周期只是不短于string2，故此时无法保证其存活
+//                                       ------ borrow later used here
+
+}
+```
+
+#### 静态生命周期（`'static`）
+
+> 静态生命周期即程序的生命周期。
+
+字符串切片字面即静态生命周期`&'static str`。
 
 # 模式匹配
 
@@ -3093,9 +3161,383 @@ let x = if let Coin::Penny = m {
 
 # 元编程
 
-## 属性
-
 ## 宏
+
+> 根据定义和处理方式的不同，Rust宏分为[声明式宏（Declarative Macros）](#声明式宏)和[过程式宏（Procedural Macros）](#过程式宏)。
+
+### 声明式宏
+
+> **声明式宏（Declarative Macros）**其处理方式类似于`match`，通过对语法树进行模式匹配，并返回其他代码替代原代码注入到编译输出中。
+
+简单定义一个`vec!`宏：
+
+```rust
+let v = vec![1, 2, 3];
+```
+
+```rust
+// 0. 声明所定义的宏在当前包（crate）内可见。
+#[macro_export]
+// 1. 通过关键字`macro_rules!`定义宏。
+//    - `macro_rules!`：开始宏定义
+//    - *vec*：所声明的宏的名称为vec
+//    - `{}`：宏声明的内容
+// 示例声明名为`vec`的宏
+macro_rules! vec {
+  // 2. 定义匹配模式。
+  //    - `()`：捕获整个匹配模式
+  //    - `$`：定义一个宏变量
+  //    - `()`：捕获该宏变量的模式
+  //    - `$x`：定义捕获到的模式的名称
+  //    - `expr`：定义该宏变量的模式（`expr`为Rust表达式）
+  //    - `,`：定义在该模式后可以有个`,`
+  //    - `*`：定义可以捕获该模式的次数（`*`为任意次数）
+  // 示例定义一个接受零个或多个（`*`）表达式（`expr`）作为输入，并定义输入项的形参名为`$x`（`$`前缀以与普通变量区分）
+  ( $($x: expr),* ) => {
+    {
+      let mut temp_vec = Vec::new();
+      // 3. `$()*`里面的代码在每次捕获后都会执行
+      $(
+        temp_vec.push($x);
+      )*
+      temp_vec
+    }
+  };
+}
+```
+
+#### 匹配模式
+
+##### `block`
+
+> 匹配块表达式`{}`
+
+```rust
+macro_rules! blocks {
+    ($($block:block)*) => ();
+}
+
+blocks! {
+    {}
+    {
+        let zig;
+    }
+    { 2 }
+}
+```
+
+##### `expr`
+
+> 匹配任意表达式
+
+```rust
+macro_rules! expressions {
+    ($($expr:expr)*) => ();
+}
+
+expressions! {
+    "literal"
+    funcall()
+    future.await
+    break 'foo bar
+}
+```
+
+##### `ident`
+
+> 匹配标识符（*identifier*）或关键字（*keyword*）
+
+```rust
+macro_rules! idents {
+    ($($ident:ident)*) => ();
+}
+
+idents! {
+    // _ <- This is not an ident, it is a pattern
+    foo
+    async
+    O_________O
+    _____O_____
+}
+```
+
+##### `item`
+
+> 匹配[项目（*Item*）](#%E9%A1%B9items)定义。
+
+```rust
+macro_rules! items {
+    ($($item:item)*) => ();
+}
+
+items! {
+    struct Foo;
+    enum Bar {
+        Baz
+    }
+    impl Foo {}
+    pub use crate::foo;
+    /*...*/
+}
+```
+
+##### `lifetime`
+
+> 匹配生命周期或标签。（`'`）
+
+```rust
+macro_rules! lifetimes {
+    ($($lifetime:lifetime)*) => ();
+}
+
+lifetimes! {
+    'static
+    'shiv
+    '_
+}
+```
+
+##### `literal`
+
+> 匹配字面量（*literal*）。
+
+```rust
+macro_rules! literals {
+    ($($literal:literal)*) => ();
+}
+
+literals! {
+    -1
+    "hello world"
+    2.3
+    b'b'
+    true
+}
+```
+
+##### `meta`
+
+> 匹配[属性（*attributes*）](#属性attributes)的内容。
+
+```rust
+macro_rules! metas {
+    ($($meta:meta)*) => ();
+}
+
+metas! {
+    ASimplePath
+    super::man
+    path = "home"
+    foo(bar)
+}
+```
+
+##### `pat`
+
+> 匹配[模式（*patterns*）](#模式patterns)。
+
+```rust
+macro_rules! patterns {
+    ($($pat:pat)*) => ();
+}
+
+patterns! {
+    "literal"
+    _
+    0..5
+    ref mut PatternsAreNice
+    0 | 1 | 2 | 3
+}
+```
+
+##### `pat_param`
+
+> 匹配[模式（*patterns*）](#模式patterns)。
+
+```rust
+macro_rules! patterns {
+    ($( $( $pat:pat_param )|+ )*) => ();
+}
+
+patterns! {
+    "literal"
+    _
+    0..5
+    ref mut PatternsAreNice
+    0 | 1 | 2 | 3
+}
+```
+
+##### `path`
+
+> 匹配路径
+
+```rust
+macro_rules! paths {
+    ($($path:path)*) => ();
+}
+
+paths! {
+    ASimplePath
+    ::A::B::C::D
+    G::<eneri>::C
+    FnMut(u32) -> ()
+}
+```
+
+##### `stmt`
+
+> 匹配[语句（*Statements*）](#语句statement)。不包括尾部的分号，除非分号是语句构成的一部分（常见于项目*Items*），如单元结构`struct Foo;`。
+
+```rust
+macro_rules! statements {
+    ($($stmt:stmt)*) => ($($stmt)*);
+}
+
+fn main() {
+    statements! {
+        struct Foo; // 单元结构本身需要包含分号
+        fn foo() {}
+        let zig = 3
+        let zig = 3; // 该分号多余（单独构成空语句）
+        3
+        3; // 该分号多余（单独构成空语句）
+        if true {} else {}
+        {}
+    }
+}
+```
+
+编译后的代码：
+
+```rust
+/* snip */
+
+fn main() {
+    struct Foo;
+    fn foo() { }
+    let zig = 3;
+    let zig = 3;
+    ;
+    3;
+    3;
+    ;
+    if true { } else { }
+    { }
+}
+```
+
+##### `tt`
+
+> 匹配[语素树（*TokenTree*）](https://veykril.github.io/tlborm/syntax-extensions/source-analysis.html#token-trees)
+
+##### `ty`
+
+> 匹配类型表达式（*type expressions*）。
+
+```rust
+macro_rules! types {
+    ($($type:ty)*) => ();
+}
+
+types! {
+    foo::bar
+    bool
+    [u8]
+    impl IntoIterator<Item = u32>
+}
+```
+
+##### `vis`
+
+> 匹配可见性限定符（*Visibility Qualifiers*）。可以匹配空内容。
+
+```rust
+macro_rules! visibilities {
+    //         ∨~~Note this comma, since we cannot repeat a `vis` fragment on its own
+    ($($vis:vis,)*) => ();
+}
+
+visibilities! {
+    , // no vis is fine, due to the implicit `?`
+    pub,
+    pub(crate),
+    pub(in super),
+    pub(in some_path),
+}
+```
+
+### 过程式宏
+
+> **过程式宏（Procedural Macros）**接受一些代码作为输入数据（`InputStream`），对其进行操作并返回一些代码注入到编译输出中。
+
+过程宏分为三种：
+
+#### 自定义派生宏
+
+```rust
+use hello_macro::HelloMacro;
+use hello_macro_derive::HelloMacro;
+
+#[derive(HelloMacro)]
+struct Pancakes;
+
+fn main() {
+    Pancakes::hello_macro();
+}
+```
+
+```rust
+use proc_macro::TokenStream;
+use quote::quote;
+use syn;
+
+#[proc_macro_derive(HelloMacro)]
+pub fn hello_macro_derive(input: TokenStream) -> TokenStream {
+    // Construct a representation of Rust code as a syntax tree
+    // that we can manipulate
+    let ast = syn::parse(input).unwrap();
+
+    // Build the trait implementation
+    impl_hello_macro(&ast)
+}
+```
+
+#### 类属性宏
+
+```rust
+#[route(GET, "/")]
+fn index() {
+}
+```
+
+```rust
+#[proc_macro_attribute]
+pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {
+}
+```
+
+#### 类函数宏
+
+```rust
+let sql = sql!(SELECT * FROM posts WHERE id=1);
+```
+
+```rust
+#[proc_macro]
+pub fn sql(input: TokenStream) -> TokenStream {
+}
+```
+
+### 声明式宏和过程式宏
+
+1. 根据两者定义可知，声明式宏通常用于自定义语法扩展，而过程式宏通常用于进行代码注入。
+
+```rust
+let v = vec![1, 2, 3]; // vec![] 是一种语法结构（表达式（`expr`）宏）
+
+format!("hello {}", "world"); // => "hello world"
+```
 
 # WebAssembly
 
