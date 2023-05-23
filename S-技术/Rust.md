@@ -1198,7 +1198,7 @@ const MAX: u8 = 100;
 # 项（Items）
 
 > [项](http://localhost/rust/reference/items.html)，是程序文件的一部分，在编译期确定并编译入程序文件，在程序执行期间常驻于内存中，通常是只读内存，
-> **包括可在模块（*Modules*）全局范围内出现的任何声明**，如`struct`、`trait`、`const`、函数（`fn`）等。
+> **包括可在模块（*Modules*）全局范围内出现的任何声明**，如`struct`、`trait`、`const`、函数（`fn`）、模块（`mod`）等。
 
 ## 模块（Module）
 
@@ -3163,37 +3163,89 @@ let x = if let Coin::Penny = m {
 
 ## 宏
 
-> 根据定义和处理方式的不同，Rust宏分为[声明式宏（Declarative Macros）](#声明式宏)和[过程式宏（Procedural Macros）](#过程式宏)。
+> Rust宏展开（*Expansion*）是在创建AST之前，分词（*Tokenization*）之后，故而传入宏的参数为**词条流（*TokenStream*）**。
+
+> 所谓**词条（*Token*）**，即是语言的最小语义单元，包括标识符、字面量、运算符......，如`+`、`1`、`111`、`{}`都是词条，而`{`、`}`则不是词条。
+
+> 之所以没有在AST后进行宏展开，则是因为Rust本身还处于高速迭代期，AST变动频繁，而词法则相对比较稳定。
+
+根据处理方式的不同，宏分为[声明式宏（Declarative Macros）](#声明式宏)和[过程式宏（Procedural Macros）](#过程式宏)。
+
+[![Rust编译过程](./Rust-compilation.png#h200)](https://juejin.cn/post/6927467074868658189#heading-2)
 
 ### 声明式宏
 
-> **声明式宏（Declarative Macros）**其处理方式类似于`match`，通过对语法树进行模式匹配，并返回其他代码替代原代码注入到编译输出中。
+> **声明（式）宏（Declarative Macros）**，通常也直接叫***宏（*Macros*）***，其处理方式类似于`match`，对词条流（*TokenStream*）进行模式匹配并返回替换内容。
+> 由于宏是在AST之前展开，仅是对词条流进行替换，故无法进行任何类型的计算。关于如何在宏中实现计算，见[过程式宏](#过程式宏)。
 
-简单定义一个`vec!`宏：
+> 在分词阶段，由于嵌套结构的存在，分组标记（即括号`()`,`[]`, `{}`）会形成所谓的**词条树（*Token Tree*）**，宏会根据词条树来确定**宏输入**。而单一词条（*Token*）则是一种特殊的词条树。
+
+宏的定义：
 
 ```rust
-let v = vec![1, 2, 3];
+macro_rules! IDENTIFIER MacroRulesDefinition
+
+MacroRulesDefinition:
+  {MacroRules}
+  /* OR */
+  (MacroRules);
+  /* OR */
+  [MacroRules];
+
+MacroRules:
+  MacroRule (;MacroRule)* ;?
+
+MacroRule:
+  MacroMatcher => MacroTranscriber
+
+MacroMatcher:
+  (MacroMatch*)
+  /* OR */
+  [MacroMatch*]
+  /* OR */
+  {MacroMatch*}
+
+MacroTranscriber:
+  DelimTokenTree
+
+MacroMatch:
+  Exclude<Token, $|DELIMITER> // 可以直接比对纯字面量
+  /* OR */
+  $MetaVariable: MacroFragmentSpecifier // 指定片段的匹配模式，并捕获到元变量`$MetaVariable`
+  /* OR */
+  $(MacroMatch+) MacroRepetitionSeperator? MacroRepetitionOperator // 如需要进行多次匹配，可以指定分隔符和匹配次数
+  /* OR */
+  MacroMatcher
+
+MetaVariable: Exclude<IDENTIFIER|KEYWORD, crate|RAW_IDENTIFIER|_> // 元变量的命名规则
+
+DelimTokenTree :
+  (TokenTree*)
+  /* OR */
+  [TokenTree*]
+  /* OR */
+  {TokenTree*}
+
+TokenTree: Exclude<Token, DELIMITER | DelimTokenTree>
+MacroFragmentSpecifier: block | expr | ident | item | lifetime | literal | meta | pat | pat_param | path | stmt | tt | ty | vis
+MacroRepetitionSeperator: Exclude<Token, DELIMITER | MacroRepetitionOperator>
+MacroRepetitionOperator: * | + | ?
+DELIMITER: ( | ) | [ | ] | { | }
 ```
 
+例如，定义一个名为`vec`的宏：
+
 ```rust
-// 0. 声明所定义的宏在当前包（crate）内可见。
+// 声明所定义的宏在当前包（crate）内可见。
 #[macro_export]
-// 1. 通过关键字`macro_rules!`定义宏。
-//    - `macro_rules!`：开始宏定义
-//    - *vec*：所声明的宏的名称为vec
-//    - `{}`：宏声明的内容
-// 示例声明名为`vec`的宏
+// 关键字`macro_rules!`定义宏
 macro_rules! vec {
-  // 2. 定义匹配模式。
-  //    - `()`：捕获整个匹配模式
-  //    - `$`：定义一个宏变量
-  //    - `()`：捕获该宏变量的模式
-  //    - `$x`：定义捕获到的模式的名称
-  //    - `expr`：定义该宏变量的模式（`expr`为Rust表达式）
-  //    - `,`：定义在该模式后可以有个`,`
-  //    - `*`：定义可以捕获该模式的次数（`*`为任意次数）
-  // 示例定义一个接受零个或多个（`*`）表达式（`expr`）作为输入，并定义输入项的形参名为`$x`（`$`前缀以与普通变量区分）
-  ( $($x: expr),* ) => {
+  // 定义匹配模式：
+  // - 元变量：$x
+  // - 模式：expr
+  // - 分隔符：,
+  // - 重复次数：*
+  ($($x:expr),*) => {
     {
       let mut temp_vec = Vec::new();
       // 3. `$()*`里面的代码在每次捕获后都会执行
@@ -3204,6 +3256,23 @@ macro_rules! vec {
     }
   };
 }
+
+// 宏的调用：
+let a = vec![1, 2, 3];
+// 根据前述宏根据词条树确立输入可知，以下写法都是等价的：
+let a = vec!(1, 2, 3);
+let a = vec!{1, 2, 3};
+```
+
+> 需要注意的是，元变量（*Metavariable*）一旦开始匹配就会最大化匹配（*Maximal Munch*），且不会回溯（~~Backtrack~~）。[Metavariables and Expansion Redux](https://veykril.github.io/tlborm/decl-macros/minutiae/metavar-and-expansion.html)
+
+```rust
+macro_rules! dead_rule {
+  ($e:expr) => { ... };
+  ($i:ident +) => { ... };
+}
+// `x`可以作为表达式，故匹配到expr，但后续`x+`无法构成表达式，由于不会回溯，故会导致报错而非向下匹配。
+dead_rule!(x+); // error: expected expression, found end of macro arguments
 ```
 
 #### 匹配模式
@@ -3245,7 +3314,7 @@ expressions! {
 
 ##### `ident`
 
-> 匹配标识符（*identifier*）或关键字（*keyword*）
+> 匹配标识符（*identifiers*）或关键字（*keywords*）
 
 ```rust
 macro_rules! idents {
@@ -3263,7 +3332,7 @@ idents! {
 
 ##### `item`
 
-> 匹配[项目（*Item*）](#%E9%A1%B9items)定义。
+> 匹配[项目（*Item*）](#%E9%A1%B9items)。
 
 ```rust
 macro_rules! items {
@@ -3370,7 +3439,7 @@ patterns! {
 
 ##### `path`
 
-> 匹配路径
+> 匹配路径（*Path*）
 
 ```rust
 macro_rules! paths {
@@ -3429,7 +3498,17 @@ fn main() {
 
 ##### `tt`
 
-> 匹配[语素树（*TokenTree*）](https://veykril.github.io/tlborm/syntax-extensions/source-analysis.html#token-trees)
+> 匹配[词条树（*TokenTree*）](https://veykril.github.io/tlborm/syntax-extensions/source-analysis.html#token-trees)
+
+```rust
+macro_rules! tts {
+    ($($tt:tt)*) => ($($tt)*2);
+}
+
+tts! {
+  1 +
+}
+```
 
 ##### `ty`
 
@@ -3469,7 +3548,9 @@ visibilities! {
 
 ### 过程式宏
 
-> **过程式宏（Procedural Macros）**接受一些代码作为输入数据（`InputStream`），对其进行操作并返回一些代码注入到编译输出中。
+> 为了解决声明宏无法做计算的问题，Rust引入了**过程（式）宏（Procedural Macros）**。
+
+同样都是对词条流（*TokenStream*）进行变换处理，但声明宏就像它的名字一样，一般用作代码替换，而不直接处理计算问题，故被设计为提供 而过程宏则被设计为更擅长于处理计算问题，其中缘由则是
 
 过程宏分为三种：
 
