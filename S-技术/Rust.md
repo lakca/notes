@@ -3165,7 +3165,9 @@ let x = if let Coin::Penny = m {
 
 > Rust宏展开（*Expansion*）是在创建AST之前，分词（*Tokenization*）之后，故而传入宏的参数为**词条流（*TokenStream*）**。
 
-> 所谓**词条（*Token*）**，即是语言的最小语义单元，包括标识符、字面量、运算符......，如`+`、`1`、`111`、`{}`都是词条，而`{`、`}`则不是词条。
+> 所谓**词条（*Token*）**，即是语言的最小语义单元，包括标识符、字面量、运算符......，如`+`、`1`、`111`、`{}`都是一个词条，而`{`、`}`则不是词条。
+
+> 在分词阶段，由于嵌套结构的存在，分组标记（即括号`()`,`[]`, `{}`）会形成所谓的**词条树（*Token Tree*）**，而单一词条（*Token*）可以看作是一种特殊的词条树。
 
 > 之所以没有在AST后进行宏展开，则是因为Rust本身还处于高速迭代期，AST变动频繁，而词法则相对比较稳定。
 
@@ -3177,8 +3179,6 @@ let x = if let Coin::Penny = m {
 
 > **声明（式）宏（Declarative Macros）**，通常也直接叫***宏（*Macros*）***，其处理方式类似于`match`，对词条流（*TokenStream*）进行模式匹配并返回替换内容。
 > 由于宏是在AST之前展开，仅是对词条流进行替换，故无法进行任何类型的计算。关于如何在宏中实现计算，见[过程式宏](#过程式宏)。
-
-> 在分词阶段，由于嵌套结构的存在，分组标记（即括号`()`,`[]`, `{}`）会形成所谓的**词条树（*Token Tree*）**，宏会根据词条树来确定**宏输入**。而单一词条（*Token*）则是一种特殊的词条树。
 
 宏的定义：
 
@@ -3502,12 +3502,12 @@ fn main() {
 
 ```rust
 macro_rules! tts {
-    ($($tt:tt)*) => ($($tt)*2);
+  ($tt:tt) => { }
 }
 
-tts! {
-  1 +
-}
+tts! { 1 }
+tts! { (1 + 2) }
+tts! { hello }
 ```
 
 ##### `ty`
@@ -3548,61 +3548,26 @@ visibilities! {
 
 ### 过程式宏
 
-> 为了解决声明宏无法做计算的问题，Rust引入了**过程（式）宏（Procedural Macros）**。
+> 为了更好地处理宏计算的问题，Rust提供了**过程（式）宏（Procedural Macros）**，其作用方式类似函数，接受词条流作为输入、处理后返回词条流。其实现宏计算的关键在于借助`syn`和`quote`实现TokenStream和AST之间的转换。
 
-同样都是对词条流（*TokenStream*）进行变换处理，但声明宏就像它的名字一样，一般用作代码替换，而不直接处理计算问题，故被设计为提供 而过程宏则被设计为更擅长于处理计算问题，其中缘由则是
+1. 过程宏必须单独定义在开启`proc-macro`属性的库内：
 
-过程宏分为三种：
-
-#### 自定义派生宏
-
-```rust
-use hello_macro::HelloMacro;
-use hello_macro_derive::HelloMacro;
-
-#[derive(HelloMacro)]
-struct Pancakes;
-
-fn main() {
-    Pancakes::hello_macro();
-}
+```toml
+[lib]
+proc-macro = true
 ```
 
-```rust
-use proc_macro::TokenStream;
-use quote::quote;
-use syn;
+2. 过程宏库编译时总会链接为过程宏提供基础设施（主要是`TokenStream`类型）的`proc_macro`库；
 
-#[proc_macro_derive(HelloMacro)]
-pub fn hello_macro_derive(input: TokenStream) -> TokenStream {
-    // Construct a representation of Rust code as a syntax tree
-    // that we can manipulate
-    let ast = syn::parse(input).unwrap();
-
-    // Build the trait implementation
-    impl_hello_macro(&ast)
-}
-```
-
-#### 类属性宏
-
-```rust
-#[route(GET, "/")]
-fn index() {
-}
-```
-
-```rust
-#[proc_macro_attribute]
-pub fn route(attr: TokenStream, item: TokenStream) -> TokenStream {
-}
-```
+3. `TokenStream`类似`Vec<TokenTree>`，但克隆成本更低；
 
 #### 类函数宏
 
-```rust
-let sql = sql!(SELECT * FROM posts WHERE id=1);
-```
+> **（类）函数宏（*Function-like Macros*）**类似声明宏，用于独立产生代码。
+
+1. 函数宏通过带有`proc_macro`属性的公共函数（`pub`）定义；
+
+2. 函数签名为`(TokenStream) -> TokenStream`，其中参数*TokenStream*为跟随宏调用操作符`!`后面的*Token Tree*；
 
 ```rust
 #[proc_macro]
@@ -3610,15 +3575,86 @@ pub fn sql(input: TokenStream) -> TokenStream {
 }
 ```
 
-### 声明式宏和过程式宏
-
-1. 根据两者定义可知，声明式宏通常用于自定义语法扩展，而过程式宏通常用于进行代码注入。
+> 通过宏调用操作符`!`进行调用。
 
 ```rust
-let v = vec![1, 2, 3]; // vec![] 是一种语法结构（表达式（`expr`）宏）
-
-format!("hello {}", "world"); // => "hello world"
+let sql = sql!(SELECT * FROM posts WHERE id=1);
 ```
+
+#### 派生宏
+
+> **派生宏（*Derived Macros*）**用于修饰结构体（Struct）、枚举（Enum）、联合类型（Union），为其追加项目（*Items*）。
+
+1. 派生宏通过带有`proc_macro_derive`属性的公共函数（`pub`）定义，该属性的第一个参数是宏的名称；
+
+2. 函数的签名为`(TokenStream) -> TokenStream`，其中参数*TokenStream*为`derive`属性所修饰的项目的*Token Tree*，返回的*TokenStream*也必须是一组项目（*Items*），因为会被附加到所修饰项目所在的模块或块中；
+
+```rust
+extern crate proc_macro;
+use proc_macro::TokenStream;
+
+#[proc_macro_derive(AnswerFn)]
+pub fn derive_answer_fn(_item: TokenStream) -> TokenStream {
+    "fn answer() -> u32 { 42 }".parse().unwrap()
+}
+// ...
+extern crate proc_macro_examples;
+use proc_macro_examples::AnswerFn;
+
+#[derive(AnswerFn)]
+struct Struct;
+
+fn main() {
+    assert_eq!(42, answer());
+}
+```
+
+> 派生宏还可以为所修饰项目定添加仅在项目定义范围内可见的属性，可用于修饰结构体字段、枚举项等，这些属性称为**派生宏辅助属性（*Derive Macro Helper Attributes*）**。
+
+1. 辅助属性的定义是通过向`proc_macro_derive`属性增加`attributes(helper0, helper1, ..)`参数，该参数内可添加多个标识符（以逗号分隔），即辅助属性名称。
+
+```rust
+// 定义了一个名为helper的属性
+#[proc_macro_derive(HelperAttr, attributes(helper))]
+pub fn derive_helper_attr(_item: TokenStream) -> TokenStream {
+    TokenStream::new()
+}
+// ...
+#[derive(HelperAttr)]
+struct Struct {
+    #[helper] field: ()
+}
+```
+
+#### 属性宏
+
+> **属性宏（*Attribute Macros*）**
+
+1. 属性宏通过带有`proc_macro_attribute`属性的公共函数（`pub`）定义；
+
+2. 函数签名为`(TokenStream, TokenStream) -> TokenStream`，其中第一个*TokenStream*参数为跟随属性名称的*Token Tree*，第二个*TokenStream*是项目的其余部分，包括项目的其他属性，返回值*TokenStream*包含任意数量的项目用以替换所修饰项目；
+
+```rust
+#[proc_macro_attribute]
+pub fn show_streams(attr: TokenStream, item: TokenStream) -> TokenStream {
+    println!("attr: \"{}\"", attr.to_string());
+    println!("item: \"{}\"", item.to_string());
+    item
+}
+// ...
+extern crate my_macro;
+use my_macro::show_streams;
+
+#[show_streams(bar)]
+fn invoke2() {}
+// out: attr: "bar"
+// out: item: "fn invoke2() {}"
+```
+
+### 声明宏与过程宏
+
+同样都是对词条流（*TokenStream*）进行变换处理，但声明宏就像它的名字所描述的一样，一般用作代码替换，而不直接处理计算问题，故被设计为接受不同范式的输入并坐简单的代码替换。
+而过程宏则被设计为擅长于处理计算问题，接受原始的词条流（*TokenStream*），并提供一些内置方法，以及借助`syn`库将词条流解析为AST进行处理，并借助`quote`库再反解析为词条流。
 
 # WebAssembly
 
