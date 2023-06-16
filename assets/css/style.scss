@@ -54,6 +54,10 @@ html {
       transition: .3s;
       text-decoration: none;
 
+      &:has(img) {
+        display: inline-block;
+      }
+
       &:hover, &.hover {
         &:not(.btn) {
           text-decoration: none;
@@ -114,6 +118,12 @@ html {
     }
 
     img {
+      &[src*="#inline"] {
+        display: inline-block;
+      }
+      &[src*="#scale"] {
+        cursor: pointer;
+      }
       &[src*="#w50"] {
         width: 50%;
       }
