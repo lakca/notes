@@ -50,7 +50,7 @@ title: Web框架
 [![NPM downloads](https://img.shields.io/npm/dw/%40svelteuidev%2Fcore?logo=npm)](https://www.npmjs.com/package/%40svelteuidev%2Fcore)
 [![NPM types](https://img.shields.io/npm/types/%40svelteuidev%2Fcore?logo=npm)](https://www.npmjs.com/package/%40svelteuidev%2Fcore)
 
-![SvelteUI](./SvelteUI.png)
+![SvelteUI](./SvelteUI.png#h100)
 
 ### SvelteStrap
 
@@ -63,9 +63,9 @@ title: Web框架
 [![GitHub stars](https://img.shields.io/github/stars/themesberg/flowbite-svelte.svg)](https://GitHub.com/themesberg/flowbite-svelte/releases/)
 [![GitHub release](https://img.shields.io/github/release/themesberg/flowbite-svelte.svg)](https://GitHub.com/themesberg/flowbite-svelte/releases/)
 [![GitHub tag](https://img.shields.io/github/tag/themesberg/flowbite-svelte.svg)](https://GitHub.com/themesberg/flowbite-svelte/tags/)
-![npm](https://img.shields.io/npm/v/flowbite-svelte)
+![npm](https://img.shields.io/npm/v/flowbite-svelte#inline)
 
-![Flowbite-Svelte](./Flowbite-Svelte.png)
+![Flowbite-Svelte](./Flowbite-Svelte.png#h100)
 
 ## Angular
 
@@ -81,7 +81,7 @@ title: Web框架
 [![GitHub tag](https://img.shields.io/github/tag/saadeghi/daisyui.svg)](https://GitHub.com/saadeghi/daisyui/tags/)
 ![npm](https://img.shields.io/npm/v/daisyui)
 
-![daisyui](./daisyui.png)
+![daisyui](./daisyui.png#h100)
 
 ## tabler
 
@@ -96,7 +96,7 @@ title: Web框架
 [![GitHub tag](https://img.shields.io/github/tag/tabler/tabler.svg)](https://GitHub.com/tabler/tabler/tags/)
 ![npm](https://img.shields.io/npm/v/tabler)
 
-![tabler](./tabler.jpeg)
+![tabler](./tabler.jpeg#h100)
 
 ## UIkit
 
@@ -110,7 +110,9 @@ title: Web框架
 
 # 离线存储
 
-- [localForge](https://github.com/localForage/localForage): 复杂数据结构存储，支持使用`IndexedDB`和`Web SQL`，或（降级）`LocalStorage`存储数据，支持*存储序列化数据*，以及`Blobs`和`TypedArrays`等，API类似*localStorage*。
-- [ImmortalDB](https://github.com/gruns/ImmortalDB): 简单的`key-value`存储，通过同时使用`Cookies`, `IndexedDB`和`LocalStorage`进行冗余存储，最大程度保存数据和保证数据正确性。
-- [PouchDB](https://github.com/pouchdb/pouchdb): 轻量级数据库（*46kb*），在浏览器默认使用`IndexedDB`，或（降级）`Web SQL`，在*NodeJS*则使用本地文件存储。
-- [WebStorageCache](https://github.com/wuchangming/web-storage-cache): `LocalStorage`和`SessionStorage`增强，支持超时和序列化。
+| 库                                                                  | 描述                                                                                                                                                            |
+| ------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [localForge](https://github.com/localForage/localForage)            | 复杂数据结构存储，支持使用`IndexedDB`和`Web SQL`，或（降级）`LocalStorage`存储数据，支持*存储序列化数据*，以及`Blobs`和`TypedArrays`等，API类似*localStorage*。 |
+| [ImmortalDB](https://github.com/gruns/ImmortalDB)                   | 简单的`key-value`存储，通过同时使用`Cookies`, `IndexedDB`和`LocalStorage`进行冗余存储，最大程度保存数据和保证数据正确性。                                       |
+| [PouchDB](https://github.com/pouchdb/pouchdb)                       | 轻量级数据库（*46kb*），在浏览器默认使用`IndexedDB`，或（降级）`Web SQL`，在*NodeJS*则使用本地文件存储。                                                        |
+| [WebStorageCache](https://github.com/wuchangming/web-storage-cache) | `LocalStorage`和`SessionStorage`增强，支持超时和序列化。                                                                                                        |
