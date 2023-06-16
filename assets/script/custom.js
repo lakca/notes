@@ -610,7 +610,8 @@
       const img = el('img')
       .attr('src', e.target.src)
       .attr(ident('previewing'), true)
-      .style('width', '100%')
+      .style('width', 'auto')
+      .style('height', 'auto')
       .on('load', () => modal.loading(false))
       .el
       modal.wrap.appendChild(img)
@@ -897,7 +898,7 @@ html, body {
 	left: 0px;
   margin: auto;
   border-radius: 5px;
-  border: 1px solid transparent;
+  backdrop-filter: blur(2px);
 }
 #${ident('modal')} {
   position: fixed;
