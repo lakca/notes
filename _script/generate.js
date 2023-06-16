@@ -171,5 +171,6 @@ function green() {
 if (IS_COMMIT) {
   spawnSync('git', ['add', '-f', `${ROOT}/${INDEX_FILE}`])
   spawnSync('git', ['add', '-f', `[^_]*/**/${INDEX_FILE}`])
+  spawnSync('git', ['reset', `node_modules/**/${INDEX_FILE}`])
   spawnSync('git', ['commit', '-m', 'update index'])
 }
