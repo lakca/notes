@@ -164,7 +164,7 @@ html {
       line-height: 2em;
 
       p {
-        margin: 1em 0;
+        margin-block: .5em;
       }
 
       h1,
@@ -176,6 +176,7 @@ html {
         font-family: $inlineBlockFonts;
         font-weight: bold;
         color: #006bff;
+        margin: 1rem 0;
       }
 
       h1 {

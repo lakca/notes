@@ -182,13 +182,13 @@
 
     document.body.appendChild(modal)
     document.body.classList.add(ident('overflow-hidden'))
-    createCloseButton(modal, function() {
+    createCloseButton(modal, function () {
       modal.remove()
       document.body.classList.remove(ident('overflow-hidden'))
     })
 
     modal.wrap = wrap
-    modal.loading = function(force) {
+    modal.loading = function (force) {
       if (force === false) {
         if (loading) {
           loading.destroy()
@@ -391,7 +391,7 @@
         plv = lv
       }
       close()
-      return chain.find(e => e).join('')
+      return chain.find(e => e)?.join('')
     },
     mountMenu() {
 
@@ -608,15 +608,19 @@
     if (e.target.tagName === 'IMG' && !e.target.hasAttribute(ident('previewing')) && e.target.parentElement.tagName !== 'A') {
       const modal = createModal()
       const img = el('img')
-      .attr('src', e.target.src)
-      .attr(ident('previewing'), true)
-      .style('width', 'auto')
-      .style('height', 'auto')
-      .on('load', () => modal.loading(false))
-      .el
-      modal.wrap.appendChild(img)
+        .attr('src', e.target.src)
+        .attr(ident('previewing'), true)
+        .on('load', () => modal.loading(false))
+      if (e.target.src.indexOf('.svg') > -1) {
+        img.style('min-width', '100vw')
+          .style('min-height', '100vh')
+      } else {
+        img.style('width', 'auto')
+          .style('height', 'auto')
+      }
+      modal.wrap.appendChild(img.el)
       modal.loading()
-      if (img.complete) {
+      if (img.el.complete) {
         modal.loading(false)
       }
     }
@@ -663,7 +667,7 @@ html, body {
 }
 @media (max-width: 104rem) {
   .${ident('custom')}.${ident('has-menu')} {
-    padding-left: 25rem;
+    padding-left: 20rem;
   }
   .${ident('custom')} {
     transition: padding-left .3s;
@@ -675,15 +679,12 @@ html, body {
 .${ident('custom')}.${ident('closed')} .${ident('menu')}{
   left: -30rem;
 }
-.${ident('h1')} {
-  font-size: 1.1em;
-}
 .${ident('menu')} {
   position: fixed;
   z-index: 999;
   left: 0;
   top: 0;
-  width: 25rem;
+  width: 20rem;
   max-width: 90%;
   border: solid 1em transparent;
   border-bottom-width: 70px;
@@ -835,17 +836,17 @@ html, body {
   transition: .3s;
 }
 .${ident('menu')}::-webkit-scrollbar-thumb,
-.${ident('global-nav')} > div > ul ::-webkit-scrollbar-thumb {
+.${ident('global-nav')} > div > ul::-webkit-scrollbar-thumb {
   background-image: linear-gradient(180deg, #00f2ff, #006bff);
 }
 .${ident('menu')}::-webkit-scrollbar,
-.${ident('global-nav')} > div > ul ::-webkit-scrollbar {
+.${ident('global-nav')} > div > ul::-webkit-scrollbar {
   width: 5px;
   height: 5px;
   border-radius: 2px;
 }
 .${ident('menu')}::-webkit-scrollbar-track,
-.${ident('global-nav')} > div > ul ::-webkit-scrollbar-track {
+.${ident('global-nav')} > div > ul::-webkit-scrollbar-track {
   box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.2);
   border-radius: 2px;
 }
