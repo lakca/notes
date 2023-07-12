@@ -91,6 +91,9 @@ html {
         border-radius: 4px;
         background-color: #282a36;
       }
+      &:has(code.language-mermaid[data-processed="true"]) {
+        background-color: #f3f6fa;
+      }
     }
 
     .language- {
