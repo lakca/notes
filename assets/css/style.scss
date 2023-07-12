@@ -17,6 +17,10 @@
   text-transform: capitalize;
 }
 
+.highlight {
+  background-color: unset;
+}
+
 html {
   font-size: 16px;
 
@@ -28,7 +32,30 @@ html {
   $codeFonts: Fira Code, Operator Mono, Inconsolata, Hack, Droid Sans Mono, DejaVu Sans Mono, Consolas, Liberation Mono, Menlo, monospace;
   $shellFonts: Fira Mono for Powerline, Inconsolata for Powerline, Droid Sans Mono for Powerline, DejaVu Sans Mono for Powerline, $codeFonts;
 
+  &[theme="dark"] {
+    background-color: #1e1e20;
+    font-size: 18px;
+    body {
+      color: #d3d3d3;
+      blockquote {
+        background-color: unset;
+      }
+      a {
+        color: dodgerblue;
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: darkgray;
+      }
+    }
+  }
+
   body {
+    color: #383838;
     .text-highlight, em, b, strong {
       padding: 0 1px;
       transition: .1s;
@@ -162,8 +189,7 @@ html {
     }
 
     .main-content {
-      color: #383838;
-      font-size: 1rem;
+      font-size: inherit;
       line-height: 2em;
 
       p {
@@ -179,7 +205,7 @@ html {
         font-family: $inlineBlockFonts;
         font-weight: bold;
         color: #006bff;
-        margin: 1rem 0;
+        margin: 2rem 0;
       }
 
       h1 {

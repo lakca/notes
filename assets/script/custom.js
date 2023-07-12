@@ -649,6 +649,12 @@
   }
 
   el('style').attr('id', ident('style')).html(`
+[theme="dark"] .${ident('menu')} {
+  background-color: #1e1e20;
+}
+[theme="dark"] .${ident('menu')} a {
+  color: #d3d3d3;
+}
 html, body {
   min-width: 100%;
   min-height: 100%;
@@ -667,7 +673,7 @@ html, body {
 }
 @media (max-width: 104rem) {
   .${ident('custom')}.${ident('has-menu')} {
-    padding-left: 20rem;
+    padding-left: 24rem;
   }
   .${ident('custom')} {
     transition: padding-left .3s;
@@ -684,7 +690,7 @@ html, body {
   z-index: 999;
   left: 0;
   top: 0;
-  width: 20rem;
+  width: 24rem;
   max-width: 90%;
   border: solid 1em transparent;
   border-bottom-width: 70px;
@@ -719,12 +725,12 @@ html, body {
   transform: rotate(90deg);
   transition: .2s;
 }
-.${ident('menu')} li.${ident('close')} > ul {
+.${ident('menu')} li.${ident('close')}:not(:has(.hover)) > ul {
   height: 0;
   margin: 0;
   overflow: hidden;
 }
-.${ident('menu')} li.${ident('close')} > .${ident('handle')} {
+.${ident('menu')} li.${ident('close')}:not(:has(.hover)) > .${ident('handle')} {
   transform: rotate(0);
 }
 .${ident('bar')} {

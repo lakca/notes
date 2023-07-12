@@ -147,7 +147,7 @@ date: 2021-04-19T11:13:31.973Z
 
 [Ferris](https://www.rustacean.net/):
 
-![Ferris](https://rustacean.net/static/rustacean-orig-noshadow.svg#h200)
+![Ferris](ferris.svg#h200)
 
 ### 语言习惯
 
@@ -1711,6 +1711,20 @@ assert_eq!(None, scores.get("Yellow"));
 
 > 引用，一种借用（可访问但不转移所有权）数据的手段。
 > *A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
 
 [![reference](./Rust-reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
 
