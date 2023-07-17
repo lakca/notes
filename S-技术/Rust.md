@@ -1024,14 +1024,11 @@ let a = "ha"; // 声明新 a 的时候，Rust 会将旧 a 销毁
 
 ## 数据所有权（Ownership）
 
-> *Rust*没有垃圾回收器（~~Runtime Garbage Collector~~），一般情况下也无需手动释放（~~Manully Free~~）内存。通过在**编译时**检查**所有权机制**，对变量和数据进行绑定标记，来保证内存*用完即毁*。
-> *Rust*的这一自动销毁机制是在编译时确定的，没有运行时的额外开销（~~如引用计数、线程暂停~~等）。
+> *Rust*没有运行时，所以也没有垃圾回收器，但一般情况下却无需手动释放内存。这是通过编译器检查**所有权机制**实现的，通过对变量（Stack）和数据（Heap）进行所有权绑定，来保证数据在变量用完即毁，显然，这种实现没有运行时开销。
 
-> *In Rust, memory is managed through a system of ownership with a set of rules that the compiler checks at compile time. None of the ownership features slow down your program while it’s running.*
+所有权的基本规则为：
 
-所有权规则为：
-
-1. 每个值都有一个变量对应着，这个变量即**所有者（Owner）**；
+1. 每个值都有一个所有者（Owner）；
 2. 每个值同一时刻只有一个所有者；
 3. 当所有者的作用范围结束时，值即被自动销毁；
 
@@ -1044,21 +1041,26 @@ fn main() {
 }
 ```
 
-当涉及到变量间的**赋值操作**时，包括：
+## 数据调用（Munipulation）
 
-- 变量赋值
-- 函数传参
-- 函数返回
-- 模式匹配（`match`，`if let`等）
-- ......
+数据调用主要表现为数据的传递，如变量间赋值、传入函数、函数返回、数据解构...，不同的操作对数据的访问深度可能不同，为了保证数据调用的性能，Rust提供了多种数据传递的处理方式供开发者选择。
+包括：
 
-数据有可能会被[复制（Copy）](#数据复制copy)，也有可能被[转移所有权（Move）](#数据所有权转移move)。
+- **Move**，即转移数据所有权。
+- **Copy**，即复制数据。
+- **Borrow**，即借用（完成引用）数据。
+
+### 数据拷贝（Copy）
+
+> 对于直接分配在栈（*Stack*）中的数据，在传递时执行复制（*Copy*）操作（即推入执行栈）。这类数据主要为标量，包括字面量（数字、字符（串）、布尔值）和非显式分配在堆中的数字（包括指针）和布尔值。
+
+![data-copy](./Rust-data-copy.svg#h200)
 
 ### 数据所有权转移（Move）
 
-> 当把存储**对象**的变量赋值给其他变量时，*Rust*默认执行转移（*Move*）操作。
+> 对于分配在堆内存（*Heap*）中的数据，数据复制将涉及到分配空内存、复制数据，以及碎片整理等操作，为了保持性能，Rust在进行数据传递时默认转移（*Move*）数据的所有权（即复制指针），而非（深度）复制（即[克隆](#数据克隆clone)）数据。
 
-> 所谓**对象**，即在运行时进行分配，存储在堆（*heap*）中，由指针进行调用的值，包括除了字面量和标量类型以外的所有类型的值。
+![ownership-move](./Rust-ownership-move.svg#h200)
 
 ```rust
 let s1 = String::from("hello");
@@ -1066,19 +1068,9 @@ let s2 = s1;
 println!("{}", s1); // error[E0382]: borrow of moved value: `s1`
 ```
 
-![ownership-move](./Rust-ownership-move.svg#h200)
+### 数据克隆（Clone）
 
-### 数据复制（Copy）
-
-> 当把存储**标量**的变量赋值给其他变量时，*Rust*默认执行数据复制（*Copy*）操作。
-
-> 所谓**标量**，即在编译时便已分配好，存储在栈（*stack*）中直接调用的值，包括字面量和标量类型的值。
-
-![data-copy](./Rust-data-copy.svg#h200)
-
-#### 数据深复制（Clone）
-
-> 如果你不想转移复杂值的所有权，从而使原有变量失效，而是复制一份给被赋值变量，那么需要执行深拷贝（*Clone*）操作。
+> 当然在需要的时候，你也可以显式克隆（深度复制）堆数据。
 
 ```rust
 let s1 = String::from("hello");
@@ -1088,13 +1080,30 @@ assert_eq!(s1, s2);
 
 ### 数据借用（Borrow）
 
-> 通过[引用](#引用)，可以在不转移数据所有权的情况下，实现对数据的调用。
+> 由于转移数据所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#引用)以借用数据的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#指针pointer)调用数据。
+
+借用可以存在多个，但为了避免数据冲突，实现借用（有效引用）也是需要遵循一定规则的：
+
+1. 可变性（可写）借用不能同时存在多个；
+2. 不可变性（只读）借用与可变性借用不能同时存在；
+
+⚠️ 需要特别指出的是，虽然创建[引用](#引用)的目的是借用数据，但*数据借用*和*创建引用*仍需要严格区分开来：只有引用在创建后有被调用过，借用才成立，该引用才会被纳入数据竞争规则中考虑。例如：
 
 ```rust
 let mut a = String::from("hello");
-let b = &mut a; // b 是一个无效引用，所以并不影响 c
+let mut b = &mut a; // 这里创建的引用b并未借用数据，因为b从未被使用过，所以借用机制的检查并没有纳入b
 let c = &a;
-println!("{}", c);
+assert_eq!("hello", c);
+```
+
+⚠️ 另外需要注意的细节是，通过某个引用完成的最后一次借用会立即让引用失效，即借用检查机制在引用完成其最后一次借用时将其抛弃。详见下例：
+
+```rust
+let mut a = String::from("hello");
+let mut b = &mut a;
+*b = String::form("world"); // b的借用到此结束，借用机制不再考察b引用
+let c = &a;
+assert_eq!("world", c);
 ```
 
 ## 生命周期（Lifetime）
@@ -1709,8 +1718,7 @@ assert_eq!(None, scores.get("Yellow"));
 
 ### 引用`&`
 
-> 引用，一种借用（可访问但不转移所有权）数据的手段。
-> *A reference is just a pointer that is assumed to be aligned, not null, and pointing to memory containing a valid value of T.*
+> 引用，一种[借用](#数据借用borrow)（不转移数据所有权进行数据访问）数据的手段。
 
 ```rust
 fn main() {
@@ -1728,16 +1736,6 @@ fn calculate_length(s: &String) -> usize {
 
 [![reference](./Rust-reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
 
-根据[所有权](#数据所有权ownership)章节我们知道，赋值会转移（*Move*）数据所有权（*Ownership*），使原变量失效。
-显然有时候这样做将增加内部代码逻辑的冗余，比如将值传入子作用域（如函数）时，如果在外部仍想访问该值，则需要将值从子作用域返回。
-为了简化类似场景的调用，我们自然想到可以通过地址即指针来进行处理，在Rust中，指针通常不是直接暴露的，而是通过提供*引用*或其他封装对象进行提供，以适配所有权机制从而实现内存安全。
-
-- 引用分为可变引用（`&mut`, `ref mut`）和不可变引用（`&`, `ref`）。
-- 引用也是一个变量（广义左值），其有效作用域（有效存在）开始于引用声明，结束于该引用最后一次使用。
-- 在不造成数据竞争（*Date Races*）的情况下，引用可以同时存在多个，并遵循[借用规则](#借用borrow)。
-- 可变引用可以转换成不可变引用。
-- 长周期引用可以转换成短周期引用。
-
 > Note: *Historically, Rust kept the borrow alive until the end of scope, so these examples might fail to compile with older compilers. Also, there are still some corner cases where Rust fails to properly shorten the live part of the borrow and fails to compile even when it looks like it should. These'll be solved over time. [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
 
 ```rust
@@ -1745,18 +1743,6 @@ fn add(a: &mut String) {
   a.push_str(", world")
 }
 ```
-
-#### 借用（Borrow）
-
-> 引用生效了就叫做借用（*Borrow*），与转移（*Move*）所有权相对应。
-
-若一个变量只是被赋值了一个引用，而该变量并没有被调用（借用），那么这个变量相当于无效变量，引用也是一个无效的引用。
-
-借用遵循如下规则：
-
-- 同时存在多个不可变引用；
-- 同时存在多个可变引用；
-- 不可同时存在可变和不可变引用；
 
 #### 悬空引用（Dangling Reference）
 
@@ -1785,7 +1771,15 @@ fn demo() -> &'static str {
 
 ### 原始指针（Raw Pointers）
 
-> *Raw, unsafe pointers, `*const T`, and `*mut T`.*
+> `*const T`、`*mut T`，直接进行指针操作。
+
+```rust
+fn main() {
+    let arr: [u8; 3] = [1, 2, 3];
+    let first = (&arr).as_ptr() as usize;
+    unsafe { assert_eq!(arr[1], *((first + 1) as *const u8).as_ref().unwrap()) }
+}
+```
 
 ## 智能指针（Smart Pointers）
 
@@ -1891,15 +1885,15 @@ enum List {
 
 ### 单线程引用计数`Rc<T>`
 
-> `Rc<T>`通过在堆上二级指针存储数据地址和引用次数，允许通过*强引用*共享数据所有权，当*强引用*次数为0时，数据释放。
+> `Rc<T>`通过在堆上二级指针存储数据地址和引用次数，通过*强引用*共享数据所有权，当*强引用*次数为0时，数据释放。
 
-根据借用规则，只能通过*不可变引用*创建引用计数。但有时候确实需要改变数据，这将涉及到[内部可变性（*Interior Mutability*）](#内部可变性interior-mutability)的问题。
+由于`Rc<T>`会共享所有权，根据借用规则（避免修改竞争），只能通过*不可变引用*创建引用计数。但有时候确实需要改变数据，这将涉及到[内部可变性（*Interior Mutability*）](#内部可变性interior-mutability)的问题。
 
 ```rust
 use std::rc::{Rc, Weak};
 let rc: Rc<u8> = Rc::new(1);
 let rc_strong: Rc<u8> = Rc::clone(&rc);
-let rc_weak: Weak<u8> = Rc::downgrade(&rc);
+let rc_weak: Weak<u8> = Rc::downgrade(&rc); // 见"弱引用 Weak<T>"
 assert_eq!(Rc::strong_count(&rc), 2);
 assert_eq!(Rc::weak_count(&rc), 1);
 ```
@@ -1955,14 +1949,30 @@ println!("count after creating c = {}", Rc::strong_count(&a));
 
 ### 内部可变性（Interior Mutability）
 
-有些符合[借用规则](#借用borrow)的场景是在运行时才显现出来的，无法通过（编译器）对代码的静态分析识别。
-为了使这部分代码能够顺利通过编译，就需要通过某种方式告知编译器我们在**运行时保证[借用规则](#借用borrow)**，
-对照借用规则换句话说就是，如何**实现在运行时对不可变引用进行修改**，即**内部可变性（*Interior Mutability*）**机制。
+> 若某种结构所封装的数据的可变性是独立的，即该结构不可变时也可获取内部数据的可变调用，那么该结构实现了内部可变性。
 
-### 单线程运行时借用`RefCell<T>`
+⚠️ 内部可变性本质上都是通过非安全的`unsafe`的指针操作实现，之所以有这些概念和结构的封装和提供，就是为了尽可能地减少开发者直接操作指针，以减少可能的内存泄露。
 
-> `RefCell<T>`：一个不在编译时而是在运行时执行借用规则的类型。
-> 也就是说即使`RefCell<T>`不可变，你也可以更改其内部值。
+### 单线程内部可变`Cell<T>`
+
+> `Cell<T>`：一个可变内存位置（*mutable memory location*）。（即内部数据指针可变）
+
+```rust
+use std::cell::Cell;
+fn main() {
+  let a = Cell::new(1);
+  a.set(2);
+  assert_eq!(2, a.get());
+}
+```
+
+### 单线程内部可变运行时借用`RefCell<T>`
+
+某些符合[借用规则](#数据借用borrow)的场景是在运行时才分析出来的，无法通过（编译器）对代码的静态分析识别。
+为了使这部分代码能够顺利通过编译，就需要通过某种方式告知编译器不要检查这个数据的借用，我们会在运行时保证的。
+简单来说就是，**在运行时可变借用不可变数据**，`RefCell<T>`即是实现了这种机制的结构。
+
+> `RefCell<T>`：一个动态检查借用规则的可变内存位置。也就是说即使`RefCell<T>`不可变，你也可以更改其内部值。
 
 ```rust
 let msg = RefCell::new(String::from("hello"));
@@ -1971,6 +1981,36 @@ ref_msg.borrow_mut().push_str("!");
 let msg = ref_msg.borrow();
 let msg: &str = msg.as_ref();
 assert_eq!("hello!", msg);
+```
+
+### 单线程弱引用`Weak<T>`
+
+> 与`Rc<T>`不同，`Weak<T>`为弱引用，不会共享数据所有权，故内存回收也不会考虑弱引用的数量。
+
+当*内部可变性*同引用计数`Rc<T>`结合使用不当时，可能会造成循环引用，需要根据逻辑判断将部分引用改为弱引用，在需要的时候再进行“强化”。比如：
+
+```rust
+use std::cell::RefCell;
+use std::rc::{Rc, Weak};
+
+#[derive(Debug)]
+struct Node {
+  children: RefCell<Vec<Rc<Node>>>,
+  parent: RefCell<Weak<Node>>
+}
+
+fn main() {
+  let leaf = Rc::new(Node {
+    children: RefCell::new(vec![]),
+    parent: RefCell::new(Weak::new())
+  });
+  let branch = Rc::new(Node {
+    children: RefCell::new(vec![Rc::clone(&leaf)]),
+    parent: RefCell::new(Weak::new())
+  });
+  *leaf.parent.borrow_mut() = Rc::downgrade(&branch);
+  println!("{:?}", leaf.parent.borrow().upgrade())
+}
 ```
 
 ### 原子引用计数`Arc<T>`
