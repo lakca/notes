@@ -150,6 +150,7 @@ html {
     img {
       &[src*="#inline"] {
         display: inline-block;
+        vertical-align: middle;
       }
       &[src*="#scale"] {
         cursor: pointer;

@@ -1237,6 +1237,8 @@ git log A B --not $(git merge-base --all A B)
 
 ### 格式化
 
+[时间格式](https://git-scm.com/docs/git-log#Documentation/git-log.txt---dateltformatgt)
+
 ```bash
 # 指定每条日志的整体格式：
 --pretty=oneline|short|medium|full|fuller|reference|email|raw|format:<string>|tformat:<string>
@@ -1255,6 +1257,14 @@ git log A B --not $(git merge-base --all A B)
 
 # 指定日志中时间的格式：
 --date=relative|local|iso|iso-strict|rfc|short|raw|human|unix|default|format:...
+
+# relative: `2 hours ago`
+# short: `2022-02-22`
+# unix: Unix时间戳
+# raw: 带时区的Unix时间戳
+# iso: `2022-02-22 12:09:12 +0800`
+# iso-strict: `2022-02-22T12:09:12+08:00`
+# format: 传递给`strftime`处理
 
 # 使用短的 Commit ID：
 --abbrev-commit
@@ -1283,15 +1293,16 @@ git log A B --not $(git merge-base --all A B)
 --format=<format-string>
 ```
 
-| 内容               | 占位符                                                                                                                                                                          |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| 换行               | `%n`                                                                                                                                                                            |
-| 切换颜色           | `%Cred`,`%Cgreen`,`%Cblue`,`%Creset`                                                                                                                                            |
-| 提交哈希值         | `%h`, `%H`                                                                                                                                                                      |
-| 提交信息           | *Subject*：`%s`；*Body*：`%b`, `%B`；*Note*：`%N`                                                                                                                               |
-| （*Author*）作者名 | `%an`, `%aN`（*Committer*相应地改成`%cn`, `%cN`，下同）                                                                                                                         |
-| 作者提交时间       | `%ah` (*human*), `%as` (*YYYY-MM-DD*), `%aI` (*ISO 8601*), `%ai` (*ISO 8601*), `%at` (*UNIX*), `%ar` (*relative*), `%aD` (*RFC2822*), `%ad` (*Fri, 24 Dec 2021 16:11:27 +0800*) |
-| 作者邮箱           | `%ae`, `%aE`, `%al`, `%aL`                                                                                                                                                      |
+| 内容                                                                                | 占位符                                                                                                                                                                          |
+| ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| 换行                                                                                | `%n`                                                                                                                                                                            |
+| 对齐                                                                                | `%<(<N>[,trunc                                                                                                                                                                  | ltrunc | mtrunc])`（下一个占位符至少占用N列，`<`改成`>`则在左侧填充） |
+| 切换[颜色](#https://git-scm.com/docs/git-config#Documentation/git-config.txt-color) | `%Cred`,`%Cgreen`,`%Cblue`,`%Creset`, `%C(...)`                                                                                                                                 |
+| 提交哈希值                                                                          | `%h`, `%H`                                                                                                                                                                      |
+| 提交信息                                                                            | *Subject*：`%s`；*Body*：`%b`, `%B`；*Note*：`%N`                                                                                                                               |
+| （*Author*）作者名                                                                  | `%an`, `%aN`（*Committer*相应地改成`%cn`, `%cN`，下同）                                                                                                                         |
+| 作者提交时间                                                                        | `%ah` (*human*), `%as` (*YYYY-MM-DD*), `%aI` (*ISO 8601*), `%ai` (*ISO 8601*), `%at` (*UNIX*), `%ar` (*relative*), `%aD` (*RFC2822*), `%ad` (*Fri, 24 Dec 2021 16:11:27 +0800*) |
+| 作者邮箱                                                                            | `%ae`, `%aE`, `%al`, `%aL`                                                                                                                                                      |
 
 ### 其他
 
@@ -1436,23 +1447,6 @@ blame指定的文件行：
 
 ## fsck
 
-### 找回删掉的文件
-
-> 如果一个文件有被`add`但没被提交过，该文件还是可以找回的，因为生成了*blob*。
-
-```bash
-for i in `git fsck --unreachable | grep blob | cut -d\  -f3`; do `git cat-file -p $i |  grep 干支` && echo $i; done
-```
-
-### 列出已被清理的stash：
-
-```bash
-# WIP是stash message的特征文字，如果你自定义过，修改即可
-> git fsck --unreachable |
-grep commit | cut -d\  -f3 |
-xargs git log --merges --no-walk --grep=WIP
-```
-
 ## rev-list（列出某个提交中的对象）
 
 ## shortlog（根据提交人分组统计提交）
@@ -1499,16 +1493,87 @@ git update-index --skip-worktree/--no-skip-worktree <file>
 ## gc
 > Clean up unnecessary files and optimize the local repository.
 
-## 更多技巧
+# 更多技巧
 
-### 获取git项目根目录
+## 找回删掉的文件
+
+> 如果一个文件有被`add`但没被提交过，该文件还是可以找回的，因为生成了*blob*。
+
+```bash
+for i in `git fsck --unreachable | grep blob | cut -d\  -f3`; do `git cat-file -p $i |  grep 干支` && echo $i; done
+```
+
+## 列出已被清理的stash：
+
+```bash
+# WIP是stash message的特征文字，如果你自定义过，修改即可
+> git fsck --unreachable |
+grep commit | cut -d\  -f3 |
+xargs git log --merges --no-walk --grep=WIP
+```
+
+## 获取git项目根目录
 > `git rev-parse --show-toplevel`
 
-### 不检测指定文件变动
+## 不检测指定文件变动
 > `git update-index --assume-unchanged <file>`
 > [REF](https://stackoverflow.com/questions/1274057/how-to-make-git-forget-about-a-file-that-was-tracked-but-is-now-in-gitignore#answer-20241145)
 
-### `git update-index --skip-worktree <file>`
+## `git update-index --skip-worktree <file>`
+
+# 常见问题
+
+## `git status`中文显示成了一段数字（字符编码）：
+
+`git config --global core.quotepath false`
+
+# 配置
+
+[Git Config](https://git-scm.com/docs/git-config#Documentation/git-config)
+
+获取所有配置名称：
+```bash
+git help -c
+```
+
+常见配置：
+
+| 配置名称                      | 数据类型或示例        |                                |
+| ----------------------------- | --------------------- | ------------------------------ |
+| `core.editor`                 | `code --wait`         |                                |
+| `core.quotepath`              | `<bool>`              | 输出时是否转义路径中的特殊字符 |
+| `http.proxy`                  |                       |                                |
+| `https.proxy`                 |                       |                                |
+| `credential.username`         |                       |                                |
+| `user.name`                   |                       |                                |
+| `user.email`                  |                       |                                |
+| `author.name`                 |                       |                                |
+| `author.email`                |                       |                                |
+| `committer.name`              |                       |                                |
+| `committer.email`             |                       |                                |
+| `branch.<branch>.remote`      | `origin`              |                                |
+| `branch.<branch>.merge`       | `refs/heads/develop`  |                                |
+| `branch.<branch>.description` | `默认开发分支`        |                                |
+| `remote.<remote>.url`         |                       |                                |
+| `color.status`                | `<bool>`              |                                |
+| `color.status.untracked`      | `<color>`             |                                |
+| `color.status.added`          | `<color>`             |                                |
+| `pager.branch`                | `<bool>`              |                                |
+| `pager.log`                   | `<bool>`              |                                |
+| `pretty.<format_name>`        | [`<format>`](#格式化) | 保存自定义的日志输出格式       |
+
+# 环境变量
+
+[内置环境变量](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
+
+常见变量：
+
+- `GIT_AUTHOR_NAME`
+- `GIT_AUTHOR_EMAIL`
+- `GIT_AUTHOR_DATE`
+- `GIT_COMMITTER_NAME`
+- `GIT_COMMITTER_EMAIL`
+- `GIT_COMMITTER_DATE`
 
 # Startup
 
@@ -1636,31 +1701,6 @@ git update-index --skip-worktree/--no-skip-worktree <file>
 
 > Move object and refs by archive.
 
-# 配置
-
-常见配置：
-
-- `credential.username`
-- `user.name`
-- `user.email`
-- `author.name`
-- `author.email`
-- `committer.name`
-- `committer.email`
-
-# 环境变量
-
-[内置环境变量](https://git-scm.com/book/en/v2/Git-Internals-Environment-Variables)
-
-常见变量：
-
-- `GIT_AUTHOR_NAME`
-- `GIT_AUTHOR_EMAIL`
-- `GIT_AUTHOR_DATE`
-- `GIT_COMMITTER_NAME`
-- `GIT_COMMITTER_EMAIL`
-- `GIT_COMMITTER_DATE`
-
 # Github
 
 ## API
@@ -1669,9 +1709,3 @@ git update-index --skip-worktree/--no-skip-worktree <file>
 
 
 [officialDoc]: https://www.git-scm.com/docs
-
-# 常见问题
-
-## `git status`中文显示成了一段数字（字符编码）：
-
-`git config --global core.quotepath false`

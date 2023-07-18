@@ -1080,14 +1080,14 @@ assert_eq!(s1, s2);
 
 ### 数据借用（Borrow）
 
-> 由于转移数据所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#引用)以借用数据的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#指针pointer)调用数据。
+> 由于转移数据所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#%E5%BC%95%E7%94%A8reference)以借用数据的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#指针pointer)调用数据。
 
 借用可以存在多个，但为了避免数据冲突，实现借用（有效引用）也是需要遵循一定规则的：
 
 1. 可变性（可写）借用不能同时存在多个；
 2. 不可变性（只读）借用与可变性借用不能同时存在；
 
-⚠️ 需要特别指出的是，虽然创建[引用](#引用)的目的是借用数据，但*数据借用*和*创建引用*仍需要严格区分开来：只有引用在创建后有被调用过，借用才成立，该引用才会被纳入数据竞争规则中考虑。例如：
+⚠️ 需要特别指出的是，虽然创建[引用](#%E5%BC%95%E7%94%A8reference)的目的是借用数据，但*数据借用*和*创建引用*仍需要严格区分开来：只有引用在创建后有被调用过，借用才成立，该引用才会被纳入数据竞争规则中考虑。例如：
 
 ```rust
 let mut a = String::from("hello");
@@ -1521,6 +1521,128 @@ loop {
 let a = loop { break 1 }
 ```
 
+# 枚举和模式匹配（Pattern Matching）
+
+> Rust枚举是一种特殊的[结构体](#结构struct)，不仅可以存储各种动态或静态值，还可以绑定方法等，具体见[面向对象编程-枚举](#枚举enum)。
+
+```rust
+struct QuitMessage; // unit struct
+struct MoveMessage { x: i32, y: i32, }
+struct WriteMessage(String); // tuple struct
+struct ChangeColorMessage(i32, i32, i32); // tuple struct
+```
+
+## `Option<T>`
+
+> 从限制空值（*null*）的普遍性并提高代码的安全性考虑，Rust并未提供空值类型，而是通过提供复合类型`Option<T>`枚举包装可空值，以迫使程序显式处理空值。
+
+```rust
+pub enum Option<T> {
+  Some(T),
+  None,
+}
+```
+
+`Option<T>`, `Some(T)`均已被预先导入（*Prelude*），可直接使用：
+
+```rust
+let some_char = Some('e');
+let some_number: Option<i8> = Some(5);
+let absent_number: Option<i8> = None;
+```
+
+## `match`
+
+> 使用 `match` 表达式通过一系列的匹配模式（*Patterns*）来比对（*Matching*）值。
+
+- 一旦进入分支就不再向下匹配；
+- 声明分支必须全面无遗漏（*Exhaustive*）;
+- 支持通配模式`_`以处理剩余值；
+- 匹配模式可以是字面量、变量名、通配符以及其他等等，具体可见 *Pattern* 章节；
+
+```rust
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+let five = Some(5);
+let six = plus_one(five);
+let none = plus_one(None);
+```
+
+## `if let`
+
+> 使用 `if let` 可以进行非全面（*non-exhaustive*）匹配。
+
+```rust
+let m = Coin::Penny;
+if let Coin::Penny = m {
+  println!("Penny!");
+}
+```
+
+# 错误处理（Error Handling）
+
+Rust有两种基础的错误处理方式：
+
+1. 通过`panic!(errMsg:)`抛出错误，并立即终止程序执行，通常用于开发调试阶段。
+2. 通过`Result<T,E>`枚举包装错误，并传递给后续程序进行处理。
+
+```rust
+enum Result<T, E> {
+  Ok(T),
+  Err(E),
+}
+```
+
+对于`Result<T,E>`的处理方式，通常有两种：
+
+1. 通过`match`或`if let`模式匹配进行处理：
+
+```rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => {
+                panic!("Problem opening the file: {:?}", other_error);
+            }
+        },
+    };
+}
+```
+
+2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：
+
+```rust
+use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
+}
+```
+
+3. 通过`?`调用，解包结果或将错误冒泡：
+
+```rust
+fn last_char_of_first_line(text: &str) -> Option<char> {
+    text.lines().next()?.chars().last()
+}
+```
+
 # 类型系统（Type System）
 
 > [类型系统](https://doc.rust-lang.org/reference/type-system.html)
@@ -1654,25 +1776,6 @@ let e1 = a[0];
 let e_err = a[10]; // exit with error
 ```
 
-### 切片`[T]`
-
-> [切片](http://doc.rust-lang.org/reference/types/slice.html)是DST类型，表示T类型的元素序列的视图。
-> （*A slice is a dynamically sized type representing a 'view' into a sequence of elements of type `T`. The slice type is written as `[T]`.*）
-
-切片是[动态大小类型](#动态大小类型dst)，只能通过指针类型进行调用，如：
-
-- `&[T]`，**共享切片（引用）**，通常简称为**切片**
-- `&mut [T]`，**可变切片（引用）**
-- `Box<[T]>`，**堆化切片**，
-
-```rust
-let a = [1, 2, 3, 4, 5];
-let slice = &a[1..3];
-assert_eq!(slice, &[2, 3]);
-```
-
-切片引用：![Slice](./Rust-slice.svg#h300)
-
 ### 字典`HashMap<T,V>`
 
 > 字典类型`HashMap`是标准库（`std`）实现的类型，但需要手动导入。
@@ -1706,7 +1809,7 @@ assert_eq!(None, scores.get("Yellow"));
 
 ## 动态大小类型（DST）
 
-> 如果一个类型的大小不能在编译期确定，则称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#切片t)和[特征对象](#特征对象trait-object)。
+> 如果一个类型的大小不能在编译期确定，则称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#%E5%88%87%E7%89%87t)和[特征对象](#特征对象trait-object)。
 
 动态大小类型只能在以下场景调用：
 
@@ -1716,9 +1819,11 @@ assert_eq!(None, scores.get("Yellow"));
 
 ## 指针（Pointer）
 
-### 引用`&`
+### 引用（Reference）
 
 > 引用，一种[借用](#数据借用borrow)（不转移数据所有权进行数据访问）数据的手段。
+
+[![reference](./Rust-reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
 
 ```rust
 fn main() {
@@ -1734,15 +1839,7 @@ fn calculate_length(s: &String) -> usize {
 }
 ```
 
-[![reference](./Rust-reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
-
-> Note: *Historically, Rust kept the borrow alive until the end of scope, so these examples might fail to compile with older compilers. Also, there are still some corner cases where Rust fails to properly shorten the live part of the borrow and fails to compile even when it looks like it should. These'll be solved over time. [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
-
-```rust
-fn add(a: &mut String) {
-  a.push_str(", world")
-}
-```
+> ⚠️在早期版本，Rust一直保持借用直到作用域结束。同时，也存在一些Rust无法正确缩短借用周期的极端情况，但这些在后续版本都会持续解决。 [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
 
 #### 悬空引用（Dangling Reference）
 
@@ -1777,7 +1874,7 @@ fn demo() -> &'static str {
 fn main() {
     let arr: [u8; 3] = [1, 2, 3];
     let first = (&arr).as_ptr() as usize;
-    unsafe { assert_eq!(arr[1], *((first + 1) as *const u8).as_ref().unwrap()) }
+    unsafe { assert_eq!(arr[1], *((first + 1) as *const usize).as_ref().unwrap()) }
 }
 ```
 
@@ -1794,20 +1891,76 @@ fn main() {
 
 ### 字符串`String`
 
-#### 字符串切片（`str`）
-
-> `str`类型的实质是`[u8]`类型，即`u8`类型的[切片](#切片t)，但Rust额外保证了`str`中保存的是有效的*UTF-8*编码。
+> 字符串`String`，是一个保证了元素为有效的*UTF-8*编码的字节（`u8`）向量（`Vec<u8>`）的智能指针。
 
 ```rust
-let s = "hello";
-let s: &str = "hello";
-let s: &'static str = "hello";
-let s: &[u8] = b"hello";
+// 源代码中 String 构造函数：
+impl String {
+  pub const fn new() -> String {
+      String { vec: Vec::new() }
+  }
+}
 ```
 
 #### 字符串字面量
 
-由于字面量是直接存储在编译好的文件中的，且字符串是*序列类型（Sequence）*，又由于字面量的生命周期是静态的，故字符串字面量的完整类型为`&'static str`，因为编译器可自动推断，通常简写为`&str`或省略。
+如果我们都是通过字节码来初始化字符串，那将是这样的：
+
+```rust
+fn main() {
+  let s = String::from_utf8(vec![104, 101, 108, 108, 111]).unwrap();
+  assert_eq!(s, "hello");
+}
+```
+
+很显然以上方式非常不直观，而且性能较低（校验UTF-8），所以我们通常都是通过字面量而非字节序列来初始化或赋值字符串：
+
+```rust
+fn main() {
+  let mut s1 = String::new();
+  s1.push_str("hello");
+  let s2 = String::from("hello");
+  assert_eq!(s1, s2);
+}
+```
+
+在源代码中，`from`和`push_str`的函数签名为：
+
+```rust
+fn from(s: &str) -> String
+// ...
+pub fn push_str(&mut self, &str)
+```
+
+可以看出，字符串字面量的类型为`&str`，即[字符串切片引用](#字符串切片str)。
+但实际上，由于涉及到数据生命周期的原因，真正的字符串字面量的签名为`&'static str`，只不过，对于字面量而言，其生命周期是静态的（`'static`），所以通常省略进行简写。
+
+### 切片`[T]`
+
+> [切片](http://doc.rust-lang.org/reference/types/slice.html)`[T]`，表示元素类型为`T`的序列（如数组、向量、字符串等）的局部连续片段。
+
+根据切片的定义可以知道，切片`[T]`本身是没有大小（片段长度）定义的，即切片为[动态大小的类型](#动态大小类型dst)。
+所以在实际中我们并不能直接定义切片`[T]`，而是需要通过某些方式使其大小确定下来，即通过**智能指针**进行调用。
+这其中最常见的就是通过**切片引用**`&[T]`的方式：
+
+```rust
+fn main() {
+  let arr: [u8; 3] = [1, 2, 3];
+  let arr_slice: &[u8] = &s[0..1];
+}
+```
+
+> 所以，我们通常也将**切片引用`&[T]`简称为切片**。
+
+### 字符串切片（`str`）
+
+> 字符串切片`str`即[`String`](#字符串string)的切片。类似[切片和切片引用](#切片t)的关系，**字符串切片引用`&str`也通常简称为字符串切片**。
+
+```rust
+let s = String::from("hello world");
+let world = &s[6..11];
+```
+![String Slice](./Rust-slice.svg#h300)
 
 ### 向量`Vec<T>`
 
@@ -1883,9 +2036,10 @@ enum List {
 }
 ```
 
-### 单线程引用计数`Rc<T>`
+### 单线程计数引用`Rc<T>`
 
-> `Rc<T>`通过在堆上二级指针存储数据地址和引用次数，通过*强引用*共享数据所有权，当*强引用*次数为0时，数据释放。
+> 引用计数`Rc<T>`在堆上二级指针存储数据地址和引用次数，通过*强引用*共享数据所有权，当*强引用*次数为0时，数据释放。
+> 线程安全引用计数见[`Arc<T>`](#原子引用计数arct)
 
 由于`Rc<T>`会共享所有权，根据借用规则（避免修改竞争），只能通过*不可变引用*创建引用计数。但有时候确实需要改变数据，这将涉及到[内部可变性（*Interior Mutability*）](#内部可变性interior-mutability)的问题。
 
@@ -1947,43 +2101,7 @@ let c = Cons(4, Rc::clone(&a));
 println!("count after creating c = {}", Rc::strong_count(&a));
 ```
 
-### 内部可变性（Interior Mutability）
-
-> 若某种结构所封装的数据的可变性是独立的，即该结构不可变时也可获取内部数据的可变调用，那么该结构实现了内部可变性。
-
-⚠️ 内部可变性本质上都是通过非安全的`unsafe`的指针操作实现，之所以有这些概念和结构的封装和提供，就是为了尽可能地减少开发者直接操作指针，以减少可能的内存泄露。
-
-### 单线程内部可变`Cell<T>`
-
-> `Cell<T>`：一个可变内存位置（*mutable memory location*）。（即内部数据指针可变）
-
-```rust
-use std::cell::Cell;
-fn main() {
-  let a = Cell::new(1);
-  a.set(2);
-  assert_eq!(2, a.get());
-}
-```
-
-### 单线程内部可变运行时借用`RefCell<T>`
-
-某些符合[借用规则](#数据借用borrow)的场景是在运行时才分析出来的，无法通过（编译器）对代码的静态分析识别。
-为了使这部分代码能够顺利通过编译，就需要通过某种方式告知编译器不要检查这个数据的借用，我们会在运行时保证的。
-简单来说就是，**在运行时可变借用不可变数据**，`RefCell<T>`即是实现了这种机制的结构。
-
-> `RefCell<T>`：一个动态检查借用规则的可变内存位置。也就是说即使`RefCell<T>`不可变，你也可以更改其内部值。
-
-```rust
-let msg = RefCell::new(String::from("hello"));
-let ref_msg = &msg;
-ref_msg.borrow_mut().push_str("!");
-let msg = ref_msg.borrow();
-let msg: &str = msg.as_ref();
-assert_eq!("hello!", msg);
-```
-
-### 单线程弱引用`Weak<T>`
+### 弱计数引用`Weak<T>`
 
 > 与`Rc<T>`不同，`Weak<T>`为弱引用，不会共享数据所有权，故内存回收也不会考虑弱引用的数量。
 
@@ -2015,130 +2133,335 @@ fn main() {
 
 ### 原子引用计数`Arc<T>`
 
+> 原子引用计数`Arc<T>`（*Atomically Reference Counted*）
+
+```rust
+use std::sync::Arc;
+use std::thread;
+
+let val = Arc::new(0);
+for i in 0..10 {
+    let val = Arc::clone(&val);
+
+    // You could not do this with "Rc"
+    thread::spawn(move || {
+        println!(
+            "Value: {:?} / Active pointers: {}",
+            *val+i,
+            Arc::strong_count(&val)
+        );
+    });
+}
+```
+
+### 内部可变性（Interior Mutability）
+
+> 若某种结构所封装的数据的可变性是独立的，即该结构不可变时也可获取内部数据的可变调用，那么该结构实现了内部可变性。
+
+⚠️ 内部可变性本质上都是通过非安全的`unsafe`的指针操作实现，之所以有这些概念和结构的封装和提供，就是为了尽可能地减少开发者直接操作指针，以减少可能的内存泄露。
+
+### 内部可变`Cell<T>`
+
+> `Cell<T>`：一个可变内存位置（*mutable memory location*）。（即内部数据指针可变）
+
+```rust
+use std::cell::Cell;
+fn main() {
+  let a = Cell::new(1);
+  a.set(2);
+  assert_eq!(2, a.get());
+}
+```
+
+### 内部可变借用`RefCell<T>`
+
+某些符合[借用规则](#数据借用borrow)的场景是在运行时才分析出来的，无法通过（编译器）对代码的静态分析识别。
+为了使这部分代码能够顺利通过编译，就需要通过某种方式告知编译器不要检查这个数据的借用，我们会在运行时保证的。
+简单来说就是，**在运行时可变借用不可变数据**，`RefCell<T>`即是实现了这种机制的结构。
+
+> `RefCell<T>`：一个动态检查借用规则的可变内存位置。也就是说即使`RefCell<T>`不可变，你也可以更改其内部值。
+
+```rust
+let msg = RefCell::new(String::from("hello"));
+let ref_msg = &msg;
+ref_msg.borrow_mut().push_str("!");
+let msg = ref_msg.borrow();
+let msg: &str = msg.as_ref();
+assert_eq!("hello!", msg);
+```
+
 ## 抽象类型（Abstract）
 
 > 抽象类型不直接作为值类型被使用，而是用于修饰值类型，以支持动态入参能力，从而提供更抽象的代码复用能力，如[特征](#特征trait)和[泛型](#泛型generic)。
 
-# 枚举和模式匹配（Pattern Matching）
+# 模块系统（Module System）
 
-> Rust枚举是一种特殊的[结构体](#结构struct)，不仅可以存储各种动态或静态值，还可以绑定方法等，具体见[面向对象编程-枚举](#枚举enum)。
+## 包
+
+> 包（*Package*）是一个包含包配置文件（*Cargo.toml*）和库（*Crates*）的文件夹。（*A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.*）
+
+- 一个包（*package*）只可以包含一个库资源文件（*crate library*）树；
+- 一个包（*package*）可以包含多个库可执行文件（*crate binary*）树；
+
+## 库
+
+> 库（*crate*）是 rust 的一个编译单元。
+> 库（*crate*）可以是一个可执行文件（*Crate binary*）的源文件树，或一个库资源文件（*Crate library*）的源文件树。（*A crate is a binary or library. A tree of modules that produces a library or executable.*）
+
+库资源文件（*crate library*）：用于代码引入，所以一个 *package* 只有一个 *crate library*，且与 *package* 同名。
+
+可执行文件（*crate binary*）：用于编译成可执行文件文件直接单独运行，所以可以有多个。
+
+文件树，是因为入口文件可以引入其他依赖文件。
+
+*Cargo* 约定：
+
+- *src/main.rs* 作为 *package* 同名 *crate binary* 的入口文件；
+- *src/lib.rs* 作为 *package* 同名 *crate library* 的入口文件；
+- *src/bin* 作为一个存放其他 *crate binary* 的文件夹；
+
+## 路径
+
+> 通过 *paths* 来定位目标模块或模块资源。
+> *paths* 是一串用双冒号（`::`）连起来的标识符，可以理解为一个用于定位模块或模块资源的命名空间链。
 
 ```rust
-struct QuitMessage; // unit struct
-struct MoveMessage { x: i32, y: i32, }
-struct WriteMessage(String); // tuple struct
-struct ChangeColorMessage(i32, i32, i32); // tuple struct
+// 加载模块 (src/lib.rs)
+pub mod demo; // ./demo.rs
+
+// 引入路径 (src/*)
+use std::io;
+use crate::demo;
+
+// 直接调用 (src/*)
+std::io::stdout();
 ```
 
-## `Option<T>`
+## 模块
 
-> 从限制空值（*null*）的普遍性并提高代码的安全性考虑，Rust并未提供空值类型，而是通过提供复合类型`Option<T>`枚举包装可空值，以迫使程序显式处理空值。
+> 通过模块（*Module*）封装代码，创建作用域（*Scope*）隔离功能层次，并控制代码的可见性（*public or private*）。（*Let you control the organization, scope, and privacy of paths.*）
+
+实际上可以把模块（*module*）理解为一个具名的作用域（*named scope*），特殊之处是在该作用域中可以手动控制其内部资源的暴露并通过特殊方式访问。所以默认情况下，模块有作用域同样的规则：
+
+- 模块内部对模块父域（*parent scope*）默认不可见，通过 `pub` 暴露；
+- 同级域的资源（*siblings*）互相可见；
+- 父域（*parent scope*）对其中的模块（*module in the scope*）可见；
+
+具体用法：
+
+### 创建模块-`mod`
+
+> 通过 `mod` 标记创建模块（*module*）。
 
 ```rust
-pub enum Option<T> {
-  Some(T),
-  None,
+mod a {
+  fn demo() {}
 }
 ```
 
-`Option<T>`, `Some(T)`均已被预先导入（*Prelude*），可直接使用：
+### 加载模块-`mod`
+
+> 在实际中，不同的功能模块可能需要放在单独的文件、甚至单独的文件夹中进行归类。
+> 而 *cargo* 的入口文件是固定的（*src/lib.rs* 和 *src/main.rs*），对于其他文件内的模块，我们将通过 `mod` 来进行加载（可以理解为注册到当前 *crate*）。
+
+1. 加载当前目录下文件：
 
 ```rust
-let some_char = Some('e');
-let some_number: Option<i8> = Some(5);
-let absent_number: Option<i8> = None;
+mod demo; // 同目录下 demo.rs
 ```
 
-## `match`
-
-> 使用 `match` 表达式通过一系列的匹配模式（*Patterns*）来比对（*Matching*）值。
-
-- 一旦进入分支就不再向下匹配；
-- 声明分支必须全面无遗漏（*Exhaustive*）;
-- 支持通配模式`_`以处理剩余值；
-- 匹配模式可以是字面量、变量名、通配符以及其他等等，具体可见 *Pattern* 章节；
+2. 加载子目录下文件：
 
 ```rust
-fn plus_one(x: Option<i32>) -> Option<i32> {
-    match x {
-        None => None,
-        Some(i) => Some(i + 1),
+/// src/a/b.rs
+pub fn test() {}
+
+/// src/a.rs
+pub mod b; // 找向当前文件同名目录
+
+/// src/main.rs
+mod a;
+a::b::test();
+```
+
+3. 加载的同时暴露：
+
+```rust
+// 加载，并在当前文件中暴露该模块
+pub mod demo;
+
+fn main {
+  demo::test()
+}
+```
+
+### 暴露模块-`pub`
+
+> 通过 `pub` 标记暴露模块（*module*）或模块内容（*module inners*）给父域（*parent scope*）。
+
+```rust
+pub mod a {
+  pub fn demo() {}
+}
+```
+
+> 还可以在导出模块时自定义模块的可见性。
+
+仅模块自己可见，相当于 `pub`
+
+```rs
+pub(self) a
+```
+
+最远到父模块可见
+
+```rs
+pub(super) a
+```
+
+最远到项目可见
+
+```rs
+pub(crate) a
+```
+
+最远到指定祖先模块可见
+
+```rs
+pub(in a::b) a
+```
+
+### 相对路径之库根模块-`crate`
+
+> 用 `crate` 表示当前crate根（*current crate root*）。
+
+```rust
+// src/lib.rs 是 library 的入口文件，故而 C 应该是 src/lib.rs 文件中的一级 module
+crate::C::demo();
+```
+
+### 相对路径之父级模块-`super`
+
+> 用 `super` 表示父域（*parent scope*），实现相对路径引入。
+
+```rust
+fn demo() {};
+
+mod A {
+  fn demo1() {
+    // 父域始终可见，无需 pub 暴露
+    super::demo();
+  }
+
+  mod B {
+    fn demo2() {
+      // 父域始终可见，无需 pub 暴露
+      super::demo1();
     }
-}
-
-let five = Some(5);
-let six = plus_one(five);
-let none = plus_one(None);
-```
-
-## `if let`
-
-> 使用 `if let` 可以进行非全面（*non-exhaustive*）匹配。
-
-```rust
-let m = Coin::Penny;
-if let Coin::Penny = m {
-  println!("Penny!");
+  }
 }
 ```
 
-# 错误处理（Error Handling）
+### 相对路径之当前模块-`self`
 
-Rust有两种基础的错误处理方式：
-
-1. 通过`panic!(errMsg:)`抛出错误，并立即终止程序执行，通常用于开发调试阶段。
-2. 通过`Result<T,E>`枚举包装错误，并传递给后续程序进行处理。
+> 用 `self` 表示当前域（*current scope*），实现相对路径引入。
 
 ```rust
-enum Result<T, E> {
-  Ok(T),
-  Err(E),
+/// 假设当前文件不是crate根文件：
+mod A {
+  pub mod B {
+    pub fn demo() {}
+  }
+}
+self::A::B::demo();
+// 或
+use self::A::B;
+B::demo();
+```
+
+模块暴露的详细：
+
+```rust
+mod back_of_house {
+  /// 1. struct类型：struct 需要声明 pub, 被访问的属性也需要声明 pub；
+  /// 若结构本身及其属性有未声明 pub 的，则结构无法直接在外部使用（初始化结构）
+  pub struct Breakfast {
+    pub toast: String,
+    seasonal_fruit: String,
+  }
+  /// 由于 Breakfast 有私有属性，故需要提供公有的结构函数才可以将结构间接暴露出去
+  impl Breakfast {
+    pub fn summer(toast: &str) -> Breakfast {
+      Breakfast {
+        toast: String::from(toast),
+        seasonal_fruit: String::from("peaches"),
+      }
+    }
+  }
+  /// 2. enum类型：enum 自身声明 pub 即可；
+  pub enum Appetizer {
+    Soup,
+    Salad,
+  }
+}
+pub fn eat_at_restaurant() {
+  let order1 = back_of_house::Appetizer::Soup;
+  let order2 = back_of_house::Appetizer::Salad;
+  let mut meal = back_of_house::Breakfast::summer("Rye");
+  meal.toast = String::from("Wheat");
+  println!("I'd like {} toast please", meal.toast);
+  meal.seasonal_fruit = String::from("blueberries"); // 报错，seasonal_fruit 为私有属性
 }
 ```
 
-对于`Result<T,E>`的处理方式，通常有两种：
+### 引入路径-`use`
 
-1. 通过`match`或`if let`模式匹配进行处理：
+> 通过 `use` 在当前域（*current scope*）中引入路径（*paths*）。相当于在当前域（*current scope*）中给指定路径（*paths*）创建了一个软链接/别名。如 `use std::io; let s = io::stdout();`。(*Adding `use` and a path in a scope is similar to creating a symbolic link in the filesystem. *)
+
+- \* 在 *Rust* 代码中不存在引入（*import*）包一说，只要注册到 *Rust* 或者 *Cargo*（*dependencies*）的 *Crate* 都可以直接调用，如 `std::io::stdout();`。使用 `use` 只是为了清晰代码依赖结构和简便书写 `use std::io; let s = io.stdout();`，
+- `use` 默认是绝对路径；
+- `use` 支持 *glob* 通配符；
+
+1. 引入当前 *crate* 的 *paths* ：
 
 ```rust
-use std::fs::File;
-use std::io::ErrorKind;
-
-fn main() {
-    let greeting_file_result = File::open("hello.txt");
-
-    let greeting_file = match greeting_file_result {
-        Ok(file) => file,
-        Err(error) => match error.kind() {
-            ErrorKind::NotFound => match File::create("hello.txt") {
-                Ok(fc) => fc,
-                Err(e) => panic!("Problem creating the file: {:?}", e),
-            },
-            other_error => {
-                panic!("Problem opening the file: {:?}", other_error);
-            }
-        },
-    };
-}
+use crate::B::demo;
 ```
 
-2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：
+2. 引入其他 *crate* 的 *paths* ：
 
 ```rust
-use std::fs::File;
-
-fn main() {
-    let greeting_file = File::open("hello.txt")
-        .expect("hello.txt should be included in this project");
-}
+use std::io;
 ```
 
-3. 通过`?`调用，解包结果或将错误冒泡：
+3. 同时引入多个 *paths* ：
 
 ```rust
-fn last_char_of_first_line(text: &str) -> Option<char> {
-    text.lines().next()?.chars().last()
-}
+/// self 代表上一级模块本身
+use std::io::{self, stdout}; // 同时引入 io 和 stdout
+```
+
+4. 通配符匹配 *paths* ：
+
+```rust
+use std::io::*; // 引入 io 下面所有 pub 资源
+```
+
+5. 更改当前域（*current scope*）中的 *paths* （`use .. as ..`）：
+
+```rust
+use std::io::stdout as io_stdout;
+
+use std::io::{self as io, stdout as io_stdout};
+```
+
+6. 引入并在当前域暴露 *paths* （`pub use`）：
+
+通过 `pub use` 将引入的内容再次暴露（*re-exporting*）出去。
+
+```rust
+pub use B::demo;
+demo();
 ```
 
 # 函数式编程（FP）
@@ -2733,276 +3056,6 @@ fn main() {
 
 字符串切片字面即静态生命周期`&'static str`。
 
-# 模块系统（Module System）
-
-## 包
-
-> 包（*Package*）是一个包含包配置文件（*Cargo.toml*）和库（*Crates*）的文件夹。（*A package is one or more crates that provide a set of functionality. A package contains a Cargo.toml file that describes how to build those crates.*）
-
-- 一个包（*package*）只可以包含一个库资源文件（*crate library*）树；
-- 一个包（*package*）可以包含多个库可执行文件（*crate binary*）树；
-
-## 库
-
-> 库（*crate*）是 rust 的一个编译单元。
-> 库（*crate*）可以是一个可执行文件（*Crate binary*）的源文件树，或一个库资源文件（*Crate library*）的源文件树。（*A crate is a binary or library. A tree of modules that produces a library or executable.*）
-
-库资源文件（*crate library*）：用于代码引入，所以一个 *package* 只有一个 *crate library*，且与 *package* 同名。
-
-可执行文件（*crate binary*）：用于编译成可执行文件文件直接单独运行，所以可以有多个。
-
-文件树，是因为入口文件可以引入其他依赖文件。
-
-*Cargo* 约定：
-
-- *src/main.rs* 作为 *package* 同名 *crate binary* 的入口文件；
-- *src/lib.rs* 作为 *package* 同名 *crate library* 的入口文件；
-- *src/bin* 作为一个存放其他 *crate binary* 的文件夹；
-
-## 路径
-
-> 通过 *paths* 来定位目标模块或模块资源。
-> *paths* 是一串用双冒号（`::`）连起来的标识符，可以理解为一个用于定位模块或模块资源的命名空间链。
-
-```rust
-// 加载模块 (src/lib.rs)
-pub mod demo; // ./demo.rs
-
-// 引入路径 (src/*)
-use std::io;
-use crate::demo;
-
-// 直接调用 (src/*)
-std::io::stdout();
-```
-
-## 模块
-
-> 通过模块（*Module*）封装代码，创建作用域（*Scope*）隔离功能层次，并控制代码的可见性（*public or private*）。（*Let you control the organization, scope, and privacy of paths.*）
-
-实际上可以把模块（*module*）理解为一个具名的作用域（*named scope*），特殊之处是在该作用域中可以手动控制其内部资源的暴露并通过特殊方式访问。所以默认情况下，模块有作用域同样的规则：
-
-- 模块内部对模块父域（*parent scope*）默认不可见，通过 `pub` 暴露；
-- 同级域的资源（*siblings*）互相可见；
-- 父域（*parent scope*）对其中的模块（*module in the scope*）可见；
-
-具体用法：
-
-### 创建模块-`mod`
-
-> 通过 `mod` 标记创建模块（*module*）。
-
-```rust
-mod a {
-  fn demo() {}
-}
-```
-
-### 加载模块-`mod`
-
-> 在实际中，不同的功能模块可能需要放在单独的文件、甚至单独的文件夹中进行归类。
-> 而 *cargo* 的入口文件是固定的（*src/lib.rs* 和 *src/main.rs*），对于其他文件内的模块，我们将通过 `mod` 来进行加载（可以理解为注册到当前 *crate*）。
-
-1. 加载当前目录下文件：
-
-```rust
-mod demo; // 同目录下 demo.rs
-```
-
-2. 加载子目录下文件：
-
-```rust
-/// src/a/b.rs
-pub fn test() {}
-
-/// src/a.rs
-pub mod b; // 找向当前文件同名目录
-
-/// src/main.rs
-mod a;
-a::b::test();
-```
-
-3. 加载的同时暴露：
-
-```rust
-// 加载，并在当前文件中暴露该模块
-pub mod demo;
-
-fn main {
-  demo::test()
-}
-```
-
-### 暴露模块-`pub`
-
-> 通过 `pub` 标记暴露模块（*module*）或模块内容（*module inners*）给父域（*parent scope*）。
-
-```rust
-pub mod a {
-  pub fn demo() {}
-}
-```
-
-> 还可以在导出模块时自定义模块的可见性。
-
-仅模块自己可见，相当于 `pub`
-
-```rs
-pub(self) a
-```
-
-最远到父模块可见
-
-```rs
-pub(super) a
-```
-
-最远到项目可见
-
-```rs
-pub(crate) a
-```
-
-最远到指定祖先模块可见
-
-```rs
-pub(in a::b) a
-```
-
-### 相对路径之库根模块-`crate`
-
-> 用 `crate` 表示当前crate根（*current crate root*）。
-
-```rust
-// src/lib.rs 是 library 的入口文件，故而 C 应该是 src/lib.rs 文件中的一级 module
-crate::C::demo();
-```
-
-### 相对路径之父级模块-`super`
-
-> 用 `super` 表示父域（*parent scope*），实现相对路径引入。
-
-```rust
-fn demo() {};
-
-mod A {
-  fn demo1() {
-    // 父域始终可见，无需 pub 暴露
-    super::demo();
-  }
-
-  mod B {
-    fn demo2() {
-      // 父域始终可见，无需 pub 暴露
-      super::demo1();
-    }
-  }
-}
-```
-
-### 相对路径之当前模块-`self`
-
-> 用 `self` 表示当前域（*current scope*），实现相对路径引入。
-
-```rust
-/// 假设当前文件不是crate根文件：
-mod A {
-  pub mod B {
-    pub fn demo() {}
-  }
-}
-self::A::B::demo();
-// 或
-use self::A::B;
-B::demo();
-```
-
-模块暴露的详细：
-
-```rust
-mod back_of_house {
-  /// 1. struct类型：struct 需要声明 pub, 被访问的属性也需要声明 pub；
-  /// 若结构本身及其属性有未声明 pub 的，则结构无法直接在外部使用（初始化结构）
-  pub struct Breakfast {
-    pub toast: String,
-    seasonal_fruit: String,
-  }
-  /// 由于 Breakfast 有私有属性，故需要提供公有的结构函数才可以将结构间接暴露出去
-  impl Breakfast {
-    pub fn summer(toast: &str) -> Breakfast {
-      Breakfast {
-        toast: String::from(toast),
-        seasonal_fruit: String::from("peaches"),
-      }
-    }
-  }
-  /// 2. enum类型：enum 自身声明 pub 即可；
-  pub enum Appetizer {
-    Soup,
-    Salad,
-  }
-}
-pub fn eat_at_restaurant() {
-  let order1 = back_of_house::Appetizer::Soup;
-  let order2 = back_of_house::Appetizer::Salad;
-  let mut meal = back_of_house::Breakfast::summer("Rye");
-  meal.toast = String::from("Wheat");
-  println!("I'd like {} toast please", meal.toast);
-  meal.seasonal_fruit = String::from("blueberries"); // 报错，seasonal_fruit 为私有属性
-}
-```
-
-### 引入路径-`use`
-
-> 通过 `use` 在当前域（*current scope*）中引入路径（*paths*）。相当于在当前域（*current scope*）中给指定路径（*paths*）创建了一个软链接/别名。如 `use std::io; let s = io::stdout();`。(*Adding `use` and a path in a scope is similar to creating a symbolic link in the filesystem. *)
-
-- \* 在 *Rust* 代码中不存在引入（*import*）包一说，只要注册到 *Rust* 或者 *Cargo*（*dependencies*）的 *Crate* 都可以直接调用，如 `std::io::stdout();`。使用 `use` 只是为了清晰代码依赖结构和简便书写 `use std::io; let s = io.stdout();`，
-- `use` 默认是绝对路径；
-- `use` 支持 *glob* 通配符；
-
-1. 引入当前 *crate* 的 *paths* ：
-
-```rust
-use crate::B::demo;
-```
-
-2. 引入其他 *crate* 的 *paths* ：
-
-```rust
-use std::io;
-```
-
-3. 同时引入多个 *paths* ：
-
-```rust
-/// self 代表上一级模块本身
-use std::io::{self, stdout}; // 同时引入 io 和 stdout
-```
-
-4. 通配符匹配 *paths* ：
-
-```rust
-use std::io::*; // 引入 io 下面所有 pub 资源
-```
-
-5. 更改当前域（*current scope*）中的 *paths* （`use .. as ..`）：
-
-```rust
-use std::io::stdout as io_stdout;
-
-use std::io::{self as io, stdout as io_stdout};
-```
-
-6. 引入并在当前域暴露 *paths* （`pub use`）：
-
-通过 `pub use` 将引入的内容再次暴露（*re-exporting*）出去。
-
-```rust
-pub use B::demo;
-demo();
-```
-
 # 元编程（Meta Programing）
 
 ## 宏
@@ -3499,6 +3552,62 @@ fn invoke2() {}
 
 同样都是对词条流（*TokenStream*）进行变换处理，但声明宏就像它的名字所描述的一样，一般用作代码替换，而不直接处理计算问题，故被设计为接受不同范式的输入并坐简单的代码替换。
 而过程宏则被设计为擅长于处理计算问题，接受原始的词条流（*TokenStream*），并提供一些内置方法，以及借助`syn`库将词条流解析为AST进行处理，并借助`quote`库再反解析为词条流。
+
+# 多线程编程
+
+### 互斥锁`Mutex<T>`
+
+> 互斥锁`Mutex<T>`（*Mutual Exclusion*）不区分读和写，所有锁具有同样优先级，顺序排队获取。
+
+与读写锁相比，互斥锁在任何锁未释放时都会造成死锁。
+
+```rust
+use std::sync::Mutex;
+let guard = Mutex::new(11);
+
+let mut lock = guard.lock().unwrap();
+// It does not matter if you are locking the Mutex to read or write,
+// you can only lock it once.
+assert!(guard.try_lock().is_err());
+
+// You may change it just like you did with RwLock
+*lock += 1;
+assert_eq!(*lock, 12);
+```
+
+### 读写锁`RwLock<T>`
+
+> 读写锁区分读锁和写锁。
+
+与互斥锁相比，读写锁在运用时，若出现大量读锁可能会导致写锁长期无法获取（*writer starvation*）。
+
+```rust
+use std::sync::RwLock;
+let lock = RwLock::new(11);
+
+{
+    let _r1 = lock.read().unwrap();
+    // You may pile as many read locks as you want.
+    assert!(lock.try_read().is_ok());
+    // But you cannot write.
+    assert!(lock.try_write().is_err());
+    // Note that if you use "write()" instead of "try_write()"
+    // it will wait until all the other locks are released
+    // (in this case, never).
+}
+
+// If you grab the write lock, you may easily change it
+let mut l = lock.write().unwrap();
+*l += 1;
+assert_eq!(*l, 12);
+```
+
+### 原子类型（Atomics）
+
+原子指的是一系列不可被 CPU 上下文交换的机器指令，这些指令组合在一起就形成了原子操作。在多核 CPU 下，当某个 CPU 核心开始运行原子操作时，
+会先暂停其它 CPU 内核对内存的操作，以保证原子操作不会被其它 CPU 内核所干扰。
+
+> 原子类型不需要开发者处理加锁和释放锁的问题，同时支持修改，读取等操作，还具备较高的并发性能。
 
 # WebAssembly
 
