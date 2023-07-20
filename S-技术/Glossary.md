@@ -6,46 +6,42 @@ date: 2020-08-04T09:26:34.573Z
 # 符号
 ## 标点符号
 
-| Symbol | Name                      | Programing         |
-| ------ | ------------------------- | ------------------ |
-| ()     | parentheses               | group              |
-| []     | brackets, square brackets | subscript          |
-| {}     | braces                    | block              |
-| <>     | angle brackets            |                    |
-| -      | hyphen, dash              |                    |
-| :      | colon                     |                    |
-| ;      | semicolon                 |                    |
-| ,      | comma                     |                    |
-| .      | dot, period               | period, subscript  |
-| \|     | bar, pipe, or             | or                 |
-| *      | asterisk                  |                    |
-| !      | exclamation mark          |                    |
-| ?      | question mark             |                    |
-| &      | ampersand, and            | and                |
-| #      | hash                      |                    |
-| ~      | tilde                     |                    |
-| ^      | caret                     | exclusive or (xor) |
-
-| Phrase                 | Meaning or Symbol |
-| ---------------------- | ----------------- |
-| parentheses            | ()                |
-| square bracket         | []                |
-| brace                  | {}                |
-| angle bracket          | <>                |
-| hyphen                 | -                 |
-| colon                  | :                 |
-| semicolon              | ;                 |
-| comma                  | ,                 |
-| dot                    | .                 |
-| subscript              | 下标              |
-| exclamation point/mark | !                 |
-| question mark          | ?                 |
-| ampersand              | &                 |
-| line feed, new line    | \n                |
-| carriage return        | \r                |
-| horizontal tab         | \t                |
-| vertical tab           | \v                |
-| form feed              | \f                |
+| Symbol        | Name                         | Programing         |
+| ------------- | ---------------------------- | ------------------ |
+| <kbd>~</kbd>  | tilde                        |                    |
+| <kbd>`</kbd>  | back quote                   |                    |
+| <kbd>!</kbd>  | exclamation, bang            |                    |
+| <kbd>@</kbd>  | at                           |                    |
+| <kbd>#</kbd>  | hash, number, sharp          |                    |
+| <kbd>$</kbd>  | dollar                       |                    |
+| <kbd>%</kbd>  | percent                      |                    |
+| <kbd>^</kbd>  | caret                        | exclusive or (xor) |
+| <kbd>&</kbd>  | ampersand, and               | and                |
+| <kbd>*</kbd>  | asterisk                     |                    |
+| <kbd>()</kbd> | parentheses                  | group              |
+| <kbd>[]</kbd> | brackets, square brackets    | subscript          |
+| <kbd>{}</kbd> | braces, curly brackets       | block              |
+| <kbd>-</kbd>  | hyphen, dash, minus          |                    |
+| <kbd>_</kbd>  | underscore                   |                    |
+| <kbd>+</kbd>  | plus                         |                    |
+| <kbd>=</kbd>  | equal                        |                    |
+| <kbd>/</kbd>  | slash                        |                    |
+| <kbd>\\</kbd> | backslash                    |                    |
+| <kbd>\|</kbd> | bar, pipe, or                | or                 |
+| <kbd>:</kbd>  | colon                        |                    |
+| <kbd>;</kbd>  | semicolon                    |                    |
+| <kbd>'</kbd>  | single quote                 |                    |
+| <kbd>"</kbd>  | quote                        |                    |
+| <kbd><</kbd>  | less than, angle brackets    |                    |
+| <kbd>></kbd>  | greater than, angle brackets |                    |
+| <kbd>,</kbd>  | comma                        |                    |
+| <kbd>.</kbd>  | dot, period                  | period, subscript  |
+| <kbd>?</kbd>  | question mark                |                    |
+| <kbd>\n</kbd> | line feed, newline           |                    |
+| <kbd>\r</kbd> | carriage return              |                    |
+| <kbd>\t</kbd> | horizontal tab               |                    |
+| <kbd>\v</kbd> | vertical tab                 |                    |
+| <kbd>\f</kbd> | form feed                    |                    |
 
 ## 数学符号
 
@@ -227,15 +223,6 @@ date: 2020-08-04T09:26:34.573Z
 | POP          | Post Office Protocol                                     | 邮局协议           |      |
 | SOCKS        | protocol for sessions traversal across firewall securely |                    |      |
 
-# 常用术语
-
-|           |          |
-| --------- | -------- |
-| hint      |          |
-| failover  | 故障切换 |
-| partition | 分区     |
-| sharding  | 分片     |
-
 # 近义词
 
 复制
@@ -274,16 +261,6 @@ date: 2020-08-04T09:26:34.573Z
 - *universal*
 - *generic*
 
-# 文字符号
-
-| Meaning             | Symbol |
-| ------------------- | ------ |
-| line feed, new line | \n     |
-| carriage return     | \r     |
-| horizontal tab      | \t     |
-| vertical tab        | \v     |
-| form feed           | \f     |
-
 # 编程术语
 
 | Phrase      | 中文   |
@@ -299,3 +276,10 @@ date: 2020-08-04T09:26:34.573Z
 | subscript   | 下标   |
 | vector      | 向量   |
 | array       | 数组   |
+
+|           |          |
+| --------- | -------- |
+| hint      |          |
+| failover  | 故障切换 |
+| partition | 分区     |
+| sharding  | 分片     |

@@ -1009,11 +1009,11 @@ assert_eq!("1.68", format!("{value:0.precision$}", precision=2, value=1.679));
 
 # 内存管理
 
-## 数据有效性
+## 值有效性
 
-> 数据有效性界定了数据是否被销毁、内存是否被回收。
+> 值有效性界定了值是否被销毁、内存是否被回收。
 
-- 数据（*右值*）的有效范围就是变量（*左值*, *Owner*）的有效范围；
+- 值（*右值*）的有效范围就是变量（*左值*, *Owner*）的有效范围；
 - 变量有效存在于从该变量在作用域中出现到该变量最后一次被调用之间；
 - 同级作用域下，变量遮蔽（*Variable Shadowing*）会导致变量提前销毁；
 
@@ -1022,9 +1022,9 @@ let a = 1;
 let a = "ha"; // 声明新 a 的时候，Rust 会将旧 a 销毁
 ```
 
-## 数据所有权（Ownership）
+## 值所有权（Ownership）
 
-> *Rust*没有运行时，所以也没有垃圾回收器，但一般情况下却无需手动释放内存。这是通过编译器检查**所有权机制**实现的，通过对变量（Stack）和数据（Heap）进行所有权绑定，来保证数据在变量用完即毁，显然，这种实现没有运行时开销。
+> *Rust*没有运行时，所以也没有垃圾回收器，但一般情况下却无需手动释放内存。这是通过编译器检查**所有权机制**实现的，通过对变量（Stack）和值（Heap）进行所有权绑定，来保证值在变量用完即毁，显然，这种实现没有运行时开销。
 
 所有权的基本规则为：
 
@@ -1041,36 +1041,77 @@ fn main() {
 }
 ```
 
-## 数据调用（Munipulation）
+## 值调用（Munipulation）
 
-数据调用主要表现为数据的传递，如变量间赋值、传入函数、函数返回、数据解构...，不同的操作对数据的访问深度可能不同，为了保证数据调用的性能，Rust提供了多种数据传递的处理方式供开发者选择。
+> 对于**值类型**和**引用类型**有不同的赋值策略。值类型存储的是数据本身，也就是说值类型在赋值的过程中值会进行复制，而引用类型只会复制指针，而不会复制所指向的值则不会。
+
+值调用主要表现为值的传递，如变量间赋值、传入函数、函数返回、值解构...，不同的操作对值的访问深度可能不同，为了保证值调用的性能，Rust提供了多种值传递的处理方式供开发者选择。
 包括：
 
-- **Move**，即转移数据所有权。
-- **Copy**，即复制数据。
-- **Borrow**，即借用（完成引用）数据。
+- **Move**：转移值所有权；
+- **Copy**：复制值；
+- **Borrow**：借用（完成引用）值；
 
-### 数据拷贝（Copy）
+### 值拷贝（Copy）
 
-> 对于直接分配在栈（*Stack*）中的数据，在传递时执行复制（*Copy*）操作（即推入执行栈）。这类数据主要为标量，包括字面量（数字、字符（串）、布尔值）和非显式分配在堆中的数字（包括指针）和布尔值。
+> 对于直接分配在栈（*Stack*）中的值，即值类型，在传递时执行复制（*Copy*）操作（即推入执行栈）。值类型对应的是标量，包括字面量（数字、字符（串）、布尔值）和*非显式分配*在堆中的布尔值、数字、指针、函数项。
 
 ![data-copy](./Rust-data-copy.svg#h200)
 
-### 数据所有权转移（Move）
+```rust
+fn main() {
+    let a = 1;
+    let b = a;
+    assert_ne!(&a as *const _, &b as *const _);
+}
+```
 
-> 对于分配在堆内存（*Heap*）中的数据，数据复制将涉及到分配空内存、复制数据，以及碎片整理等操作，为了保持性能，Rust在进行数据传递时默认转移（*Move*）数据的所有权（即复制指针），而非（深度）复制（即[克隆](#数据克隆clone)）数据。
+⚠️ 之所以说*非显式分配*，是因为所有值都可以通过[显式堆分配](#堆分配boxt)的方式分配到堆中，被间接引用：
 
-![ownership-move](./Rust-ownership-move.svg#h200)
+```rust
+fn main() {
+    let a = Box::new(1);
+    let pa = &a as *const _;
+    let pav = a.as_ref() /* 返回1的直接引用 */ as *const _;
+    let b = a;
+    let pb = &b as *const _;
+    let pbv = b.as_ref() as *const _;
+    assert_eq!(pav, pbv);
+    assert_ne!(pa, pb);
+    println!("{:?} {:?}", pa, pav);
+    println!("{:?} {:?}", pb, pbv);
+}
+```
+
+### 值所有权转移（Move）
+
+> 对于分配在堆内存（*Heap*）中的值，值复制将涉及到分配空内存、复制值，以及碎片整理等操作，为了保持性能，Rust在进行值传递时默认转移（*Move*）值的所有权（即复制指针），而非（深度）复制（即[克隆](#值克隆clone)）值。
 
 ```rust
 let s1 = String::from("hello");
 let s2 = s1;
 println!("{}", s1); // error[E0382]: borrow of moved value: `s1`
 ```
+```rust
+fn main() {
+    let a = vec![1];
+    let pav = a.as_ptr(); /* 获取数据（堆）地址 */
+    let pa = &a as *const /* 获取引用（指针）地址 */_;
+    let b = a;
+    let pbv = b.as_ptr();
+    let pb = &b as *const _;
+    assert_eq!(pav, pbv);
+    assert_ne!(pa, pb);
+    println!("{:?} {:?}", pa, pav);
+    println!("{:?} {:?}", pb, pbv);
+}
+```
 
-### 数据克隆（Clone）
+![ownership-move](./Rust-ownership-move.svg#h200)
 
-> 当然在需要的时候，你也可以显式克隆（深度复制）堆数据。
+### 值克隆（Clone）
+
+> 当然在需要的时候，你也可以显式克隆（深度复制）堆中值。
 
 ```rust
 let s1 = String::from("hello");
@@ -1078,20 +1119,20 @@ let s2 = s1.clone();
 assert_eq!(s1, s2);
 ```
 
-### 数据借用（Borrow）
+### 值借用（Borrow）
 
-> 由于转移数据所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#%E5%BC%95%E7%94%A8reference)以借用数据的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#指针pointer)调用数据。
+> 由于转移值所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#%E5%BC%95%E7%94%A8)以借用值的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#普通指针pointer)调用值。
 
-借用可以存在多个，但为了避免数据冲突，实现借用（有效引用）也是需要遵循一定规则的：
+借用可以存在多个，但为了避免读写冲突，实现借用（有效引用）也是需要遵循一定规则的：
 
 1. 可变性（可写）借用不能同时存在多个；
 2. 不可变性（只读）借用与可变性借用不能同时存在；
 
-⚠️ 需要特别指出的是，虽然创建[引用](#%E5%BC%95%E7%94%A8reference)的目的是借用数据，但*数据借用*和*创建引用*仍需要严格区分开来：只有引用在创建后有被调用过，借用才成立，该引用才会被纳入数据竞争规则中考虑。例如：
+⚠️ 需要特别指出的是，虽然创建[引用](#%E5%BC%95%E7%94%A8)的目的是借用值，但*值借用*和*创建引用*仍需要严格区分开来：只有引用在创建后有被调用过，借用才成立，该引用才会被纳入值竞争规则中考虑。例如：
 
 ```rust
 let mut a = String::from("hello");
-let mut b = &mut a; // 这里创建的引用b并未借用数据，因为b从未被使用过，所以借用机制的检查并没有纳入b
+let mut b = &mut a; // 这里创建的引用b并未借用值，因为b从未被使用过，所以借用机制的检查并没有纳入b
 let c = &a;
 assert_eq!("hello", c);
 ```
@@ -1521,157 +1562,33 @@ loop {
 let a = loop { break 1 }
 ```
 
-# 枚举和模式匹配（Pattern Matching）
-
-> Rust枚举是一种特殊的[结构体](#结构struct)，不仅可以存储各种动态或静态值，还可以绑定方法等，具体见[面向对象编程-枚举](#枚举enum)。
-
-```rust
-struct QuitMessage; // unit struct
-struct MoveMessage { x: i32, y: i32, }
-struct WriteMessage(String); // tuple struct
-struct ChangeColorMessage(i32, i32, i32); // tuple struct
-```
-
-## `Option<T>`
-
-> 从限制空值（*null*）的普遍性并提高代码的安全性考虑，Rust并未提供空值类型，而是通过提供复合类型`Option<T>`枚举包装可空值，以迫使程序显式处理空值。
-
-```rust
-pub enum Option<T> {
-  Some(T),
-  None,
-}
-```
-
-`Option<T>`, `Some(T)`均已被预先导入（*Prelude*），可直接使用：
-
-```rust
-let some_char = Some('e');
-let some_number: Option<i8> = Some(5);
-let absent_number: Option<i8> = None;
-```
-
-## `match`
-
-> 使用 `match` 表达式通过一系列的匹配模式（*Patterns*）来比对（*Matching*）值。
-
-- 一旦进入分支就不再向下匹配；
-- 声明分支必须全面无遗漏（*Exhaustive*）;
-- 支持通配模式`_`以处理剩余值；
-- 匹配模式可以是字面量、变量名、通配符以及其他等等，具体可见 *Pattern* 章节；
-
-```rust
-fn plus_one(x: Option<i32>) -> Option<i32> {
-    match x {
-        None => None,
-        Some(i) => Some(i + 1),
-    }
-}
-
-let five = Some(5);
-let six = plus_one(five);
-let none = plus_one(None);
-```
-
-## `if let`
-
-> 使用 `if let` 可以进行非全面（*non-exhaustive*）匹配。
-
-```rust
-let m = Coin::Penny;
-if let Coin::Penny = m {
-  println!("Penny!");
-}
-```
-
-# 错误处理（Error Handling）
-
-Rust有两种基础的错误处理方式：
-
-1. 通过`panic!(errMsg:)`抛出错误，并立即终止程序执行，通常用于开发调试阶段。
-2. 通过`Result<T,E>`枚举包装错误，并传递给后续程序进行处理。
-
-```rust
-enum Result<T, E> {
-  Ok(T),
-  Err(E),
-}
-```
-
-对于`Result<T,E>`的处理方式，通常有两种：
-
-1. 通过`match`或`if let`模式匹配进行处理：
-
-```rust
-use std::fs::File;
-use std::io::ErrorKind;
-
-fn main() {
-    let greeting_file_result = File::open("hello.txt");
-
-    let greeting_file = match greeting_file_result {
-        Ok(file) => file,
-        Err(error) => match error.kind() {
-            ErrorKind::NotFound => match File::create("hello.txt") {
-                Ok(fc) => fc,
-                Err(e) => panic!("Problem creating the file: {:?}", e),
-            },
-            other_error => {
-                panic!("Problem opening the file: {:?}", other_error);
-            }
-        },
-    };
-}
-```
-
-2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：
-
-```rust
-use std::fs::File;
-
-fn main() {
-    let greeting_file = File::open("hello.txt")
-        .expect("hello.txt should be included in this project");
-}
-```
-
-3. 通过`?`调用，解包结果或将错误冒泡：
-
-```rust
-fn last_char_of_first_line(text: &str) -> Option<char> {
-    text.lines().next()?.chars().last()
-}
-```
-
 # 类型系统（Type System）
 
 > [类型系统](https://doc.rust-lang.org/reference/type-system.html)
 
-| 分类                       | 类型名称             | 类型或表示                                    |
-| -------------------------- | -------------------- | --------------------------------------------- |
-| Scalar（标量类型）         | **signed integer**   | `i8`,`i16`,`i32`（默认）,`i64`,`i128`,`isize` |
-|                            | **unsigned integer** | `u8`,`u16`,`u32`,`u64`,`u128`,`usize`         |
-|                            | **floating point**   | `f32`,`f64`（默认）                           |
-|                            | **character**        | `char`                                        |
-|                            | **boolean**          | `bool`                                        |
-|                            | **never**            | `!`                                           |
-| Sequence（序列类型）       | **tuple**            | `(T,...)`                                     |
-|                            | **array**            | `[T; S]`                                      |
-|                            | **slice**            | `[T]`                                         |
-| User-defined（自定义类型） | **struct**           | `struct`                                      |
-|                            | **enumerated**       | `enum`                                        |
-|                            | **union**            | `union`                                       |
-| Function（函数类型）       | **function item**    | `fn`                                          |
-|                            | **closure**          | `Fn`, `FnMut`, `FnOnce`                       |
-| Pointer（指针类型）        | **reference**        | `&T`, `&mut T`                                |
-|                            | **raw pointer**      | `*const T`, `*mut T`                          |
-|                            | **function pointer** | `fn`                                          |
-| Trait（特征类型）          | **trait object**     | `trait`                                       |
-|                            | **impl trait**       | `impl`                                        |
+| 分类     | 类型名称             | 类型或表示                                    |
+| -------- | -------------------- | --------------------------------------------- |
+| 标量类型 | **signed integer**   | `i8`,`i16`,`i32`（默认）,`i64`,`i128`,`isize` |
+|          | **unsigned integer** | `u8`,`u16`,`u32`,`u64`,`u128`,`usize`         |
+|          | **floating point**   | `f32`,`f64`（默认）                           |
+|          | **character**        | `char`                                        |
+|          | **boolean**          | `bool`                                        |
+|          | **never**            | `!`                                           |
+| 复合类型 | **tuple**            | `(T,...)`                                     |
+|          | **array**            | `[T; S]`                                      |
+|          | **slice**            | `[T]`                                         |
+|          | **struct**           | `struct`                                      |
+|          | **enumerated**       | `enum`                                        |
+|          | **union**            | `union`                                       |
+|          | **function item**    | `fn`                                          |
+|          | **closure**          | `Fn`, `FnMut`, `FnOnce`                       |
+| 指针类型 | **reference**        | `&T`, `&mut T`                                |
+|          | **raw pointer**      | `*const T`, `*mut T`                          |
+|          | **function pointer** | `fn`                                          |
+| 特征类型 | **trait object**     | `trait`                                       |
+|          | **impl trait**       | `impl`                                        |
 
 ## 基础类型
-
-> 标量类型（Scalar Type）是表示单一值的类型。
 
 ### 无`!`
 
@@ -1778,7 +1695,7 @@ let e_err = a[10]; // exit with error
 
 ### 字典`HashMap<T,V>`
 
-> 字典类型`HashMap`是标准库（`std`）实现的类型，但需要手动导入。
+> 字典`HashMap`是标准库（`std`）实现的常用类型，需要手动导入。
 
 ```rust
 use std::collections::HashMap;
@@ -1807,21 +1724,275 @@ assert_eq!(Some(&20), scores.get("Blue"));
 assert_eq!(None, scores.get("Yellow"));
 ```
 
-## 动态大小类型（DST）
+## 函数项（Function Item）
 
-> 如果一个类型的大小不能在编译期确定，则称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#%E5%88%87%E7%89%87t)和[特征对象](#特征对象trait-object)。
+> 函数项是Rust一等公民，以值的形式直接存储。
 
-动态大小类型只能在以下场景调用：
+Rust函数有以下几个特点：
 
-1. 通过[指针](#指针pointer)进行调用，如切片通过共享引用`&[T]`调用；
-2. 作为具有`?Sized`绑定的[泛型](#泛型generic)的参数，其中`?Sized`指示编译器其所绑定的类型无需确定大小；
-3. 作为[结构](#结构struct)的最后一个字段；
+- 函数返回值默认返回最后一个表达式结果，无需显式声明~~`return`~~；
+- 函数返回值默认类型为空元组`()`；
 
-## 指针（Pointer）
+```rust
+fn get_one() -> i32 {
+  1
+}
+fn get_null() {
+  1;
+}
+```
 
-### 引用（Reference）
+## 结构`struct`
 
-> 引用，一种[借用](#数据借用borrow)（不转移数据所有权进行数据访问）数据的手段。
+> **结构（Struct）**（或结构体）是Rust部署的一个类似于面向对象语言中类的语法特性，用以封装一组相关的数据和行为，以描述通用功能。
+
+```rust
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+```
+
+Rust结构有以下特点：
+
+- 结构没有构造函数（~~*Constructor*~~）；
+- 通过部署[特征（Trait）](#%E7%89%B9%E5%BE%81trait)（*抽象类型/接口*）实现多类型*组合（Composition）*；
+- 结构的字段之间没有顺序；
+- 结构的可变性是整体的，不可单独定义字段的可变性;
+- 结构的字段和[关联函数](#关联函数associated-functions)同样遵循模块的可见性定义，需要显式地通过`pub`导出；
+- 支持[字段初始化速记法（Field Init Shorthand）](#字段初始化速记法field-init-shorthand)以简化使用同名变量初始化字段；
+- 支持[字段展开（Strcut Update Syntax）](#结构更新语法strcut-update-syntax)以重用其他结构字段；
+- 支持[字段解构（Destructuring）](#字段解构destructuring)；
+
+```rust
+let mut user1 = User {
+    active: true,
+    username: String::from("someusername123"),
+    email: String::from("someone@example.com"),
+    sign_in_count: 1,
+};
+user1.email = String::from("anotheremail@example.com");
+```
+
+### 三种结构
+
+#### 普通结构（Struct）
+
+> 即**结构（Struct）**，也即具名字段结构。
+
+```rust
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+```
+
+#### 元组结构（Tuple Struct）
+
+> **元组结构（Tuple Struct）**是一种字段没有名称的特殊结构，其使用方式类似*元组（Tuple）*。
+
+```rust
+struct Color(i32, i32, i32);
+struct Point(i32, i32, i32);
+
+let black = Color(0, 0, 0);
+let origin = Point(0, 0, 0);
+```
+
+#### 单元结构（Unit-Like Struct）
+
+> **单元结构（Unit-Like Struct）**是一种没有字段的特殊结构。
+
+```rs
+struct AlwaysEqual;
+let subject = AlwaysEqual;
+```
+
+### 字段初始化速记法（Field Init Shorthand）
+
+> 即使用与字段同名的变量初始化字段的一种简写方式。
+
+```rust
+fn build_user(email: String, username: String) -> User {
+    User {
+        active: true,
+        username,
+        email,
+        sign_in_count: 1,
+    }
+}
+```
+
+### 结构更新语法（Strcut Update Syntax）
+
+> **结构更新语法（Strcut Update Syntax）**是对结构剩余未赋值字段进行逐个赋值（`=`）。故遵循以下规则：
+
+- 更新结构必须放在最后；
+- 赋值字段遵循*Move*和*Copy*机制；
+- 更新结构后面不能有逗号（~~`,`~~）；
+
+```rust
+let user2 = User {
+    email: String::from("another@example.com"),
+    ..user1
+};
+```
+
+### 字段解构（Destructuring）
+
+> **字段解构（Destructuring）**也是赋值行为，故同样遵循*Move*和*Copy*机制。
+
+- 对于剩余字段可以使用`..`予以跳过。
+
+```rust
+let User { email, .. } = user1;
+assert_eq!(email, "anotheremail@example.com");
+```
+
+### 关联函数（Associated Functions）：
+
+> 结构的[方法（Methods）](#方法method)和[静态函数（Functions）](#静态函数)统称为**关联函数**。
+
+```rust
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+```
+
+关联函数有以下特点：
+
+- 结构的关联函数单独定义在`impl`块中；
+- 结构可以拥有多个`impl`块（当通过泛型或特征定义结构时，可以为不同类型定义不同关联函数）；
+- 结构的所有关联函数的函数名处于同一命名空间（意味着即使方法和静态函数的定义和调用方式都不同，也仍然不能同名）；
+
+#### 静态函数
+
+> 第一个参数不是~~`self`~~及其衍生形式（~~`&self`~~, ~~`&mut self`~~）的关联函数即为静态函数，通过命名空间符号`::`调用。
+
+在实践中，通常定义函数名为*new*（约定俗成而非强制）的静态函数以创建结构实例：
+
+```rust
+impl Rectangle {
+    fn new(width: u32, height: u32) -> Self {
+        Self {
+            width,
+            height,
+        }
+    }
+}
+```
+
+#### 方法（Method）
+
+> 第一个参数为当前实例`self`及其衍生形式（`&self`, `&mut self`）的关联函数即为方法，方法通过点号`.`调用；
+
+```rust
+impl Rectangle {
+    fn area(&self) -> u32 {
+        (*self).width * (*self).height
+    }
+}
+```
+
+> 当调用实例字段或方法时，我们无需显式地书写实例的调用方式（引用或非引用），Rust编译器会为我们**自动引用或解引用**当前实例，以适应其签名。（*when you call a method with object.something(), Rust automatically adds in `&`, `&mut`, or `*` so object matches the signature of the method.*）
+
+故上述方法在实际中更常写作：
+
+```rust
+impl Rectangle {
+    fn area(&self) -> u32 {
+        self.width * self.height
+    }
+}
+```
+
+## 枚举`enum`
+
+> Rust枚举是一种特殊的[结构体](#%E7%BB%93%E6%9E%84struct)，不仅可以存储各种动态或静态值，还可以绑定方法等，具体见[面向对象编程-枚举](#%E6%9E%9A%E4%B8%BEenum)。
+
+```rust
+struct QuitMessage; // unit struct
+struct MoveMessage { x: i32, y: i32, }
+struct WriteMessage(String); // tuple struct
+struct ChangeColorMessage(i32, i32, i32); // tuple struct
+```
+
+### 无值枚举
+
+```rust
+enum IpAddrKind { V4, V6 }
+// 使用命名空间符号`::`获取变体
+let four = IpAddrKind::V4;
+```
+
+### 有值枚举
+
+> 枚举变体（*variants*）可以是任何类型。
+
+```rust
+enum IpAddr {
+  V4(u8, u8, u8, u8),
+  V6(String)
+}
+let home = IpAddr::V4(127, 0, 0, 1);
+let loopback = IpAddr::V6(String::from("::1"));
+```
+
+```rust
+enum Message {
+  // 单元结构（unit struct）
+  Quit,
+  // 匿名结构（anonymous struct）
+  Move { x: i32, y: i32 },
+  // 元组结构（tuple struct）
+  ChangeColor(i32, i32, i32),
+}
+```
+
+获取有值枚举的绑定值：
+
+```rust
+match home {
+  V4(a, b, c, d) => a,
+  V6(a) => a,
+}
+```
+
+定义方法（*methods*）：
+
+> 同[结构（Struct）](#%E7%BB%93%E6%9E%84struct)一样，也可以定义方法，且写法相同。
+
+```rust
+impl Message {
+  fn call(&self) {
+    // method body would be defined here
+  }
+}
+let m = Message::Write(String::from("hello"));
+m.call();
+```
+
+获取绑定值：
+
+```rust
+match home {
+  V4(a, b, c, d) => a,
+  V6(a) => a,
+}
+```
+
+## 普通指针（Pointer）
+
+> 在Rust中，普通指针与[智能指针](#智能指针smart-pointers)区分，指的是那些并不拥有所指向数据的指针。
+
+### 引用`&`
+
+> 引用，一种[借用](#值借用borrow)（不转移数据所有权进行数据访问）数据的手段。
 
 [![reference](./Rust-reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
 
@@ -1866,28 +2037,163 @@ fn demo() -> &'static str {
 }
 ```
 
-### 原始指针（Raw Pointers）
+### 切片`&[T]`
 
-> `*const T`、`*mut T`，直接进行指针操作。
+> [切片](http://doc.rust-lang.org/reference/types/slice.html)`[T]`，表示元素类型为`T`的序列（如数组、向量、字符串等）的局部连续片段。
+
+根据切片的定义可以知道，切片`[T]`本身是没有大小（片段长度）定义的，即切片为[动态大小的类型](#动态大小类型dst)。
+所以在实际中我们并不能直接定义切片`[T]`，而是需要通过某些方式使其大小确定下来，即通过**智能指针**进行调用。
+这其中最常见的就是通过**切片引用**`&[T]`的方式：
 
 ```rust
 fn main() {
-    let arr: [u8; 3] = [1, 2, 3];
-    let first = (&arr).as_ptr() as usize;
-    unsafe { assert_eq!(arr[1], *((first + 1) as *const usize).as_ref().unwrap()) }
+  let arr: [u8; 3] = [1, 2, 3];
+  let arr_slice: &[u8] = &s[0..1];
+}
+```
+
+> 所以，我们通常也将**切片引用`&[T]`简称为切片**。
+
+### 字符串切片（`str`）
+
+> 字符串切片`str`即[`String`](#字符串string)的切片。类似[切片和切片引用](#%E5%88%87%E7%89%87t)的关系，**字符串切片引用`&str`也通常简称为字符串切片**。
+
+```rust
+let s = String::from("hello world");
+let world = &s[6..11];
+```
+![String Slice](./Rust-slice.svg#h300)
+
+### 函数指针（`fn`）
+
+> 函数指针用于动态派发，在运行时通过函数项（*function item*）或非捕获闭包（*non-capturing closure*）来创建。
+
+如下例，`add`是一个*函数项*，`bo`是一个*函数指针*，其类型是`Binop`：
+
+```rust
+fn add(x: i32, y: i32) -> i32 {
+    x + y
+}
+
+let mut x = add(5,7);
+
+type Binop = fn(i32, i32) -> i32;
+let bo: Binop = add;
+x = bo(5,7);
+```
+
+### 闭包`||`
+
+> 闭包：一个可以捕获它所处环境信息的匿名函数。
+
+#### 闭包类型
+
+```rust
+let add_one_v1 = |x: u32| -> u32 { x + 1 };
+```
+
+#### 闭包对环境值的捕获方式
+
+> 同函数参数可采用的三种传递方式相同：*不可变引用*、*可变引用*、*获取所有权*。
+
+闭包会根据函数体中的调用方式进行自动选择捕获方式：
+
+```rust
+fn main() {
+  let mut list = vec![1, 2, 3];
+  println!("Before defining closure: {:?}", list);
+
+  // 由函数体得知，闭包隐式声明了可变引用
+  let mut borrows_mutably = || list.push(7);
+
+  // `borrows_mutably`后续有被调用，所以`&mut list`此时已被`borrows_mutably`有效捕获，故此处借用将会报错
+  println!("{:?}", list); // error[E0502]: cannot borrow `list` as immutable because it is also borrowed as mutable
+
+  borrows_mutably();
+  // `borrows_mutably`后续未再被调用，所以闭包内的`&mut list`已释放，此处不会报错
+  println!("After calling closure: {:?}", list);
+}
+```
+
+尽管闭包会自动选择捕获方式，你仍可以显式声明以进行主动选择：
+
+```rust
+use std::thread;
+
+fn main() {
+    let list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+    // 显式声明`move`策略，以使闭包将数据转移给新线程（因为新线程与主线程其余部分执行结束的先后顺序并不确定）
+    thread::spawn(move || println!("From thread: {:?}", list))
+        .join()
+        .unwrap();
+    let list = vec![1, 2, 3];
+    // error[E0373]: closure may outlive the current function, but it borrows `list`, which is owned by the current function
+    thread::spawn(|| println!("From thread: {:?}", list))
+        .join()
+        .unwrap();
+}
+```
+
+#### 闭包对捕获值的处理方式
+
+> 闭包对捕获值的处理方式通过其部署的特征（*Trait*）进行定义。
+
+- `FnOnce`：闭包可以被调用一次。所有的闭包均部署了该特征。
+- `FnMut`：闭包会修改捕获的值，且闭包不会移出其捕获的值，且可以被多次调用。
+- `Fn`：闭包不会捕获环境值或不会改变捕获的值，且闭包不会移出其捕获的值，且可以被多次调用。
+
+```rust
+impl<T> Option<T> {
+    pub fn unwrap_or_else<F>(self, f: F) -> T
+    where
+        F: FnOnce() -> T
+    {
+        match self {
+            Some(x) => x,
+            None => f(),
+        }
+    }
+}
+```
+
+```rust
+pub fn sort_by_key<K, F>(&mut self, mut f: F)
+where
+    F: FnMut(&T) -> K,
+    K: Ord,
+{
+  stable_sort(self, |a, b| f(a).lt(&f(b)));
+}
+```
+
+### 原始指针`*const T`
+
+> 原始指针可以用来直接进行指针运算，包括不可变指针`*const T`和可变指针`*mut T`。由于是直接访问内存，不受编译器内存安全保证，所以是“不安全代码”，需要在`unsafe {}`中进行。
+
+```rust
+fn main() {
+    let a = [1, 2, 3];
+    let p1 = a.as_ptr() as usize; // 指针大小的类型是usize
+    let p2 = p1 + 1;
+    let p2 = p2 as *const u8;
+    let p2 = unsafe { p2.as_ref().unwrap() }; // 将数字转换成地址
+    let v2 = *p2;
+    assert_eq!(a[1], v2);
 }
 ```
 
 ## 智能指针（Smart Pointers）
 
-> 所谓智能指针（*Smart Pointers*），也叫胖指针。
-> 除了跟普通指针一样保存指代的数据地址外，智能指针还会存储数据的额外信息（如数据容量）或保障机制（如`String`保证数据为有效的*UTF-8*），以实现更多“智能”。
+> 智能指针是拥有一套自管理内存的二级指针。换句话说，**智能指针托管数据所有权，管理数据的生命周期**。所以，除了在引用数据外，智能指针还可以对数据实现额外的**“智能”**，比如智能指针`Rc<T>`存储了数据的引用次数、`String`保证存储的是有效的UTF-8编码。
 
-- 智能指针对数据拥有所有权。
-- 智能指针通常通过结构体来实现，并需要部署`Deref`和`Drop`特征。
-- `Deref`定义解引用方法让智能指针可以像普通引用一样通过`*`访问指向值、通过强制解引用（*Deref Coercion*）机制自适应调用。比如接受`&str`类型参数的函数可以传入`String`，将被编译器自动转换。
-- `Drop`定义析构函数让智能指针保障深层数据遵循所有权规则（指针清理时同步释放），避免内存泄漏。比如在`drop`函数中释放文件句柄、断开连接等等。
-- 显式调用`std::mem::drop`可以提前释放智能指针。
+根据社区的最佳实践：
+
+- 智能指针需要部署`Deref`和`Drop`特征。
+  - `Deref`定义解引用方法让智能指针可以像普通指针一样通过`*`访问值、通过强制解引用（*Deref Coercion*）机制自适应调用。（比如，接受`&str`类型参数的函数可以传入`String`，将被编译器自动转换。）
+  - `Drop`定义析构函数让智能指针保障所管理的数据遵循所有权规则（指针清理时能同步释放），避免内存泄漏。（比如在`drop`函数中释放文件句柄、断开连接等等。）
+
+⚠️显式调用`std::mem::drop`可以提前释放智能指针。
 
 ### 字符串`String`
 
@@ -1934,33 +2240,6 @@ pub fn push_str(&mut self, &str)
 
 可以看出，字符串字面量的类型为`&str`，即[字符串切片引用](#字符串切片str)。
 但实际上，由于涉及到数据生命周期的原因，真正的字符串字面量的签名为`&'static str`，只不过，对于字面量而言，其生命周期是静态的（`'static`），所以通常省略进行简写。
-
-### 切片`[T]`
-
-> [切片](http://doc.rust-lang.org/reference/types/slice.html)`[T]`，表示元素类型为`T`的序列（如数组、向量、字符串等）的局部连续片段。
-
-根据切片的定义可以知道，切片`[T]`本身是没有大小（片段长度）定义的，即切片为[动态大小的类型](#动态大小类型dst)。
-所以在实际中我们并不能直接定义切片`[T]`，而是需要通过某些方式使其大小确定下来，即通过**智能指针**进行调用。
-这其中最常见的就是通过**切片引用**`&[T]`的方式：
-
-```rust
-fn main() {
-  let arr: [u8; 3] = [1, 2, 3];
-  let arr_slice: &[u8] = &s[0..1];
-}
-```
-
-> 所以，我们通常也将**切片引用`&[T]`简称为切片**。
-
-### 字符串切片（`str`）
-
-> 字符串切片`str`即[`String`](#字符串string)的切片。类似[切片和切片引用](#切片t)的关系，**字符串切片引用`&str`也通常简称为字符串切片**。
-
-```rust
-let s = String::from("hello world");
-let world = &s[6..11];
-```
-![String Slice](./Rust-slice.svg#h300)
 
 ### 向量`Vec<T>`
 
@@ -2175,7 +2454,7 @@ fn main() {
 
 ### 内部可变借用`RefCell<T>`
 
-某些符合[借用规则](#数据借用borrow)的场景是在运行时才分析出来的，无法通过（编译器）对代码的静态分析识别。
+某些符合[借用规则](#值借用borrow)的场景是在运行时才分析出来的，无法通过（编译器）对代码的静态分析识别。
 为了使这部分代码能够顺利通过编译，就需要通过某种方式告知编译器不要检查这个数据的借用，我们会在运行时保证的。
 简单来说就是，**在运行时可变借用不可变数据**，`RefCell<T>`即是实现了这种机制的结构。
 
@@ -2190,9 +2469,410 @@ let msg: &str = msg.as_ref();
 assert_eq!("hello!", msg);
 ```
 
+## 动态大小类型（DST）
+
+> 如果一个类型的大小不能在编译期确定，则称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#%E5%88%87%E7%89%87t)和[特征对象](#特征对象trait-object)。
+
+动态大小类型只能在以下场景调用：
+
+1. 通过[指针](#普通指针pointer)进行调用，如切片通过共享引用`&[T]`调用；
+2. 作为具有`?Sized`绑定的[泛型](#%E6%B3%9B%E5%9E%8Bt)的参数，其中`?Sized`指示编译器其所绑定的类型无需确定大小；
+3. 作为[结构](#%E7%BB%93%E6%9E%84struct)的最后一个字段；
+
 ## 抽象类型（Abstract）
 
-> 抽象类型不直接作为值类型被使用，而是用于修饰值类型，以支持动态入参能力，从而提供更抽象的代码复用能力，如[特征](#特征trait)和[泛型](#泛型generic)。
+> 抽象类型不直接作为值类型被使用，而是用于修饰值类型，以支持动态入参能力，从而提供更抽象的代码复用能力，如[特征](#%E7%89%B9%E5%BE%81trait)和[泛型](#%E6%B3%9B%E5%9E%8Bt)。
+
+### 泛型`<T>`
+
+> 泛型会在编译时*单态化（monomorphization）*，所以在使用泛型时不会比使用具体类型时运行得更慢。
+
+```rust
+fn print<T: std::fmt::Display>(value: T) {
+  println!("{value}");
+}
+```
+
+```rust
+struct Point<T> {
+  x: T, y: T
+}
+impl<T> Point<T> {
+  fn new(x: T, y: T) -> Self {
+    Self { x, y }
+  }
+}
+```
+
+#### 值泛型（`const`）
+
+### 特征`trait`
+
+> **特征（Trait）**是拥有共同特性的类型的特性集合，类似某些编程语言中的*接口（Interface）*。
+
+特征具有以下特点：
+
+- 特征方法可以有默认实现；
+- 特征方法的默认实现无法通过代码直接调用；
+- 特征可直接描述参数类型；
+- [特征对象（Trait Object）](#特征对象trait-object)可以描述值类型（静态化抽象类以实现动态类型）；
+
+```rust
+// 定义特征
+pub trait Summary {
+    fn summarize_author(&self) -> String;
+    // 带有默认实现的方法
+    fn summarize(&self) -> String {
+        format!("(Read more from {}...)", self.summarize_author())
+    }
+}
+
+// 部署特征
+impl Summary for Post {
+  fn summarize_author(&self) -> String {
+      self.username
+  }
+}
+
+impl Summary for Tweet {
+  fn summarize_author(&self) -> String {
+      self.author
+  }
+  // 覆盖默认实现
+  fn summarize(&self) -> String {
+      format!("(Read more ...)")
+  }
+}
+```
+
+#### 特征直接描述参数（`impl Trait`）
+
+使用`impl <Trait>`语法描述参数类型：
+
+```rust
+pub fn notify(item: &impl Summary);
+```
+
+##### 特征绑定语法糖（Trait Bound）
+
+> 特征绑定（*Trait Bound*）：使用泛型写法为特征临时起别名的一种语法糖，用于简化复杂场景下的重复书写。
+
+```rust
+fn notify<T: Summary>(item1: &T, item2: &T);
+```
+
+##### 通过特征绑定有条件地实现方法
+
+> 通过对`impl {}`使用特征进行限制可以对同一结构针对（泛型面向的）不同入参类型部署不同的方法。
+
+```rust
+struct Pair<T> { x: T, y: T }
+
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> Self { Self { x, y } }
+}
+
+// 只有当`T`同时部署了`PartialOrd`和`Copy`时，下列方法才存在
+impl<T: PartialOrd + Copy> Pair<T> {
+    fn largest(&self) -> T {
+        if self.x >= self.y { self.x } else { self.y }
+    }
+}
+
+assert_eq!(Pair::new(1, 2).largest(), 2);
+
+// error[E0599]: the method `largest` exists for struct `Pair<String>`, but its trait bounds were not satisfied.
+assert_eq!(Pair::new(String::from("a"), String::from("b")).largest(), String::form("b"));
+```
+
+##### 组合多个特征
+
+通过`+`可以组合多个特征：
+
+```rust
+fn notify(item: &(impl Summary + Display));
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32;
+```
+
+##### `where`语句简化特征绑定
+
+```rust
+fn some_function<T, U>(t: &T, u: &U) -> i32 where T: Display + Clone, U: Clone + Debug;
+```
+
+#### 特征对象间接描述值（`dyn Trait`）
+
+##### 静态调度（`impl Trait`）和动态调度（`dyn Trait`）
+
+> 当代码涉及多态性时，需要有一种机制来确定实际运行的是哪个具体的版本。这就是所谓的**调度（Dispatch）**。
+
+> 所谓**静态调度（Static Dispatch）**，在编译期确定调用类型。如前述的泛型会在编译期间单态化，这种静态分发的优势，是没有运行时的性能损耗，但函数无法返回多种类型。所以Rust也支持通过[*特征对象（Trait Object）*](#特征对象trait-object)来实现**动态调度（Dynamic Dispatch）**。
+
+### 特征对象（Trait Object）
+
+> *特征（Trait）*代表的是不定类型（在编译时无法确定大小），无法用作直接值的类型（如函数返回值）。
+> 要想使用特征描述值的类型，就需要将特征包装成确定大小类型（如指针），在Rust中这个特殊类型就是**特征对象（Trait Object）**。
+
+特征对象的类型为`Box<Trait>`，如下：
+
+```rust
+fn returns_summarizable(switch: bool) -> Box<dyn Summary> {
+  if switch {
+    Box::new(NewsArticle { /* ... */ })
+  } else {
+    Box::new(Tweet { /* ... */ })
+  }
+}
+```
+
+其中，`dyn`为特征对象的标识符（以与特征进行区分），`Box`为装箱类型存储实质类型的指针。
+
+> 装箱类型（`Box`）可以封装不定大小数据（不定类型），在无需确切知道具体类型的上下文中实现动态数据的调用。具体地，`Box`将封装的数据存储在堆上，并在栈中保留一个指向数据的*智能指针（smart pointer）*）
+
+### 生命周期（Lifetime）
+
+> [生命周期（Lifetime）](http://localhost/rust/book/ch10-03-lifetime-syntax.html)规则用以保证*引用*的存活时间符合我们的需要。
+> 简单情况下，引用的生命周期可以被编译器正确推导，复杂的情况下则需要我们主动进行[生命周期标注](#生命周期lifetime)。
+
+```rust
+// error[E0106]: missing lifetime specifier
+// help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
+fn longest(x: &str, y: &str) -> &str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+```
+
+#### 生命周期标注（`'a`）
+
+> 当多个引用传入作用域时，可能会引起生命周期歧义，这时，我们需要对这些引用的生命周期进行明确标注，以使编译器可以顺利地遵循Rust的内存管理规则来保障内存安全。
+> *需要注意的是，引用的生命周期在其声明时便已确定，标注并不会改变引用的生命周期，标注是为了在编译器不清楚的时候告知编译器以保证借用的规则。*
+
+```rust
+&i32        // a reference
+&'a i32     // a reference with an explicit lifetime
+&'a mut i32 // a mutable reference with an explicit lifetime
+```
+
+#### 生命周期泛型（generic lifetime parameters）
+
+```rust
+// 函数
+fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
+    if x.len() > y.len() {
+        x
+    } else {
+        y
+    }
+}
+// 结构
+struct ImportantExcerpt<'a> { // ImportantExcerpt实例的存活时间不会晚于part字段的存活时间
+    part: &'a str,
+}
+```
+
+> 生命周期泛型标注的含义是：被标注的引用的生命周期不短于该标注泛型来源引用所具有的生命周期，如果来源有多个，则不短于其中最短的一个。
+
+```rust
+fn main() {
+    let string1 = String::from("long string is long");
+    let result;
+    {
+        let string2 = String::from("xyz");
+        result = longest(string1.as_str(), string2.as_str()); // error[E0597]: `string2` does not live long enough
+    }
+    println!("The longest string is {}", result); // 由于result生命周期只是不短于string2，故此时无法保证其存活
+//                                       ------ borrow later used here
+
+}
+```
+
+#### 静态生命周期（`'static`）
+
+> 静态生命周期即程序的生命周期。
+
+字符串切片字面即静态生命周期`&'static str`。
+
+# 模式和匹配（Patterns and Matching）
+
+## 模式（Patterns）
+
+> [**模式（Patterns）**](https://doc.rust-lang.org/reference/patterns.html)，是一种与右值表达式类似的特殊语法，用于与各种结构进行匹配，以灵活地**解构取值**和**构建复杂的控制流**。
+
+> 模式通常出现在`let`声明、`match`表达式分支、`if let`表达式条件、`while let`表达式、`for`表达式，以及函数或闭包的参数中。
+
+```rust
+fn main() {
+  if let
+    Person {
+        // 匹配 car 字段，并且有值（不是None）
+        car: Some(_),
+
+        // 匹配 age 字段，并且在[13, 19]区间，后赋值给变量 person_age
+        age: person_age @ 13..=19,
+
+        // 匹配 name 字段，后创建引用赋值给 person_name
+        name: ref person_name,
+
+        // 忽略剩余字段
+        ..
+    } = person
+  {
+    println!("{} has a car and is {} years old.", person_name, person_age);
+  }
+
+}
+```
+
+模式语法：
+
+```rust
+Pattern:
+  // Rust RFC-1925
+  |? PatternNoTopAlt ( | PatternNoTopAlt )*
+
+PatternNoTopAlt:
+  // PatternWithoutRange:
+    LiteralPattern                          // 字面量
+  | IdentifierPattern                       // 标识符
+  | WildcardPattern                         // 通配符
+  | RestPattern                             // 剩余模式
+  | ReferencePattern                        // 引用
+  | StructPattern                           // 结构
+  | TupleStructPattern                      // 元组结构
+  | TuplePattern                            // 元组
+  | GroupedPattern                          // 分组
+  | SlicePattern                            // 切片
+  | PathPattern                             // 路径
+  | MacroInvocation                         // 宏调用
+  // RangePattern
+  | RangePatternBound ..= RangePatternBound // [] RangeInclusivePattern
+  | ..= RangePatternBound                   // <= RangeToInclusivePattern
+  | RangePatternBound ..                    // >  RangeFromPattern
+  | RangePatternBound ... RangePatternBound // () ObsoleteRangePattern
+
+RangePatternBound:
+    CHAR_LITERAL                            // 字符
+  | BYTE_LITERAL                            // 字节
+  | -? INTEGER_LITERAL                      // 整型
+  | -? FLOAT_LITERAL                        // 浮点数
+  | PathExpression                          // 路径
+```
+
+### 字面量（Literals）
+
+```rust
+LiteralPattern :
+     true | false
+   | CHAR_LITERAL
+   | BYTE_LITERAL
+   | STRING_LITERAL
+   | RAW_STRING_LITERAL
+   | BYTE_STRING_LITERAL
+   | RAW_BYTE_STRING_LITERAL
+   | -? INTEGER_LITERAL
+   | -? FLOAT_LITERAL
+```
+
+### 复合类型的解构（Destructured arrays, enums, structs, or tuples）
+
+### 变量（Variables）
+
+### 通配符（Wildcards）
+
+```rust
+WildcardPattern :
+   _
+```
+
+### 占位符（Placeholders）
+
+## 匹配表达式`match`
+
+- 匹配分支必须穷举（*Exhaustive*），但可以用下划线`_`代表剩余所有可能性。
+- 分支返回值类型必须一致。
+
+```rust
+match 10 {
+  0..=5 => println!("between 0 and 5")
+  _ => println!("others")
+}
+```
+
+## 匹配表达式`if let`
+
+> 使用 `if let` 可以进行非全面（*non-exhaustive*）匹配。
+
+```rust
+let m = Coin::Penny;
+if let Coin::Penny = m {
+  println!("Penny!");
+}
+```
+
+## 匹配表达式`while let`
+
+# 错误处理（Error Handling）
+
+Rust有两种基础的错误处理方式：
+
+1. 通过`panic!(errMsg:)`抛出错误，并立即终止程序执行，通常用于开发调试阶段。
+2. 通过`Result<T,E>`枚举包装错误，并传递给后续程序进行处理。
+
+```rust
+enum Result<T, E> {
+  Ok(T),
+  Err(E),
+}
+```
+
+对于`Result<T,E>`的处理方式，通常有两种：
+
+1. 通过`match`或`if let`模式匹配进行处理：
+
+```rust
+use std::fs::File;
+use std::io::ErrorKind;
+
+fn main() {
+    let greeting_file_result = File::open("hello.txt");
+
+    let greeting_file = match greeting_file_result {
+        Ok(file) => file,
+        Err(error) => match error.kind() {
+            ErrorKind::NotFound => match File::create("hello.txt") {
+                Ok(fc) => fc,
+                Err(e) => panic!("Problem creating the file: {:?}", e),
+            },
+            other_error => {
+                panic!("Problem opening the file: {:?}", other_error);
+            }
+        },
+    };
+}
+```
+
+2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：
+
+```rust
+use std::fs::File;
+
+fn main() {
+    let greeting_file = File::open("hello.txt")
+        .expect("hello.txt should be included in this project");
+}
+```
+
+3. 通过`?`调用，解包结果或将错误冒泡：
+
+```rust
+fn last_char_of_first_line(text: &str) -> Option<char> {
+    text.lines().next()?.chars().last()
+}
+```
 
 # 模块系统（Module System）
 
@@ -2464,598 +3144,6 @@ pub use B::demo;
 demo();
 ```
 
-# 函数式编程（FP）
-
-## 函数项（Function Item）
-
-- *snake_case*为函数名的约定命名格式；
-- 返回值为最后一个*表达式*的执行结果，无需显式的~~`return`~~；
-- 没有返回值时等同于返回空元组`()`；
-
-```rust
-fn add(x: i32, y: i32) -> i32 {
-  x + y // 注意这里末尾没有分号，因为是表达式
-}
-fn main() {
-  1; // 这里末尾有分号，不是表达式，故不是返回结果
-}
-```
-
-## 函数指针（Function Pointer）
-
-> 函数指针在编译时不一定知道其标识的函数，可以通过函数项（*function item*）或非捕获闭包（*non-capturing closure*）来创建。
-> *Function pointers are pointers that point to code, not data.*
-
-如下例，`add`是一个*函数项*，`bo`是一个*函数指针*，其类型是`Binop`：
-
-```rust
-fn add(x: i32, y: i32) -> i32 {
-    x + y
-}
-
-let mut x = add(5,7);
-
-type Binop = fn(i32, i32) -> i32;
-let bo: Binop = add;
-x = bo(5,7);
-```
-
-## 闭包（Closure）
-
-> 闭包：一个可以捕获它所处环境信息的匿名函数。
-
-### 闭包类型
-
-```rust
-let add_one_v1 = |x: u32| -> u32 { x + 1 };
-```
-
-### 闭包对环境值的捕获方式
-
-> 同函数参数可采用的三种传递方式相同：*不可变引用*、*可变引用*、*获取所有权*。
-
-闭包会根据函数体中的调用方式进行自动选择捕获方式：
-
-```rust
-fn main() {
-  let mut list = vec![1, 2, 3];
-  println!("Before defining closure: {:?}", list);
-
-  // 由函数体得知，闭包隐式声明了可变引用
-  let mut borrows_mutably = || list.push(7);
-
-  // `borrows_mutably`后续有被调用，所以`&mut list`此时已被`borrows_mutably`有效捕获，故此处借用将会报错
-  println!("{:?}", list); // error[E0502]: cannot borrow `list` as immutable because it is also borrowed as mutable
-
-  borrows_mutably();
-  // `borrows_mutably`后续未再被调用，所以闭包内的`&mut list`已释放，此处不会报错
-  println!("After calling closure: {:?}", list);
-}
-```
-
-尽管闭包会自动选择捕获方式，你仍可以显式声明以进行主动选择：
-
-```rust
-use std::thread;
-
-fn main() {
-    let list = vec![1, 2, 3];
-    println!("Before defining closure: {:?}", list);
-    // 显式声明`move`策略，以使闭包将数据转移给新线程（因为新线程与主线程其余部分执行结束的先后顺序并不确定）
-    thread::spawn(move || println!("From thread: {:?}", list))
-        .join()
-        .unwrap();
-    let list = vec![1, 2, 3];
-    // error[E0373]: closure may outlive the current function, but it borrows `list`, which is owned by the current function
-    thread::spawn(|| println!("From thread: {:?}", list))
-        .join()
-        .unwrap();
-}
-```
-
-### 闭包对捕获值的处理方式
-
-> 闭包对捕获值的处理方式通过其部署的特征（*Trait*）进行定义。
-
-- `FnOnce`：闭包可以被调用一次。所有的闭包均部署了该特征。
-- `FnMut`：闭包会修改捕获的值，且闭包不会移出其捕获的值，且可以被多次调用。
-- `Fn`：闭包不会捕获环境值或不会改变捕获的值，且闭包不会移出其捕获的值，且可以被多次调用。
-
-```rust
-impl<T> Option<T> {
-    pub fn unwrap_or_else<F>(self, f: F) -> T
-    where
-        F: FnOnce() -> T
-    {
-        match self {
-            Some(x) => x,
-            None => f(),
-        }
-    }
-}
-```
-
-```rust
-pub fn sort_by_key<K, F>(&mut self, mut f: F)
-where
-    F: FnMut(&T) -> K,
-    K: Ord,
-{
-  stable_sort(self, |a, b| f(a).lt(&f(b)));
-}
-```
-
-# 面向对象编程（OOP）
-
-## 结构（Struct）
-
-> **结构（Struct）**（或结构体）是Rust部署的一个类似于面向对象语言中类的语法特性，用以封装一组相关的数据和行为，以描述通用功能。
-
-```rust
-struct User {
-    active: bool,
-    username: String,
-    email: String,
-    sign_in_count: u64,
-}
-```
-
-Rust结构有以下特点：
-
-- 结构没有构造函数（~~*Constructor*~~）；
-- 通过部署[特征（Trait）](#特征trait)（*抽象类型/接口*）实现多类型*组合（Composition）*；
-- 结构的字段之间没有顺序；
-- 结构的可变性是整体的，不可单独定义字段的可变性;
-- 结构的字段和[关联函数](#关联函数associated-functions)同样遵循模块的可见性定义，需要显式地通过`pub`导出；
-- 支持[字段初始化速记法（Field Init Shorthand）](#字段初始化速记法field-init-shorthand)以简化使用同名变量初始化字段；
-- 支持[字段展开（Strcut Update Syntax）](#结构更新语法strcut-update-syntax)以重用其他结构字段；
-- 支持[字段解构（Destructuring）](#字段解构destructuring)；
-
-```rust
-let mut user1 = User {
-    active: true,
-    username: String::from("someusername123"),
-    email: String::from("someone@example.com"),
-    sign_in_count: 1,
-};
-user1.email = String::from("anotheremail@example.com");
-```
-
-### 三种结构
-
-#### 普通结构（Struct）
-
-> 即**结构（Struct）**，也即具名字段结构。
-
-```rust
-struct User {
-    active: bool,
-    username: String,
-    email: String,
-    sign_in_count: u64,
-}
-```
-
-#### 元组结构（Tuple Struct）
-
-> **元组结构（Tuple Struct）**是一种字段没有名称的特殊结构，其使用方式类似*元组（Tuple）*。
-
-```rust
-struct Color(i32, i32, i32);
-struct Point(i32, i32, i32);
-
-let black = Color(0, 0, 0);
-let origin = Point(0, 0, 0);
-```
-
-#### 单元结构（Unit-Like Struct）
-
-> **单元结构（Unit-Like Struct）**是一种没有字段的特殊结构。
-
-```rs
-struct AlwaysEqual;
-let subject = AlwaysEqual;
-```
-
-### 字段初始化速记法（Field Init Shorthand）
-
-> 即使用与字段同名的变量初始化字段的一种简写方式。
-
-```rust
-fn build_user(email: String, username: String) -> User {
-    User {
-        active: true,
-        username,
-        email,
-        sign_in_count: 1,
-    }
-}
-```
-
-### 结构更新语法（Strcut Update Syntax）
-
-> **结构更新语法（Strcut Update Syntax）**是对结构剩余未赋值字段进行逐个赋值（`=`）。故遵循以下规则：
-
-- 更新结构必须放在最后；
-- 赋值字段遵循*Move*和*Copy*机制；
-- 更新结构后面不能有逗号（~~`,`~~）；
-
-```rust
-let user2 = User {
-    email: String::from("another@example.com"),
-    ..user1
-};
-```
-
-### 字段解构（Destructuring）
-
-> **字段解构（Destructuring）**也是赋值行为，故同样遵循*Move*和*Copy*机制。
-
-- 对于剩余字段可以使用`..`予以跳过。
-
-```rust
-let User { email, .. } = user1;
-assert_eq!(email, "anotheremail@example.com");
-```
-
-### 关联函数（Associated Functions）：
-
-> 结构的[方法（Methods）](#方法method)和[静态函数（Functions）](#静态函数)统称为**关联函数**。
-
-```rust
-struct Rectangle {
-    width: u32,
-    height: u32,
-}
-```
-
-关联函数有以下特点：
-
-- 结构的关联函数单独定义在`impl`块中；
-- 结构可以拥有多个`impl`块（当通过泛型或特征定义结构时，可以为不同类型定义不同关联函数）；
-- 结构的所有关联函数的函数名处于同一命名空间（意味着即使方法和静态函数的定义和调用方式都不同，也仍然不能同名）；
-
-#### 静态函数
-
-> 第一个参数不是~~`self`~~及其衍生形式（~~`&self`~~, ~~`&mut self`~~）的关联函数即为静态函数，通过命名空间符号`::`调用。
-
-在实践中，通常定义函数名为*new*（约定俗成而非强制）的静态函数以创建结构实例：
-
-```rust
-impl Rectangle {
-    fn new(width: u32, height: u32) -> Self {
-        Self {
-            width,
-            height,
-        }
-    }
-}
-```
-
-#### 方法（Method）
-
-> 第一个参数为当前实例`self`及其衍生形式（`&self`, `&mut self`）的关联函数即为方法，方法通过点号`.`调用；
-
-```rust
-impl Rectangle {
-    fn area(&self) -> u32 {
-        (*self).width * (*self).height
-    }
-}
-```
-
-> 当调用实例字段或方法时，我们无需显式地书写实例的调用方式（引用或非引用），Rust编译器会为我们**自动引用或解引用**当前实例，以适应其签名。（*when you call a method with object.something(), Rust automatically adds in `&`, `&mut`, or `*` so object matches the signature of the method.*）
-
-故上述方法在实际中更常写作：
-
-```rust
-impl Rectangle {
-    fn area(&self) -> u32 {
-        self.width * self.height
-    }
-}
-```
-
-## 枚举（Enum）
-
-### 无值枚举
-
-```rust
-enum IpAddrKind { V4, V6 }
-// 使用命名空间符号`::`获取变体
-let four = IpAddrKind::V4;
-```
-
-### 有值枚举
-
-> 枚举变体（*variants*）可以是任何类型。
-
-```rust
-enum IpAddr {
-  V4(u8, u8, u8, u8),
-  V6(String)
-}
-let home = IpAddr::V4(127, 0, 0, 1);
-let loopback = IpAddr::V6(String::from("::1"));
-```
-
-```rust
-enum Message {
-  // 单元结构（unit struct）
-  Quit,
-  // 匿名结构（anonymous struct）
-  Move { x: i32, y: i32 },
-  // 元组结构（tuple struct）
-  ChangeColor(i32, i32, i32),
-}
-```
-
-获取有值枚举的绑定值：
-
-```rust
-match home {
-  V4(a, b, c, d) => a,
-  V6(a) => a,
-}
-```
-
-定义方法（*methods*）：
-
-> 同[结构（Struct）](#结构struct)一样，也可以定义方法，且写法相同。
-
-```rust
-impl Message {
-  fn call(&self) {
-    // method body would be defined here
-  }
-}
-let m = Message::Write(String::from("hello"));
-m.call();
-```
-
-获取绑定值：
-
-```rust
-match home {
-  V4(a, b, c, d) => a,
-  V6(a) => a,
-}
-```
-
-## 泛型（Generic）
-
-> Rust通过在编译时对使用泛型的代码进行*单态化（monomorphization）*，所以在使用泛型时不会比使用具体类型时运行得更慢。
-
-函数：
-
-```rust
-fn largest<T>(list: &[T]) -> T {
-  // ...
-}
-```
-
-结构体：
-
-```rust
-struct Point<T> {
-  x: T,
-  y: T,
-}
-
-impl<T> Point<T> {
-  fn x(&self) -> &T {
-    &self.x
-  }
-}
-
-// 可以只在局部类型上面实现方法
-impl Point<f32> {
-  fn distance_from_origin(&self) -> f32 {
-    (self.x.powi(2) + self.y.powi(2)).sqrt()
-  }
-}
-```
-
-枚举：
-
-```rust
-enum Option<T> {
-  Some(T),
-  None,
-}
-```
-
-## 特征（Trait）
-
-> **特征（Trait）**是拥有共同特性的类型的特性集合，类似某些编程语言中的*接口（Interface）*。
-
-特征具有以下特点：
-
-- 特征方法可以有默认实现；
-- 特征方法的默认实现无法通过代码直接调用；
-- 特征可直接描述参数类型；
-- [特征对象（Trait Object）](#特征对象trait-object)可以描述值类型（静态化抽象类以实现动态类型）；
-
-```rust
-// 定义特征
-pub trait Summary {
-    fn summarize_author(&self) -> String;
-
-    // 带有默认实现的方法
-    fn summarize(&self) -> String {
-        format!("(Read more from {}...)", self.summarize_author())
-    }
-}
-
-// 部署特征
-impl Summary for Post {
-  fn summarize_author(&self) -> String {
-      self.username
-  }
-}
-
-impl Summary for Tweet {
-  fn summarize_author(&self) -> String {
-      self.author
-  }
-  // 覆盖默认实现
-  fn summarize(&self) -> String {
-      format!("(Read more ...)")
-  }
-}
-```
-
-### 特征直接描述参数（`impl Trait`）
-
-使用`impl <Trait>`语法描述参数类型：
-
-```rust
-pub fn notify(item: &impl Summary);
-```
-
-#### 特征绑定语法糖（Trait Bound）
-
-> 特征绑定（*Trait Bound*）：使用泛型写法为特征临时起别名的一种语法糖，用于简化复杂场景下的重复书写。
-
-```rust
-fn notify<T: Summary>(item1: &T, item2: &T);
-```
-
-#### 通过特征绑定有条件地实现方法
-
-> 通过对`impl {}`使用特征进行限制可以对同一结构针对（泛型面向的）不同入参类型部署不同的方法。
-
-```rust
-struct Pair<T> { x: T, y: T }
-
-impl<T> Pair<T> {
-    fn new(x: T, y: T) -> Self { Self { x, y } }
-}
-
-// 只有当`T`同时部署了`PartialOrd`和`Copy`时，下列方法才存在
-impl<T: PartialOrd + Copy> Pair<T> {
-    fn largest(&self) -> T {
-        if self.x >= self.y { self.x } else { self.y }
-    }
-}
-
-assert_eq!(Pair::new(1, 2).largest(), 2);
-
-// error[E0599]: the method `largest` exists for struct `Pair<String>`, but its trait bounds were not satisfied.
-assert_eq!(Pair::new(String::from("a"), String::from("b")).largest(), String::form("b"));
-```
-
-#### 组合多个特征
-
-通过`+`可以组合多个特征：
-
-```rust
-fn notify(item: &(impl Summary + Display));
-fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32;
-```
-
-#### `where`语句简化特征绑定
-
-```rust
-fn some_function<T, U>(t: &T, u: &U) -> i32 where T: Display + Clone, U: Clone + Debug;
-```
-
-### 特征对象间接描述值（`dyn Trait`）
-
-#### 静态调度（`impl Trait`）和动态调度（`dyn Trait`）
-
-> 当代码涉及多态性时，需要有一种机制来确定实际运行的是哪个具体的版本。这就是所谓的**调度（Dispatch）**。
-
-> 所谓**静态调度（Static Dispatch）**，在编译期确定调用类型。如前述的泛型会在编译期间单态化，这种静态分发的优势，是没有运行时的性能损耗，但函数无法返回多种类型。所以Rust也支持通过[*特征对象（Trait Object）*](#特征对象trait-object)来实现**动态调度（Dynamic Dispatch）**。
-
-#### 特征对象（Trait Object）
-
-> *特征（Trait）*代表的是不定类型（在编译时无法确定大小），无法用作直接值的类型（如函数返回值）。
-> 要想使用特征描述值的类型，就需要将特征包装成确定大小类型（如指针），在Rust中这个特殊类型就是**特征对象（Trait Object）**。
-
-特征对象的类型为`Box<Trait>`，如下：
-
-```rust
-fn returns_summarizable(switch: bool) -> Box<dyn Summary> {
-  if switch {
-    Box::new(NewsArticle { /* ... */ })
-  } else {
-    Box::new(Tweet { /* ... */ })
-  }
-}
-```
-
-其中，`dyn`为特征对象的标识符（以与特征进行区分），`Box`为装箱类型存储实质类型的指针。
-
-> 装箱类型（`Box`）可以封装不定大小数据（不定类型），在无需确切知道具体类型的上下文中实现动态数据的调用。具体地，`Box`将封装的数据存储在堆上，并在栈中保留一个指向数据的*智能指针（smart pointer）*）
-
-## 生命周期（Lifetime）
-
-> [生命周期（Lifetime）](http://localhost/rust/book/ch10-03-lifetime-syntax.html)规则用以保证*引用*的存活时间符合我们的需要。
-> 简单情况下，引用的生命周期可以被编译器正确推导，复杂的情况下则需要我们主动进行[生命周期标注](#生命周期标注)。
-
-```rust
-// error[E0106]: missing lifetime specifier
-// help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
-fn longest(x: &str, y: &str) -> &str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-```
-
-### 生命周期标注（`'a`）
-
-> 当多个引用传入作用域时，可能会引起生命周期歧义，这时，我们需要对这些引用的生命周期进行明确标注，以使编译器可以顺利地遵循Rust的内存管理规则来保障内存安全。
-> *需要注意的是，引用的生命周期在其声明时便已确定，标注并不会改变引用的生命周期，标注是为了在编译器不清楚的时候告知编译器以保证借用的规则。*
-
-```rust
-&i32        // a reference
-&'a i32     // a reference with an explicit lifetime
-&'a mut i32 // a mutable reference with an explicit lifetime
-```
-
-#### 生命周期泛型（generic lifetime parameters）
-
-```rust
-// 函数
-fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-// 结构
-struct ImportantExcerpt<'a> { // ImportantExcerpt实例的存活时间不会晚于part字段的存活时间
-    part: &'a str,
-}
-```
-
-> 生命周期泛型标注的含义是：被标注的引用的生命周期不短于该标注泛型来源引用所具有的生命周期，如果来源有多个，则不短于其中最短的一个。
-
-```rust
-fn main() {
-    let string1 = String::from("long string is long");
-    let result;
-    {
-        let string2 = String::from("xyz");
-        result = longest(string1.as_str(), string2.as_str()); // error[E0597]: `string2` does not live long enough
-    }
-    println!("The longest string is {}", result); // 由于result生命周期只是不短于string2，故此时无法保证其存活
-//                                       ------ borrow later used here
-
-}
-```
-
-#### 静态生命周期（`'static`）
-
-> 静态生命周期即程序的生命周期。
-
-字符串切片字面即静态生命周期`&'static str`。
-
 # 元编程（Meta Programing）
 
 ## 宏
@@ -3080,53 +3168,54 @@ fn main() {
 宏的定义：
 
 ```rust
-macro_rules! IDENTIFIER MacroRulesDefinition
+macro_rules! IDENTIFIER MacroRulesDef
 
-MacroRulesDefinition:
-  {MacroRules}
-  /* OR */
-  (MacroRules);
-  /* OR */
-  [MacroRules];
+MacroRulesDef :
+    ( MacroRules );
+  | [ MacroRules ];
+  | { MacroRules }
 
 MacroRules:
-  MacroRule (;MacroRule)* ;?
+  MacroRule
+  (; MacroRule)*
+  ;?
 
 MacroRule:
   MacroMatcher => MacroTranscriber
 
 MacroMatcher:
-  (MacroMatch*)
-  /* OR */
-  [MacroMatch*]
-  /* OR */
-  {MacroMatch*}
+    ( MacroMatch* )
+  | [ MacroMatch* ]
+  | { MacroMatch* }
+
+MacroMatch:
+    Exclude<Token, $|DELIMITER> // 可以直接比对纯字面量
+  | $MetaVariable: MacroFragSpec // 指定片段的匹配模式，并捕获到元变量`$MetaVariable`
+  | $(MacroMatch+) MacroRepSep? MacroRepOp // 如需要进行多次匹配，可以指定分隔符和匹配次数
+  | MacroMatcher
+
+MacroFragSpec:
+    block | expr | ident | item | lifetime | literal
+  | meta | pat | pat_param | path | stmt | tt | ty | vis
+
+// 重复分隔符
+MacroRepSep:
+  Exclude<Token, DELIMITER | MacroRepOp>
+
+MacroRepOp:
+  * | + | ?
+
+MetaVariable: Exclude<IDENTIFIER|KEYWORD, crate|RAW_IDENTIFIER|_> // 元变量的命名规则
 
 MacroTranscriber:
   DelimTokenTree
 
-MacroMatch:
-  Exclude<Token, $|DELIMITER> // 可以直接比对纯字面量
-  /* OR */
-  $MetaVariable: MacroFragmentSpecifier // 指定片段的匹配模式，并捕获到元变量`$MetaVariable`
-  /* OR */
-  $(MacroMatch+) MacroRepetitionSeperator? MacroRepetitionOperator // 如需要进行多次匹配，可以指定分隔符和匹配次数
-  /* OR */
-  MacroMatcher
-
-MetaVariable: Exclude<IDENTIFIER|KEYWORD, crate|RAW_IDENTIFIER|_> // 元变量的命名规则
-
 DelimTokenTree :
-  (TokenTree*)
-  /* OR */
-  [TokenTree*]
-  /* OR */
-  {TokenTree*}
+    ( TokenTree* )
+  | [ TokenTree* ]
+  | { TokenTree* }
 
 TokenTree: Exclude<Token, DELIMITER | DelimTokenTree>
-MacroFragmentSpecifier: block | expr | ident | item | lifetime | literal | meta | pat | pat_param | path | stmt | tt | ty | vis
-MacroRepetitionSeperator: Exclude<Token, DELIMITER | MacroRepetitionOperator>
-MacroRepetitionOperator: * | + | ?
 DELIMITER: ( | ) | [ | ] | { | }
 ```
 
