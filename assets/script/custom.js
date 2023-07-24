@@ -529,6 +529,7 @@
       }
       const list = Array.from(nav.el.querySelectorAll('a')).filter(e => !e.nextElementSibling)
       const wrap = el('div')
+        .append(nav.el)
         .append(el('div')
           .append(el('div').append(document.createTextNode('🔍')))
           .append(el('input')
@@ -545,8 +546,7 @@
                 }
               })
             }))
-        )
-        .append(nav.el).el
+        ).el
 
       document.querySelector('.bar-1fc7ed35')?.querySelector('.global-nav-1fc7ed35')?.remove()
       document.querySelector('.bar-1fc7ed35')?.appendChild(el('div').class('global-nav-1fc7ed35').append(wrap).el)
@@ -783,7 +783,6 @@ html, body {
   outline: none;
   border-radius: 2px;
   padding: 2px;
-  text-align: center;
   border: none;
   border-bottom: solid 1px;
   color: #006bff;
