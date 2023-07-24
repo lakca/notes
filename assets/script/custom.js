@@ -538,8 +538,10 @@
               list.forEach(el => {
                 if (el.textContent.toLowerCase().indexOf(val) > -1) {
                   el.parentElement.style.maxHeight = '2em'
+                  el.parentElement.style.overflowY = ''
                 } else {
                   el.parentElement.style.maxHeight = '0'
+                  el.parentElement.style.overflowY = 'hidden'
                 }
               })
             }))
@@ -570,28 +572,6 @@
   }
   if (document.body.classList.contains('page') || document.body.classList.contains('post')) {
     menu.mount()
-  }
-
-  // init mermaid
-  function initMermaid() {
-    window.mermaid.initialize({
-      startOnLoad: true,
-      theme: "forest",
-      flowchart: {
-        useMaxWidth: true,
-        htmlLabels: true
-      }
-    })
-    window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
-  }
-  if (window.mermaid) {
-    initMermaid()
-  } else {
-    for (const script of document.scripts) {
-      if (/mermaid/.test(script.src)) {
-        script.onload = initMermaid
-      }
-    }
   }
 
   // click event
@@ -939,4 +919,32 @@ img:not([${ident('previewing')}]) {
   cursor: pointer;
 }
 `).mount(document.head)
+
+  const externals = [
+    [() => window.mermaid, (script) => script.src.indexOf('mermaid') > -1, function mermaid() {
+      window.mermaid.initialize({
+        startOnLoad: true,
+        theme: "forest",
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true
+        }
+      })
+      window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
+    }],
+    [() => window.pseudoCode, (script) => script.src.indexOf('pseudo-code') > -1, function pseudo() {
+      window.pseudoCode(document.body.querySelectorAll('.language-pseudo'))
+    }],
+  ]
+  for (const external of externals) {
+    if (external[0]()) {
+      external[2]()
+    } else {
+      for (const script of document.scripts) {
+        if (external[1](script)) {
+          script.onload = external[2]()
+        }
+      }
+    }
+  }
 }())
