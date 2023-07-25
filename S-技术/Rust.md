@@ -2729,37 +2729,37 @@ fn main() {
 
 模式语法：
 
-```rust
-Pattern:
-  // Rust RFC-1925
-  |? PatternNoTopAlt ( | PatternNoTopAlt )*
+```pseudo
+Pattern
+  / RFC-1925 /
+  `|`"?" PatternNoTopAlt "(" `|` PatternNoTopAlt ")""*"
 
-PatternNoTopAlt:
-  // PatternWithoutRange:
-    LiteralPattern                          // 字面量
-  | IdentifierPattern                       // 标识符
-  | WildcardPattern                         // 通配符
-  | RestPattern                             // 剩余模式
-  | ReferencePattern                        // 引用
-  | StructPattern                           // 结构
-  | TupleStructPattern                      // 元组结构
-  | TuplePattern                            // 元组
-  | GroupedPattern                          // 分组
-  | SlicePattern                            // 切片
-  | PathPattern                             // 路径
-  | MacroInvocation                         // 宏调用
-  // RangePattern
-  | RangePatternBound ..= RangePatternBound // [] RangeInclusivePattern
-  | ..= RangePatternBound                   // <= RangeToInclusivePattern
-  | RangePatternBound ..                    // >  RangeFromPattern
-  | RangePatternBound ... RangePatternBound // () ObsoleteRangePattern
+PatternNoTopAlt
+  / PatternWithoutRange /
+    LiteralPattern                            / 字面量 /
+  | IdentifierPattern                         / 标识符 /
+  | WildcardPattern                           / 通配符 /
+  | RestPattern                               / 剩余模式 /
+  | ReferencePattern                          / 引用 /
+  | StructPattern                             / 结构 /
+  | TupleStructPattern                        / 元组结构 /
+  | TuplePattern                              / 元组 /
+  | GroupedPattern                            / 分组 /
+  | SlicePattern                              / 切片 /
+  | PathPattern                               / 路径 /
+  | MacroInvocation                           / 宏调用 /
+  / RangePattern /
+  | RangePatternBound `..=` RangePatternBound / [] RangeInclusivePattern /
+  | `..=` RangePatternBound                   / <= RangeToInclusivePattern /
+  | RangePatternBound `..`                    / >  RangeFromPattern /
+  | RangePatternBound `...` RangePatternBound / () ObsoleteRangePattern /
 
-RangePatternBound:
-    CHAR_LITERAL                            // 字符
-  | BYTE_LITERAL                            // 字节
-  | -? INTEGER_LITERAL                      // 整型
-  | -? FLOAT_LITERAL                        // 浮点数
-  | PathExpression                          // 路径
+RangePatternBound
+    CHAR_LITERAL                            / 字符 /
+  | BYTE_LITERAL                            / 字节 /
+  | `-`"?" INTEGER_LITERAL                  / 整型 /
+  | `-`"?" FLOAT_LITERAL                    / 浮点数 /
+  | PathExpression                          / 路径 /
 ```
 
 ### 字面量（Literals）
@@ -3167,56 +3167,59 @@ demo();
 
 宏的定义：
 
-```rust
-macro_rules! IDENTIFIER MacroRulesDef
+```pseudo
+#Macros
+  `macro_rules!` [IDENTIFIER] [MacroRulesDefinition]
 
-MacroRulesDef :
-    ( MacroRules );
-  | [ MacroRules ];
-  | { MacroRules }
+#MacroRulesDefinition
+  `{` [MacroRules] `}` | `(` [MacroRules] `)``;` | `[` [MacroRules] `]``;`
 
-MacroRules:
-  MacroRule
-  (; MacroRule)*
-  ;?
+#MacroRules
+  [MacroRule] "("`;`[MacroRule]")""*" `;`"?"
 
-MacroRule:
-  MacroMatcher => MacroTranscriber
+  #MacroRule
+    [MacroMatcher] `=>` [MacroTranscriber]
 
-MacroMatcher:
-    ( MacroMatch* )
-  | [ MacroMatch* ]
-  | { MacroMatch* }
+  #MacroMatcher
+    `(` [MacroMatches] `)` | `[` [MacroMatches] `]` | `{` [MacroMatches] `}`
 
-MacroMatch:
-    Exclude<Token, $|DELIMITER> // 可以直接比对纯字面量
-  | $MetaVariable: MacroFragSpec // 指定片段的匹配模式，并捕获到元变量`$MetaVariable`
-  | $(MacroMatch+) MacroRepSep? MacroRepOp // 如需要进行多次匹配，可以指定分隔符和匹配次数
-  | MacroMatcher
+  #MacroMatches
+    [MacroMatch] "("`,`[MacroMatch]")""*"
 
-MacroFragSpec:
-    block | expr | ident | item | lifetime | literal
-  | meta | pat | pat_param | path | stmt | tt | ty | vis
+  #MacroMatch
+      /可以直接比对纯字面量/
+      Exclude<[Token], `$` | [DELIMITER]>
+      /指定每段的匹配模式，并捕获到元变量`$MetaVariable`/
+    | `$`[MetaVariable]`: `[MacroFragmentSpecifier]
+      /如需要进行多次匹配，可以指定分隔符和匹配次数/
+    | `$`"("[MacroMatch]"+"")" [MacroRepetitionSeparator]"?" [MacroRepetitionOperator]
+    | [MacroMatcher]
 
-// 重复分隔符
-MacroRepSep:
-  Exclude<Token, DELIMITER | MacroRepOp>
+    /元变量的命名规则/
+    #MetaVariable
+      Exclude<[IDENTIFIER] | [KEYWORD], `crate`> | [RAW_IDENTIFIER] | `_`
 
-MacroRepOp:
-  * | + | ?
+    #MacroFragmentSpecifier
+        `block` | `expr` | `ident` | `item` | `lifetime` | `literal` | `meta` | `pat`
+      | `pat_param` | `path` | `stmt` | `tt` | `ty` | `vis`
 
-MetaVariable: Exclude<IDENTIFIER|KEYWORD, crate|RAW_IDENTIFIER|_> // 元变量的命名规则
+    #MacroRepetitionSeparator
+      Exclude<[Token], [DELIMITER] | [MacroRepetitionOperator]>
 
-MacroTranscriber:
-  DelimTokenTree
+    #MacroRepetitionOperator
+      `*` | `+` | `?`
 
-DelimTokenTree :
-    ( TokenTree* )
-  | [ TokenTree* ]
-  | { TokenTree* }
+  #DELIMITER
+    `(` | `)` | `[` | `]` | `{` | `}`
 
-TokenTree: Exclude<Token, DELIMITER | DelimTokenTree>
-DELIMITER: ( | ) | [ | ] | { | }
+#MacroTranscriber
+  [DelimTokenTree]
+
+  #DelimTokenTree
+    `(`[TokenTree]"*"`)` | `[`[TokenTree]"*"`]` | `{`[TokenTree]"*"`}`
+
+  #TokenTree
+    Exclude<[Token], [DELIMITER] | [DelimTokenTree]>
 ```
 
 例如，定义一个名为`vec`的宏：
