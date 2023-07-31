@@ -3,16 +3,57 @@ title: Python-基本教程
 date: 2021-05-08T09:01:36.275Z
 ---
 
-- [cookbooks](#cookbooks)
+- [文档](#文档)
+- [builtin](#builtin)
+- [包](#包)
 - [FAQ](#faq)
   - [根据文件绝对路径引入模块](#根据文件绝对路径引入模块)
+  - [在低版本Python使用未来特性](#在低版本python使用未来特性)
 - [字符串格式化](#字符串格式化)
   - [`%`](#)
   - [`format()`](#format)
 
-# cookbooks
+# 文档
 
 - [https://python3-cookbook.readthedocs.io/](https://python3-cookbook.readthedocs.io/)
+
+# builtin
+
+- `vars()`
+- `enumerate()`
+- `iter()`
+
+# 包
+
+- `inspect`: 获取活动对象的信息，比如
+  - `ismethod()`
+  - `getsourcefile()`
+  - `getdoc()`
+  - `getcallargs()`
+  - `signature()`
+  - ...
+- `os`: 系统相关的信息或操作，比如
+  - 环境变量：`environ`
+  - 系统信息：`cpu_count`
+  - 执行系统命令：`system()`, `execl()`等
+  - 文件系统操作：`open()`, `close()`, `stat()`, `chmod()`等
+  - ...
+- `sys`: 当前Python环境信息或操作，比如
+  - 命令行参数：`argv`
+  - ...
+- `types`: 提供环境预加载（*prelude*）类型（如`str`, `int`）以外的内置类型，比如
+  - `BuiltinFunctionType`
+  - `GeneratorType`
+  - `MethodType`
+  - ...
+- `typing`
+- `collections`
+- `__future__`: 引入Python未来版本中的特性，比如
+  - `annotations`: 类型注释
+  - `print_method`: `print()`函数
+  - ...
+
+- `argparse`: 解析命令行参数                                                                                                  |
 
 # FAQ
 
@@ -40,6 +81,15 @@ foo.MyClass()
 import imp
 foo = imp.load_source('module.name', '/path/to/file.py')
 foo.MyClass()
+```
+
+## 在低版本Python使用未来特性
+
+```python
+# 引进`print()`函数，可以在2.x使用
+from __future__ import print_method
+# 引进类型标注
+from __future__ import annotations
 ```
 
 # 字符串格式化
