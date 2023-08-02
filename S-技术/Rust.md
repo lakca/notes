@@ -2730,41 +2730,129 @@ fn main() {
 模式语法：
 
 ```pseudo
-Pattern
+#Pattern
   / RFC-1925 /
-  `|`"?" PatternNoTopAlt "(" `|` PatternNoTopAlt ")""*"
+  `|`"?" [PatternNoTopAlt] "(" `|` [PatternNoTopAlt] ")""*"
 
-PatternNoTopAlt
-  / PatternWithoutRange /
-    LiteralPattern                            / 字面量 /
-  | IdentifierPattern                         / 标识符 /
-  | WildcardPattern                           / 通配符 /
-  | RestPattern                               / 剩余模式 /
-  | ReferencePattern                          / 引用 /
-  | StructPattern                             / 结构 /
-  | TupleStructPattern                        / 元组结构 /
-  | TuplePattern                              / 元组 /
-  | GroupedPattern                            / 分组 /
-  | SlicePattern                              / 切片 /
-  | PathPattern                               / 路径 /
-  | MacroInvocation                           / 宏调用 /
-  / RangePattern /
-  | RangePatternBound `..=` RangePatternBound / [] RangeInclusivePattern /
-  | `..=` RangePatternBound                   / <= RangeToInclusivePattern /
-  | RangePatternBound `..`                    / >  RangeFromPattern /
-  | RangePatternBound `...` RangePatternBound / () ObsoleteRangePattern /
+#PatternNoTopAlt
+    [PatternWithoutRange]
+  | [RangePattern]
 
-RangePatternBound
-    CHAR_LITERAL                            / 字符 /
-  | BYTE_LITERAL                            / 字节 /
-  | `-`"?" INTEGER_LITERAL                  / 整型 /
-  | `-`"?" FLOAT_LITERAL                    / 浮点数 /
-  | PathExpression                          / 路径 /
+#RangePattern
+     [RangeInclusivePattern]
+   | [RangeFromPattern]
+   | [RangeToInclusivePattern]
+   | [ObsoleteRangePattern]
+
+  #RangeInclusivePattern
+        [RangePatternBound] `..=` [RangePatternBound]
+
+  #RangeFromPattern
+        [RangePatternBound] `..`
+
+  #RangeToInclusivePattern
+        `..=` [RangePatternBound]
+
+  #ObsoleteRangePattern
+    [RangePatternBound] `...` [RangePatternBound]
+
+  #RangePatternBound
+      [CHAR_LITERAL]                                / 字符 /
+    | [BYTE_LITERAL]                                / 字节 /
+    | `-`"?" [INTEGER_LITERAL]                      / 整型 /
+    | `-`"?" [FLOAT_LITERAL]                        / 浮点数 /
+    | [PathExpression]                              / 路径 /
+
+#PatternWithoutRange
+    [LiteralPattern]                              / 字面量 /
+  | [IdentifierPattern]                           / 标识符 /
+  | [WildcardPattern]                             / 通配符 /
+  | [RestPattern]                                 / 剩余模式 /
+  | [ReferencePattern]                            / 引用 /
+  | [StructPattern]                               / 结构 /
+  | [TupleStructPattern]                          / 元组结构 /
+  | [TuplePattern]                                / 元组 /
+  | [GroupedPattern]                              / 分组 /
+  | [SlicePattern]                                / 切片 /
+  | [PathPattern]                                 / 路径 /
+  | [MacroInvocation]                             / 宏调用 /
+
+  #LiteralPattern
+      `true` | `false`
+    | [CHAR_LITERAL]
+    | [BYTE_LITERAL]
+    | [STRING_LITERAL]
+    | [RAW_STRING_LITERAL]
+    | [BYTE_STRING_LITERAL]
+    | [RAW_BYTE_STRING_LITERAL]
+    | `-`"?" [INTEGER_LITERAL]
+    | `-`"?" [FLOAT_LITERAL]
+
+  #IdentifierPattern
+    `ref`"?" `mut`"?" [IDENTIFIER] "("`@` [PatternNoTopAlt] ")" "?"
+
+  #WildcardPattern
+    `_`
+
+  #RestPattern
+    `..`
+
+  #ReferencePattern
+    "("`&`|`&&`")" `mut`"?" [PatternWithoutRange]
+
+  #StructPattern
+    [PathInExpression] `{`
+        [StructPatternElements] "?"
+    `}`
+
+    #StructPatternElements
+        [StructPatternFields] "("`,` | `,` [StructPatternEtCetera]")""?"
+      | [StructPatternEtCetera]
+
+    #StructPatternFields
+      [StructPatternField] "("`,` [StructPatternField]")" "*"
+
+    #StructPatternField
+      [OuterAttribute] "*"
+      "("
+            [TUPLE_INDEX] `:` [Pattern]
+          | [IDENTIFIER] `:` [Pattern]
+          | `ref`"?" `mut`"?" [IDENTIFIER]
+      ")"
+
+    #StructPatternEtCetera
+      [OuterAttribute] "*"
+      `..`
+  #TupleStructPattern
+    [PathInExpression] `(` [TupleStructItems]"?" `)`
+
+    #TupleStructItems
+      [Pattern] "(" `,` [Pattern] ")""*" `,`"?"
+
+  #TuplePattern
+    `(` [TuplePatternItems]"?" `)`
+
+    #TuplePatternItems
+        [Pattern] `,`
+      | [RestPattern]
+      | [Pattern] "("`,` [Pattern]")""+" `,`?
+
+  #GroupedPattern
+    `(` [Pattern] `)`
+
+  #SlicePattern
+    `[` [SlicePatternItems]"?" `]`
+
+    #SlicePatternItems
+      [Pattern] "("`,` [Pattern]")""*" `,`"?"
+
+  #PathPattern
+    [PathExpression]
 ```
 
 ### 字面量（Literals）
 
-```rust
+```pseudo
 LiteralPattern :
      true | false
    | CHAR_LITERAL
