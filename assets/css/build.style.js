@@ -6,44 +6,45 @@ const os = require('os')
 let building = false
 
 async function removeAfter(filename, linePattern) {
-  return new Promise((rsv, rej) => {
+  return new Promise((resolve, reject) => {
     const rl = readline.createInterface({
-      input: fs.createReadStream(filename),
-    });
+      input: fs.createReadStream(filename)
+    })
 
     let newLength = 0
     let found = false
-    rl.on('line', function (line) {
+    rl.on('line', function(line) {
       if (linePattern.test(line)) {
         found = true
         rl.close()
       } else {
         newLength += Buffer.from(line).byteLength + 1
       }
-    });
+    })
 
-    rl.on('close', function () {
+    rl.on('close', function() {
       if (found) {
-        fs.truncateSync(filename, newLength);
+        fs.truncateSync(filename, newLength)
       }
-      rsv(null)
-    });
+      resolve(null)
+    })
   })
 }
 
 function escapeRegExp(string) {
-  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+  return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') // $& means the whole matched string
 }
 
 function removeBetween(filename, startPattern, endPattern) {
-  return new Promise((rsv, rej) => {
+  if (!fs.existsSync(filename)) return Promise.resolve(true)
+  return new Promise((resolve, reject) => {
     const rl = readline.createInterface({
-      input: fs.createReadStream(filename),
-    });
+      input: fs.createReadStream(filename)
+    })
 
     const lines = []
     let ignoring = 0
-    rl.on('line', function (line) {
+    rl.on('line', function(line) {
       if (startPattern.test(line)) {
         if (ignoring < 0) ignoring = 0
         ignoring += 1
@@ -52,14 +53,14 @@ function removeBetween(filename, startPattern, endPattern) {
       } else if (ignoring < 1) {
         lines.push(line)
       }
-    });
+    })
 
-    rl.on('close', function () {
+    rl.on('close', function() {
       setTimeout(() => {
         fs.writeFileSync(filename, lines.join(os.EOL))
-        rsv(null)
+        resolve(null)
       }, 0)
-    });
+    })
   })
 }
 
@@ -74,22 +75,22 @@ function ensureNewline(filePath) {
   fs.closeSync(fd)
 }
 
-async function append(target, themes, theme) {
+async function append(output, themes, theme) {
   if (theme) {
     const filename = themes[theme]
     building = true
     const startIndicator = `/*---START:${theme}---*/`
     const endIndicator = `/*---END:${theme}---*/`
-    await removeBetween(target, new RegExp('^\\s*' + escapeRegExp(startIndicator) + '\\s*$'), new RegExp('^\\s*' + escapeRegExp(endIndicator) + '\\s*$'))
-    ensureNewline(target)
-    fs.appendFileSync(target, `${startIndicator}\n` + build(filename, theme))
-    ensureNewline(target)
-    fs.appendFileSync(target, `${endIndicator}\n`)
+    await removeBetween(output, new RegExp('^\\s*' + escapeRegExp(startIndicator) + '\\s*$'), new RegExp('^\\s*' + escapeRegExp(endIndicator) + '\\s*$'))
+    ensureNewline(output)
+    fs.appendFileSync(output, `${startIndicator}\n` + build(filename, theme))
+    ensureNewline(output)
+    fs.appendFileSync(output, `${endIndicator}\n`)
     building = false
     console.log('built done!', new Date().toLocaleString())
   } else {
     for await (const theme of Object.keys(themes)) {
-      await append(target, themes, theme)
+      await append(output, themes, theme)
     }
   }
 }
@@ -105,9 +106,9 @@ function build(filename, theme) {
     const level = line.match(/^\s*/)?.[0].length
     const last = records[records.length - 1]
     const phrases = records[records.length] = []
-    let phrase = ""
+    let phrase = ''
     let quoted = false
-    const push = function () {
+    const push = function() {
       if (!phrase) return
       if (phrases.length) {
         phrases.push(phrase)
@@ -121,7 +122,7 @@ function build(filename, theme) {
         }
         leading.push([level, phrase])
       }
-      phrase = ""
+      phrase = ''
     }
     for (let j = 0, token = line[j]; j < line.length; ++j, token = line[j]) {
       if (token === '"') {
@@ -157,24 +158,29 @@ function build(filename, theme) {
   return style
 }
 
-const suffix = '.theme.conf'
-const themes = Object.fromEntries(fs.readdirSync(__dirname).filter(file => file.endsWith(suffix)).map(file => {
-  return [file.slice(0, -suffix.length), path.join(__dirname, file)]
-}))
-const theme = process.argv.find(e => themes[e])
+function getThemes() {
+  return Object.fromEntries(fs.readdirSync(__dirname).filter(file => file.endsWith(SUFFIX)).map(file => {
+    return [file.slice(0, -SUFFIX.length), path.join(__dirname, file)]
+  }))
+}
+
+const SUFFIX = '.theme.conf'
 
 if (process.argv.includes('dev')) {
-  const targetPath = path.join(__dirname, '../override/longpeng.me/notes/assets/css')
-  let target = fs.readdirSync(targetPath).find(e => e.startsWith('style.css'))
-  if (target) {
-    target = path.join(targetPath, target)
-    Object.entries(themes).forEach(([theme, filename]) => {
-      fs.watchFile(filename, async stat => {
-        return building || append(target, themes, theme)
-      })
-    })
-  }
+  const output = path.join(__dirname, './style.highlight.scss')
+  fs.watch(__dirname, function(type, filename) {
+    if (filename?.endsWith(SUFFIX)) {
+      building || append(output, getThemes(), filename.slice(0, -SUFFIX.length))
+    }
+  })
+} else if (process.argv.includes('alone')) {
+  const output = path.join(__dirname, './style.highlight.scss')
+  const themes = getThemes()
+  const theme = process.argv.find(e => themes[e])
+  building || append(output, themes, theme)
 } else {
-  const target = path.join(__dirname, './style.scss')
-  building || append(target, themes, theme)
+  const output = path.join(__dirname, './style.scss')
+  const themes = getThemes()
+  const theme = process.argv.find(e => themes[e])
+  building || append(output, themes, theme)
 }

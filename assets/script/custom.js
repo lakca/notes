@@ -1,5 +1,5 @@
 // @ts-nocheck
-(function () {
+(function() {
   const TOUCH_SUPPORT = !!(window.DocumentTouch && document instanceof window.DocumentTouch || window.ontouchstart === null)
 
   function el(tag) {
@@ -22,8 +22,8 @@
       },
       style(prop, value) {
         let style = el.getAttribute('style') || ''
-        style = style.replace(new RegExp(prop + '\s*:.*?(;|$)', 'g'), '')
-        if (value !== void 0) {
+        style = style.replace(new RegExp(prop + '\\s*:.*?(;|$)', 'g'), '')
+        if (value !== undefined) {
           style += prop + ':' + value + ';'
         }
         el.setAttribute('style', style)
@@ -48,7 +48,7 @@
       append(e) {
         el.appendChild(e.el || e)
         return this
-      },
+      }
     }
   }
 
@@ -67,21 +67,22 @@
         this.move = null
       }
     }
-    ele.addEventListener('touchstart', function (e) {
+    ele.addEventListener('touchstart', function(e) {
       e.stopPropagation()
       if (touch.start) return
       touch.start = { x: e.touches[0].clientX, y: e.touches[0].clientY }
       cb.onstart && cb.onstart.call(this, touch, e)
     }, { passive: false })
-    if (cb.onmove)
-      ele.addEventListener('touchmove', function (e) {
+    if (cb.onmove) {
+      ele.addEventListener('touchmove', function(e) {
         e.stopPropagation()
         if (touch.start) {
           touch.move = { x: e.touches[0].clientX, y: e.touches[0].clientY }
           cb.onmove.call(this, touch, e)
         }
       }, { passive: false })
-    ele.addEventListener('touchend', function (e) {
+    }
+    ele.addEventListener('touchend', function(e) {
       e.stopPropagation()
       cb.onend && cb.onend.call(this, touch, e)
       cb.reset && cb.reset()
@@ -146,7 +147,7 @@
     </svg>`
     target.appendChild(loading)
     const unsetRelative = setRelative(target)
-    loading.destroy = function () {
+    loading.destroy = function() {
       console.log('destroy')
       loading.remove()
       unsetRelative()
@@ -161,7 +162,7 @@
     closeBtn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"><path d="M289.94 256l95-95A24 24 0 0 0 351 127l-95 95l-95-95a24 24 0 0 0-34 34l95 95l-95 95a24 24 0 1 0 34 34l95-95l95 95a24 24 0 0 0 34-34z" fill="currentColor"></path></svg>'
     target.appendChild(closeBtn)
     const unsetRelative = setRelative(target)
-    closeBtn.destroy = function () {
+    closeBtn.destroy = function() {
       closeBtn.remove()
       unsetRelative()
     }
@@ -182,13 +183,13 @@
 
     document.body.appendChild(modal)
     document.body.classList.add(ident('overflow-hidden'))
-    createCloseButton(modal, function () {
+    createCloseButton(modal, function() {
       modal.remove()
       document.body.classList.remove(ident('overflow-hidden'))
     })
 
     modal.wrap = wrap
-    modal.loading = function (force) {
+    modal.loading = function(force) {
       if (force === false) {
         if (loading) {
           loading.destroy()
@@ -280,7 +281,7 @@
       const menus = this.menu.querySelectorAll('a[data-id]')
       let scrollTop = document.documentElement.scrollTop
       let hoveredMenu = null
-      const onFrame = function () {
+      const onFrame = function() {
         if (Math.abs(document.documentElement.scrollTop - scrollTop) > 40) {
           scrollTop = document.documentElement.scrollTop
           let last = headers[0]
@@ -312,7 +313,7 @@
       const items = []
       let pathname = window.location.pathname
       // @ts-ignore
-      while (pathname = pathname.match(/(.*\/)(.+?)(?=\/?$)/)) {
+      while ((pathname = pathname.match(/(.*\/)(.+?)(?=\/?$)/))) {
         const name = decodeURIComponent(pathname[2]).toUpperCase()
         if (items.length) {
           items.unshift(`<a href="${pathname[0]}">${name}</a>`)
@@ -367,7 +368,7 @@
         if (plv > lv) indexes.length = lv
         const id = indexes.join('.')
 
-        const html = [`<li>`, `<a data-id="${id}" href="#${h.id}"><span style="font-size:0.5em">${id}</span> ${h.innerHTML}</a>`, '</li>']
+        const html = ['<li>', `<a data-id="${id}" class="effect-bg" href="#${h.id}"><span style="font-size:0.5em">${id}</span> ${h.innerHTML}</a>`, '</li>']
 
         const span = document.createElement('a')
         span.textContent = id + '. '
@@ -394,7 +395,6 @@
       return chain.find(e => e)?.join('')
     },
     mountMenu() {
-
       el('ul').class(ident('menu'))
         .class(ident('h1'))
         .class(ident('transitionable'))
@@ -503,10 +503,10 @@
       const files = window?.site_data?.files || []
       const nav = { el: document.createDocumentFragment(), children: {} }
       const baseUrl = '/notes'
-      for (file of files) {
+      for (const file of files) {
         let parent = nav
         const last = file.segments[file.segments.length - 1]
-        let path = [baseUrl]
+        const path = [baseUrl]
         for (const name of file.segments) {
           path.push(name)
           if (parent.children[name]) {
@@ -564,14 +564,56 @@
         if (!isCatalog) {
           this.mountMenu()
           this.mountBar()
+          this.collapse(1)
         }
         this.onScroll()
-        return this._mounted = true
+        this._mounted = true
+        return true
       } return false
-    },
+    }
   }
   if (document.body.classList.contains('page') || document.body.classList.contains('post')) {
     menu.mount()
+  }
+
+  function previewSvg(svg) {
+    const modal = createModal()
+    svg = svg.cloneNode(true)
+    el(svg)
+      .style('min-width', '100vw')
+      .style('min-height', '100vh')
+      .style('max-width', '100vw')
+      .style('max-height', '100vh')
+      .style('background', 'white')
+    modal.wrap.appendChild(svg)
+  }
+
+  function previewImage(_img) {
+    if (_img.hasAttribute(ident('previewing'))) return
+    const modal = createModal()
+    const img = el('img')
+      .attr('src', _img.src)
+      .attr(ident('previewing'), true)
+      .on('load', () => modal.loading(false))
+    if (_img.src.indexOf('.svg') > -1) {
+      img
+        .style('min-width', '100vw')
+        .style('min-height', '100vh')
+        .style('max-width', '100vw')
+        .style('max-height', '100vh')
+        .style('background', 'white')
+    } else {
+      img
+        .style('min-width', '100%')
+        .style('min-height', '100%')
+        .style('max-width', '100%')
+        .style('max-height', '100%')
+    }
+    modal.wrap.appendChild(img.el)
+    modal.loading()
+    if (img.el.complete) {
+      modal.loading(false)
+    }
   }
 
   // click event
@@ -580,37 +622,17 @@
     if (['EM', 'B', 'STRONG'].includes(e.target.tagName) || (e.target.tagName === 'CODE' && e.target.parentElement.tagName !== 'PRE')) {
       await navigator.clipboard.writeText(e.target.textContent)
       window.toastr && window.toastr.success(e.target.textContent, 'Copied!')
-    } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.classList.contains('highlight')) {
-      await navigator.clipboard.writeText(e.target.parentElement.querySelector('pre').textContent)
+    } else if (e.target.classList.contains('fa-copy') && e.target.parentElement.hasAttribute('coder-header')) {
+      await navigator.clipboard.writeText(e.target.closest('[coder]').querySelector('code').textContent)
       window.toastr && window.toastr.success('Copied!')
     }
     // 浏览图片
-    if (e.target.tagName === 'IMG' && !e.target.hasAttribute(ident('previewing')) && e.target.parentElement.tagName !== 'A') {
-      const modal = createModal()
-      const img = el('img')
-        .attr('src', e.target.src)
-        .attr(ident('previewing'), true)
-        .on('load', () => modal.loading(false))
-      if (e.target.src.indexOf('.svg') > -1) {
-        img.style('min-width', '100vw')
-          .style('min-height', '100vh')
-      } else {
-        img.style('width', 'auto')
-          .style('height', 'auto')
-      }
-      modal.wrap.appendChild(img.el)
-      modal.loading()
-      if (img.el.complete) {
-        modal.loading(false)
-      }
+    const mermaid = e.target.closest('.language-mermaid')
+    if (mermaid) {
+      previewSvg(mermaid.querySelector('svg'))
     }
-  })
-  // insert copy button in code block
-  Array.from(document.body.querySelectorAll('pre.highlight')).forEach(e => {
-    if (e.parentElement.classList.contains('highlight')) {
-      const icon = document.createElement('div')
-      icon.classList.add('fa', 'fa-copy')
-      e.parentElement.appendChild(icon)
+    if (e.target.tagName === 'IMG' && e.target.parentElement.tagName !== 'A') {
+      previewImage(e.target)
     }
   })
 
@@ -625,7 +647,85 @@
     showDuration: 100,
     hideDuration: 300,
     closeDuration: 300,
-    closeEasing: 'swing',
+    closeEasing: 'swing'
+  }
+
+  function buildCoder(/** @type {Element} */code) {
+    const pre = code.parentElement
+    pre.setAttribute('coder-main', '')
+    let coder = pre.parentElement
+    if (!coder || !coder.classList.contains('coder')) {
+      coder = document.createElement('div')
+      coder.setAttribute('coder', '')
+      pre.replaceWith(coder)
+      coder.appendChild(pre)
+    }
+    return coder
+  }
+
+  function ensureCoderHeader(/** @type {Element} */coder, options) {
+    let header = coder.firstElementChild
+    let lang, copy
+    if (!coder.firstElementChild || !coder.firstElementChild.hasAttribute('coder-header')) {
+      header = document.createElement('div')
+      header.setAttribute('coder-header', '')
+      coder.firstElementChild ? coder.insertBefore(header, coder.firstElementChild) : coder.appendChild(header)
+    }
+    if (!header.querySelector('[code-lang]')) {
+      lang = document.createElement('span')
+      lang.setAttribute('code-lang', '')
+      header.appendChild(lang)
+    }
+    if (!header.querySelector('.fa.fa-copy')) {
+      copy = document.createElement('span')
+      copy.classList.add('fa', 'fa-copy')
+      header.appendChild(copy)
+    }
+    if (options) {
+      if (options.language) {
+        lang.textContent = options.language.toUpperCase()
+      }
+    }
+  }
+  // 后端渲染的代码高亮
+  [...document.querySelectorAll('pre.highlight')].forEach(pre => {
+    pre.setAttribute('coder-main', '')
+    pre.parentElement.setAttribute('coder', '')
+    const found = Array.from(pre.parentElement.parentElement.classList).find(e => e.startsWith('language-'))
+    const language = found && found.slice(9)
+    ensureCoderHeader(pre.parentElement, { language })
+  })
+
+  const externals = [
+    [() => window.mermaid, (script) => script.src.indexOf('mermaid') > -1, function mermaid() {
+      window.mermaid.initialize({
+        startOnLoad: true,
+        theme: 'forest',
+        flowchart: {
+          useMaxWidth: true,
+          htmlLabels: true
+        }
+      })
+      window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
+    }],
+    [() => window.pseudoCode, (script) => script.src.indexOf('pseudo-code') > -1, function pseudo() {
+      [...document.body.querySelectorAll('code.language-pseudo')].forEach(code => {
+        window.pseudoCode([code])
+        const coder = buildCoder(code)
+        ensureCoderHeader(coder)
+      })
+    }]
+  ]
+  for (const external of externals) {
+    if (external[0]()) {
+      external[2]()
+    } else {
+      for (const script of document.scripts) {
+        if (external[1](script)) {
+          script.onload = external[2]()
+        }
+      }
+    }
   }
 
   el('style').attr('id', ident('style')).html(`
@@ -722,16 +822,16 @@ html, body {
   display: flex;
 }
 .${ident('bar')} > * {
+  width: 40px;
   height: 40px;
+  line-height: 40px;
   outline: none;
   border: none;
   appearance: none;
   border-radius: 50%;
   box-shadow: 0 0 5px #b1b1b1, 0 0 30px #b1b1b1;
-  width: 40px;
   margin-right: 5px;
   text-align: center;
-  line-height: 40px;
   user-select: none;
   -webkit-user-select: none;
 }
@@ -845,26 +945,29 @@ html, body {
 .${ident('loading')} {
   z-index: 999;
   position: absolute;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
   width: 50px;
   height: 50px;
   margin: auto;
   color: rgb(0, 0, 0, 0.3);
 }
 .${ident('button-close')} {
-	z-index: 999;
-	position: absolute;
-	top: 5px;
-	left: 5px;
-	height: 12px;
-	width: 12px;
+  z-index: 999;
+  position: absolute;
+  top: 5px;
+  left: 5px;
+  height: 12px;
+  width: 12px;
   border-radius: 50%;
   background-color: rgb(255, 0, 0, 0.9);
   box-shadow: 0 0 2px;
   color: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .${ident('button-close')} svg {
   color: rgb(0, 0, 0, 0.6);
@@ -878,10 +981,10 @@ html, body {
 #${ident('modal')} {
   z-index: 999;
   position: fixed;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
   margin: auto;
   border-radius: 5px;
   backdrop-filter: blur(2px);
@@ -895,55 +998,26 @@ html, body {
 }
 #${ident('modal')} .${ident('wrap')} {
   margin: auto;
-	max-height: 100%;
-	max-width: 100%;
-  overflow: auto;
+  max-height: 100%;
+  max-width: 100%;
 }
 #${ident('modal')}.${ident('fullscreen')} .${ident('wrap')} {
-	height: 100%;
-	width: 100%;
+  height: 100%;
+  width: 100%;
 }
 #${ident('modal')} .${ident('overlay')} {
   z-index: -1;
   position: absolute;
-	height: 100%;
-	width: 100%;
-	top: 0px;
-	left: 0px;
-	background-color: #000;
-	opacity: 0.6;
-	transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
+  height: 100%;
+  width: 100%;
+  top: 0px;
+  left: 0px;
+  background-color: #000;
+  opacity: 0.9;
+  transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
 }
 img:not([${ident('previewing')}]) {
   cursor: pointer;
 }
 `).mount(document.head)
-
-  const externals = [
-    [() => window.mermaid, (script) => script.src.indexOf('mermaid') > -1, function mermaid() {
-      window.mermaid.initialize({
-        startOnLoad: true,
-        theme: "forest",
-        flowchart: {
-          useMaxWidth: true,
-          htmlLabels: true
-        }
-      })
-      window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'))
-    }],
-    [() => window.pseudoCode, (script) => script.src.indexOf('pseudo-code') > -1, function pseudo() {
-      window.pseudoCode(document.body.querySelectorAll('.language-pseudo'))
-    }],
-  ]
-  for (const external of externals) {
-    if (external[0]()) {
-      external[2]()
-    } else {
-      for (const script of document.scripts) {
-        if (external[1](script)) {
-          script.onload = external[2]()
-        }
-      }
-    }
-  }
 }())
