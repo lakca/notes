@@ -665,18 +665,29 @@
 
   function ensureCoderHeader(/** @type {Element} */coder, options) {
     let header = coder.firstElementChild
-    let lang, copy
-    if (!coder.firstElementChild || !coder.firstElementChild.hasAttribute('coder-header')) {
+    if (!header || !header.hasAttribute('coder-header')) {
       header = document.createElement('div')
       header.setAttribute('coder-header', '')
       coder.firstElementChild ? coder.insertBefore(header, coder.firstElementChild) : coder.appendChild(header)
     }
-    if (!header.querySelector('[code-lang]')) {
+    let lang = header.querySelector('[code-lang]')
+    let copy = header.querySelector('.fa.fa-copy')
+    let play = header.querySelector('.fa.fa-play')
+    if (!lang) {
+      const holder = document.createElement('span')
+      holder.classList.add('holder')
       lang = document.createElement('span')
       lang.setAttribute('code-lang', '')
       header.appendChild(lang)
+      header.appendChild(holder)
     }
-    if (!header.querySelector('.fa.fa-copy')) {
+    if (!play) {
+      play = document.createElement('a')
+      play.classList.add('fa', 'fa-play')
+      play.target = '_blank'
+      header.appendChild(play)
+    }
+    if (!copy) {
       copy = document.createElement('span')
       copy.classList.add('fa', 'fa-copy')
       header.appendChild(copy)
@@ -684,6 +695,13 @@
     if (options) {
       if (options.language) {
         lang.textContent = options.language.toUpperCase()
+        if (['RUST', 'RS'].includes(lang.textContent)) {
+          let code = header.closest('[coder]').querySelector('code').textContent
+          if (!/\bfn\s+main\b/.test(code)) {
+            code = '#[allow(unused, dead_code)]\nfn main() {\n' + code.trim() + '\n}'
+          }
+          play.href = 'https://play.rust-lang.org/?version=nightly&mode=debug&edition=2021&code=' + encodeURIComponent(code)
+        }
       }
     }
   }
@@ -962,8 +980,8 @@ html, body {
   height: 12px;
   width: 12px;
   border-radius: 50%;
-  background-color: rgb(255, 0, 0, 0.9);
-  box-shadow: 0 0 2px;
+  background-color: rgb(255, 0, 0, 0.72);
+  box-shadow: 0 0 1px;
   color: black;
   display: flex;
   align-items: center;
@@ -972,7 +990,6 @@ html, body {
 .${ident('button-close')} svg {
   color: rgb(0, 0, 0, 0.6);
   opacity: 0;
-  transition: .2s;
 }
 .${ident('button-close')}:hover svg {
   opacity: 1;
@@ -1017,7 +1034,7 @@ html, body {
   transition: all 0.1s cubic-bezier(0.05, 0.03, 0.35, 1);
 }
 img:not([${ident('previewing')}]) {
-  cursor: pointer;
+  cursor: zoom-in;
 }
 `).mount(document.head)
 }())

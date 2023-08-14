@@ -220,9 +220,19 @@ html {
       align-items: center;
       justify-content: space-between;
       background-color: $headerColor;
-
-      .fa-copy {
+      .holder {
+        flex: 1;
+      }
+      .fa {
         cursor: pointer;
+        margin-left: 15px;
+      }
+      a {
+        color: inherit;
+        background: unset;
+        &:not([href]) {
+          display: none;
+        }
       }
     }
 

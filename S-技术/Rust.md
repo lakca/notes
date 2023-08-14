@@ -37,14 +37,14 @@ date: 2021-04-19T11:13:31.973Z
 
 ## 语言特性
 
-- 闭包（*Closure*）
-- 运算符重载（*Overload*）
 - 严格可变性（*Mutability*）
-- 类型推断（*Type Inference*）
 - 变量遮蔽（*Variable Shadowing*）
+- 类型推断（*Type Inference*）
 - 强大的模式匹配（*Pattern Matching*）
 - 表达式编程（*Expressions Everywhere*）
   - 封闭域（*Block*）自动返回尾部表达式
+- 闭包（*Closure*）
+- 运算符重载（*Overload*）
 - 没有类(~~*Class*~~)
 - 没有反射（~~*Reflection*~~）
 - 文件内模块化能力（*Inline Modules*）
@@ -145,9 +145,9 @@ date: 2021-04-19T11:13:31.973Z
 
 ### 吉祥物
 
-[Ferris](https://www.rustacean.net/):
-
-![Ferris](ferris.svg#h200)
+| [Ferris](https://www.rustacean.net/) |
+| ------------------------------------ |
+| ![Ferris](ferris.svg#h200)           |
 
 ### 语言习惯
 
@@ -713,15 +713,13 @@ fn main() {
 }
 ```
 
-#### [features]
+#### `[features]`
 
 通过在*Cargo.toml*中定义特征可以简化配置条件。比如：
 
 ```toml
 
 ```
-
-`[features]`
 
 ### 目标平台和交叉编译
 
@@ -918,22 +916,74 @@ rustc --help | grep '\--emit'
 //! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档。
 ```
 
-## 调试
-
-### 格式化输出
+## 格式化输出
 
 > 打印由[std::fmt](https://doc.rust-lang.org/stable/std/fmt/)标准模块所定义的一系列*宏（Macro）*和*特征（Trait）*来处理，且这些格式化不会本地化，在所有环境下表示完全一致。
 
-基本语法为：
+| 宏（Macro）    | 含义                                                   |
+| -------------- | ------------------------------------------------------ |
+| `format_args!` | 将格式化文本写到字符串                                 |
+| `format!`      | 将格式化文本写到字符串                                 |
+| `print!`       | 将格式化文本写到控制台（`io::stdout`）                 |
+| `println!`     | 同上，输出追加一个换行符                               |
+| `eprint!`      | 将格式化文本写到标准错误（`io::stderr`）               |
+| `eprintln!`    | 同上，输出追加一个换行符                               |
+| `write!`       | 将格式化文本写到指定缓冲区（内存）（`&mut io::Write`） |
+| `writeln!`     | 同上，输出追加一个换行符                               |
 
+```pseudo
+#FORMAT
+  / `{` 和 `}` 的转义分别为 `{{` 和 `}}` /
+  `{`"("[FORMAT_ARGUMENT]")""?"`:`"(""("[FORMAT_FILL]")""?"[FORMAT_ALIGN]")""?""("[FORMAT_SIGN]")""?""("[FORMAT_MIN_WIDTH]")""?""("`.`[FORMAT_PRECISION_OR_MAX_WIDTH]")""?"`}`
+
+  #FORMAT_ARGUMENT
+      [INTEGER]             / 位置参数 /
+    | [IDENTIFIER]          / 具名参数 /
+
+  #FORMAT_FILL
+    [CHAR]
+
+  #FORMAT_ALIGN
+      `<`                   / 左对齐 /
+    | `^`                   / 中心对齐 /
+    | `>`                   / 右对齐 /
+
+  #FORMAT_SIGN
+      `+`                   / 针对数字，始终打印正负号 /
+    | `-`                   / 保留字符，当前未使用 /
+    | `0`                   / 针对数字，填充 `0` /
+    | `#?`                  / `Debug`模式打印 /
+    | `#x`                  / 添加前缀`0x` /
+    | `#X`                  / 添加前缀`0x` /
+    | `#b`                  / 添加前缀`0b` /
+    | `#o`                  / 添加前缀`0o` /
+
+  #FORMAT_MIN_WIDTH
+    / 文本最小长度，或数字的小数部分的最小长度 /
+      [INTEGER]             / 具体值 /
+    | [FORMAT_ARGUMENT]`$`  / 使用参数 /
+
+  #FORMAT_PRECISION_OR_MAX_WIDTH
+    / 文本最大长度，或数字的小数部分的最大长度 /
+      [INTEGER]             / 具体值 /
+    | [FORMAT_ARGUMENT]`$`  / 使用参数 /
+    | `*`                   / 见*https://doc.rust-lang.org/stable/std/fmt/#precision* /
+                            / 如`assert_eq!(format!("{:.*}", 3, 1.2345), format!("{name:.*}", 3, name=1.2345))` /
+
+  #FORMAT_TRAIT
+    / 任何部署了如下右侧特征的值，都可以通过左侧格式进行格式化，如`println!("{:b}", 0b111)` /
+      "nothing"             / `Display` /
+    | `?`                   / `Debug`/
+    | `x?`                  / `Debug`/
+    | `X?`                  / `Debug`/
+    | `b`                   / `Binary` /
+    | `o`                   / `Octal` /
+    | `p`                   / `Pointer` /
+    | `x`                   / `LowerHex` /
+    | `X`                   / `UpperHex` /
+    | `e`                   / `LowerExp` /
+    | `E`                   / `UpperExp` /
 ```
-{[[[argumentName|argumentIndex]:][trait|[flag|fill][alignment][sign][minWidth|.precision|.maxWidth]]]}
-```
-
-其中：
-
-- `{`和`}`的转义格式分别为`{{`和`}}`
-- 所有选项均可以通过引用参数设置
 
 ```rust
 // 位置参数:
@@ -953,14 +1003,13 @@ assert_eq!("Hello   x  !", format!("Hello {:^5}!", "x")); // 参数居中对齐 
 assert_eq!("Hello     x!", format!("Hello {:>5}!", "x")); // 参数右对齐 `>`
 
 // 最小宽度:
-assert_eq!("Hello x !", format!("Hello {:5}!", "x"));
-assert_eq!("Hello x !", format!("Hello {:1$}!", "x", 5));
-assert_eq!("Hello x !", format!("Hello {1:0$}!", 5, "x"));
-assert_eq!("Hello x !", format!("Hello {:width$}!", "x", width = 5));
+assert_eq!("Hello x    !", format!("Hello {:5}!", "x"));
+assert_eq!("Hello x    !", format!("Hello {:1$}!", "x", 5));
+assert_eq!("Hello x    !", format!("Hello {1:0$}!", 5, "x"));
+assert_eq!("Hello x    !", format!("Hello {:width$}!", "x", width = 5));
 
 // 小数精度: `.<precision>`
-assert_eq!("1.7", format!("{value:0.1}", value=1.679));
-
+assert_eq!("1.7", format!("{value:.1}", value=1.679));
 // 文本最大宽度: `.<maxWidth>`
 assert_eq!("wor", format!("{value:.3}", value="world"));
 
@@ -969,43 +1018,24 @@ assert_eq!("1.68", format!("{value:0.0$}", 2, value=1.679));
 assert_eq!("1.68", format!("{value:0.precision$}", precision=2, value=1.679));
 ```
 
-| 符号（Sign） | 含义                                     |
-| ------------ | ---------------------------------------- |
-| `+`          | 针对数字，始终打印正负号                 |
-| `0`          | 针对数字，填充`0`                        |
-| `#`          | 不单独使用，类似转义，表示复杂格式       |
-| `#?`         | 美化打印 `Debug` 格式 (添加换行符和缩进) |
-| `#x`         | 针对整数，十六进制 `0x`                  |
-| `#X`         | 针对整数，十六进制 `0x`                  |
-| `#b`         | 针对整数，二进制 `0b`                    |
-| `#o`         | 针对整数，八进制 `0o`                    |
+## 断言
 
-| 宏（Macro）    | 含义                                                             |
-| -------------- | ---------------------------------------------------------------- |
-| `format!`      | 将格式化文本写到字符串                                           |
-| `format_args!` | 将格式化文本写到字符串                                           |
-| `print!`       | 与 `format!` 类似，但将文本输出到控制台（`io::stdout`）          |
-| `println!`     | 与 `print!` 类似，但输出结果追加一个换行符                       |
-| `eprint!`      | 与 `print!` 类似，但将文本输出到标准错误（`io::stderr`）         |
-| `eprintln!`    | 与 `eprint!` 类似，但输出结果追加一个换行符                      |
-| `write!`       | 与 `print!` 类似，但将文本输出到传入的指定流（`&mut io::Write`） |
-| `writeln!`     | 与 `write!` 相同，但追加了一个换行符                             |
+```rust
+assert!(1 == 1);
+assert_eq!(1, 1);
+assert_ne!(1, 2);
+// 非优化模式编译
+debug_assert!(1 == 1);
+debug_assert_eq!(1, 1);
+debug_assert_ne!(1, 2);
+```
 
-| 特征（Trait） | 表示符号 | 含义                       |
-| ------------- | -------- | -------------------------- |
-| `Display`     |          | 空格式的格式 trait，`{}`。 |
-| `Debug`       | `?`      |                            |
-| `Debug`       | `x?`     | Debug 带有小写十六进制整数 |
-| `Debug`       | `X?`     | Debug 带有大写十六进制整数 |
-| `Binary`      | `b`      |                            |
-| `Octal`       | `o`      |                            |
-| `Pointer`     | `p`      |                            |
-| `LowerHex`    | `x`      |                            |
-| `UpperHex`    | `X`      |                            |
-| `LowerExp`    | `e`      |                            |
-| `UpperExp`    | `E`      |                            |
+## 调试
 
-### 断言
+- `dbg!`: 将表达式及其执行结果输出到*stderr*
+- `file!`: 获取当前文件名
+- `line!`: 获取当前文件行号
+- `column!`: 获取当前文件列号
 
 # 内存管理
 
@@ -1056,7 +1086,7 @@ fn main() {
 
 > 对于直接分配在栈（*Stack*）中的值，即值类型，在传递时执行复制（*Copy*）操作（即推入执行栈）。值类型对应的是标量，包括字面量（数字、字符（串）、布尔值）和*非显式分配*在堆中的布尔值、数字、指针、函数项。
 
-![data-copy](./Rust-data-copy.svg#h200)
+![data-copy](./Rust-data-copy.svg#h300)
 
 ```rust
 fn main() {
@@ -1066,7 +1096,7 @@ fn main() {
 }
 ```
 
-⚠️ 之所以说*非显式分配*，是因为所有值都可以通过[显式堆分配](#堆分配boxt)的方式分配到堆中，被间接引用：
+⚠️ 之所以说*非显式分配*，是因为所有值都可以通过[显式堆分配](#装箱boxt)的方式分配到堆中，被间接引用：
 
 ```rust
 fn main() {
@@ -1107,7 +1137,7 @@ fn main() {
 }
 ```
 
-![ownership-move](./Rust-ownership-move.svg#h200)
+![ownership-move](./Rust-ownership-move.svg#h300)
 
 ### 值克隆（Clone）
 
@@ -1121,7 +1151,7 @@ assert_eq!(s1, s2);
 
 ### 值借用（Borrow）
 
-> 由于转移值所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#%E5%BC%95%E7%94%A8)以借用值的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#普通指针pointer)调用值。
+> 由于转移值所有权会导致原变量失效，这在处理很多场景会让代码显得复杂和冗余，所以Rust也提供了通过创建[引用](#%E5%BC%95%E7%94%A8)以借用值的方法，即在不转移所有权的情况下通过创建严格可变性的[指针](#%E6%8C%87%E9%92%88pointer)调用值。
 
 借用可以存在多个，但为了避免读写冲突，实现借用（有效引用）也是需要遵循一定规则的：
 
@@ -1148,8 +1178,6 @@ assert_eq!("world", c);
 ```
 
 ## 生命周期（Lifetime）
-
-> 由于存在
 
 ### 生命周期省略规则（Lifetime Elision）
 
@@ -1663,7 +1691,7 @@ tup.0 = 12;
 ### 数组`[T;N]`
 
 > [数组](http://doc.rust-lang.org/reference/types/slice.html)：一组**类型相同（homogenous type）**、**长度固定（fixed length）**的**连续存储的序列（sequence）**值。
-> （相应地，变长数组见[向量-Vector](#向量vect)）
+> （相应地，变长数组见[向量-Vector](#%E5%8F%AF%E5%A2%9E%E9%95%BF%E6%95%B0%E7%BB%84vect)）
 
 - 元素类型相同；
 - 长度固定；
@@ -1693,37 +1721,6 @@ let e1 = a[0];
 let e_err = a[10]; // exit with error
 ```
 
-### 字典`HashMap<T,V>`
-
-> 字典`HashMap`是标准库（`std`）实现的常用类型，需要手动导入。
-
-```rust
-use std::collections::HashMap;
-```
-
-```rust
-// 标准创建
-let mut scores: HashMap<String, i32> = HashMap::new();
-
-// 推断创建
-let mut scores = HashMap::new();
-
-// 通过 key 和 value 集合间接创建
-let teams = vec![String::from("Blue")];
-let initial_scores = vec![10];
-// collect() 可以返回不同的数据结构，使用 HashMap<_, _> 后可以指定为 HashMap
-// 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
-let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
-```
-
-```rust
-scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
-scores.insert(String::from("Blue"), 20);
-scores.entry(String::from("Blue")).or_insert(30); // only add
-assert_eq!(Some(&20), scores.get("Blue"));
-assert_eq!(None, scores.get("Yellow"));
-```
-
 ## 函数项（Function Item）
 
 > 函数项是Rust一等公民，以值的形式直接存储。
@@ -1740,6 +1737,283 @@ fn get_one() -> i32 {
 fn get_null() {
   1;
 }
+```
+
+## 指针（Pointer）
+
+### 引用`&`
+
+> 引用，一种[借用](#值借用borrow)（不转移数据所有权进行数据访问）数据的手段。
+
+| [Reference](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing) |
+| ---------------------------------------------------------------------------------------------------------- |
+| ![reference](./Rust-reference.svg)                                                                         |
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
+
+> ⚠️在早期版本，Rust一直保持借用直到作用域结束。同时，也存在一些Rust无法正确缩短借用周期的极端情况，但这些在后续版本都会持续解决。 [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
+
+#### 悬空引用（Dangling Reference）
+
+> 如果一个引用在被其引用的变量作用域结束后仍被调用，即引用的生命周期超过了原始变量的[生命周期](#生命周期lifetime)，这种引用就是**悬空引用（dangling reference）**。显然，这是一种不安全的调用方式，是被安全的Rust代码所禁止的。
+
+```rust
+fn demo() -> &str {
+//           ^ expected named lifetime parameter
+  let s = String::from("hello");
+  &s
+// help: this function's return type contains a borrowed value, but there is no value for it to be borrowed from
+}
+```
+
+### 切片`[T]`
+
+> [切片](http://doc.rust-lang.org/reference/types/slice.html)`[T]`，表示元素类型为`T`的序列（如数组、向量、字符串等）的局部连续片段。
+
+根据切片的定义可以知道，切片`[T]`本身是没有大小（片段长度）定义的，即切片为[动态大小的类型](#动态大小类型dst)。
+所以在实际中我们并不能直接定义切片`[T]`，而是需要通过某些方式使其大小确定下来，即通过**智能指针**进行调用。
+这其中最常见的就是通过**切片引用**`&[T]`的方式：
+
+```rust
+fn main() {
+  let arr: [u8; 3] = [1, 2, 3];
+  let arr_slice: &[u8] = &s[0..1];
+}
+```
+
+> 所以，我们通常也将**切片引用`&[T]`简称为切片**。
+
+### 字符串切片（`str`）
+
+> 字符串切片`str`即[`String`](#字符串string)的切片。类似[切片和切片引用](#%E5%88%87%E7%89%87t)的关系，**字符串切片引用`&str`也通常简称为字符串切片**。
+
+```rust
+let s = String::from("hello world");
+let world = &s[6..11];
+```
+![String Slice](./Rust-slice.svg#h300)
+
+### 函数指针（`fn()`）
+
+> 函数指针用于动态派发，在运行时通过函数项（*function item*）或非捕获闭包（*non-capturing closure*）来创建。
+
+如下例，`add`是一个*函数项*，`bo`是一个*函数指针*，其类型是`Binop`：
+
+```rust
+fn main() {
+  let want_i32 = false;
+  fn foo<T>() { }
+
+  // `foo_ptr_1` has function pointer type `fn()` here
+  let foo_ptr_1: fn() = foo::<i32>;
+
+  // ... and so does `foo_ptr_2` - this type-checks.
+  let foo_ptr_2 = if want_i32 {
+      foo::<i32>
+  } else {
+      foo::<u32>
+  };
+}
+```
+
+### 闭包`||`
+
+> 闭包是一个可以捕获它所处环境信息的匿名函数。
+
+```rust
+let add_one_v1 = |x: u32| -> u32 { x + 1 };
+```
+
+> 同函数参数的传递方式相同，闭包对环境值的捕获方式也有三种：*不可变引用*、*可变引用*、*获取所有权*。
+
+闭包会根据闭包体中的调用方式自动选择值的捕获方式：
+
+```rust
+fn main() {
+  let mut list = vec![1, 2, 3];
+  println!("Before defining closure: {:?}", list);
+
+  // `push`方法需要可变引用，所以闭包隐式声明了可变引用
+  let mut borrows_mutably = || list.push(7);
+
+  // `borrows_mutably`后续有被调用，所以`&mut list`此时已被`borrows_mutably`有效捕获，故此处借用将会报错
+  println!("{:?}", list); // error[E0502]: cannot borrow `list` as immutable because it is also borrowed as mutable
+
+  borrows_mutably();
+  // `borrows_mutably`后续未再被调用，所以闭包内的`&mut list`已释放，此处不会报错
+  println!("After calling closure: {:?}", list);
+}
+```
+
+当涉及跨线程时，可能需要显式声明`move`捕获方式：
+
+```rust
+use std::thread;
+
+fn main() {
+    let list = vec![1, 2, 3];
+    println!("Before defining closure: {:?}", list);
+    // 由于新线程与主线程执行结束的先后顺序并不确定，所以需要显式声明`move`策略，以使闭包将数据转移给新线程
+    thread::spawn(move || println!("From thread: {:?}", list))
+        .join()
+        .unwrap();
+}
+```
+
+> 闭包对捕获值的处理方式通过其部署的三种特征`FnOnce`, `FnMut`, `Fn`进行定义。
+
+`FnOnce`：闭包只可以被调用一次（闭包的所有权被返回）。所有的闭包均部署了该特征。
+
+```rust
+fn fn_once(func: impl FnOnce(u8) -> bool) {
+//         ---- move occurs because `func` has type `impl FnOnce(usize) -> bool`, which does not implement the `Copy` trait
+    println!("{}", func(3));
+//                 ------- `func` moved due to this call
+    println!("{}", func(4));
+//                 ^^^^ value used here after move
+}
+fn main() {
+    let x = vec![1, 2, 3];
+    fn_once(|z|{z == x.len()})
+}
+```
+
+`FnMut`：闭包将修改捕获的值，可以被多次调用。
+
+`Fn`：闭包不会捕获或改变值，可以被多次调用。
+
+```rust
+impl<T> Option<T> {
+    pub fn unwrap_or_else<F>(self, f: F) -> T
+    where
+        F: FnOnce() -> T
+    {
+        match self {
+            Some(x) => x,
+            None => f(),
+        }
+    }
+}
+```
+
+```rust
+pub fn sort_by_key<K, F>(&mut self, mut f: F)
+where
+    F: FnMut(&T) -> K,
+    K: Ord,
+{
+  stable_sort(self, |a, b| f(a).lt(&f(b)));
+}
+```
+
+### 原始指针`*const T`
+
+> 原始指针可以用来直接进行指针运算，包括不可变指针`*const T`和可变指针`*mut T`。由于是直接访问内存，不受编译器内存安全保证，所以是“不安全代码”，需要在`unsafe {}`中进行。
+
+```rust
+fn main() {
+    let a = [1, 2, 3];
+    let p1 = a.as_ptr() as usize; // 指针大小的类型是usize
+    let p2 = p1 + 1;
+    let p2 = p2 as *const u8;
+    let p2 = unsafe { p2.as_ref().unwrap() }; // 将数字转换成地址
+    let v2 = *p2;
+    assert_eq!(a[1], v2);
+}
+```
+
+## 字符串`String`
+
+> 字符串`String`，是一个保证了元素为有效的*UTF-8*编码的字节（`u8`）向量（`Vec<u8>`）的智能指针。
+
+```rust
+// 源代码中 String 构造函数：
+impl String {
+  pub const fn new() -> String {
+      String { vec: Vec::new() }
+  }
+}
+```
+
+### 字符串字面量
+
+如果我们都是通过字节码来初始化字符串，那将是这样的：
+
+```rust
+fn main() {
+  let s = String::from_utf8(vec![104, 101, 108, 108, 111]).unwrap();
+  assert_eq!(s, "hello");
+}
+```
+
+很显然以上方式非常不直观，而且性能较低（校验UTF-8），所以我们通常都是通过字面量而非字节序列来初始化或赋值字符串：
+
+```rust
+fn main() {
+  let mut s1 = String::new();
+  s1.push_str("hello");
+  let s2 = String::from("hello");
+  assert_eq!(s1, s2);
+}
+```
+
+在源代码中，`from`和`push_str`的函数签名为：
+
+```rust
+fn from(s: &str) -> String
+// ...
+pub fn push_str(&mut self, &str)
+```
+
+可以看出，字符串字面量的类型为`&str`，即[字符串切片引用](#字符串切片str)。
+但实际上，由于涉及到数据生命周期的原因，真正的字符串字面量的签名为`&'static str`，只不过，对于字面量而言，其生命周期是静态的（`'static`），所以通常省略进行简写。
+
+## 可增长数组`Vec<T>`
+
+> *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
+
+- *homogenous*
+
+```rust
+/// 创建空数组
+let mut v: Vec<i32> = Vec::new();
+let mut v: Vec<i32> = vec![]; /// 字面量
+let mut v: Vec<i32> = Vec::with_capacity(3); /// 带有容量声明（可以避免在push数据时需要重新分配内存）
+
+/// 带有初始化的数组
+let mut v = vec![1, 2, 3];
+let mut v = vec![1; 3]; /// 容量为3，元素为1
+```
+
+```rust
+let mut v = vec![0, 1, 2];
+
+assert_eq!(&3, &v.len());
+assert_eq!(&3, &v.capacity());
+
+assert_eq!(&0, &v[0]);
+assert!(std::panic::catch_unwind(|| { &v[10] }).is_err()); // * 这里用到了匿名函数
+
+assert_eq!(&Some(&0), &v.get(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&Some(&mut 0), &v.get_mut(0));
+assert_eq!(&None, &v.get(10));
+
+assert_eq!(&(), &v.push(1));
+assert_eq!(&Some(1), &v.pop());
 ```
 
 ## 结构`struct`
@@ -1776,9 +2050,7 @@ let mut user1 = User {
 user1.email = String::from("anotheremail@example.com");
 ```
 
-### 三种结构
-
-#### 普通结构（Struct）
+### 普通结构（Struct）
 
 > 即**结构（Struct）**，也即具名字段结构。
 
@@ -1791,7 +2063,7 @@ struct User {
 }
 ```
 
-#### 元组结构（Tuple Struct）
+### 元组结构（Tuple Struct）
 
 > **元组结构（Tuple Struct）**是一种字段没有名称的特殊结构，其使用方式类似*元组（Tuple）*。
 
@@ -1803,7 +2075,7 @@ let black = Color(0, 0, 0);
 let origin = Point(0, 0, 0);
 ```
 
-#### 单元结构（Unit-Like Struct）
+### 单元结构（Unit-Like Struct）
 
 > **单元结构（Unit-Like Struct）**是一种没有字段的特殊结构。
 
@@ -1986,206 +2258,10 @@ match home {
 }
 ```
 
-## 普通指针（Pointer）
-
-> 在Rust中，普通指针与[智能指针](#智能指针smart-pointers)区分，指的是那些并不拥有所指向数据的指针。
-
-### 引用`&`
-
-> 引用，一种[借用](#值借用borrow)（不转移数据所有权进行数据访问）数据的手段。
-
-[![reference](./Rust-reference.svg#h200)](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html#references-and-borrowing)
-
-```rust
-fn main() {
-    let s1 = String::from("hello");
-
-    let len = calculate_length(&s1);
-
-    println!("The length of '{}' is {}.", s1, len);
-}
-
-fn calculate_length(s: &String) -> usize {
-    s.len()
-}
-```
-
-> ⚠️在早期版本，Rust一直保持借用直到作用域结束。同时，也存在一些Rust无法正确缩短借用周期的极端情况，但这些在后续版本都会持续解决。 [https://doc.rust-lang.org/nomicon/lifetimes.html](https://doc.rust-lang.org/nomicon/lifetimes.html)*
-
-#### 悬空引用（Dangling Reference）
-
-> 所谓悬空引用（*dangling reference*），即引用的变量的作用域结束后，该引用仍被使用。
-> 注意，这是一个错误的用法。
-
-```rust
-fn demo() -> &String {
-  let s = String::from("hello");
-  &s // 错误，引用在这里被借调（borrowing）给其他作用域，但此时所引用的变量 s 的作用域随函数结束而结束了，从而无法编译通过
-}
-
-// 可以通过 move 来实现值的返回：
-fn demo() -> String {
-  let s = String::from("hello");
-  s
-}
-
-// 当然，也可以使用静态生命周期：
-fn demo() -> &'static str {
-  let s = String::from("hello");
-  let s = Box::leak(s.into_boxed_str()); // 转换为拥有静态生命的 str 引用
-  s
-}
-```
-
-### 切片`&[T]`
-
-> [切片](http://doc.rust-lang.org/reference/types/slice.html)`[T]`，表示元素类型为`T`的序列（如数组、向量、字符串等）的局部连续片段。
-
-根据切片的定义可以知道，切片`[T]`本身是没有大小（片段长度）定义的，即切片为[动态大小的类型](#动态大小类型dst)。
-所以在实际中我们并不能直接定义切片`[T]`，而是需要通过某些方式使其大小确定下来，即通过**智能指针**进行调用。
-这其中最常见的就是通过**切片引用**`&[T]`的方式：
-
-```rust
-fn main() {
-  let arr: [u8; 3] = [1, 2, 3];
-  let arr_slice: &[u8] = &s[0..1];
-}
-```
-
-> 所以，我们通常也将**切片引用`&[T]`简称为切片**。
-
-### 字符串切片（`str`）
-
-> 字符串切片`str`即[`String`](#字符串string)的切片。类似[切片和切片引用](#%E5%88%87%E7%89%87t)的关系，**字符串切片引用`&str`也通常简称为字符串切片**。
-
-```rust
-let s = String::from("hello world");
-let world = &s[6..11];
-```
-![String Slice](./Rust-slice.svg#h300)
-
-### 函数指针（`fn`）
-
-> 函数指针用于动态派发，在运行时通过函数项（*function item*）或非捕获闭包（*non-capturing closure*）来创建。
-
-如下例，`add`是一个*函数项*，`bo`是一个*函数指针*，其类型是`Binop`：
-
-```rust
-fn add(x: i32, y: i32) -> i32 {
-    x + y
-}
-
-let mut x = add(5,7);
-
-type Binop = fn(i32, i32) -> i32;
-let bo: Binop = add;
-x = bo(5,7);
-```
-
-### 闭包`||`
-
-> 闭包：一个可以捕获它所处环境信息的匿名函数。
-
-#### 闭包类型
-
-```rust
-let add_one_v1 = |x: u32| -> u32 { x + 1 };
-```
-
-#### 闭包对环境值的捕获方式
-
-> 同函数参数可采用的三种传递方式相同：*不可变引用*、*可变引用*、*获取所有权*。
-
-闭包会根据函数体中的调用方式进行自动选择捕获方式：
-
-```rust
-fn main() {
-  let mut list = vec![1, 2, 3];
-  println!("Before defining closure: {:?}", list);
-
-  // 由函数体得知，闭包隐式声明了可变引用
-  let mut borrows_mutably = || list.push(7);
-
-  // `borrows_mutably`后续有被调用，所以`&mut list`此时已被`borrows_mutably`有效捕获，故此处借用将会报错
-  println!("{:?}", list); // error[E0502]: cannot borrow `list` as immutable because it is also borrowed as mutable
-
-  borrows_mutably();
-  // `borrows_mutably`后续未再被调用，所以闭包内的`&mut list`已释放，此处不会报错
-  println!("After calling closure: {:?}", list);
-}
-```
-
-尽管闭包会自动选择捕获方式，你仍可以显式声明以进行主动选择：
-
-```rust
-use std::thread;
-
-fn main() {
-    let list = vec![1, 2, 3];
-    println!("Before defining closure: {:?}", list);
-    // 显式声明`move`策略，以使闭包将数据转移给新线程（因为新线程与主线程其余部分执行结束的先后顺序并不确定）
-    thread::spawn(move || println!("From thread: {:?}", list))
-        .join()
-        .unwrap();
-    let list = vec![1, 2, 3];
-    // error[E0373]: closure may outlive the current function, but it borrows `list`, which is owned by the current function
-    thread::spawn(|| println!("From thread: {:?}", list))
-        .join()
-        .unwrap();
-}
-```
-
-#### 闭包对捕获值的处理方式
-
-> 闭包对捕获值的处理方式通过其部署的特征（*Trait*）进行定义。
-
-- `FnOnce`：闭包可以被调用一次。所有的闭包均部署了该特征。
-- `FnMut`：闭包会修改捕获的值，且闭包不会移出其捕获的值，且可以被多次调用。
-- `Fn`：闭包不会捕获环境值或不会改变捕获的值，且闭包不会移出其捕获的值，且可以被多次调用。
-
-```rust
-impl<T> Option<T> {
-    pub fn unwrap_or_else<F>(self, f: F) -> T
-    where
-        F: FnOnce() -> T
-    {
-        match self {
-            Some(x) => x,
-            None => f(),
-        }
-    }
-}
-```
-
-```rust
-pub fn sort_by_key<K, F>(&mut self, mut f: F)
-where
-    F: FnMut(&T) -> K,
-    K: Ord,
-{
-  stable_sort(self, |a, b| f(a).lt(&f(b)));
-}
-```
-
-### 原始指针`*const T`
-
-> 原始指针可以用来直接进行指针运算，包括不可变指针`*const T`和可变指针`*mut T`。由于是直接访问内存，不受编译器内存安全保证，所以是“不安全代码”，需要在`unsafe {}`中进行。
-
-```rust
-fn main() {
-    let a = [1, 2, 3];
-    let p1 = a.as_ptr() as usize; // 指针大小的类型是usize
-    let p2 = p1 + 1;
-    let p2 = p2 as *const u8;
-    let p2 = unsafe { p2.as_ref().unwrap() }; // 将数字转换成地址
-    let v2 = *p2;
-    assert_eq!(a[1], v2);
-}
-```
-
 ## 智能指针（Smart Pointers）
 
-> 智能指针是拥有一套自管理内存的二级指针。换句话说，**智能指针托管数据所有权，管理数据的生命周期**。所以，除了在引用数据外，智能指针还可以对数据实现额外的**“智能”**，比如智能指针`Rc<T>`存储了数据的引用次数、`String`保证存储的是有效的UTF-8编码。
+> 智能指针是相对于普通指针而言的，特指拥有一套自管理内存的二级指针，换句话说，**智能指针托管数据所有权，管理数据的生命周期**。
+> 所以，除了在引用数据外，智能指针还可以对数据实现额外的**“智能”**，比如`String`实际也是一个智能指针，其实现的过程中确保存储的是有效的UTF-8编码。
 
 根据社区的最佳实践：
 
@@ -2195,91 +2271,9 @@ fn main() {
 
 ⚠️显式调用`std::mem::drop`可以提前释放智能指针。
 
-### 字符串`String`
+### 装箱`Box<T>`
 
-> 字符串`String`，是一个保证了元素为有效的*UTF-8*编码的字节（`u8`）向量（`Vec<u8>`）的智能指针。
-
-```rust
-// 源代码中 String 构造函数：
-impl String {
-  pub const fn new() -> String {
-      String { vec: Vec::new() }
-  }
-}
-```
-
-#### 字符串字面量
-
-如果我们都是通过字节码来初始化字符串，那将是这样的：
-
-```rust
-fn main() {
-  let s = String::from_utf8(vec![104, 101, 108, 108, 111]).unwrap();
-  assert_eq!(s, "hello");
-}
-```
-
-很显然以上方式非常不直观，而且性能较低（校验UTF-8），所以我们通常都是通过字面量而非字节序列来初始化或赋值字符串：
-
-```rust
-fn main() {
-  let mut s1 = String::new();
-  s1.push_str("hello");
-  let s2 = String::from("hello");
-  assert_eq!(s1, s2);
-}
-```
-
-在源代码中，`from`和`push_str`的函数签名为：
-
-```rust
-fn from(s: &str) -> String
-// ...
-pub fn push_str(&mut self, &str)
-```
-
-可以看出，字符串字面量的类型为`&str`，即[字符串切片引用](#字符串切片str)。
-但实际上，由于涉及到数据生命周期的原因，真正的字符串字面量的签名为`&'static str`，只不过，对于字面量而言，其生命周期是静态的（`'static`），所以通常省略进行简写。
-
-### 向量`Vec<T>`
-
-> *Vectors* allow you to store more than one value in a single data structure that puts all the values next to each other in memory. Vectors can only store values of the same type.*
-
-- *homogenous*
-
-```rust
-/// 创建空数组
-let mut v: Vec<i32> = Vec::new();
-let mut v: Vec<i32> = vec![]; /// 字面量
-let mut v: Vec<i32> = Vec::with_capacity(3); /// 带有容量声明（可以避免在push数据时需要重新分配内存）
-
-/// 带有初始化的数组
-let mut v = vec![1, 2, 3];
-let mut v = vec![1; 3]; /// 容量为3，元素为1
-```
-
-```rust
-let mut v = vec![0, 1, 2];
-
-assert_eq!(&3, &v.len());
-assert_eq!(&3, &v.capacity());
-
-assert_eq!(&0, &v[0]);
-assert!(std::panic::catch_unwind(|| { &v[10] }).is_err()); // * 这里用到了匿名函数
-
-assert_eq!(&Some(&0), &v.get(0));
-assert_eq!(&None, &v.get(10));
-
-assert_eq!(&Some(&mut 0), &v.get_mut(0));
-assert_eq!(&None, &v.get(10));
-
-assert_eq!(&(), &v.push(1));
-assert_eq!(&Some(1), &v.pop());
-```
-
-### 堆分配`Box<T>`
-
-> `Box<T>`将数据分配到堆中，并在栈中保存堆的“盒子”（智能指针）。
+> `Box<T>`将数据分配到堆中，通过二级指针“盒子”（智能指针）在栈中调用。
 
 ```mermaid
 ---
@@ -2304,7 +2298,7 @@ classDiagram
 
 - 由于指针是一个地址（或者胖地址），其类型大小是确定的，所以盒子类型通常用于在需要确定数据大小的上下文中**封装DST类型**，比如递归类型。
 - 当面对大量数据需要转移所有权，但又不想复制数据时，可以通过数据装箱实现**免复制数据转移所有权**；
-- 有时我们需要的数据可能不是某个类型，而是一组实现了某些特征的类型数据，即[特征对象](#特征对象trait-object)，可以通过数据装箱**转移特征对象所有权**；
+- 有时我们需要的数据可能不是某个类型，而是一组实现了某些特征的类型数据，即[特征对象](#特征对象trait-object用特征描述值)，可以通过数据装箱**转移特征对象所有权**；
 
  如定义递归结构：
 
@@ -2315,7 +2309,7 @@ enum List {
 }
 ```
 
-### 单线程计数引用`Rc<T>`
+### 计数引用`Rc<T>`
 
 > 引用计数`Rc<T>`在堆上二级指针存储数据地址和引用次数，通过*强引用*共享数据所有权，当*强引用*次数为0时，数据释放。
 > 线程安全引用计数见[`Arc<T>`](#原子引用计数arct)
@@ -2435,33 +2429,31 @@ for i in 0..10 {
 
 ### 内部可变性（Interior Mutability）
 
-> 若某种结构所封装的数据的可变性是独立的，即该结构不可变时也可获取内部数据的可变调用，那么该结构实现了内部可变性。
+Rust内存安全是基于[编译器对所有权和借用规则的严格限制](#内存管理)来保证的，但在实际情况中，是会有超出借用规则的引用存在的，比如多个引用都可能修改数据。
+这时候就需要一种在不违背内存管理基本规则的实现，即实现了内部可变性的结构。
 
-⚠️ 内部可变性本质上都是通过非安全的`unsafe`的指针操作实现，之所以有这些概念和结构的封装和提供，就是为了尽可能地减少开发者直接操作指针，以减少可能的内存泄露。
+> 若某种结构所封装的数据的可变性是独立的，即该结构不可变时也可获取内部数据的可变调用，那么该结构实现了**内部可变性**。
+
+⚠️ 内部可变性本质上都是通过对多级指针进行非安全的`unsafe`的指针操作实现，之所以有这些概念和结构的封装，就是为了尽可能地减少开发者直接操作指针，以减少可能的内存泄露。
 
 ### 内部可变`Cell<T>`
 
-> `Cell<T>`：一个可变内存位置（*mutable memory location*）。（即内部数据指针可变）
+> `Cell<T>`：一个可变内存位置（*mutable memory location*），即内部（二级）指针可变。
 
 ```rust
-use std::cell::Cell;
-fn main() {
-  let a = Cell::new(1);
-  a.set(2);
-  assert_eq!(2, a.get());
-}
+// a 不可变，但内部仍可变
+let a = std::cell::Cell::new(1);
+a.set(2);
+assert_eq!(2, a.get());
 ```
 
 ### 内部可变借用`RefCell<T>`
 
-某些符合[借用规则](#值借用borrow)的场景是在运行时才分析出来的，无法通过（编译器）对代码的静态分析识别。
-为了使这部分代码能够顺利通过编译，就需要通过某种方式告知编译器不要检查这个数据的借用，我们会在运行时保证的。
-简单来说就是，**在运行时可变借用不可变数据**，`RefCell<T>`即是实现了这种机制的结构。
-
-> `RefCell<T>`：一个动态检查借用规则的可变内存位置。也就是说即使`RefCell<T>`不可变，你也可以更改其内部值。
+> `RefCell<T>`：一个（通过生命周期来）实现了动态借用的可变内存位置，也就是说即使`RefCell<T>`不可变，你也可以通过引用更改其内部值。
 
 ```rust
-let msg = RefCell::new(String::from("hello"));
+// msg和ref_msg都不可变，但仍可以获取内部可变引用
+let msg = std::cell::RefCell::new(String::from("hello"));
 let ref_msg = &msg;
 ref_msg.borrow_mut().push_str("!");
 let msg = ref_msg.borrow();
@@ -2469,13 +2461,21 @@ let msg: &str = msg.as_ref();
 assert_eq!("hello!", msg);
 ```
 
+### 一次性写入`OnceCell<T>`
+
+> `OnceCell<T>`：限制了只能写入一次的`Cell<T>`。
+
+### “钉针”`Pin<T>`
+
+> “钉针”`Pin<T>`，顾名思义，将数据的内存位置钉（固定）住。
+
 ## 动态大小类型（DST）
 
-> 如果一个类型的大小不能在编译期确定，则称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#%E5%88%87%E7%89%87t)和[特征对象](#特征对象trait-object)。
+> 如果一个类型的大小不能在编译期确定，则称之为[动态大小类型（Dynamically-Sized Type）](https://doc.rust-lang.org/reference/dynamically-sized-types.html)。例如[切片](#%E5%88%87%E7%89%87t)和[特征对象](#特征对象trait-object用特征描述值)。
 
 动态大小类型只能在以下场景调用：
 
-1. 通过[指针](#普通指针pointer)进行调用，如切片通过共享引用`&[T]`调用；
+1. 通过[指针](#%E6%8C%87%E9%92%88pointer)进行调用，如切片通过共享引用`&[T]`调用；
 2. 作为具有`?Sized`绑定的[泛型](#%E6%B3%9B%E5%9E%8Bt)的参数，其中`?Sized`指示编译器其所绑定的类型无需确定大小；
 3. 作为[结构](#%E7%BB%93%E6%9E%84struct)的最后一个字段；
 
@@ -2508,62 +2508,96 @@ impl<T> Point<T> {
 
 ### 特征`trait`
 
-> **特征（Trait）**是拥有共同特性的类型的特性集合，类似某些编程语言中的*接口（Interface）*。
+> **特征**即类型共性的集中描述，形式上类似某些语言中的接口。Rust不是传统的面向对象语言，没有继承机制，其多态是通过**特征（Trait）**来实现的。
 
-特征具有以下特点：
+- 特征用于描述类型，但不可以直接用来构造结构（对象）;
+- 特征无法定义属性；
+- 特征方法可以提供默认实现，但无法通过代码直接调用默认实现；
 
-- 特征方法可以有默认实现；
-- 特征方法的默认实现无法通过代码直接调用；
-- 特征可直接描述参数类型；
-- [特征对象（Trait Object）](#特征对象trait-object)可以描述值类型（静态化抽象类以实现动态类型）；
+定义特征：
 
 ```rust
-// 定义特征
-pub trait Summary {
-    fn summarize_author(&self) -> String;
-    // 带有默认实现的方法
-    fn summarize(&self) -> String {
-        format!("(Read more from {}...)", self.summarize_author())
+trait Draw {
+    fn clear(&self);
+    fn draw_at(&mut self, at: Point);
+    // 提供默认实现
+    fn move_to(&mut self, to: Point) {
+      self.clear();
+      self.draw_at(to);
     }
 }
-
-// 部署特征
-impl Summary for Post {
-  fn summarize_author(&self) -> String {
-      self.username
-  }
-}
-
-impl Summary for Tweet {
-  fn summarize_author(&self) -> String {
-      self.author
-  }
-  // 覆盖默认实现
-  fn summarize(&self) -> String {
-      format!("(Read more ...)")
-  }
-}
 ```
 
-#### 特征直接描述参数（`impl Trait`）
-
-使用`impl <Trait>`语法描述参数类型：
+部署特征：
 
 ```rust
-pub fn notify(item: &impl Summary);
+struct Point { x: usize, y: usize }
+struct Circle { r: usize, at: Point }
+struct Rect { w: usize, h: usize, at: Point }
+
+impl Draw for Circle {
+  fn clear(&self) {
+    println!("clear circle.");
+  }
+  fn draw_at(&mut self, at: Point) {
+    println!("draw_at circle.");
+    self.at = at
+  }
+}
+impl Draw for Rect {
+  fn clear(&self) {
+    println!("clear rect.");
+  }
+  fn draw_at(&mut self, at: Point) {
+    println!("draw_at rect.");
+    self.at = at
+  }
+}
 ```
 
-##### 特征绑定语法糖（Trait Bound）
-
-> 特征绑定（*Trait Bound*）：使用泛型写法为特征临时起别名的一种语法糖，用于简化复杂场景下的重复书写。
+对于具备默认实现的特征，可以通过`#[derive()]`宏快速部署：
 
 ```rust
-fn notify<T: Summary>(item1: &T, item2: &T);
+fn main() {
+  #[derive(Debug)]
+  struct Point { x: usize, y: usize } // x, y 属性（usize）均实现了 Debug 特征
+  let p = Point { x:1, y:1 };
+  println!("{:?}", p)
+}
 ```
 
-##### 通过特征绑定有条件地实现方法
+尽管Rust是静态编译语言，类型需要在编译时确立，但是：
 
-> 通过对`impl {}`使用特征进行限制可以对同一结构针对（泛型面向的）不同入参类型部署不同的方法。
+- 得益于[虚拟方法表（*vtable*）](#特征绑定trait-bound用特征描述参数)的部署，特征可以用于直接描述参数类型；
+- 得益于[动态调度机制](#静态调度和动态调度)，特征可以通过[特征对象（Trait Object）](#特征对象trait-object用特征描述值)的方式描述值类型（静态化抽象类以实现动态类型）；
+
+#### 特征绑定（Trait Bound）：用特征描述参数
+
+> 通过特征描述参数可以更松散地约束参数类型。**特征绑定（Trait Bound）**则是特征描述参数的基本写法。
+
+```rust
+fn notify<T: Summary>(item1: &T, item2: &T) {}
+```
+
+> 在简单情况下，特征绑定可以直接使用`impl <Trait>`语法糖。
+
+```rust
+fn notify(item: &impl Summary) {}
+```
+
+> 通过`+`可以对多个特征绑定进行组合。
+
+```rust
+fn notify<T:Summary + Display>(item1: &T, item2: &T) {}
+```
+
+> 通过`where`语句进行特征绑定可以简化复杂绑定下的签名。
+
+```rust
+fn notify<T>(item1: &T, item2: &T) where T: Summary + Display {}
+```
+
+通过特征绑定有条件地实现方法或特征：
 
 ```rust
 struct Pair<T> { x: T, y: T }
@@ -2585,124 +2619,178 @@ assert_eq!(Pair::new(1, 2).largest(), 2);
 assert_eq!(Pair::new(String::from("a"), String::from("b")).largest(), String::form("b"));
 ```
 
-##### 组合多个特征
+#### 静态调度和动态调度
 
-通过`+`可以组合多个特征：
+> 当代码涉及多态时，需要有一种机制来确定实际运行的是哪个类型，这一过程就是所谓的**调度（Dispatch）**。
 
-```rust
-fn notify(item: &(impl Summary + Display));
-fn some_function<T: Display + Clone, U: Clone + Debug>(t: &T, u: &U) -> i32;
-```
-
-##### `where`语句简化特征绑定
+> **静态调度（Static Dispatch）**是指在编译期确定调度类型的调度，故也没有运行时的性能损耗。
+> 包括[泛型](#泛型t)和[特征绑定](#特征绑定trait-bound用特征描述参数)，它们都是在编译期进行单态化。
 
 ```rust
-fn some_function<T, U>(t: &T, u: &U) -> i32 where T: Display + Clone, U: Clone + Debug;
-```
-
-#### 特征对象间接描述值（`dyn Trait`）
-
-##### 静态调度（`impl Trait`）和动态调度（`dyn Trait`）
-
-> 当代码涉及多态性时，需要有一种机制来确定实际运行的是哪个具体的版本。这就是所谓的**调度（Dispatch）**。
-
-> 所谓**静态调度（Static Dispatch）**，在编译期确定调用类型。如前述的泛型会在编译期间单态化，这种静态分发的优势，是没有运行时的性能损耗，但函数无法返回多种类型。所以Rust也支持通过[*特征对象（Trait Object）*](#特征对象trait-object)来实现**动态调度（Dynamic Dispatch）**。
-
-### 特征对象（Trait Object）
-
-> *特征（Trait）*代表的是不定类型（在编译时无法确定大小），无法用作直接值的类型（如函数返回值）。
-> 要想使用特征描述值的类型，就需要将特征包装成确定大小类型（如指针），在Rust中这个特殊类型就是**特征对象（Trait Object）**。
-
-特征对象的类型为`Box<Trait>`，如下：
-
-```rust
-fn returns_summarizable(switch: bool) -> Box<dyn Summary> {
-  if switch {
-    Box::new(NewsArticle { /* ... */ })
-  } else {
-    Box::new(Tweet { /* ... */ })
-  }
+fn clear(shape: &impl Draw) {
+  shape.clear()
 }
 ```
 
-其中，`dyn`为特征对象的标识符（以与特征进行区分），`Box`为装箱类型存储实质类型的指针。
+相应地，由于在编译期进行了单态化，所以静态调度无法返回动态类型：
 
-> 装箱类型（`Box`）可以封装不定大小数据（不定类型），在无需确切知道具体类型的上下文中实现动态数据的调用。具体地，`Box`将封装的数据存储在堆上，并在栈中保留一个指向数据的*智能指针（smart pointer）*）
+```rust
+fn get_default_shape(is_circle: bool) -> impl Draw {
+    if is_circle {
+        Circle { r: 1, at: Point { x: 0, y: 0 } }
+//      ----------------------------------------- expected because of this
+    } else {
+        Rect { w: 1, h: 1, at: Point { x: 0, y: 0 } }
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Circle`, found `Rect`
+    }
+//  - `if` and `else` have incompatible types
+}
+// help: you could change the return type to be a boxed trait object
+```
 
-### 生命周期（Lifetime）
+> 相对地，**动态调度（Dynamic Dispatch）**即在运行期间确立调度类型的调度，这一调度方式通过[特征对象](#特征对象trait-object用特征描述值)来实现。
 
-> [生命周期（Lifetime）](http://localhost/rust/book/ch10-03-lifetime-syntax.html)规则用以保证*引用*的存活时间符合我们的需要。
-> 简单情况下，引用的生命周期可以被编译器正确推导，复杂的情况下则需要我们主动进行[生命周期标注](#生命周期lifetime)。
+#### 特征对象（Trait Object）：用特征描述值
+
+> 特征代表的是不定类型，无法用作直接值的类型（如函数返回值），要想使用特征描述值的类型，就需要将特征包装成确定大小类型（如指针），在Rust中这个类型描述为一种特殊的智能指针：**特征对象（Trait Object）**。
+
+根据前面的编译器提示，`get_default_shape`修改为如下特征对象形式即可通过编译：
+
+```rust
+fn get_default_shape(is_circle: bool) -> Box<dyn Draw> {
+    if is_circle {
+        Box::new(Circle { r: 1, at: Point { x: 0, y: 0 } })
+    } else {
+        Box::new(Rect { w: 1, h: 1, at: Point { x: 0, y: 0 } })
+    }
+}
+```
+
+`Box<dyn Draw>`中的`dyn`为特征对象的标识符（以与特征进行区分），`Box<T>`为[智能指针](#智能指针smart-pointers)，其通过二级指针存储实际类型的指针。
+
+### 生命周期（Lifetime `'a`）
+
+由于栈的特性，原始值的生命周期对于编译器来说很容易推断。但对于引用（指针）来说，其依托于被引用数据的存在而存在，所以它的生命周期需要间接推断。
+
+在单一生命周期的情况下，编译器仍会推断出来：
+
+```rust
+fn longest(x: &str) -> &str {
+  x
+}
+```
+```rust
+// error[E0106]: missing lifetime specifier
+fn longest() -> &str {
+//              ^ expected named lifetime parameter
+  let x = String::from("hello");
+  &x
+}
+```
+
+但在多个生命周期交织时，编译器将难以推断：
 
 ```rust
 // error[E0106]: missing lifetime specifier
-// help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
 fn longest(x: &str, y: &str) -> &str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
+//            ----     ----     ^ expected named lifetime parameter
+    if x.len() > y.len() { x } else { y }
+// help: this function's return type contains a borrowed value, but the signature does not say whether it is borrowed from `x` or `y`
+// help: consider introducing a named lifetime parameter
 }
 ```
 
-#### 生命周期标注（`'a`）
+虽然上述代码我们能清晰地看到返回值的生命周期是x, y中的一个，但对于编译器来说，为了确保程序的安全性，选择了保守推断。
 
-> 当多个引用传入作用域时，可能会引起生命周期歧义，这时，我们需要对这些引用的生命周期进行明确标注，以使编译器可以顺利地遵循Rust的内存管理规则来保障内存安全。
-> *需要注意的是，引用的生命周期在其声明时便已确定，标注并不会改变引用的生命周期，标注是为了在编译器不清楚的时候告知编译器以保证借用的规则。*
-
-```rust
-&i32        // a reference
-&'a i32     // a reference with an explicit lifetime
-&'a mut i32 // a mutable reference with an explicit lifetime
-```
-
-#### 生命周期泛型（generic lifetime parameters）
+> 当在编译器无法自动推断时，需要我们手动**标注生命周期**，用以**告知编译器引用的存活时间**。
+> *生命周期修饰是一种特殊的抽象类型*，在使用时紧跟在引用标识符（`&`, `ref`）后面：`&'a usize`, `&'a mut usize`。
 
 ```rust
-// 函数
 fn longest<'a>(x: &'a str, y: &'a str) -> &'a str {
-    if x.len() > y.len() {
-        x
-    } else {
-        y
-    }
-}
-// 结构
-struct ImportantExcerpt<'a> { // ImportantExcerpt实例的存活时间不会晚于part字段的存活时间
-    part: &'a str,
+    if x.len() > y.len() { x } else { y }
 }
 ```
 
-> 生命周期泛型标注的含义是：被标注的引用的生命周期不短于该标注泛型来源引用所具有的生命周期，如果来源有多个，则不短于其中最短的一个。
+静态生命周期即程序的生命周期，标记为`'static`。
+
+## 标准库实现的其他常用类型
+
+### 双端可增长数组`VecDeque`
+
+> `std::collections::VecDeque`是通过环形缓冲区实现的双端可增长数组。
+
+### 双向链表`LinkedList`
+
+> `std::collections::LinkedList`
+
+### 哈希字典`HashMap`
+
+> `std::collections::HashMap`
 
 ```rust
-fn main() {
-    let string1 = String::from("long string is long");
-    let result;
-    {
-        let string2 = String::from("xyz");
-        result = longest(string1.as_str(), string2.as_str()); // error[E0597]: `string2` does not live long enough
-    }
-    println!("The longest string is {}", result); // 由于result生命周期只是不短于string2，故此时无法保证其存活
-//                                       ------ borrow later used here
+use std::collections::HashMap;
 
-}
+// 标准创建
+let mut scores: HashMap<String, i32> = HashMap::new();
+
+// 推断创建
+let mut scores = HashMap::new();
+
+// 通过 key 和 value 集合间接创建
+let teams = vec![String::from("Blue")];
+let initial_scores = vec![10];
+// collect() 可以返回不同的数据结构，使用 HashMap<_, _> 后可以指定为 HashMap
+// 使用 <_, _> 的原因是 Rust 可以根据两个 collections 推断出来
+let mut scores: HashMap<_, _> = teams.into_iter().zip(initial_scores.into_iter()).collect();
+
+scores.insert(String::from("Red"), 50); // add or overwrite when value is not equal
+scores.insert(String::from("Blue"), 20);
+scores.entry(String::from("Blue")).or_insert(30); // only add
+assert_eq!(Some(&20), scores.get("Blue"));
+assert_eq!(None, scores.get("Yellow"));
 ```
 
-#### 静态生命周期（`'static`）
+### B树字典`BTreeMap`
 
-> 静态生命周期即程序的生命周期。
+> `std::collections::BTreeMap`
 
-字符串切片字面即静态生命周期`&'static str`。
+### 哈希集合`HashSet`
+
+> `std::collections::HashSet`
+
+### B树集合`BTreeSet`
+
+> `std::collections::BTreeSet`
+
+### 二叉堆`BinaryHeap`
+
+> `std::collections::BinaryHeap`是大根堆（max-heap），可通过`core::cmp::Reverse`或自定义`Ord`实现小根堆（min-heap）。
+
+```rust
+use std::collections::BinaryHeap;
+use std::cmp::Reverse;
+
+let mut heap = BinaryHeap::new();
+
+// Wrap values in `Reverse`
+heap.push(Reverse(1));
+heap.push(Reverse(5));
+heap.push(Reverse(2));
+
+// If we pop these scores now, they should come back in the reverse order.
+assert_eq!(heap.pop(), Some(Reverse(1)));
+assert_eq!(heap.pop(), Some(Reverse(2)));
+assert_eq!(heap.pop(), Some(Reverse(5)));
+assert_eq!(heap.pop(), None);
+```
 
 # 模式和匹配（Patterns and Matching）
 
 ## 模式（Patterns）
 
-> [**模式（Patterns）**](https://doc.rust-lang.org/reference/patterns.html)，是一种与右值表达式类似的特殊语法，用于与各种结构进行匹配，以灵活地**解构取值**和**构建复杂的控制流**。
+> [模式（Patterns）](https://doc.rust-lang.org/reference/patterns.html)，是一种与右值表达式类似的特殊语法，用于与各种结构进行匹配，以灵活地**解构取值**和**构建复杂的控制流**。
 
-> 模式通常出现在`let`声明、`match`表达式分支、`if let`表达式条件、`while let`表达式、`for`表达式，以及函数或闭包的参数中。
+模式通常出现在[`let`声明](#声明语句let)、[`match`表达式分支](#全面匹配表达式match)、[`if let`表达式条件](#非全面匹配表达式if-let)、[`while let`表达式](#条件循环表达式while-let)、[`for`表达式](#循环表达式for)，以及[函数或闭包的形参](#函数形参)中。
 
 ```rust
 fn main() {
@@ -2738,31 +2826,6 @@ fn main() {
     [PatternWithoutRange]
   | [RangePattern]
 
-#RangePattern
-     [RangeInclusivePattern]
-   | [RangeFromPattern]
-   | [RangeToInclusivePattern]
-   | [ObsoleteRangePattern]
-
-  #RangeInclusivePattern
-        [RangePatternBound] `..=` [RangePatternBound]
-
-  #RangeFromPattern
-        [RangePatternBound] `..`
-
-  #RangeToInclusivePattern
-        `..=` [RangePatternBound]
-
-  #ObsoleteRangePattern
-    [RangePatternBound] `...` [RangePatternBound]
-
-  #RangePatternBound
-      [CHAR_LITERAL]                                / 字符 /
-    | [BYTE_LITERAL]                                / 字节 /
-    | `-`"?" [INTEGER_LITERAL]                      / 整型 /
-    | `-`"?" [FLOAT_LITERAL]                        / 浮点数 /
-    | [PathExpression]                              / 路径 /
-
 #PatternWithoutRange
     [LiteralPattern]                              / 字面量 /
   | [IdentifierPattern]                           / 标识符 /
@@ -2776,112 +2839,280 @@ fn main() {
   | [SlicePattern]                                / 切片 /
   | [PathPattern]                                 / 路径 /
   | [MacroInvocation]                             / 宏调用 /
-
-  #LiteralPattern
-      `true` | `false`
-    | [CHAR_LITERAL]
-    | [BYTE_LITERAL]
-    | [STRING_LITERAL]
-    | [RAW_STRING_LITERAL]
-    | [BYTE_STRING_LITERAL]
-    | [RAW_BYTE_STRING_LITERAL]
-    | `-`"?" [INTEGER_LITERAL]
-    | `-`"?" [FLOAT_LITERAL]
-
-  #IdentifierPattern
-    `ref`"?" `mut`"?" [IDENTIFIER] "("`@` [PatternNoTopAlt] ")" "?"
-
-  #WildcardPattern
-    `_`
-
-  #RestPattern
-    `..`
-
-  #ReferencePattern
-    "("`&`|`&&`")" `mut`"?" [PatternWithoutRange]
-
-  #StructPattern
-    [PathInExpression] `{`
-        [StructPatternElements] "?"
-    `}`
-
-    #StructPatternElements
-        [StructPatternFields] "("`,` | `,` [StructPatternEtCetera]")""?"
-      | [StructPatternEtCetera]
-
-    #StructPatternFields
-      [StructPatternField] "("`,` [StructPatternField]")" "*"
-
-    #StructPatternField
-      [OuterAttribute] "*"
-      "("
-            [TUPLE_INDEX] `:` [Pattern]
-          | [IDENTIFIER] `:` [Pattern]
-          | `ref`"?" `mut`"?" [IDENTIFIER]
-      ")"
-
-    #StructPatternEtCetera
-      [OuterAttribute] "*"
-      `..`
-  #TupleStructPattern
-    [PathInExpression] `(` [TupleStructItems]"?" `)`
-
-    #TupleStructItems
-      [Pattern] "(" `,` [Pattern] ")""*" `,`"?"
-
-  #TuplePattern
-    `(` [TuplePatternItems]"?" `)`
-
-    #TuplePatternItems
-        [Pattern] `,`
-      | [RestPattern]
-      | [Pattern] "("`,` [Pattern]")""+" `,`?
-
-  #GroupedPattern
-    `(` [Pattern] `)`
-
-  #SlicePattern
-    `[` [SlicePatternItems]"?" `]`
-
-    #SlicePatternItems
-      [Pattern] "("`,` [Pattern]")""*" `,`"?"
-
-  #PathPattern
-    [PathExpression]
 ```
 
-### 字面量（Literals）
+### 字面量模式（Literal Patterns）
 
 ```pseudo
-LiteralPattern :
-     true | false
-   | CHAR_LITERAL
-   | BYTE_LITERAL
-   | STRING_LITERAL
-   | RAW_STRING_LITERAL
-   | BYTE_STRING_LITERAL
-   | RAW_BYTE_STRING_LITERAL
-   | -? INTEGER_LITERAL
-   | -? FLOAT_LITERAL
+[LiteralPattern] :
+    `true` | `false`
+  | [CHAR_LITERAL]
+  | [BYTE_LITERAL]
+  | [STRING_LITERAL]
+  | [RAW_STRING_LITERAL]
+  | [BYTE_STRING_LITERAL]
+  | [RAW_BYTE_STRING_LITERAL]
+  | `-`"?" [INTEGER_LITERAL]
+  | `-`"?" [FLOAT_LITERAL] / 浮点数由于复杂性原因，在将来会被删除支持 /
 ```
 
-### 复合类型的解构（Destructured arrays, enums, structs, or tuples）
+### 标识符模式（Identifier Patterns）
 
-### 变量（Variables）
+> 标识符模式用于将匹配到的值绑定到变量。
 
-### 通配符（Wildcards）
+```pseudo
+[IdentifierPattern]
+  `ref`"?" `mut`"?" [IDENTIFIER] "("`@` [PatternNoTopAlt] ")" "?"
+```
 
 ```rust
-WildcardPattern :
-   _
+let x = 2;
+
+match x {
+    e @ 1 ..= 5 => println!("got a range element {}", e),
+    _ => println!("anything"),
+}
 ```
 
-### 占位符（Placeholders）
+```rust
+// `name` is moved from person and `age` referenced
+let Person { name, ref age } = person;
+```
 
-## 匹配表达式`match`
+### 通配符模式（Wildcard Pattern）
 
-- 匹配分支必须穷举（*Exhaustive*），但可以用下划线`_`代表剩余所有可能性。
-- 分支返回值类型必须一致。
+> 通配符（或占位符）匹配任何值。
+
+```pseudo
+#WildcardPattern
+  `_`
+```
+
+```rust
+if let Some(_) = x {}
+```
+
+### 剩余模式（Rest Patterns）
+
+> 匹配范围内所有值（剩余值）。
+
+```pseudo
+#RestPattern
+  `..`
+```
+
+```rust
+match slice {
+    [.., "!"] => println!("!!!"),
+
+    [start @ .., "z"] => println!("starts with: {:?}", start),
+
+    ["a", end @ ..] => println!("ends with: {:?}", end),
+
+    whole @ [.., last] => println!("the last element of {:?} is {}", whole, last),
+
+    rest => println!("{:?}", rest),
+}
+```
+
+### 区间模式（Range Patterns）
+
+> 与区间表达式不同的是没有双开区间（~~*exclusive range patterns*~~）
+
+```pseudo
+#RangePattern
+     [RangeInclusivePattern]
+   | [RangeFromPattern]
+   | [RangeToInclusivePattern]
+   | [ObsoleteRangePattern]
+
+  #RangeInclusivePattern
+    [RangePatternBound] `..=` [RangePatternBound]
+
+  #RangeFromPattern
+    [RangePatternBound] `..`
+
+  #RangeToInclusivePattern
+    `..=` [RangePatternBound]
+
+  #ObsoleteRangePattern / 同[RangeToInclusivePattern] /
+    [RangePatternBound] `...` [RangePatternBound]
+
+  #RangePatternBound
+      [CHAR_LITERAL]                                / 字符 /
+    | [BYTE_LITERAL]                                / 字节 /
+    | `-`"?" [INTEGER_LITERAL]                      / 整型 /
+    | `-`"?" [FLOAT_LITERAL]                        / 浮点数 /
+    | [PathExpression]                              / 路径 /
+```
+
+### 引用模式（Reference Pattrens）
+
+> 匹配和解构的指针。
+
+```pseudo
+#ReferencePattern
+  "("`&`|`&&`")" `mut`"?" [PatternWithoutRange]
+```
+
+```rust
+let int_reference = &3;
+
+let a = match *int_reference { 0 => "zero", _ => "some" };
+let b = match int_reference { &0 => "zero", _ => "some" };
+
+assert_eq!(a, b);
+```
+
+### 结构模式（Struct Patterns）
+
+> 匹配和解构结构体。
+
+```pseudo
+#StructPattern
+  [PathInExpression] `{`
+      [StructPatternElements] "?"
+  `}`
+
+  #StructPatternElements
+      [StructPatternFields] "("`,` | `,` [StructPatternEtCetera]")""?"
+    | [StructPatternEtCetera]
+
+  #StructPatternFields
+    [StructPatternField] "("`,` [StructPatternField]")" "*"
+
+  #StructPatternField
+    [OuterAttribute] "*"
+    "("
+          [TUPLE_INDEX] `:` [Pattern]
+        | [IDENTIFIER] `:` [Pattern]
+        | `ref`"?" `mut`"?" [IDENTIFIER]
+    ")"
+
+  #StructPatternEtCetera
+    [OuterAttribute] "*"
+    `..`
+```
+
+```rust
+match struct_value {
+    Struct{a: 10, b: 'X', c: false} => (),
+    Struct{a: 10, b: 'X', ref c} => (),
+    Struct{a: 10, b: 'X', ref mut c} => (),
+    Struct{a: 10, b: 'X', c: _} => (),
+    Struct{a: _, b: _, c: _} => (),
+}
+```
+
+```rust
+let Struct{a: x, b: y, c: z} = struct_value; // destructure all fields
+```
+
+### 元组结构模式（Tuple Patterns）
+
+> 匹配和解构元组结构。
+
+```pseudo
+#TupleStructPattern
+  [PathInExpression] `(` [TupleStructItems]"?" `)`
+
+  #TupleStructItems
+    [Pattern] "(" `,` [Pattern] ")""*" `,`"?"
+```
+
+### 元组模式（Tuple Patterns）
+
+> 匹配和解构元组。
+
+```pseudo
+#TuplePattern
+  `(` [TuplePatternItems]"?" `)`
+
+  #TuplePatternItems
+      [Pattern] `,`
+    | [RestPattern]
+    | [Pattern] "("`,` [Pattern]")""+" `,`?
+```
+
+### 切片模式（Slice Patterns）
+
+> 匹配和解构切片、数组和定长向量。
+
+```pseudo
+#SlicePattern
+  `[` [SlicePatternItems]"?" `]`
+
+  #SlicePatternItems
+    [Pattern] "("`,` [Pattern]")""*" `,`"?"
+```
+
+```rust
+// Dynamic size
+let v = vec![1, 2, 3];
+match v[..] {
+    [a, b] => { /* this arm will not apply because the length doesn't match */ }
+    [a, b, c] => { /* this arm will apply */ }
+    _ => { /* this wildcard is required, since the length is not known statically */ }
+};
+```
+
+
+### 路径模式（Path Patterns）
+
+> 匹配和解构路径表达式，如常量、没有字段的结构或枚举变体。
+
+```pseudo
+#PathPattern
+  [PathExpression]
+```
+
+```rust
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+let msg = Message::Move {x: 1, y: 2};
+match msg {
+  Message::Quit => { println!("Quit!") }
+  Message::Move{x, y} => { println!("Move to {x}, {y}") }
+  Message::Write(msg) => { println!("Write {msg}") }
+  Message::ChangeColor(r, g, b) => { println!("Change color to: {r} {g} {b}") }
+}
+```
+
+### 分组模式（Grouped Patterns）
+
+> 分组模式在复合模式中控制模式优先级。
+
+```pseudo
+#GroupedPattern
+  `(` [Pattern] `)`
+```
+
+```rust
+let int_reference = &3;
+match int_reference {
+    &(0..=5) => (),
+    _ => (),
+}
+```
+
+### 或模式（Or Patterns）
+
+> 或模式始终具有最低优先级。
+
+```pseudo
+#OrPattern / 见[Pattern] /
+  `|`
+```
+
+## 全面匹配表达式`match`
+
+> 使用`match`进行全面（*Exhaustive*）匹配。
+
+- `match`是表达式，所以每个分支返回值的类型必须一致。
 
 ```rust
 match 10 {
@@ -2890,7 +3121,34 @@ match 10 {
 }
 ```
 
-## 匹配表达式`if let`
+### 匹配守卫（Match Guard）
+
+> 匹配（分支）守卫是在匹配分支后额外添加的`if`条件，为模式解构的值提供进一步条件收缩。
+
+```rust
+let num = Some(4);
+
+match num {
+  Some(x) if x % 2 == 0 => println!("The number {} is even", x),
+  Some(x) => println!("The number {} is odd", x),
+  None => (),
+}
+```
+
+> 守卫作用于整个分支（模式），而不是某个子模式。
+
+```rust
+let x = 4;
+let y = false;
+
+let r = match x {
+    4 | 5 | 6 if y => "yes",
+    _ => "no",
+};
+assert_eq!(r, "no");
+```
+
+## 非全面匹配表达式`if let`
 
 > 使用 `if let` 可以进行非全面（*non-exhaustive*）匹配。
 
@@ -2901,14 +3159,66 @@ if let Coin::Penny = m {
 }
 ```
 
-## 匹配表达式`while let`
+## 条件循环表达式`while let`
+
+```rust
+let mut stack = Vec::new();
+
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+while let Some(top) = stack.pop() {
+    println!("{}", top);
+}
+```
+
+## 循环表达式`for`
+
+```rust
+let v = vec!['a', 'b', 'c'];
+
+for (index, value) in v.iter().enumerate() {
+    println!("{} is at index {}", value, index);
+}
+```
+
+## 声明语句`let`
+
+```rust
+let (x, ..) = (1, 2, 3);
+```
+
+## 函数形参（*In Parameters*）
+
+```rust
+fn print_coordinates(&(x, y): &(i32, i32)) {
+    println!("Current location: ({}, {})", x, y);
+}
+
+fn main() {
+    let point = (3, 5);
+    print_coordinates(&point);
+}
+```
+
+## 测试模式`matches!`
+
+```rust
+let foo = 'f';
+assert!(matches!(foo, 'A'..='Z' | 'a'..='z'));
+
+let bar = Some(4);
+assert!(matches!(bar, Some(x) if x > 2));
+```
 
 # 错误处理（Error Handling）
 
 Rust有两种基础的错误处理方式：
 
 1. 通过`panic!(errMsg:)`抛出错误，并立即终止程序执行，通常用于开发调试阶段。
-2. 通过`Result<T,E>`枚举包装错误，并传递给后续程序进行处理。
+2. 通过`compile_error!(errMsg:)`抛出编译时错误。
+3. 通过`Result<T,E>`枚举包装错误，并传递给后续程序进行处理。
 
 ```rust
 enum Result<T, E> {
@@ -3234,24 +3544,24 @@ demo();
 
 # 元编程（Meta Programing）
 
-## 宏
+## 宏（Macros）
 
-> Rust宏展开（*Expansion*）是在创建AST之前，分词（*Tokenization*）之后，故而传入宏的参数为**词条流（*TokenStream*）**。
+> Rust宏展开（Expansion）是在创建AST之前，分词（Tokenization）之后，故传入宏的参数为**词条流（TokenStream）**。之所以没有在AST后进行宏展开，则是因为Rust本身还处于高速迭代期，AST变动频繁，而词法则相对比较稳定。
 
-> 所谓**词条（*Token*）**，即是语言的最小语义单元，包括标识符、字面量、运算符......，如`+`、`1`、`111`、`{}`都是一个词条，而`{`、`}`则不是词条。
+> 所谓**词条（Token）**，即是语言的最小语义单元，包括标识符、字面量、运算符......，如`+`、`1`、`111`、`{}`都是一个词条，而`{`、`}`则不是词条。
 
-> 在分词阶段，由于嵌套结构的存在，分组标记（即括号`()`,`[]`, `{}`）会形成所谓的**词条树（*Token Tree*）**，而单一词条（*Token*）可以看作是一种特殊的词条树。
+> 在分词阶段，由于嵌套结构的存在，分组标记（即括号`()`,`[]`, `{}`）会形成所谓的**词条树（Token Tree）**，而单一词条（Token）可以看作是一种特殊的词条树。
 
-> 之所以没有在AST后进行宏展开，则是因为Rust本身还处于高速迭代期，AST变动频繁，而词法则相对比较稳定。
+根据处理方式的不同，宏分为[声明式宏（Declarative Macros）](#%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%AE%8Fdeclarative-macros)和[过程式宏（Procedural Macros）](#%E8%BF%87%E7%A8%8B%E5%BC%8F%E5%AE%8Fprocedual-macros)。
 
-根据处理方式的不同，宏分为[声明式宏（Declarative Macros）](#声明式宏)和[过程式宏（Procedural Macros）](#过程式宏)。
+| [Rust编译过程](https://juejin.cn/post/6927467074868658189#heading-2) |
+| -------------------------------------------------------------------- |
+| ![Rust编译过程](./Rust-compilation.png#h400)                         |
 
-[![Rust编译过程](./Rust-compilation.png#h200)](https://juejin.cn/post/6927467074868658189#heading-2)
+### 声明式宏（Declarative Macros）
 
-### 声明式宏
-
-> **声明（式）宏（Declarative Macros）**，通常也直接叫***宏（*Macros*）***，其处理方式类似于`match`，对词条流（*TokenStream*）进行模式匹配并返回替换内容。
-> 由于宏是在AST之前展开，仅是对词条流进行替换，故无法进行任何类型的计算。关于如何在宏中实现计算，见[过程式宏](#过程式宏)。
+> **声明（式）宏（Declarative Macros）**，通常也直接叫***宏（Macros）***，其处理方式类似于`match`，对词条流（*TokenStream*）进行模式匹配并返回替换内容。
+> 由于宏是在AST之前展开，仅是对词条流进行替换，故无法进行任何类型的计算。关于如何在宏中实现计算，见[过程式宏](#%E8%BF%87%E7%A8%8B%E5%BC%8F%E5%AE%8Fprocedual-macros)。
 
 宏的定义：
 
@@ -3352,7 +3662,7 @@ macro_rules! dead_rule {
 dead_rule!(x+); // error: expected expression, found end of macro arguments
 ```
 
-#### 匹配模式
+#### 声明式宏的匹配模式
 
 ##### `block`
 
@@ -3480,7 +3790,7 @@ metas! {
 
 ##### `pat`
 
-> 匹配[模式（*patterns*）](#匹配模式)。
+> 匹配[模式（*patterns*）](#%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%AE%8F%E7%9A%84%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F)。
 
 ```rust
 macro_rules! patterns {
@@ -3498,7 +3808,7 @@ patterns! {
 
 ##### `pat_param`
 
-> 匹配[模式（*patterns*）](#匹配模式)。
+> 匹配[模式（*patterns*）](#%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%AE%8F%E7%9A%84%E5%8C%B9%E9%85%8D%E6%A8%A1%E5%BC%8F)。
 
 ```rust
 macro_rules! patterns {
@@ -3623,7 +3933,7 @@ visibilities! {
 }
 ```
 
-### 过程式宏
+### 过程式宏（Procedual Macros）
 
 > 为了更好地处理宏计算的问题，Rust提供了**过程（式）宏（Procedural Macros）**，其作用方式类似函数，接受词条流作为输入、处理后返回词条流。其实现宏计算的关键在于借助`syn`和`quote`实现TokenStream和AST之间的转换。
 
@@ -3638,9 +3948,9 @@ proc-macro = true
 
 3. `TokenStream`类似`Vec<TokenTree>`，但克隆成本更低；
 
-#### 类函数宏
+#### 类函数宏（Function-like Macros）
 
-> **（类）函数宏（*Function-like Macros*）**类似声明宏，用于独立产生代码。
+> **（类）函数宏（*Function-like Macros*）**的调用方式和作用都与[声明（式）宏](#%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%AE%8Fdeclarative-macros)类似，均用于独立生成代码。
 
 1. 函数宏通过带有`proc_macro`属性的公共函数（`pub`）定义；
 
@@ -3658,15 +3968,19 @@ pub fn sql(input: TokenStream) -> TokenStream {
 let sql = sql!(SELECT * FROM posts WHERE id=1);
 ```
 
-#### 派生宏
+#### 派生宏（Derive Macros）
 
-> **派生宏（*Derived Macros*）**用于修饰结构体（Struct）、枚举（Enum）、联合类型（Union），为其追加项目（*Items*）。
+> **派生宏（*Derived Macros*）**接受所修饰的项目（*结构体（Struct）*、*枚举（Enum）*、*联合（Union）*）为唯一参数，返回值是为所修饰项目追加的合适的额外项目。
 
-1. 派生宏通过带有`proc_macro_derive`属性的公共函数（`pub`）定义，该属性的第一个参数是宏的名称；
+派生宏通过带有`proc_macro_derive`属性的公共函数（`pub`）定义，其中：
+  - `proc_macro_derive`属性的第一个参数是宏的名称。
 
-2. 函数的签名为`(TokenStream) -> TokenStream`，其中参数*TokenStream*为`derive`属性所修饰的项目的*Token Tree*，返回的*TokenStream*也必须是一组项目（*Items*），因为会被附加到所修饰项目所在的模块或块中；
+函数的签名为`(TokenStream) -> TokenStream`，其中：
+  - 参数中的*TokenStream*为`derive`属性所修饰的项目的*Token Tree*。
+  - 返回的*TokenStream*也必须是一组[项目（Items）](#项目items)，因为会被附加到所修饰项目所在的模块或块中。
 
 ```rust
+// 定义
 extern crate proc_macro;
 use proc_macro::TokenStream;
 
@@ -3674,7 +3988,10 @@ use proc_macro::TokenStream;
 pub fn derive_answer_fn(_item: TokenStream) -> TokenStream {
     "fn answer() -> u32 { 42 }".parse().unwrap()
 }
-// ...
+```
+
+```rust
+// 调用
 extern crate proc_macro_examples;
 use proc_macro_examples::AnswerFn;
 
@@ -3686,9 +4003,9 @@ fn main() {
 }
 ```
 
-> 派生宏还可以为所修饰项目定添加仅在项目定义范围内可见的属性，可用于修饰结构体字段、枚举项等，这些属性称为**派生宏辅助属性（*Derive Macro Helper Attributes*）**。
+> 派生宏还可以为所修饰项目定添加仅在项目定义范围内可见的属性，可用于修饰字段、枚举项等，这些属性称为**派生宏辅助属性（Derive Macro Helper Attributes）**。
 
-1. 辅助属性的定义是通过向`proc_macro_derive`属性增加`attributes(helper0, helper1, ..)`参数，该参数内可添加多个标识符（以逗号分隔），即辅助属性名称。
+辅助属性的定义是通过向`proc_macro_derive`属性增加`attributes(helper0, helper1, ..)`参数，该参数内可添加多个标识符（以逗号分隔），即辅助属性名称。
 
 ```rust
 // 定义了一个名为helper的属性
@@ -3703,13 +4020,16 @@ struct Struct {
 }
 ```
 
-#### 属性宏
+#### 属性宏（Attribute Macros）
 
-> **属性宏（*Attribute Macros*）**
+> **属性宏（*Attribute Macros*）**接受所传入的属性和所修饰的项目（任意[项目（Items）](#项目items)）作为输入参数，返回值用于替换所修饰的项目。
 
-1. 属性宏通过带有`proc_macro_attribute`属性的公共函数（`pub`）定义；
+属性宏通过带有`proc_macro_attribute`属性的公共函数（`pub`）定义。
 
-2. 函数签名为`(TokenStream, TokenStream) -> TokenStream`，其中第一个*TokenStream*参数为跟随属性名称的*Token Tree*，第二个*TokenStream*是项目的其余部分，包括项目的其他属性，返回值*TokenStream*包含任意数量的项目用以替换所修饰项目；
+函数签名为`(TokenStream, TokenStream) -> TokenStream`，其中：
+  - 第一个*TokenStream*参数为跟随属性名称的*Token Tree*。
+  - 第二个*TokenStream*参数为所修饰的项目，包括后续项目的其他所有属性。
+  - 返回值*TokenStream*包含任意数量的项目用以替换所修饰项目。
 
 ```rust
 #[proc_macro_attribute]
@@ -3724,8 +4044,8 @@ use my_macro::show_streams;
 
 #[show_streams(bar)]
 fn invoke2() {}
-// out: attr: "bar"
-// out: item: "fn invoke2() {}"
+// print: attr: "bar"
+// print: item: "fn invoke2() {}"
 ```
 
 ### 声明宏与过程宏
@@ -3851,16 +4171,209 @@ greet("World!");
 
 [配置文件 Trunk.toml](https://github.com/thedodd/trunk/blob/master/Trunk.toml)
 
-# 其他
+# 标准库
 
-```rust
-// 获取数据的类型名称
-fn get_type(_: &T) -> &'static str {
-  std::any::type_name::<T>()
-}
-```
+> 核心库`core`是标准库`std`的子集，不依赖OS实现，在核心库有提供的情况下可以优先使用核心库模块。
 
-# 库
+|               |                            |
+| ------------- | -------------------------- |
+| `alloc`       | 内存分配                   |
+| `cell`        | 可共享的可变容器               |
+| `mem`         | 内存操作                   |
+| `boxed`       | 堆分配                     |
+| `rc`          | 引用计数                   |
+| `pin`         | “钉针”类型                 |
+| `ptr`         | 原始指针                   |
+|               |                            |
+| `any`         | 动态类型、类型反射         |
+| `collections` | 集合类型                   |
+| `marker`      | 代表类型基本属性的原生特征 |
+|               |                            |
+| `fmt`         | 格式化、打印字符串         |
+| `cmp`         | 比较、排序                 |
+| `iter`        | 迭代                       |
+| `hash`        | 哈希                       |
+| `num`         | 数字相关的额外实用程序     |
+| `ops`         | 运算符重载                 |
+| `hint`        | 编译器提示                 |
+| `ffi`         | FFI 绑定                   |
+|               |                            |
+| `time`        | 时间量化                   |
+| `future`      | 异步                       |
+| `task`        | 异步任务                   |
+| `thread`      | 本机线程                   |
+| `process`     | 进程                       |
+|               |                            |
+| `os`          | 操作系统相关               |
+| `env`         | 环境相关                   |
+| `path`        | 路径                       |
+| `fs`          | 文件系统操作               |
+| `io`          | 核心 I/O 功能              |
+| `net`         | TCP/UDP 通信               |
+
+| 含义                         | 标记 |
+| ---------------------------- | ---- |
+| [*the prelude*][the_prelude] | ✅    |
+
+## 宏
+
+- 工具
+  - `concat!`: 将所有（字面量）参数连接成`&'static str`，如`assert_eq!("test10btrue", concat!("test", 10, 'b', true))`。
+  - `concat_bytes`: 将文字字节或数字连接成字节切片，如`assert_eq!(b"ABCDEF", concat_bytes!(b'A', b"BC", [68, b'E', 70]))`。
+  - `concat_idents`: 将多个标识符连接成一个标识符，如`fn foobar() -> u32 { 23 }; concat_idents!(foo, bar); f();`。
+  - `matches!`: 判断表达式是否与给定的模式匹配。
+  - `stringify!`: 将参数作为原始字符串输出。
+  - `todo!`
+  - `unimplemented!`
+  - `unreachable!`
+  - `#[drive]`
+  - `#[drive(Clone)]`
+  - `#[drive(Eq)]`
+  - `#[drive(Ord)]`
+  - `#[drive(PartialEq)]`
+  - `#[drive(PartialOrd)]`
+  - `#[drive(Debug)]`
+  - `#[drive(Hash)]`
+  - `#[drive(Copy)]`
+  - `#[drive(ConstParamTy)]`
+- 断言和抛错
+  - `assert!`, `assert_eq!`, `assert_ne!`
+  - `debug_assert!`, `debug_assert_eq!`, `debug_assert_ne!`
+  - `panic!`
+  - `compile_error!`
+- 格式化，见[格式化输出](#格式化输出)
+  - `format!`
+  - `format_args!`
+  - `write!`, `writeln!`
+  - `print!`, `println!`
+  - `eprint!`, `eprintln!`
+- 调试
+  - `dbg!`: 将表达式及其执行结果输出到*stderr*
+  - `module_path!`: 获取当前模块路径
+  - `file!`: 获取当前文件名
+  - `line!`: 获取当前文件行号
+  - `column!`: 获取当前文件列号
+  - `log_syntax!`: 将内容打印到*stdout*
+  - `trace_macros!`: 启用或禁用用于调试其他宏的跟踪功能。
+- 环境变量
+  - `env!`: 获取环境变量
+  - `option_env!`: 在编译时获取环境变量
+- 配置
+  - `cfg!`: 获取编译配置项
+- 动态导入
+  - `include!`: 将文件内容解析为表达式或者项目。
+  - `include_bytes!`: 将文件内容解析为字节数组。
+  - `include_str!`: 将UTF-8编码文件内容解析为字符串。
+- 测试
+  - `#[test]`: 将函数转换为单元测试。
+  - `#[bench]`: 将函数转换为基准测试。
+
+
+## 枚举
+
+- ✅ `std::option::Option`
+- ✅ `std::option::Option::Some`
+- ✅ `std::option::Option::None`
+- ✅ `std::result::Result`
+- ✅ `std::result::Result::Ok`
+- ✅ `std::result::Result::Err`
+- `std::io::ErrorKind`
+- `std::net::IpAddr`
+- `std::net::SocketAddr`
+- `std::path::Prefix`
+
+## 特征
+
+- 数据访问
+  - ✅ `std::borrow::ToOwned`: 从借用数据创建自有数据
+  - `std::borrow::Borrow`
+  - `std::borrow::BorrowMut`
+  - ✅ `std::clone::Clone`
+  - `std::default::Default`
+- 比较
+  - ✅ `std::cmp::Eq`
+  - ✅ `std::cmp::PartialEq`
+  - ✅ `std::cmp::Ord`
+  - ✅ `std::cmp::PartialOrd`
+- 标记
+  - ✅ `std::marker::Copy`
+  - ✅ `std::marker::Sized`
+  - ✅ `std::marker::Send`
+  - ✅ `std::marker::Sync`
+  - ✅ `std::marker::Unpin`
+- 转换
+  - ✅ `std::convert::AsRef`
+  - ✅ `std::convert::AsMut`
+  - ✅ `std::convert::From`
+  - ✅ `std::convert::Into`
+  - `std::convert::TryFrom`
+  - `std::convert::TryInto`
+- 切片
+  - `std::slice::Concat`
+  - `std::slice::Join`
+  - `std::slice::SliceIndex`
+- 字符串
+  - `std::str::FromStr`
+  - ✅ `std::string::ToString`
+- 格式化
+  - `std::fmt::Debug`
+  - `std::fmt::Display`
+  - `std::fmt::Error`
+- 迭代器
+  - ✅ `std::iter::Iterator`
+  - `std::iter::FusedIterator`
+  - `std::iter::FromIterator`
+  - ✅ `std::iter::IntoIterator`
+  - ✅ `std::iter::Extend`
+  - ✅ `std::iter::DoubleEndedIterator`
+  - ✅ `std::iter::ExactSizeIterator`
+- 运算符
+  - `std::ops::Add`
+  - `std::ops::AddAssign`
+  - `std::ops::BitAnd`
+  - `std::ops::BitAndAssign`
+  - `std::ops::BitOr`
+  - `std::ops::BitOrAssign`
+  - `std::ops::BitXor`
+  - `std::ops::BitXorAssign`
+  - `std::ops::CoerceUnsized`
+  - `std::ops::Deref`
+  - `std::ops::DerefMut`
+  - `std::ops::DispatchFromDyn`
+  - `std::ops::Div`
+  - `std::ops::DivAssign`
+  - ✅ `std::ops::Drop`
+  - ✅ `std::ops::Fn`
+  - ✅ `std::ops::FnMut`
+  - ✅ `std::ops::FnOnce`
+  - `std::ops::FromResidual`
+  - `std::ops::Generator`
+  - `std::ops::Index`
+  - `std::ops::IndexMut`
+  - `std::ops::Mul`
+  - `std::ops::MulAssign`
+  - `std::ops::Neg`
+  - `std::ops::Not`
+  - `std::ops::OneSidedRange`
+  - `std::ops::RangeBounds`
+  - `std::ops::Rem`
+  - `std::ops::RemAssign`
+  - `std::ops::Residual`
+  - `std::ops::Shl`
+  - `std::ops::ShlAssign`
+  - `std::ops::Shr`
+  - `std::ops::ShrAssign`
+  - `std::ops::Sub`
+  - `std::ops::SubAssign`
+  - `std::ops::Try`
+- IO
+  - `std::io::Read`
+  - `std::io::BufRead`
+  - `std::io::Write`
+  - `std::io::IsTerminal`
+
+
+# 第三方库
 
 | Crate                                                          |                                                                                                                                                                                                                    |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -3902,3 +4415,14 @@ fn get_type(_: &T) -> &'static str {
 # 链接
 
 - [Rust web framework comparison](https://github.com/flosse/rust-web-framework-comparison#frontend-frameworks): A comparison of some web frameworks and libs written in Rust
+
+# Q&A
+
+```rust
+// 获取数据的类型名称
+fn get_type<T>(_: &T) -> &'static str {
+  std::any::type_name::<T>()
+}
+```
+
+[the_prelude]: https://doc.rust-lang.org/std/prelude/index.html

@@ -289,8 +289,16 @@ html {
       align-items: center;
       justify-content: space-between;
       background-color: #2a8cdc1a; }
-      html [coder] [coder-header] .fa-copy {
-        cursor: pointer; }
+      html [coder] [coder-header] .holder {
+        flex: 1; }
+      html [coder] [coder-header] .fa {
+        cursor: pointer;
+        margin-left: 15px; }
+      html [coder] [coder-header] a {
+        color: inherit;
+        background: unset; }
+        html [coder] [coder-header] a:not([href]) {
+          display: none; }
     html [coder] [coder-main] {
       margin: 0;
       padding: 1em;
