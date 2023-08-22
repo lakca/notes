@@ -898,22 +898,18 @@ rustc --help | grep '\--emit'
 
 ## 注释
 
-普通注释
+```rust
+// （非文档注释）单行注释，注释内容直到行尾。
 
-```rust
-// 单行注释，注释内容直到行尾。
-```
-```rust
-/* 块注释，注释内容一直到结束分隔符。 */
-```
+/* （非文档注释）块注释，注释内容一直到结束分隔符。 */
 
-文档注释
+/// 为接下来的项生成帮助文档，等价于#[doc="..."]。
 
-```rust
-/// 为接下来的项生成帮助文档。
-```
-```rust
-//! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档。
+/** 为接下来的项生成帮助文档，等价于#[doc="..."]。*/
+
+//! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档，等价于#![doc="..."]。
+
+/*! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档，等价于#![doc="..."]。
 ```
 
 ## 格式化输出
@@ -2970,8 +2966,6 @@ assert_eq!(heap.pop(), None);
 
 ### 动态类型模拟`Any`
 
-> `core::any::Any`
-
 ```rust
 pub trait Any: 'static {
     // Required method
@@ -2979,8 +2973,10 @@ pub trait Any: 'static {
 }
 ```
 
+> `core::any::Any`，通过方法模拟一些类型反射操作，例如获取数据的类型。
+
 ```rust
-// downcast
+// 类型具化
 fn print_if_string(s: &dyn std::any::Any) {
     if let Some(string) = s.downcast_ref::<String>() {
         println!("It's a string({}): '{}'", string.len(), string);
@@ -2998,9 +2994,46 @@ fn is_string(s: &dyn std::any::Any) {
 }
 ```
 
-### 解引用`Deref`
+### 复制`Copy`,`Clone`
 
-> `core::ops::Deref`, `core::ops::DerefMut`，解引用，实现`*`操作符，被自动解引用规则调用。
+```rust
+pub trait Copy: Clone { }
+
+pub trait Clone: Sized {
+    // Required method
+    fn clone(&self) -> Self;
+
+    // Provided method
+    fn clone_from(&mut self, source: &Self) { ... }
+}
+```
+
+> `core::marker::Copy`，隐式复制（即赋值）时调用（以取代Move）。
+
+> `core::Clone`，显式复制（即手动调用`.clone()`）时调用。
+
+```rust
+#[derive(Debug, Copy, Clone)]
+struct Foo;
+
+let x = Foo;
+let y = x; // 如果没有部署Copy，x将被Moved。
+
+println!("{x:?}"); // A-OK!
+```
+
+### 析构钩子`Drop`
+
+```rust
+pub trait Drop {
+    // Required method
+    fn drop(&mut self);
+}
+```
+
+> `core::ops::Drop`，类型析构时的钩子函数，以部署伴随的析构动作。
+
+### 解引用`Deref`
 
 ```rust
 pub trait Deref {
@@ -3011,21 +3044,9 @@ pub trait Deref {
 }
 ```
 
-### 析构勾子`Drop`
+> `core::ops::Deref`, `core::ops::DerefMut`，解引用操作符（`*`）重载，会被自动解引用规则调用。
 
-> `core::ops::Drop`
-
-```rust
-pub trait Drop {
-    // Required method
-    fn drop(&mut self);
-}
-```
-
-### 值转换`From<T>`和`Into<T>`
-
-> `core::convert::From<T>`, `core::convert::TryFrom<T>`
-> `core::convert::Into<T>`, `core::convert::TryInto<T>`
+### 跨类型值转换`From<T>`
 
 ```rust
 pub trait From<T>: Sized {
@@ -3038,9 +3059,9 @@ pub trait Into<T>: Sized {
 }
 ```
 
-### 引用转换`AsRef<T>`
+> `core::convert::From<T>`, `core::convert::TryFrom<T>`，`core::convert::Into<T>`, `core::convert::TryInto<T>`，用于数据类型转换，通常涉及数据克隆。
 
-> `core::borrow::AsRef<T>`, `core::borrow::AsMut<T>`
+### 跨类型引用转换`AsRef<T>`
 
 ```rust
 pub trait AsRef<T>
@@ -3052,9 +3073,11 @@ where
 }
 ```
 
-### 借用`Borrow<T>`
+> `core::convert::AsRef<T>`, `core::convert::AsMut<T>`，用于轻量级的类型转换（通常不涉及克隆，如涉及用[`From<T>`](#跨类型值转换fromt)实现）。
 
-> `core::borrow::Borrow<T>`, `core::borrow::BorrowMut<T>`
+通过与[`From<T>`](#跨类型值转换fromt)的签名对比可以发现，`AsRef<T>`可以接受未知大小的类型，如切片`[u8]`，所以一般而言`From<T>`会涉及到对数据的操作（如克隆）。
+
+### 跨类型借用`Borrow<T>`
 
 ```rust
 pub trait Borrow<Borrowed>
@@ -3066,9 +3089,45 @@ where
 }
 ```
 
-### `ToOwned<T>`
+> `core::borrow::Borrow<T>`, `core::borrow::BorrowMut<T>`，用于借用不同类型的值（通常是内部值）。
 
-> `core::borrow::ToOwned<T>`
+与[`AsRef<T>`](#跨类型引用转换asreft)的签名对比可以发现，两者在定义上并没有什么不同，其主要在于语义上的区别：`Borrow`强调类型之间的借用关系，而`AsRef`用于简单的类型转换。
+
+此外：
+  - `Borrow<T>`对所有类型及其引用都部署了默认实现。
+  - `Borrow<T>`要求在转换前后`Hash`, `Ord`, `Eq`都等价，如`if x == y { assert!(x.borrow() == y.borrow()) }`
+
+### 跨类型克隆`ToOwned<T>`
+
+```rust
+pub trait ToOwned {
+    type Owned: Borrow<Self>;
+
+    // Required method
+    fn to_owned(&self) -> Self::Owned;
+
+    // Provided method
+    fn clone_into(&self, target: &mut Self::Owned) { ... }
+}
+```
+
+> `core::borrow::ToOwned<T>`，与`Clone`不同的是，该特征通常用于从给定类型的任何借用构造拥有的数据。
+
+### 线程安全`Send`
+
+```rust
+pub unsafe auto trait Send { }
+```
+
+> `std::marker::Send`，标识可以跨线程传输的类型。
+
+### 比较`PartialEq<Self>`
+
+> `std::cmp::Eq<Self>`, `std::cmp::PartialEq<Self>`, `std::cmp::Ord<Self>`, `std::cmp::PartialOrd<Self>`
+
+### 操作符重载
+
+> [附录：操作符](https://doc.rust-lang.org/stable/book/appendix-02-operators.html)
 
 # 模式和匹配（Patterns and Matching）
 
@@ -4498,9 +4557,9 @@ greet("World!");
 | `io`          | 核心 I/O 功能              |
 | `net`         | TCP/UDP 通信               |
 
-| 含义                         | 标记 |
-| ---------------------------- | ---- |
-| [*the prelude*][the_prelude] | ✅    |
+| 含义                                                            | 标记 |
+| --------------------------------------------------------------- | ---- |
+| [the prelude](https://doc.rust-lang.org/std/prelude/index.html) | ✅    |
 
 ## 宏
 
@@ -4712,4 +4771,7 @@ fn get_type<T>(_: &T) -> &'static str {
 }
 ```
 
-[the_prelude]: https://doc.rust-lang.org/std/prelude/index.html
+# 索引
+
+- [Keywords](https://doc.rust-lang.org/stable/book/appendix-01-keywords.html)
+- [Punctuations](https://doc.rust-lang.org/reference/tokens.html#punctuation)

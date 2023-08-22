@@ -50,6 +50,13 @@ html {
   line-height: 1.75;
   color: $textColor;
   font-family: $fonts;
+  width: 100%;
+  height: 100%;
+
+  body {
+    width: 100%;
+    height: 100%;
+  }
 
   .toast-success {
     background-color: #030303;
@@ -281,6 +288,8 @@ html {
     word-break: break-word;
     margin: 1em 0;
     width: 100%;
+    table-layout: fixed;
+    overflow-wrap: break-word;
 
     thead {
       @include backgroundBlock($headerColor);

@@ -474,7 +474,6 @@
       })
     },
     mountBar() {
-      if (TOUCH_SUPPORT) return
       const bar = el()
         .class(ident('bar'))
         .append(el('div')
@@ -548,8 +547,8 @@
             }))
         ).el
 
-      document.querySelector('.bar-1fc7ed35')?.querySelector('.global-nav-1fc7ed35')?.remove()
-      document.querySelector('.bar-1fc7ed35')?.appendChild(el('div').class('global-nav-1fc7ed35').append(wrap).el)
+      document.querySelector('.' + ident('bar'))?.querySelector('.global-' + ident('nav'))?.remove()
+      document.querySelector('.' + ident('bar'))?.appendChild(el('div').class(ident('global-nav')).append(wrap).el)
       return wrap
     },
     mount() {
@@ -753,10 +752,6 @@
 [theme="dark"] .${ident('menu')} a {
   color: #d3d3d3;
 }
-html, body {
-  min-width: 100%;
-  min-height: 100%;
-}
 .${ident('breadcrumb')} a {
   color: white;
   font-size: 1.5rem;
@@ -769,19 +764,8 @@ html, body {
   background: unset;
   font-weight: bold;
 }
-@media (max-width: 104rem) {
-  .${ident('custom')}.${ident('has-menu')} {
-    padding-left: 24rem;
-  }
-  .${ident('custom')} {
-    transition: padding-left .3s;
-  }
-  .${ident('custom')}.${ident('closed')}{
-    padding-left: 0;
-  }
-}
 .${ident('custom')}.${ident('closed')} .${ident('menu')}{
-  left: -30rem;
+  left: -100%;
 }
 .${ident('menu')} {
   position: fixed;
@@ -799,6 +783,19 @@ html, body {
   background: white;
   box-shadow: 0 0 1px #999;
   padding-inline-start: 1.2em;
+}
+@media (max-width: 112rem) and (min-width: 58rem) {
+  .${ident('custom')}.${ident('has-menu')} {
+    transition: padding-left 0.3s;
+    padding-left: 24rem;
+  }
+  .${ident('custom')}.${ident('closed')} {
+    padding-left: 0;
+  }
+  .main-content {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 .${ident('menu')}.${ident('transitionable')}  {
   transition: left .3s;
@@ -852,6 +849,7 @@ html, body {
   text-align: center;
   user-select: none;
   -webkit-user-select: none;
+  background-color: white;
 }
 .${ident('bar')} .handle:before {
   content: "🐵";
