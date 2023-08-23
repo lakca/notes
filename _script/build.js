@@ -19,11 +19,12 @@ const fs = require('fs')
 const path = require('path')
 const { spawnSync } = require('child_process')
 const INDEX_FILE = 'README.md' // folder index file name.
-const UNTRACKED = git('git ls-files --others --exclude-standard')
 const TRACKED = git('git ls-tree -r master --full-name --name-only')
-const COMMITTED = Object.fromEntries(git(`git show HEAD --name-status --pretty=''`).map((e, r) => (r = e.split(/\t+/), [r[r.length - 1], r[0]])))
-const files = TRACKED.filter(file => /^(?!(404|README)).*\.(html|md)$/i.test(file))
-const data = { files: [] }
+const COMMITTED = Object.fromEntries(git(`git show HEAD --name-status --pretty=''`).map((e, r) => {
+  r = e.split(/\t+/)
+  return [r[r.length - 1], r[0]]
+}))
+const FILES = TRACKED.filter(file => /^(?!(_|404)).*\.(html|md)$/i.test(file))
 
 function getFileInfo(relpath) {
   const segments = relpath.split(path.sep)
@@ -78,51 +79,61 @@ function renderFolder(relpath, relative = '') {
   ].join('')
 }
 
-const SEGMENTS = []
-for (const file of files) {
-  const fileInfo = getFileInfo(file)
-  if (fileInfo.name === 'README') continue
-  data.files.push(pick(fileInfo, ['name', 'filename', 'relpath', 'segments', 'title', 'h1', 'fronter', 'created_at', 'updated_at']))
-  const segments = ['.', ...fileInfo.segments.slice(0, -1)]
-  segments.reduce((base, segment, i) => {
-    base = path.join(base, segment)
-    if (SEGMENTS[i] == null) SEGMENTS[i] = {}
-    if (SEGMENTS[i].segment !== segment) {
-      // clear right segments if dfs backtracking
-      while (SEGMENTS[i].length > i) {
-        const folder = SEGMENTS[i].pop()
-        folder.fd && fs.closeSync(folder.fd)
-      }
-      SEGMENTS[i].segment = segment
-      // open index fd of current folder
-      SEGMENTS[i].fd = fs.openSync(path.join(ROOT, base, INDEX_FILE), 'w')
-      // insert folder link in ancestors
-      SEGMENTS.reduce((b, s, i) => {
-        b = path.join(b, s.segment)
-        if (base !== b) {
-          const text = renderFolder(base, b)
-          fs.writeSync(s.fd, text)
+function generate(files) {
+  const changes = []
+  const segments = []
+  const data = { files: [] }
+  for (const file of files) {
+    const fileInfo = getFileInfo(file)
+    if (fileInfo.name === 'README') continue
+    data.files.push(pick(fileInfo, ['name', 'filename', 'relpath', 'segments', 'title', 'h1', 'fronter', 'created_at', 'updated_at']))
+    const fileSegments = ['.', ...fileInfo.segments.slice(0, -1)]
+    fileSegments.reduce((base, segment, i) => {
+      base = path.join(base, segment)
+      if (segments[i] == null) segments[i] = {}
+      if (segments[i].segment !== segment) {
+        // clear right segments if dfs backtracking
+        while (segments[i].length > i) {
+          const folder = segments[i].pop()
+          folder.fd && fs.closeSync(folder.fd)
         }
-        return b
-      }, '')
-    }
-    return base
-  }, '')
-  SEGMENTS.length = fileInfo.segments.length
-  // insert file link in ancestors
-  SEGMENTS.reduce((b, f) => {
-    b = path.join(b, f.segment)
-    const text = render(fileInfo, b)
-    fs.writeSync(f.fd, text)
-    return b
-  }, '')
+        segments[i].segment = segment
+        // open index fd of current folder
+        const readme = path.join(ROOT, base, INDEX_FILE)
+        changes.push(readme)
+        segments[i].fd = fs.openSync(readme, 'w')
+        // insert folder link in ancestors
+        segments.reduce((b, s, i) => {
+          b = path.join(b, s.segment)
+          if (base !== b) {
+            const text = renderFolder(base, b)
+            fs.writeSync(s.fd, text)
+          }
+          return b
+        }, '')
+      }
+      return base
+    }, '')
+    segments.length = fileInfo.segments.length
+    // insert file link in ancestors
+    segments.reduce((b, f) => {
+      b = path.join(b, f.segment)
+      const text = render(fileInfo, b)
+      fs.writeSync(f.fd, text)
+      return b
+    }, '')
+  }
+  segments.forEach(e => fs.closeSync(e.fd))
+
+  const DATA_FILE = path.join(ROOT, 'assets/script/data.js')
+  fs.writeFileSync(DATA_FILE, `window.site_data = ${JSON.stringify(data)}`)
+  changes.push(DATA_FILE)
+  return changes
 }
-SEGMENTS.forEach(e => fs.closeSync(e.fd))
-fs.writeFileSync(path.join(ROOT, 'assets/script/data.js'), `window.site_data = ${JSON.stringify(data)}`)
+
+const changes = generate(FILES)
 
 if (process.argv.includes('commit')) {
-  spawnSync('git', ['add', '-f', `${ROOT}/${INDEX_FILE}`])
-  spawnSync('git', ['add', '-f', `[^_]*/**/${INDEX_FILE}`])
-  spawnSync('git', ['reset', `node_modules/**/${INDEX_FILE}`])
-  spawnSync('git', ['commit', '-m', 'update index'])
+  spawnSync('git', ['add', '-f'].concat(changes))
+  spawnSync('git', ['commit', '-m', 'update index.'])
 }

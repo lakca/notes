@@ -1981,8 +1981,8 @@ assert_eq!(a[1], v1);
 /******* 空指针 *******/
 
 // 创建空指针
-let pn: *const u32 = std::ptr::null();
-let pn_mut: *mut u32 = std::ptr::null_mut();
+let pn: *const u32 = core::ptr::null();
+let pn_mut: *mut u32 = core::ptr::null_mut();
 // 判断空指针
 assert!(pn.is_null());
 
@@ -1993,13 +1993,13 @@ let pi_mut = &mut i as *mut _;
 
 struct Foo { i: u32, unaligned: usize }
 let mut s = Foo { i: 1, unaligned: 2 };
-let ps_unaligned = std::ptr::addr_of_mut!(s.unaligned);
+let ps_unaligned = core::ptr::addr_of_mut!(s.unaligned);
 
-// （Copy）读取指针的值
-unsafe { assert_eq!(std::ptr::read(pi_mut), 10) }
+// （Copy）读取指针的值（与解引用*不同，解引用需要获取ownership或者Copy Trait）
+unsafe { assert_eq!(core::ptr::read(pi_mut), 10) }
 
 // （Copy）读取未对齐指针的值
-unsafe { assert_eq!(std::ptr::read_unaligned(ps_unaligned), 2) }
+unsafe { assert_eq!(core::ptr::read_unaligned(ps_unaligned), 2) }
 
 /******** 写 ********/
 
@@ -2007,36 +2007,36 @@ let mut v = vec![0u32; 4];
 let pv_mut = v.as_mut_ptr();
 
 // 向指针（Move）写入值
-unsafe { std::ptr::write(pv_mut, 20) }
+unsafe { core::ptr::write(pv_mut, 20) }
 assert_eq!(v, &[20, 0, 0, 0]);
 
 // 将指定位置开始的`count * size_of::<T>()`个字节写入值
-unsafe { std::ptr::write_bytes(pv_mut, 0xfe, 2) }
+unsafe { core::ptr::write_bytes(pv_mut, 0xfe, 2) }
 assert_eq!(v, [0xfefefefe, 0xfefefefe, 0, 0]);
 
 // 向未对齐指针（Move）写入值
-unsafe { std::ptr::write_unaligned(ps_unaligned, 20) }
+unsafe { core::ptr::write_unaligned(ps_unaligned, 20) }
 
 /******** 复制 ********/
 
 // 将指定位置开始的`count * size_of::<T>()`个字节复制到目标位置的同样字节，区间可以重叠, 非重叠版本为`copy_nonoverlapping()`
-unsafe { std::ptr::copy(pv_mut, ((pv_mut as usize) + 4 * 2) as *mut u32, 1) }
+unsafe { core::ptr::copy(pv_mut, ((pv_mut as usize) + 4 * 2) as *mut u32, 1) }
 assert_eq!(v, [0xfefefefe, 0xfefefefe, 0xfefefefe, 0]);
 
 /******** 替换 ********/
 
 // 替换指针的值，并返回旧值
-unsafe { assert_eq!(std::ptr::replace(pi_mut, 20), 10); };
+unsafe { assert_eq!(core::ptr::replace(pi_mut, 20), 10); };
 
 /******** 交换 ********/
 
 // 交换同类型指针的值
-unsafe { std::ptr::swap(pi_mut, pv_mut) };
+unsafe { core::ptr::swap(pi_mut, pv_mut) };
 
 /******** 析构 ********/
 
-// 析构指针的值
-unsafe { std::ptr::drop_in_place() }
+// 析构指针指向的值（与`drop`不同，不会释放内存）
+unsafe { core::ptr::drop_in_place(pv_mut) }
 ```
 
 ## 字符串`String`
@@ -2881,6 +2881,50 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
 
 ```
 
+## 内存操作
+
+> 不同于指针操作，内存操作是针对值或引用，即遵循所有权规则的值。
+
+```rust
+// 获取类型的内存对齐数（如用于结构体字段）
+pub const fn align_of<T>() -> usize
+pub fn align_of_val<T>(val: &T) -> usize where T: ?Sized
+
+// 析构并释放内存
+pub fn drop<T>(_x: T) { } // 本质上没有做任何事，只是将值的所有权转入（编译器析构和回收内存）
+
+// 忘记（析构但不释放）内存
+pub const fn forget<T>(t: T) {
+    let _ = ManuallyDrop::new(t);
+    // 执行`ManuallyDrop::<T>::drop(t)`
+}
+pub fn forget_unsized<T>(t: T) where T: ?Sized
+
+// 替换内存内容
+pub fn replace<T>(dest: &mut T, src: T) -> T {
+    // 通过ptr::read和ptr::write执行，所以不会改变原来值。
+    unsafe {
+        let result = ptr::read(dest);
+        ptr::write(dest, src);
+        result
+    }
+}
+
+// 获取类型大小
+pub const fn size_of<T>() -> usize
+
+// 获取引用值大小
+pub fn size_of_val<T>(val: &T) -> usize where T: ?Sized
+
+// 交换引用值
+pub fn swap<T>(x: &mut T, y: &mut T)
+
+// 取出值（并用默认值填回）
+pub fn take<T: Default>(dest: &mut T) -> T {
+    replace(dest, T::default())
+}
+```
+
 ## 标准库实现的其他常用类型
 
 ### 双端可增长数组`VecDeque`
@@ -2954,9 +2998,54 @@ assert_eq!(heap.pop(), None);
 
 ### `ThinBox<T>`
 
-### 手动析构内存`ManuallyDrop<T>`
+### 手动释放内存`ManuallyDrop<T>`
 
-> `core::mem::ManuallyDrop`，不会被编译器自动析构（`drop`）的内存。
+> `core::mem::ManuallyDrop`，一个避免值被编译器自动析构（destruct）和释放（deallocate）的包装器。
+
+`ManuallyDrop::<T>::drop()`函数签名：
+
+```rust
+pub unsafe fn drop(slot: &mut ManuallyDrop<T>) {
+    // SAFETY: we are dropping the value pointed to by a mutable reference
+    // which is guaranteed to be valid for writes.
+    // It is up to the caller to make sure that `slot` isn't dropped again.
+    unsafe { ptr::drop_in_place(&mut slot.value) } // 此处只有析构（destuct），并没有释放内存
+}
+```
+
+```rust
+use std::mem::ManuallyDrop;
+
+let v = vec![65, 122];
+// Before we disassemble `v` into its raw parts, make sure it
+// does not get dropped!
+let mut v = ManuallyDrop::new(v);
+// Now disassemble `v`. These operations cannot panic, so there cannot be a leak.
+let (ptr, len, cap) = (v.as_mut_ptr(), v.len(), v.capacity());
+// Finally, build a `String`.
+let s = unsafe { String::from_raw_parts(ptr, len, cap) };
+assert_eq!(s, "Az");
+// `s` is implicitly dropped and its memory deallocated.
+```
+
+> `std::mem::forget`作用类似，并会同时释放所有权（析构destruct）。
+
+```rust
+pub const fn forget<T>(t: T) {
+    let _ = ManuallyDrop::new(t); // 执行`ManuallyDrop::<T>::drop()`
+}
+```
+
+比如，将文件描述符泄漏：
+
+```rust
+use std::mem;
+use std::fs::File;
+
+let file = File::open("foo.txt").unwrap();
+// file变量回收，但底层资源不会释放
+mem::forget(file);
+```
 
 ### 非空指针`NonNull<T>`
 

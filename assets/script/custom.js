@@ -782,7 +782,7 @@
   height: 100%;
   background: white;
   box-shadow: 0 0 1px #999;
-  padding-inline-start: 1.2em;
+  padding-inline-start: 1.5em;
 }
 @media (max-width: 112rem) and (min-width: 58rem) {
   .${ident('custom')}.${ident('has-menu')} {
@@ -811,7 +811,7 @@
 .${ident('menu')} .${ident('handle')} {
   display: inline-block;
   vertical-align: middle;
-  margin: -5px 12px 0 -20px;
+  margin: 0 12px 0 -20px;
   border-width: 5px 0 5px 8px;
   border-style: solid;
   border-color: transparent transparent transparent lightgray;
@@ -844,7 +844,7 @@
   border: none;
   appearance: none;
   border-radius: 50%;
-  box-shadow: 0 0 5px #b1b1b1, 0 0 30px #b1b1b1;
+  box-shadow: 0 0 5px #b1b1b1;
   margin-right: 5px;
   text-align: center;
   user-select: none;
@@ -918,7 +918,7 @@
 }
 .${ident('global-nav')} > div {
   position: absolute;
-  left: 100%;
+  left: 0;
   bottom: 0;
   transform-origin: left bottom;
   transform: scale(0);
@@ -927,9 +927,10 @@
   box-shadow: 0 0 5px #b1b1b1, 0 0 30px #b1b1b1;
   border: solid 10px transparent;
   border-width: 20px 10px;
+  transition: .25s;
 }
 .${ident('global-nav')} > div > ul {
-  max-height: 80vh;
+  max-height: 60vh;
   overflow-y: auto;
 }
 .${ident('global-nav')} li {
@@ -959,7 +960,7 @@
   overflow: hidden!important;
 }
 .${ident('loading')} {
-  z-index: 999;
+  z-index: 99;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -994,7 +995,7 @@
 }
 
 #${ident('modal')} {
-  z-index: 999;
+  z-index: 1000;
   position: fixed;
   top: 0px;
   right: 0px;
