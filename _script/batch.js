@@ -1,10 +1,7 @@
-
 const fs = require('fs')
 const path = require('path')
-const moment = require('moment')
-const startCase = require('lodash.startcase')
 const { execSync } = require('child_process')
-const { SRC_ROOT } = require('./help')
+const { ROOT } = require('./help')
 
 function gitList(cmd) {
   return execSync(cmd).toString().trim().split(/\r\n|\n|\r/)
@@ -50,10 +47,10 @@ function fileStat(file) {
   }
 }
 
-function* traverse(dir) {
+function * traverse(dir) {
   for (const dirent of fs.readdirSync(dir, { withFileTypes: true })) {
     if (dirent.isDirectory()) {
-      yield* traverse(path.join(dir, dirent.name))
+      yield * traverse(path.join(dir, dirent.name))
     } else if (dirent.isFile()) {
       yield path.join(dir, dirent.name)
     }
@@ -67,13 +64,13 @@ function getBirthtime(file) {
 
 const gitStatus = gitHead()
 
-for (const file of traverse(SRC_ROOT)) {
+for (const file of traverse(ROOT)) {
   if (path.extname(file) === '.md') {
     const { meta, content } = extractFile(file)
     const stat = fileStat(file)
     meta.date = meta.date || getBirthtime(file)
     meta.title = meta.title || path.basename(file, '.md')
-    const relPath = path.relative(SRC_ROOT, file)
+    const relPath = path.relative(ROOT, file)
     if (gitStatus[relPath]) {
       meta.gitStatus = gitStatus[relPath]
       meta.updatedAt = new Date(stat.mtime).toISOString()

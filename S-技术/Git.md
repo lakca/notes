@@ -953,6 +953,12 @@ git ls-files ':!:*.md'
 --exclude-per-directory=<file>
 ```
 
+列出跟踪过的（`tracked`）文件:
+
+```bash
+git ls-tree -r master --full-name --name-only
+```
+
 列出未被跟踪的（`untracked`）文件：
 
 ```bash

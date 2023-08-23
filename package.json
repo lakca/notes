@@ -17,11 +17,9 @@
     "marked": "^1.2.9"
   },
   "scripts": {
-    "prepare": "echo '[[ $nopostcommit ]] || npm run generate -- github commit' > .git/hooks/post-commit",
-    "generate": "node _script/generate.js",
-    "html": "node _script/html.js",
-    "view": "node _script/view.js",
-    "post": "touch _posts/posts/`date +%Y%m%d%H%M%S`.md"
+    "setup": "node -e \"fs.writeFileSync('.git/hooks/pre-push', '[[ \\$noprepush ]] || npm run build -- github commit', { mode: 0o755 })\"",
+    "build": "node _script/build.js",
+    "new": "touch Essay/`date +%Y%m%d%H%M%S`.md"
   },
   "repository": {
     "type": "git",

@@ -1,5 +1,5 @@
-const path = require('path')
 const { execSync } = require('child_process')
+const ROOT = execSync('git rev-parse --show-toplevel').toString().trim()
 
 function stringifyMeta(meta) {
   return `---
@@ -24,28 +24,30 @@ function parseMeta(text) {
   return { meta, h1 }
 }
 
-function help(print) {
-  if (process.argv.some(e => e === '-h' || e === '--help' || e === 'help')) {
-    typeof print === 'function' ? print() : console.log(print +
-    '\thelp, --help, -h\t-\tdisplay help.')
-    process.exit(0)
-  }
+/** @return {string[]} */
+function git(cmd) {
+  return execSync(cmd).toString().trim().split(/\n\r?/)
 }
 
-let root
-
-module.exports = {
-  stringifyMeta,
-  parseMeta,
-  help,
-  get ROOT() {
-    if (!root) {
-      root = execSync('git rev-parse --show-toplevel').toString().trim()
-    }
-    return root
-  },
-  get HTML() {
-    return 'html'
-  },
-  get HTML_ROOT() { return path.join(this.ROOT, this.HTML) }
+function capitalize(str) {
+  return str.replace(/^[a-z]/, e => e.toUpperCase())
 }
+
+function titlize(str) {
+  return str.split(/\s+|-/).map(capitalize).join(' ')
+}
+
+function pad(n) {
+  return n > 9 ? n : '0' + n
+}
+
+function date(d = new Date()) {
+  d = new Date(d)
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`
+}
+
+function pick(obj, keys) {
+  return Object.fromEntries(keys.map(k => [k, obj[k]]))
+}
+
+module.exports = { ROOT, stringifyMeta, parseMeta, git, capitalize, titlize, pad, date, pick }
