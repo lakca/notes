@@ -8,7 +8,7 @@
     "gulp-stylus": "^2.7.1",
     "gulp-terser": "^2.1.0",
     "lodash.startcase": "^4.4.0",
-    "moment": "^2.29.1"
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "@types/node": "^17.0.8",
