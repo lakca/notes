@@ -17,7 +17,7 @@
     "marked": "^1.2.9"
   },
   "scripts": {
-    "setup": "node -e \"fs.writeFileSync('.git/hooks/pre-push', '#! /bin/sh\\nwhile true; do read -p \\'是否自动生成索引提交(y|n):\\' answer; case \\$answer in y) npm run build -- commit;; n) exit 0;; esac done ', { mode: 0o755 })\"",
+    "setup": "node -e \"fs.writeFileSync('.git/hooks/pre-push', '#!/bin/sh\\n\\$_pre && npm run build -- commit', { mode: 0o755 })\"",
     "build": "node _script/build.js",
     "new": "touch Essay/`date +%Y%m%d%H%M%S`.md"
   },

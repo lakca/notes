@@ -1965,28 +1965,63 @@ unsafe {
 }
 ```
 
-指针运算：
+指针操作：
 
 ```rust
+// 创建指针
+pub macro addr_of($place:expr) { ... }
+pub macro addr_of_mut($place:expr) { ... }
+
+// 创建空指针
+pub const fn null<T: ?Sized + Thin>() -> *const T
+pub const fn null_mut<T: ?Sized + Thin>() -> *mut T
+
+// 读取（Copy）值（与解引用*不同，解引用需要获取ownership或者Copy Trait）
+pub const unsafe fn read<T>(src: *const T) -> T
+pub const unsafe fn read_unaligned<T>(src: *const T) -> T
+
+// 写入（Move）值
+pub unsafe fn write<T>(dst: *mut T, src: T)
+pub unsafe fn write_unaligned<T>(dst: *mut T, src: T)
+
+// 写入字节
+pub unsafe fn write_bytes<T>(dst: *mut T, val: u8, count: usize)
+
+// 复制字节
+pub const unsafe fn copy<T>(src: *const T, dst: *mut T, count: usize)
+pub const unsafe fn copy_nonoverlapping<T>(src: *const T, dst: *mut T, count: usize)
+
+// 替换值，并返回旧值
+pub unsafe fn replace<T>(dst: *mut T, src: T) -> T
+
+// 交换值
+pub unsafe fn swap<T>(x: *mut T, y: *mut T)
+
+// 析构值（执行析构函数，不会释放内存）
+pub unsafe fn drop_in_place<T: ?Sized>(to_drop: *mut T)
+```
+
+<details>
+<summary>指针运算示例：</summary>
+
+<pre><code class="language-rust">
 let a = [1, 2, 3];
 let pa = &a as *const _ as usize;
 let p1 = (pa + 1) as *const u8;
 let v1 = unsafe { *p1 };
 assert_eq!(a[1], v1);
-```
+</code></pre>
+</details>
 
-指针操作：
+<details>
+<summary>指针操作示例：</summary>
 
 ```rust
-/******* 空指针 *******/
-
 // 创建空指针
 let pn: *const u32 = core::ptr::null();
 let pn_mut: *mut u32 = core::ptr::null_mut();
 // 判断空指针
 assert!(pn.is_null());
-
-/******** 读 ********/
 
 let mut i = 10u32;
 let pi_mut = &mut i as *mut _;
@@ -2000,8 +2035,6 @@ unsafe { assert_eq!(core::ptr::read(pi_mut), 10) }
 
 // （Copy）读取未对齐指针的值
 unsafe { assert_eq!(core::ptr::read_unaligned(ps_unaligned), 2) }
-
-/******** 写 ********/
 
 let mut v = vec![0u32; 4];
 let pv_mut = v.as_mut_ptr();
@@ -2017,27 +2050,20 @@ assert_eq!(v, [0xfefefefe, 0xfefefefe, 0, 0]);
 // 向未对齐指针（Move）写入值
 unsafe { core::ptr::write_unaligned(ps_unaligned, 20) }
 
-/******** 复制 ********/
-
 // 将指定位置开始的`count * size_of::<T>()`个字节复制到目标位置的同样字节，区间可以重叠, 非重叠版本为`copy_nonoverlapping()`
 unsafe { core::ptr::copy(pv_mut, ((pv_mut as usize) + 4 * 2) as *mut u32, 1) }
 assert_eq!(v, [0xfefefefe, 0xfefefefe, 0xfefefefe, 0]);
 
-/******** 替换 ********/
-
 // 替换指针的值，并返回旧值
 unsafe { assert_eq!(core::ptr::replace(pi_mut, 20), 10); };
-
-/******** 交换 ********/
 
 // 交换同类型指针的值
 unsafe { core::ptr::swap(pi_mut, pv_mut) };
 
-/******** 析构 ********/
-
-// 析构指针指向的值（与`drop`不同，不会释放内存）
+// 析构指针指向的值（不会释放内存）
 unsafe { core::ptr::drop_in_place(pv_mut) }
 ```
+</details>
 
 ## 字符串`String`
 
@@ -2890,13 +2916,18 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
 pub const fn align_of<T>() -> usize
 pub fn align_of_val<T>(val: &T) -> usize where T: ?Sized
 
-// 析构并释放内存
+// 析构并释放内存（对于部署Copy Trait的值没有意义）
 pub fn drop<T>(_x: T) { } // 本质上没有做任何事，只是将值的所有权转入（编译器析构和回收内存）
+
+// 返回类型是否需要drop
+pub const fn needs_drop<T: ?Sized>() -> bool {
+    intrinsics::needs_drop::<T>()
+}
 
 // 忘记（析构但不释放）内存
 pub const fn forget<T>(t: T) {
     let _ = ManuallyDrop::new(t);
-    // 执行`ManuallyDrop::<T>::drop(t)`
+    // drop(_)
 }
 pub fn forget_unsized<T>(t: T) where T: ?Sized
 
@@ -3002,14 +3033,17 @@ assert_eq!(heap.pop(), None);
 
 > `core::mem::ManuallyDrop`，一个避免值被编译器自动析构（destruct）和释放（deallocate）的包装器。
 
-`ManuallyDrop::<T>::drop()`函数签名：
+手动释放函数`ManuallyDrop::<T>::drop()`签名：
 
 ```rust
-pub unsafe fn drop(slot: &mut ManuallyDrop<T>) {
-    // SAFETY: we are dropping the value pointed to by a mutable reference
-    // which is guaranteed to be valid for writes.
-    // It is up to the caller to make sure that `slot` isn't dropped again.
-    unsafe { ptr::drop_in_place(&mut slot.value) } // 此处只有析构（destuct），并没有释放内存
+// 注意，这不是部署`Drop` Trait，需要手动调用。
+impl<T: ?Sized> ManuallyDrop<T> {
+    pub unsafe fn drop(slot: &mut ManuallyDrop<T>) {
+        // SAFETY: we are dropping the value pointed to by a mutable reference
+        // which is guaranteed to be valid for writes.
+        // It is up to the caller to make sure that `slot` isn't dropped again.
+        unsafe { ptr::drop_in_place(&mut slot.value) }
+    }
 }
 ```
 
@@ -3032,7 +3066,8 @@ assert_eq!(s, "Az");
 
 ```rust
 pub const fn forget<T>(t: T) {
-    let _ = ManuallyDrop::new(t); // 执行`ManuallyDrop::<T>::drop()`
+    let _ = ManuallyDrop::new(t);
+    // 执行`drop(_)`
 }
 ```
 
@@ -3663,7 +3698,8 @@ enum Result<T, E> {
 
 对于`Result<T,E>`的处理方式，通常有两种：
 
-1. 通过`match`或`if let`模式匹配进行处理：
+<details>
+<summary>1. 通过`match`或`if let`模式匹配进行处理：</summary>
 
 ```rust
 use std::fs::File;
@@ -3686,8 +3722,9 @@ fn main() {
     };
 }
 ```
-
-2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：
+</details>
+<details>
+<summary>2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：</summary>
 
 ```rust
 use std::fs::File;
@@ -3697,14 +3734,16 @@ fn main() {
         .expect("hello.txt should be included in this project");
 }
 ```
-
-3. 通过`?`调用，解包结果或将错误冒泡：
+</details>
+<details>
+<summary>3. 通过`?`调用，解包结果或将错误冒泡：</summary>
 
 ```rust
 fn last_char_of_first_line(text: &str) -> Option<char> {
     text.lines().next()?.chars().last()
 }
 ```
+</details>
 
 # 模块系统（Module System）
 
@@ -3891,7 +3930,8 @@ use self::A::B;
 B::demo();
 ```
 
-模块暴露的详细：
+<details>
+<summary>模块暴露的举例说明：</summary>
 
 ```rust
 mod back_of_house {
@@ -3925,6 +3965,7 @@ pub fn eat_at_restaurant() {
   meal.seasonal_fruit = String::from("blueberries"); // 报错，seasonal_fruit 为私有属性
 }
 ```
+</details>
 
 ### 引入路径-`use`
 
@@ -4054,7 +4095,8 @@ demo();
     Exclude<[Token], [DELIMITER] | [DelimTokenTree]>
 ```
 
-例如，定义一个名为`vec`的宏：
+<details>
+<summary>定义一个名为`vec`的宏：</summary>
 
 ```rust
 // 声明所定义的宏在当前包（crate）内可见。
@@ -4084,6 +4126,7 @@ let a = vec![1, 2, 3];
 let a = vec!(1, 2, 3);
 let a = vec!{1, 2, 3};
 ```
+</details>
 
 > 需要注意的是，元变量（*Metavariable*）一旦开始匹配就会最大化匹配（*Maximal Munch*），且不会回溯（~~Backtrack~~）。[Metavariables and Expansion Redux](https://veykril.github.io/tlborm/decl-macros/minutiae/metavar-and-expansion.html)
 
