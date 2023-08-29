@@ -20,6 +20,8 @@ excerpt_separator: <!--more-->
 
 source: _posts
 
-markdown: kramdown
-kramdown:
-    math_engine: katex
+markdown: GFM
+
+sass:
+  sass_dir: assets/css
+  style: compressed

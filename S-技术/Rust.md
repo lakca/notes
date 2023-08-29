@@ -2004,13 +2004,13 @@ pub unsafe fn drop_in_place<T: ?Sized>(to_drop: *mut T)
 <details>
 <summary>指针运算示例：</summary>
 
-<pre><code class="language-rust">
+```rust
 let a = [1, 2, 3];
 let pa = &a as *const _ as usize;
 let p1 = (pa + 1) as *const u8;
 let v1 = unsafe { *p1 };
 assert_eq!(a[1], v1);
-</code></pre>
+```
 </details>
 
 <details>
@@ -3047,6 +3047,9 @@ impl<T: ?Sized> ManuallyDrop<T> {
 }
 ```
 
+<details>
+<summary><code>ManuallyDrop</code>示例：</summary>
+
 ```rust
 use std::mem::ManuallyDrop;
 
@@ -3061,6 +3064,7 @@ let s = unsafe { String::from_raw_parts(ptr, len, cap) };
 assert_eq!(s, "Az");
 // `s` is implicitly dropped and its memory deallocated.
 ```
+</details>
 
 > `std::mem::forget`作用类似，并会同时释放所有权（析构destruct）。
 
@@ -3071,7 +3075,8 @@ pub const fn forget<T>(t: T) {
 }
 ```
 
-比如，将文件描述符泄漏：
+<details>
+<summary>比如，将文件描述符泄漏：</summary>
 
 ```rust
 use std::mem;
@@ -3081,6 +3086,7 @@ let file = File::open("foo.txt").unwrap();
 // file变量回收，但底层资源不会释放
 mem::forget(file);
 ```
+</details>
 
 ### 非空指针`NonNull<T>`
 
@@ -3683,7 +3689,7 @@ assert!(matches!(bar, Some(x) if x > 2));
 
 # 错误处理（Error Handling）
 
-Rust有两种基础的错误处理方式：
+Rust有三种基础的错误处理方式：
 
 1. 通过`panic!(errMsg:)`抛出错误，并立即终止程序执行，通常用于开发调试阶段。
 2. 通过`compile_error!(errMsg:)`抛出编译时错误。
@@ -3696,10 +3702,10 @@ enum Result<T, E> {
 }
 ```
 
-对于`Result<T,E>`的处理方式，通常有两种：
+对于`Result<T,E>`的处理方式，通常有三种：
 
 <details>
-<summary>1. 通过`match`或`if let`模式匹配进行处理：</summary>
+<summary>1. 通过<code>match</code>或<code>if let</code>模式匹配进行处理：</summary>
 
 ```rust
 use std::fs::File;
@@ -3724,7 +3730,7 @@ fn main() {
 ```
 </details>
 <details>
-<summary>2. 通过`unwrap()`或`expect(errMsg:)`方法解包结果或将错误重新抛出：</summary>
+<summary>2. 通过<code>unwrap()</code>或<code>expect(errMsg:)</code>方法解包结果或将错误重新抛出：</summary>
 
 ```rust
 use std::fs::File;
@@ -3736,7 +3742,7 @@ fn main() {
 ```
 </details>
 <details>
-<summary>3. 通过`?`调用，解包结果或将错误冒泡：</summary>
+<summary>3. 通过<code>?</code>调用，解包结果或将错误冒泡：</summary>
 
 ```rust
 fn last_char_of_first_line(text: &str) -> Option<char> {
@@ -4096,7 +4102,7 @@ demo();
 ```
 
 <details>
-<summary>定义一个名为`vec`的宏：</summary>
+<summary>定义一个名为<code>vec</code>的宏：</summary>
 
 ```rust
 // 声明所定义的宏在当前包（crate）内可见。

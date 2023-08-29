@@ -1,3 +1,5 @@
+---
+---
 /*! normalize.css v3.0.2 | MIT License | git.io/normalize */
 @import "./normalize.scss";
 
@@ -211,7 +213,7 @@ html {
   }
 
   [coder] {
-    margin: 2em 0;
+    margin: 1em 0;
 
     [coder-header] {
       height: 2em;
@@ -337,6 +339,11 @@ html {
     }
   }
 
+  summary {
+    display: list-item;
+    cursor: pointer;
+  }
+
   // https://github.com/rouge-ruby/rouge/blob/master/lib/rouge/token.rb
   // https://github.com/rouge-ruby/rouge/wiki/List-of-tokens
 
@@ -367,4 +374,4 @@ html[theme="dark"] {
   }
 }
 
-@import "./style.highlight.scss"
+@import "./style.highlight.scss";
