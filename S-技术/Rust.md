@@ -914,7 +914,7 @@ rustc --help | grep '\--emit'
 
 ## 格式化输出
 
-> 打印由[std::fmt](https://doc.rust-lang.org/stable/std/fmt/)标准模块所定义的一系列*宏（Macro）*和*特征（Trait）*来处理，且这些格式化不会本地化，在所有环境下表示完全一致。
+> 打印由[std::fmt](https://doc.rust-lang.org/stable/std/fmt/)标准模块所定义的一系列*宏（Macro）* 和*特征（Trait）* 来处理，且这些格式化不会本地化，在所有环境下表示完全一致。
 
 | 宏（Macro）    | 含义                                                   |
 | -------------- | ------------------------------------------------------ |
@@ -1228,7 +1228,7 @@ let c = c.len(); // usize
 
 > 关于临时变量，可以查看错误码[E0716](https://doc.rust-lang.org/stable/error_codes/E0716.html)
 
-临时变量，有固定的销毁机制，通常在*封闭语句（Enclosing Statement）*的末尾销毁：
+临时变量，有固定的销毁机制，通常在*封闭语句（Enclosing Statement）* 的末尾销毁：
 
 ```rust
 fn foo() -> i8 { 1 }
@@ -2198,7 +2198,7 @@ struct User {
 
 ### 元组结构（Tuple Struct）
 
-> **元组结构（Tuple Struct）**是一种字段没有名称的特殊结构，其使用方式类似*元组（Tuple）*。
+> **元组结构（Tuple Struct）** 是一种字段没有名称的特殊结构，其使用方式类似*元组（Tuple）*。
 
 ```rust
 struct Color(i32, i32, i32);
@@ -2210,7 +2210,7 @@ let origin = Point(0, 0, 0);
 
 ### 单元结构（Unit-Like Struct）
 
-> **单元结构（Unit-Like Struct）**是一种没有字段的特殊结构。
+> **单元结构（Unit-Like Struct）** 是一种没有字段的特殊结构。
 
 ```rs
 struct AlwaysEqual;
@@ -2234,7 +2234,7 @@ fn build_user(email: String, username: String) -> User {
 
 ### 结构更新语法（Strcut Update Syntax）
 
-> **结构更新语法（Strcut Update Syntax）**是对结构剩余未赋值字段进行逐个赋值（`=`）。故遵循以下规则：
+> **结构更新语法（Strcut Update Syntax）** 是对结构剩余未赋值字段进行逐个赋值（`=`）。故遵循以下规则：
 
 - 更新结构必须放在最后；
 - 赋值字段遵循*Move*和*Copy*机制；
@@ -2249,7 +2249,7 @@ let user2 = User {
 
 ### 字段解构（Destructuring）
 
-> **字段解构（Destructuring）**也是赋值行为，故同样遵循*Move*和*Copy*机制。
+> **字段解构（Destructuring）** 也是赋值行为，故同样遵循*Move*和*Copy*机制。
 
 - 对于剩余字段可以使用`..`予以跳过。
 
@@ -2394,7 +2394,7 @@ match home {
 ## 智能指针（Smart Pointers）
 
 > 智能指针是相对于普通指针而言的，特指拥有一套自管理内存的二级指针，换句话说，**智能指针托管数据所有权，管理数据的生命周期**。
-> 所以，除了在引用数据外，智能指针还可以对数据实现额外的**“智能”**，比如`String`实际也是一个智能指针，其实现的过程中确保存储的是有效的UTF-8编码。
+> 所以，除了在引用数据外，智能指针还可以对数据实现额外的 **“智能”**，比如`String`实际也是一个智能指针，其实现的过程中确保存储的是有效的UTF-8编码。
 
 根据社区的最佳实践：
 
@@ -2641,7 +2641,7 @@ impl<T> Point<T> {
 
 ### 特征`trait`
 
-> **特征**即类型共性的集中描述，形式上类似某些语言中的接口。Rust不是传统的面向对象语言，没有继承机制，其多态是通过**特征（Trait）**来实现的。
+> **特征**即类型共性的集中描述，形式上类似某些语言中的接口。Rust不是传统的面向对象语言，没有继承机制，其多态是通过**特征（Trait）** 来实现的。
 
 - 特征用于描述类型，但不可以直接用来构造结构（对象）;
 - 特征无法定义属性；
@@ -2706,7 +2706,7 @@ fn main() {
 
 #### 特征绑定（Trait Bound）：用特征描述参数
 
-> 通过特征描述参数可以更松散地约束参数类型。**特征绑定（Trait Bound）**则是特征描述参数的基本写法。
+> 通过特征描述参数可以更松散地约束参数类型。**特征绑定（Trait Bound）** 则是特征描述参数的基本写法。
 
 ```rust
 fn notify<T: Summary>(item1: &T, item2: &T) {}
@@ -2756,7 +2756,7 @@ assert_eq!(Pair::new(String::from("a"), String::from("b")).largest(), String::fo
 
 > 当代码涉及多态时，需要有一种机制来确定实际运行的是哪个类型，这一过程就是所谓的**调度（Dispatch）**。
 
-> **静态调度（Static Dispatch）**是指在编译期确定调度类型的调度，故也没有运行时的性能损耗。
+> **静态调度（Static Dispatch）** 是指在编译期确定调度类型的调度，故也没有运行时的性能损耗。
 > 包括[泛型](#泛型t)和[特征绑定](#特征绑定trait-bound用特征描述参数)，它们都是在编译期进行单态化。
 
 ```rust
@@ -2781,7 +2781,7 @@ fn get_default_shape(is_circle: bool) -> impl Draw {
 // help: you could change the return type to be a boxed trait object
 ```
 
-> 相对地，**动态调度（Dynamic Dispatch）**即在运行期间确立调度类型的调度，这一调度方式通过[特征对象](#特征对象trait-object用特征描述值)来实现。
+> 相对地，**动态调度（Dynamic Dispatch）** 即在运行期间确立调度类型的调度，这一调度方式通过[特征对象](#特征对象trait-object用特征描述值)来实现。
 
 #### 特征对象（Trait Object）：用特征描述值
 
@@ -2907,34 +2907,93 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
 
 ```
 
-## 析构（Destruction）
+## 类型析构（Destruction）
 
-> 当一个已初始化的变量或临时变量超出范围时，其析构函数（*destructor*）将被执行，或者说将被销毁（*dropped*）。部分初始化的变量将只销毁已经初始化的字段。
+> [类型析构](https://doc.rust-lang.org/reference/destructors.html)：当一个已初始化的变量或临时变量超出范围时，其析构函数（*destructor*）将被执行，或者说将被销毁（*dropped*）。部分初始化的变量将只销毁已经初始化的字段。
 
-<details>
-  <summary>`T`的析构函数（*destructor*）的组成：</summary>
+`T`的析构函数（*destructor*）的组成：
   1. 如果`T`部署了`Drop`特征，则执行`<T as std::ops::Drop>::drop`。
   2. 如果`T`是以下类型，则递归执行其所有字段（*fields*）的析构函数：
      - 结构（*Struct*）、活动的枚举变体（*Active Enum Variant*）的字段（*fields*）按声明顺序销毁：
      - 元组（*Tuple*）、数组（*Array*）、拥有所有权的切片（*Owned Slice*）的元素（*elements*）按顺序销毁；
      - 闭包（*Closure*）中的变量（*variables*）销毁顺序未定义；
      - 特征对象（*Trait Objects*）执行实际类型（*underlying type*）的析构函数；
-</details>
 
-> 如果想手动执行析构函数，可以调用`std::ptr::drop_in_place(ptr: *mut T)`，在部署自定义的[智能指针](#智能指针smart-pointers)的时候可能会用到。
+> 如果想*手动执行析构函数*，可以调用`std::ptr::drop_in_place(ptr: *mut T)`，在部署自定义的[智能指针](#智能指针smart-pointers)的时候可能会用到。
 
 ### 销毁作用域（Drop Scope）
 
 > 每个变量（*Variable*）或临时变量（*Temporary*）都有一个关联的销毁作用域（*Drop Scope*），并会随着该作用域的结束而按照（变量）声明或（临时变量）创建顺序的相反顺序销毁。
 
-<details>
-  <summary>函数（*function*）或闭包（*closure*）的销毁作用域：</summary>
-   - 整个函数；
-   - 每个[语句（*Statement*）](#语句statement)；
-   - 每个[表达式（*Expression*）](#表达式expression)；
-   - 每个块（*Block*），包括函数体；
-   - `match`的分支；
-</details>
+函数（*Function*）或闭包（*Closure*）的销毁作用域包括：
+  - 整个函数；
+  - 每个[语句（Statement）](#语句statement)；
+  - 每个[表达式（Expression）](#表达式expression)；
+  - 每个块（Block），包括函数体；
+  - `match`的分支；
+
+函数参数（*Function Parameters*）的销毁顺序是：
+  1. 如果形参内部有模式绑定，则先销毁模式绑定的变量；
+  2. 销毁实参；
+
+```rust
+struct PrintOnDrop(&'static str);
+impl Drop for PrintOnDrop {
+    fn drop(&mut self) {
+        println!("drop({})", self.0);
+    }
+}
+fn patterns_in_parameters(
+    (x, _): (PrintOnDrop, PrintOnDrop), // 该参数有模式绑定，所以先销毁模式绑定的x，再销毁整个参数（即元组，内部按顺序销毁）
+    (_, y): (PrintOnDrop, PrintOnDrop), // 该参数有模式绑定，所以先销毁模式绑定的y，再销毁整个参数（即元组，内部按顺序销毁）
+) {}
+
+// drop order is 3 2 0 1
+patterns_in_parameters(
+    (PrintOnDrop("0"), PrintOnDrop("1")),
+    (PrintOnDrop("2"), PrintOnDrop("3")),
+);
+```
+
+本地变量（*Local Variables*）的销毁顺序：
+  - 对于`match`分支而言，如果存在多个匹配模式（Pattern），则销毁顺序是不确定的。
+
+临时变量（*Temporary*）的销毁作用域包括：
+  - 函数体；
+  - [语句（Statement）](#语句statement)；
+  - `if`,`while`和`loop`表达式的主体（body）；
+  - `if`表达式的`else`代码块；
+  - `if`,`while`表达式的条件表达式；
+  - `match`的[匹配守卫（Guard）](#匹配守卫match-guard)的条件表达式、分支（条件）表达式，但~~审查条件（scrutinee）~~则不是；
+  - 惰性布尔表达式（`&&`, `||`）的第二操作数；
+
+### 临时变量生命周期扩展（Temporary Lifetime Extension）
+
+> 临时变量生命周期扩展的规则可能会变化，具体参考[官方文档](https://doc.rust-lang.org/reference/destructors.html#temporary-lifetime-extension)。
+
+1. `let`语句中的临时变量如果存活周期太短，可能会扩展到`let`的存活周期：
+   1. 如果`let`语句中的模式（*Pattern*）存在扩展存活，则初始化表达式（initializer expression）扩展存活；
+   2. 如果`let`语句中的表达式（*Expression*）存在扩展存活，则初始化表达式（initializer expression）扩展存活；
+2. 如果借用表达式（*Borrow Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
+3. 如果解引用表达式（*Dereference Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
+4. 如果字段表达式（*Field Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
+5. 如果元组索引表达式（*Tuple Indexing Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
+6. 如果索引表达式（*Indexing Expression*）有扩展存活，则被索引的表达式（indexed expression）也跟随扩展存活；
+
+扩展临时作用域的模式（*Pattern*）：
+   - 绑定变量为引用为[标识符模式（Identifier Pattern）](#标识符模式identifier-patterns)；
+   - 子模式存在扩展存活的[结构体模式（Struct Pattern）](#结构模式struct-patterns)；
+   - 子模式存在扩展存活的[元组模式（Tuple）](#元组模式tuple-patterns);
+   - 子模式存在扩展存活的[切片模式（Slice）](#切片模式slice-patterns)；
+
+扩展临时作用域的表达式（*Expression*）：
+   - 初始化表达式（*Initializer Expression*）；
+   - 具有扩展存活的借用表达式（*Extending Borrow Expression*）的操作数（的表达式），如`let x = &temp()`和`let ref x = temp()`中`temp()`被扩展；
+   - 具有扩展存活的数组表达式（*Extending Array Expression*）的操作数（的表达式）；
+   - 具有扩展存活的强制转换表达式（*Extending Cast Expression*）的操作数（的表达式），如`let x = &temp() as &dyn Send;`中的`temp()`被扩展；
+   - 具有扩展存活的大括号结构体表达式（*Extending Braced Struct Expression*）的操作数（的表达式），如`let x = Some { 0: &mut 3 }`中的`3`被扩展；
+   - 具有扩展存活的元组表达式（*Extending Tuple Expression*）的操作数（的表达式），如`let x = (&mut 1, &2)`中的`1`和`2`被扩展；
+   - 具有扩展存活的块表达式（*Extending Block Expression*）的最后一个表达式；
 
 ## 内存操作（Memory Access）
 
@@ -4462,7 +4521,7 @@ proc-macro = true
 
 #### 类函数宏（Function-like Macros）
 
-> **（类）函数宏（*Function-like Macros*）**的调用方式和作用都与[声明（式）宏](#%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%AE%8Fdeclarative-macros)类似，均用于独立生成代码。
+> **（类）函数宏（*Function-like Macros*）** 的调用方式和作用都与[声明（式）宏](#%E5%A3%B0%E6%98%8E%E5%BC%8F%E5%AE%8Fdeclarative-macros)类似，均用于独立生成代码。
 
 1. 函数宏通过带有`proc_macro`属性的公共函数（`pub`）定义；
 
@@ -4482,7 +4541,7 @@ let sql = sql!(SELECT * FROM posts WHERE id=1);
 
 #### 派生宏（Derive Macros）
 
-> **派生宏（*Derived Macros*）**接受所修饰的项目（*结构体（Struct）*、*枚举（Enum）*、*联合（Union）*）为唯一参数，返回值是为所修饰项目追加的合适的额外项目。
+> **派生宏（*Derived Macros*）** 接受所修饰的项目（*结构体（Struct）*、*枚举（Enum）*、*联合（Union）*）为唯一参数，返回值是为所修饰项目追加的合适的额外项目。
 
 派生宏通过带有`proc_macro_derive`属性的公共函数（`pub`）定义，其中：
   - `proc_macro_derive`属性的第一个参数是宏的名称。
@@ -4534,7 +4593,7 @@ struct Struct {
 
 #### 属性宏（Attribute Macros）
 
-> **属性宏（*Attribute Macros*）**接受所传入的属性和所修饰的项目（任意[项目（Items）](#项目items)）作为输入参数，返回值用于替换所修饰的项目。
+> **属性宏（*Attribute Macros*）** 接受所传入的属性和所修饰的项目（任意[项目（Items）](#项目items)）作为输入参数，返回值用于替换所修饰的项目。
 
 属性宏通过带有`proc_macro_attribute`属性的公共函数（`pub`）定义。
 
