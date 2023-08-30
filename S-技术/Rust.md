@@ -1976,11 +1976,11 @@ pub macro addr_of_mut($place:expr) { ... }
 pub const fn null<T: ?Sized + Thin>() -> *const T
 pub const fn null_mut<T: ?Sized + Thin>() -> *mut T
 
-// 读取（Copy）值（与解引用*不同，解引用需要获取ownership或者Copy Trait）
+// 读取值（与解引用*不同，解引用需要获取ownership或者Copy Trait）
 pub const unsafe fn read<T>(src: *const T) -> T
 pub const unsafe fn read_unaligned<T>(src: *const T) -> T
 
-// 写入（Move）值
+// 写入值
 pub unsafe fn write<T>(dst: *mut T, src: T)
 pub unsafe fn write_unaligned<T>(dst: *mut T, src: T)
 
@@ -2907,7 +2907,36 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
 
 ```
 
-## 内存操作
+## 析构（Destruction）
+
+> 当一个已初始化的变量或临时变量超出范围时，其析构函数（*destructor*）将被执行，或者说将被销毁（*dropped*）。部分初始化的变量将只销毁已经初始化的字段。
+
+<details>
+  <summary>`T`的析构函数（*destructor*）的组成：</summary>
+  1. 如果`T`部署了`Drop`特征，则执行`<T as std::ops::Drop>::drop`。
+  2. 如果`T`是以下类型，则递归执行其所有字段（*fields*）的析构函数：
+     - 结构（*Struct*）、活动的枚举变体（*Active Enum Variant*）的字段（*fields*）按声明顺序销毁：
+     - 元组（*Tuple*）、数组（*Array*）、拥有所有权的切片（*Owned Slice*）的元素（*elements*）按顺序销毁；
+     - 闭包（*Closure*）中的变量（*variables*）销毁顺序未定义；
+     - 特征对象（*Trait Objects*）执行实际类型（*underlying type*）的析构函数；
+</details>
+
+> 如果想手动执行析构函数，可以调用`std::ptr::drop_in_place(ptr: *mut T)`，在部署自定义的[智能指针](#智能指针smart-pointers)的时候可能会用到。
+
+### 销毁作用域（Drop Scope）
+
+> 每个变量（*Variable*）或临时变量（*Temporary*）都有一个关联的销毁作用域（*Drop Scope*），并会随着该作用域的结束而按照（变量）声明或（临时变量）创建顺序的相反顺序销毁。
+
+<details>
+  <summary>函数（*function*）或闭包（*closure*）的销毁作用域：</summary>
+   - 整个函数；
+   - 每个[语句（*Statement*）](#语句statement)；
+   - 每个[表达式（*Expression*）](#表达式expression)；
+   - 每个块（*Block*），包括函数体；
+   - `match`的分支；
+</details>
+
+## 内存操作（Memory Access）
 
 > 不同于指针操作，内存操作是针对值或引用，即遵循所有权规则的值。
 
@@ -4859,15 +4888,22 @@ greet("World!");
 
 # 第三方库
 
+## 工具库
+
+| Crate        |                                                      |
+| ------------ | ---------------------------------------------------- |
+| `serde`      | 序列化库，[支持JSON/Toml/Yaml...](https://serde.rs/) |
+| `serde_json` | 通过`serde`实现的序列化和反序列化JSON                |
+| `serde_with` | 扩展`serde`更多类型                                  |
+| `chrono`     | 时间工具库                                           |
+| `rayon`      | 并行计算库                                           |
+| `slog`       | 日志库                                               |
+| `protest`    | 属性测试库                                           |
+
+## WebAssembly
+
 | Crate                                                          |                                                                                                                                                                                                                    |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 工具库                                                         |                                                                                                                                                                                                                    |
-| `serde`                                                        | 序列化库，[支持JSON/Toml/Yaml...](https://serde.rs/)                                                                                                                                                               |
-| `serde_json`                                                   | 通过`serde`实现的序列化和反序列化JSON                                                                                                                                                                              |
-| `serde_with`                                                   | 扩展`serde`更多类型                                                                                                                                                                                                |
-| `chrono`                                                       | 时间工具库                                                                                                                                                                                                         |
-| `resvg`                                                        | SVG渲染库                                                                                                                                                                                                          |
-| WebAssembly                                                    |                                                                                                                                                                                                                    |
 | [rustwasm](https://crates.io/teams/github:rustwasm:core)       | **Rust WebAssembly**项目组                                                                                                                                                                                         |
 | [`wasm-bindgen`](https://rustwasm.github.io/docs/wasm-bindgen) | **Rust**和**JavaScript**在**WebAssembly**中的桥接（数据转换）                                                                                                                                                      |
 | `web_sys`                                                      | 通过`wasm-bindgen`实现的**Rust**和**Web API**的桥接                                                                                                                                                                |
@@ -4876,25 +4912,43 @@ greet("World!");
 | `serde_wasm_bindgen`                                           | 通过`wasm-bindgen`和`serde`实现的**Rust**和**JavaScript**的[数据结构](https://docs.rs/serde-wasm-bindgen/latest/serde_wasm_bindgen/#supported-types)互转（`wasm_bindgen::JSValue::{from_serde,into_serde}`的替代） |
 | `gloo`                                                         | `web_sys`和`js_sys` 的包装，以提升易用性                                                                                                                                                                           |
 | `gloo-net`                                                     | HTTP requests library for WASM Apps                                                                                                                                                                                |
-| 异步                                                           |                                                                                                                                                                                                                    |
-| `futures`                                                      | 异步*trait*（标准库以外的）和一个简单的*executor*                                                                                                                                                                  |
-| `tokio`                                                        | 历史最悠久的**异步运行时**（*reactor*），提供*executor*，目前运用最广泛、生态最完善                                                                                                                                |
-| `async-std`                                                    | 一个更新更小巧的**异步运行时**（*reactor*），提供*executor*，完全遵循标准库的设计模式，语法更简单、没有历史包袱，生成可执行文件更小，教程更完善                                                                    |
-| `smol`                                                         | 一个轻量级的**异步运行时**（*reactor*），提供*executor*，基于协程实现异步编程                                                                                                                                      |
-| `actix`                                                        | 基于`tokio`开发的**Actor**模型的异步高并发框架                                                                                                                                                                     |
-| Web                                                            |                                                                                                                                                                                                                    |
-| `hyper`                                                        | 基于`tokio`的HTTP库                                                                                                                                                                                                |
-| `reqwest`                                                      |                                                                                                                                                                                                                    |
-| `warp`                                                         | 基于`tokio`和`hyper`的**Web服务器框架**，由`hyper`作者开发，特色是[`Filter`](https://docs.rs/warp/latest/warp/trait.Filter.html)系统                                                                               |
-| `actix-web`                                                    | 基于`tokio`和**Actor**模型的**Web服务器框架**，最成熟的，也是目前最大的                                                                                                                                            |
-| `axum`                                                         | 基于`tokio`的**Web服务器框架**，由`tokio`官方开发                                                                                                                                                                  |
-| `tide`                                                         | 基于`async-std`的**Web服务器框架**，特色是[`Layer`]()系统                                                                                                                                                          |
-| GUI                                                            |                                                                                                                                                                                                                    |
-| `egui`                                                         |                                                                                                                                                                                                                    |
-| `iced`                                                         |                                                                                                                                                                                                                    |
-| `slint`                                                        | 声明式GUI工具包，可以为桌面和嵌入式应用程序构建本机用户界面                                                                                                                                                        |
-| 游戏引擎                                                       |                                                                                                                                                                                                                    |
-| `bevy`                                                         |                                                                                                                                                                                                                    |
+
+## 异步
+
+| Crate       |                                                                                                                                                 |
+| ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `futures`   | 异步*trait*（标准库以外的）和一个简单的*executor*                                                                                               |
+| `tokio`     | 历史最悠久的**异步运行时**（*reactor*），提供*executor*，目前运用最广泛、生态最完善                                                             |
+| `async-std` | 一个更新更小巧的**异步运行时**（*reactor*），提供*executor*，完全遵循标准库的设计模式，语法更简单、没有历史包袱，生成可执行文件更小，教程更完善 |
+| `smol`      | 一个轻量级的**异步运行时**（*reactor*），提供*executor*，基于协程实现异步编程                                                                   |
+| `actix`     | 基于`tokio`开发的**Actor**模型的异步高并发框架                                                                                                  |
+
+## Web
+
+| Crate       |                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `hyper`     | 基于`tokio`的HTTP库                                                                                                                  |
+| `reqwest`   |                                                                                                                                      |
+| `warp`      | 基于`tokio`和`hyper`的**Web服务器框架**，由`hyper`作者开发，特色是[`Filter`](https://docs.rs/warp/latest/warp/trait.Filter.html)系统 |
+| `actix-web` | 基于`tokio`和**Actor**模型的**Web服务器框架**，最成熟的，也是目前最大的                                                              |
+| `axum`      | 基于`tokio`的**Web服务器框架**，由`tokio`官方开发                                                                                    |
+| `tide`      | 基于`async-std`的**Web服务器框架**，特色是[`Layer`]()系统                                                                            |
+
+## UI
+
+| Crate   |                                                             |
+| ------- | ----------------------------------------------------------- |
+| `egui`  |                                                             |
+| `iced`  |                                                             |
+| `slint` | 声明式GUI工具包，可以为桌面和嵌入式应用程序构建本机用户界面 |
+| `clap`  | 命令行参数解析                                              |
+| `resvg` | SVG渲染库                                                   |
+
+## 游戏引擎
+
+| Crate  |     |
+| ------ | --- |
+| `bevy` |     |
 
 # 链接
 

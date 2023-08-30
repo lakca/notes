@@ -808,6 +808,10 @@
   margin: 6px 0;
   padding: 0;
 }
+.${ident('menu')} [data-lv="2"] li a {
+  font-size: 0.9em;
+  font-style: italic;
+}
 .${ident('menu')} .${ident('handle')} {
   display: inline-block;
   vertical-align: middle;
