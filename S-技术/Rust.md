@@ -75,54 +75,42 @@ date: 2021-04-19T11:13:31.973Z
 
 ### 官方文档
 
-- Rust 学习：[Learn Rust](https://www.rust-lang.org/learn)
-- Rust 教程（*The Book*）：[The Rust Programming Language](https://doc.rust-lang.org/book/)，[中文翻译](https://kaisery.github.io/trpl-zh-cn/)
-- Rust 实例教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)
-- Rust 练习式教程（*Rustlings*）：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)
-- Rust 语言文档：[The Rust Reference](https://doc.rust-lang.org/reference)
-- Rust 标准库文档：[The Rust Standard Library](https://doc.rust-lang.org/std/)
-- Rust 宏详解：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
-- Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
 - Rust 语言术语：[Glossary](https://doc.rust-lang.org/reference/glossary.html)
-- Rust 编译器：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)
-- Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- Rust 征求意见：[Rust RFCs](https://rust-lang.github.io/rfcs/)
+- Rust 学习之路：[Learn Rust](https://www.rust-lang.org/learn)
+- Rust 入门教程（The Book）：[The Rust Programming Language](https://doc.rust-lang.org/book/)，[中文翻译1](https://rustwiki.org/zh-CN/book)，[中文翻译2](https://kaisery.github.io/trpl-zh-cn/)
+- Rust 实例教程：[Rust by Example (RBE)](https://doc.rust-lang.org/rust-by-example/)，[中文翻译](https://rustwiki.org/zh-CN/rust-by-example)
+- Rust 练习教程（Rustlings）：[🦀 Small exercises on the command line!](https://github.com/rust-lang/rustlings/)，[中文翻译](https://github.com/rust-lang-cn/rustlings-cn)
+- Rust 语言参考：[The Rust Reference](https://doc.rust-lang.org/reference)，[中文翻译](https://rustwiki.org/zh-CN/reference)
+- Rust 标准库文档：[The Rust Standard Library](https://doc.rust-lang.org/std/)，[中文翻译](https://rustwiki.org/zh-CN/std)
 - Rust 异步编程：[Asynchronous Programming in Rust](https://rust-lang.github.io/async-book)
-- Rust 语言版本：[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)
-- Rust 编程风格：[Rust Style Guidelines](https://doc.rust-lang.org/1.6.0/style/README.html)
-- Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines)
-- Rust 社区仓库：[The Rust community’s crate registry](https://crates.io/)
-- Rust 社区仓库文档：[documentation host for crates](https://docs.rs/)
-- Rust 仓库目录：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
-- Rust 错误代码查询文档：[Rust error codes index](https://doc.rust-lang.org/error_codes/error-index.html)，阅读该文档对深入理解编程语言和Rust都非常有用。
+- Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- Rust 开发命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
+- Rust 开发[WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/)
+- Rust 嵌入式开发：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
+- Rust 编译器详解：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)，[中文翻译](https://rustwiki.org/zh-CN/rustc)
 - Rust 非稳定功能：[The Rust Unstable Book](https://doc.rust-lang.org/stable/unstable-book/)
-- Rust 编写命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
-- Rust 和 [WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/book/)
-- Rust 和 WebAssembly：[Rust and WebAssembly Documentation](https://rustwasm.github.io/docs)
-- Rust 编写嵌入式系统：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
-- 如何设计 Rust API：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines/#rust-api-guidelines)
-- Cargo：[The Cargo Book](http://localhost/rust/cargo/index.html#the-cargo-book)
-- Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)
+- Rust 语言版本：[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)，[中文翻译](https://rustwiki.org/zh-CN/edition-guide)
+- Rust 开发风格指引：[Rust Style Guidelines](https://doc.rust-lang.org/1.6.0/style/README.html)
+- Rust API风格指引：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines)
+- Rust 错误代码查询：[Rust error codes index](https://doc.rust-lang.org/error_codes/error-index.html)，阅读该文档对深入理解编程语言和Rust都非常有用。[中文翻译](https://rustwiki.org/zh-CN/error-index)
+- Rust 文档生成工具Rustdoc：[The Rustdoc Book](https://doc.rust-lang.org/rustdoc/)，[中文翻译](https://rustwiki.org/zh-CN/rustdoc)
+- Rust 项目管理工具Cargo：[The Cargo Book](http://localhost/rust/cargo/index.html#the-cargo-book)，[中文翻译](https://rustwiki.org/zh-CN/cargo)
+- Rust 工具链管理工具Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)s
+- Rust 官方仓库文档库：[documentation host for crates](https://docs.rs/)
 
-### 其他文档
+### 其他文档或资源
 
-- [Rust 官方文档中文教程](https://rustwiki.org/)
-  - [Rust 程序设计语言](https://rustwiki.org/zh-CN/book)
-  - [通过例子学 Rust](https://rustwiki.org/zh-CN/rust-by-example)
-  - [rustlings](https://github.com/rust-lang-cn/rustlings-cn)
-  - [Rust 参考手册](https://rustwiki.org/zh-CN/reference)
-  - [Rust 标准库](https://rustwiki.org/zh-CN/std)
-  - [Rust Cookbook](https://rustwiki.org/zh-CN/rust-cookbook)
-  - [Cargo 手册](https://rustwiki.org/zh-CN/cargo)
-  - [Rust 版本指南](https://rustwiki.org/zh-CN/edition-guide)
-  - [rustdoc 手册](https://rustwiki.org/zh-CN/rustdoc)
-  - [rustc 手册](https://rustwiki.org/zh-CN/rustc)
-  - [Rust 编译错误索引表](https://rustwiki.org/zh-CN/error-index)
+- Rust 官方社区仓库：[The Rust community’s crate registry](https://crates.io/)
+- Rust 受控的第三方仓库：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
+- Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
+- Rust 新手开发：[Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook)，[中文翻译](https://rustwiki.org/zh-CN/rust-cookbook)
+- Rust 中文翻译项目组：[Rust 官方文档中文教程](https://rustwiki.org/)
   - [Rust 规范文档](https://rustwiki.org/wiki)
   - [Rust 语言术语中英文对照表](https://rustwiki.org/wiki/translate/english-chinese-glossary-of-rust)
-- Rust 模糊测试：[Rust Fuzz Book](https://rust-fuzz.github.io/book/)
+- Rust 编写模糊测试：[Rust Fuzz Book](https://rust-fuzz.github.io/book/)
 - Rust 性能手册：[The Rust Performance Book](https://nnethercote.github.io/perf-book/title-page.html)
-- Rust 宏小册：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)
-- Rust 宏小册 中文版：[Rust宏小册 中文版](https://www.bookstack.cn/read/DaseinPhaos-tlborm-chinese/README.md)
+- Rust 宏详解：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)，[中文翻译](https://www.bookstack.cn/read/DaseinPhaos-tlborm-chinese/README.md)
 - Rust 课程：[Rust Course](https://course.rs)
 - Rust 设计模式：[Rust Design Pattern](https://rust-unofficial.github.io/patterns/)
 - [`awesome-rust` learning resources](https://github.com/rust-unofficial/awesome-rust#resources)
@@ -2804,9 +2792,7 @@ fn get_default_shape(is_circle: bool) -> Box<dyn Draw> {
 
 ### 生命周期（标注）`'a`
 
-所谓数据的生命周期，对于程序的执行来说，就是变量的作用域。
-
-对于直接值来说，其生命周期由其直接变量（即所有者）决定。例如：
+所谓数据的生命周期，对于程序的执行来说，就是变量的作用域。对于直接值来说，其生命周期由其直接变量（即所有者）决定。例如：
 
 ```rust
 {
@@ -2830,8 +2816,8 @@ fn main() {
 }
 ```
 
-> 所以，一般我们讨论生命周期，特指引用的生命周期。
-> 为了程序安全性，防止隐式的悬垂引用出现，Rust要求显式地为每个引用**标注生命周期**。
+> 所以，一般我们讨论生命周期，特指引用的生命周期。为了程序安全性，防止隐式的悬垂引用出现，Rust要求显式地为每个引用**标注生命周期**。
+
 > **生命周期标注是一种特殊的抽象类型**，在使用时紧跟在引用标识符（`&`, `ref`）后面：`&'a usize`, `&'a mut usize`。另外，静态生命周期即程序的生命周期，标记为`'static`。
 
 ```rust
@@ -2843,13 +2829,13 @@ let b = &'a a; // error: borrow expressions cannot be annotated with lifetimes
 //      help: remove the lifetime annotation
 ```
 
-但是，以上编译器又告诉我们借用表达式不能（无需）标注生命周期，这是因为Rust编译器可以根据上下文和借用规则自动推断。
+但是，以上编译器又告诉我们借用表达式不能（无需）标注生命周期，这是因为Rust编译器根据上下文和借用规则自动推断。
 
-> 只有当定义函数、结构、枚举、特征等包含*引用类型的输入（参数、字段等）*和*引用类型的返回值*的**子程序**（*创建上下文*）时，标注生命周期才是需要的。
+> 只有当定义函数、结构、枚举、特征等**包含*引用类型的输入（参数、字段等）*和*引用类型的返回值*的子程序（*创建上下文*）时，标注生命周期才是需要的**。
 
 ```rust
 // 生命周期标注的含义是a、返回值的生命周期都不低于'a：
-fn fa<'a>(a: &'a st) -> &'a str {
+fn fa<'a>(a: &'a str) -> &'a str {
     println!("{a}");
     a
 }
@@ -2864,13 +2850,13 @@ fn fc(a: u8)  -> u8 {
 }
 ```
 
-不过，为了程序代码的简洁性，也并非所有符合上述条件的情况都需要显式标注生命周期，Rust编译器会通过一套[规则](#编译器对生命周期的默认处理规则)来自动赋予默认生命周期标注。
+不过，为了程序代码的简洁性，也并非所有符合上述条件的情况都需要显式地标注生命周期，Rust**编译器会通过一套[规则](#生命周期标注省略规则lifetime-elision)来自动赋予默认生命周期标注**。
 
-#### 编译器对生命周期的默认处理规则
+#### 生命周期标注省略规则（Lifetime Elision）
 
 - 对于**函数**而言：
   - 每个参数都默认具有一个单独的生命周期；
-  - 如果参数中只有一种生命周期（标注），则返回值默认具有此生命周期；
+  - 如果参数中只有一种生命周期（标注），则返回值默认具有此生命周期；基于此规则，前述`fa`的生命周期标注可以省略。
 - 对于**方法**而言，除了具有函数的规则，还具有：
   - 如果参数中有`&Self`或`&mut Self`引用，则返回值中被省略的生命周期标注都将是`Self`的生命周期；
 - 对于**特征对象**（其生命周期称为默认对象生命周期绑定）：
@@ -2884,8 +2870,6 @@ fn fc(a: u8)  -> u8 {
       - 若特征对象在表达式中，则自动推断；
       - 若特征对象在表达式外，则生命周期为`'static`；
 
-所以基于上述规则，示例中`fa`的生命周期标注可以省略。
-
 #### 静态生命周期`'static`
 
 > 静态生命周期即程序生命周期。
@@ -2897,7 +2881,7 @@ const STRING: &str = "bitstring";
 // 等于： const STRING: &'static str = "bitstring";
 ```
 
-但如果常量或静态量引用函数或闭包，则会首先尝试函数的生命周期省略规则；
+但如果常量或静态量引用函数或闭包，则会首先尝试函数的生命周期省略[规则](#生命周期标注省略规则lifetime-elision)
 
 ```rust
 // Resolved as `fn<'a>(&'a str) -> &'a str`.
@@ -2910,30 +2894,32 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
 
 ## 类型析构（Destruction）
 
-> [类型析构](https://doc.rust-lang.org/reference/destructors.html)：当一个已初始化的变量或临时变量超出范围时，其析构函数（*destructor*）将被执行，或者说将被销毁（*dropped*）。部分初始化的变量将只销毁已经初始化的字段。
+> [类型析构](https://doc.rust-lang.org/reference/destructors.html)：当一个已初始化的变量或临时变量超出范围（[销毁作用域](#销毁作用域drop-scope)）时，其析构函数（*destructor*）将被执行，或者说将被销毁（*dropped*）。部分初始化的变量将只销毁已经初始化的字段。
 
-`T`的析构函数（*destructor*）的组成：
+类型`T`的析构函数（*destructor*）组成：
   1. 如果`T`部署了`Drop`特征，则执行`<T as std::ops::Drop>::drop`。
-  2. 如果`T`是以下类型，则递归执行其所有字段（*fields*）的析构函数：
-     - 结构（*Struct*）、活动的枚举变体（*Active Enum Variant*）的字段（*fields*）按声明顺序销毁：
-     - 元组（*Tuple*）、数组（*Array*）、拥有所有权的切片（*Owned Slice*）的元素（*elements*）按顺序销毁；
+  2. 如果`T`是以下类型，则递归执行其所有字段（Fields）的析构函数：
+     - 结构（*Struct*）、活动的枚举变体（*Active Enum Variant*）的字段（Fields）按声明顺序销毁：
+     - 元组（*Tuple*）、数组（*Array*）、拥有所有权的切片（*Owned Slice*）的元素（Elements）按顺序销毁；
      - 闭包（*Closure*）中的变量（*variables*）销毁顺序未定义；
-     - 特征对象（*Trait Objects*）执行实际类型（*underlying type*）的析构函数；
+     - 特征对象（*Trait Objects*）执行实际类型（Underlying Type）的析构函数；
 
 > 如果想**手动执行析构函数**，可以调用`std::ptr::drop_in_place(ptr: *mut T)`，在部署自定义的[智能指针](#智能指针smart-pointers)的时候可能会用到。
 
 ### 销毁作用域（Drop Scope）
 
-> 每个变量（*Variable*）或临时变量（*Temporary*）都有一个关联的销毁作用域（*Drop Scope*），会随着该作用域的结束而按照（变量）声明或（临时变量）创建顺序的相反顺序销毁。
+> 每个变量（*Variable*）或临时变量（*Temporary*）都有一个关联的销毁作用域（*Drop Scope*），会随着该作用域的结束而销毁。
 
-**函数（Function）或闭包（Closure）的销毁作用域**：
+**函数（Function）或闭包（Closure）包含的销毁作用域有**：
   - 整个函数；
   - 每个块（Block），包括函数体；
   - 每个[语句（Statement）](#语句statement)；
   - 每个[表达式（Expression）](#表达式expression)；
   - `match`的分支；
 
-**临时变量（Temporary）的销毁作用域**：
+> **临时变量（Temporary）** 按照临时变量的创建顺序的相反顺序销毁，除非存在[临时变量生命周期扩展](#临时变量生命周期扩展temporary-lifetime-extension)。
+
+临时变量的销毁作用域包括：
   - 函数体；
   - [语句（Statement）](#语句statement)；
   - `if`,`while`和`loop`表达式的主体（body）；
@@ -2942,11 +2928,13 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
   - `match`的[守卫表达式（Guard）](#匹配守卫match-guard)、分支（条件）表达式，但~~审查条件（scrutinee）~~ 则不是；
   - 惰性布尔表达式（`&&`, `||`）的第二操作数；
 
-### 销毁顺序（Drop In Order）
+> **本地变量（Local Variable）** 按照本地变量的声明顺序的相反顺序销毁，但对于`match`同一分支存在多个模式（Pattern）时，销毁顺序是不确定的。
 
-**函数参数（Function Parameters）的销毁顺序**：
-  1. 如果形参内部有模式绑定，则先销毁模式绑定的变量；
-  2. 销毁实参；
+本地变量的销毁作用域包括：
+  - `let`语句声明的本地变量的销毁作用域与`let`语句相关联；
+  - `match`表达式中声明的局部变量与匹配臂相关联；
+
+> **函数参数（Function Parameters）**，如果形参内部有模式绑定，则先销毁模式绑定的变量，然后再销毁实参；
 
 ```rust
 struct PrintOnDrop(&'static str);
@@ -2956,8 +2944,10 @@ impl Drop for PrintOnDrop {
     }
 }
 fn patterns_in_parameters(
-    (x, _): (PrintOnDrop, PrintOnDrop), // 该参数有模式绑定，所以先销毁模式绑定的x，再销毁整个参数（即元组，内部按顺序销毁）
-    (_, y): (PrintOnDrop, PrintOnDrop), // 该参数有模式绑定，所以先销毁模式绑定的y，再销毁整个参数（即元组，内部按顺序销毁）
+    // 该参数有模式绑定，所以先销毁模式绑定的x，再销毁整个参数（即元组，内部按顺序销毁）
+    (x, _): (PrintOnDrop, PrintOnDrop),
+    // 该参数有模式绑定，所以先销毁模式绑定的y，再销毁整个参数（即元组，内部按顺序销毁）
+    (_, y): (PrintOnDrop, PrintOnDrop),
 ) {}
 
 // drop order is 3 2 0 1
@@ -2967,21 +2957,52 @@ patterns_in_parameters(
 );
 ```
 
-**本地变量（Local Variables）的销毁顺序**：
-  - 对于`match`的同一分支而言，如果存在多个匹配模式（Pattern），则销毁顺序是不确定的。
+### 常量提升（Constant Promotion）
+
+> 当可以将表达式写入常量并借用，且可以被解引用获取到，还不影响运行时的时候，该表达式就会被提升到静态作用域（`'static`）。也就是说表达式可以在编译期间计算，并且计算结果不包含[内部可变性](#内部可变性interior-mutability)和析构函数。
+
+```rust
+let a: &Option<usize> = &None;
+```
+
+以下是上述代码编译的中间码（MIR），可以看到`&None`被提升到了静态域：
+
+```rust
+fn main() -> () {
+    let mut _0: ();
+    scope 1 {
+        debug a => const _;
+    }
+
+    bb0: {
+        return;
+    }
+}
+
+promoted[0] in main: &Option<usize> = {
+    let mut _0: &std::option::Option<usize>;
+    let mut _1: std::option::Option<usize>;
+
+    bb0: {
+        _1 = Option::<usize>::None;
+        _0 = &_1;
+        return;
+    }
+}
+```
 
 ### 临时变量生命周期扩展（Temporary Lifetime Extension）
 
 > 临时变量生命周期扩展的规则可能会变化，具体参考[官方文档](https://doc.rust-lang.org/reference/destructors.html#temporary-lifetime-extension)。
 
 1. `let`语句中的临时变量如果存活周期太短，可能会扩展到`let`的存活周期：
-   1. 如果`let`语句中的模式（*Pattern*）存在扩展存活，则初始化表达式（initializer expression）扩展存活；
-   2. 如果`let`语句中的表达式（*Expression*）存在扩展存活，则初始化表达式（initializer expression）扩展存活；
-2. 如果借用表达式（*Borrow Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
-3. 如果解引用表达式（*Dereference Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
-4. 如果字段表达式（*Field Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
-5. 如果元组索引表达式（*Tuple Indexing Expression*）的临时变量有扩展存活，则操作数（operand）也跟随扩展存活；
-6. 如果索引表达式（*Indexing Expression*）有扩展存活，则被索引的表达式（indexed expression）也跟随扩展存活；
+   1. 如果`let`语句中的模式（*Pattern*）存在扩展存活，则初始化表达式（Initializer Expression）也跟随扩展存活；
+   2. 如果`let`语句中的表达式（*Expression*）存在扩展存活，则初始化表达式（Initializer Expression）也跟随扩展存活；
+2. 如果借用表达式（*Borrow Expression*）的临时变量有扩展存活，则操作数（Operand）也跟随扩展存活；
+3. 如果解引用表达式（*Dereference Expression*）的临时变量有扩展存活，则操作数（Operand）也跟随扩展存活；
+4. 如果字段表达式（*Field Expression*）的临时变量有扩展存活，则操作数（Operand）也跟随扩展存活；
+5. 如果元组索引表达式（*Tuple Indexing Expression*）的临时变量有扩展存活，则操作数（Operand）也跟随扩展存活；
+6. 如果索引表达式（*Indexing Expression*）有扩展存活，则被索引的表达式（Indexed Expression）也跟随扩展存活；
 
 扩展临时作用域的模式（*Pattern*）：
    - 绑定变量为引用为[标识符模式（Identifier Pattern）](#标识符模式identifier-patterns)；
@@ -2991,12 +3012,20 @@ patterns_in_parameters(
 
 扩展临时作用域的表达式（*Expression*）：
    - 初始化表达式（*Initializer Expression*）；
-   - 具有扩展存活的借用表达式（*Extending Borrow Expression*）的操作数（的表达式），如`let x = &temp()`和`let ref x = temp()`中`temp()`被扩展；
+   - 具有扩展存活的借用表达式（*Extending Borrow Expression*）的操作数（的表达式），例如：
+     - `let x = &temp()`和`let ref x = temp()`中`temp()`被扩展；
    - 具有扩展存活的数组表达式（*Extending Array Expression*）的操作数（的表达式）；
-   - 具有扩展存活的强制转换表达式（*Extending Cast Expression*）的操作数（的表达式），如`let x = &temp() as &dyn Send;`中的`temp()`被扩展；
-   - 具有扩展存活的大括号结构体表达式（*Extending Braced Struct Expression*）的操作数（的表达式），如`let x = Some { 0: &mut 3 }`中的`3`被扩展；
-   - 具有扩展存活的元组表达式（*Extending Tuple Expression*）的操作数（的表达式），如`let x = (&mut 1, &2)`中的`1`和`2`被扩展；
+   - 具有扩展存活的强制转换表达式（*Extending Cast Expression*）的操作数（的表达式），例如：
+     - `let x = &temp() as &dyn Send;`中的`temp()`被扩展；
+   - 具有扩展存活的大括号结构体表达式（*Extending Braced Struct Expression*）的操作数（的表达式），例如：
+     - `let x = Some { 0: &mut 3 }`中的`3`被扩展；
+   - 具有扩展存活的元组表达式（*Extending Tuple Expression*）的操作数（的表达式），例如：
+     - `let x = (&mut 1, &2)`中的`1`和`2`被扩展；
    - 具有扩展存活的块表达式（*Extending Block Expression*）的最后一个表达式；
+
+## 隐式转换（Coercion）
+
+> [类型隐式转换（Type Coercions）](https://doc.rust-lang.org/reference/type-coercions.html)
 
 ## 内存操作（Memory Access）
 
