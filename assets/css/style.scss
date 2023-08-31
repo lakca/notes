@@ -43,7 +43,9 @@ $headerColor: #2a8cdc1a;
   background-color: $c;
 
   code {
-    border: solid 1px darken($c, 10%);
+    border: solid 1px darken($c, 15%);
+    padding: .15rem .35rem;
+    background-color: #f6f6f6;
   }
 }
 
@@ -185,7 +187,7 @@ html {
     &.effect-bg.hover {
       text-decoration: none;
       border-radius: 0.1875em;
-      background: $linkColor;
+      @include backgroundBlock($linkColor);
       color: white;
       padding-left: .45rem;
       padding-right: .45rem;
@@ -195,13 +197,10 @@ html {
   code {
     cursor: pointer;
     font-family: $codeFonts;
-    font-size: 0.9em;
-    vertical-align: bottom;
-    padding: .25rem .35rem;
+    vertical-align: middle;
     margin: 0 4px;
     border-radius: 4px;
     color: $codeColor;
-    background-color: #f6f6f6;
 
     &.language-mermaid {
       background-color: unset;
@@ -209,6 +208,7 @@ html {
   }
 
   pre code {
+    font-size: 0.9em;
     cursor: unset;
   }
 

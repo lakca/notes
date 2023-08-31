@@ -909,7 +909,7 @@ rustc --help | grep '\--emit'
 
 //! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档，等价于#![doc="..."]。
 
-/*! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档，等价于#![doc="..."]。
+/*! 为注释所属于的项（译注：如 crate、模块或函数）生成帮助文档，等价于#![doc="..."]。 */
 ```
 
 ## 格式化输出
@@ -927,6 +927,7 @@ rustc --help | grep '\--emit'
 | `write!`       | 将格式化文本写到指定缓冲区（内存）（`&mut io::Write`） |
 | `writeln!`     | 同上，输出追加一个换行符                               |
 
+<!-- {% raw %} -->
 ```pseudo
 #FORMAT
   / `{` 和 `}` 的转义分别为 `{{` 和 `}}` /
@@ -980,7 +981,7 @@ rustc --help | grep '\--emit'
     | `e`                   / `LowerExp` /
     | `E`                   / `UpperExp` /
 ```
-
+<!-- {% endraw %} -->
 ```rust
 // 位置参数:
 assert_eq!("hello world", format!("{1} {0}", "world", "hello"));
@@ -2919,20 +2920,31 @@ const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
      - 闭包（*Closure*）中的变量（*variables*）销毁顺序未定义；
      - 特征对象（*Trait Objects*）执行实际类型（*underlying type*）的析构函数；
 
-> 如果想*手动执行析构函数*，可以调用`std::ptr::drop_in_place(ptr: *mut T)`，在部署自定义的[智能指针](#智能指针smart-pointers)的时候可能会用到。
+> 如果想**手动执行析构函数**，可以调用`std::ptr::drop_in_place(ptr: *mut T)`，在部署自定义的[智能指针](#智能指针smart-pointers)的时候可能会用到。
 
 ### 销毁作用域（Drop Scope）
 
-> 每个变量（*Variable*）或临时变量（*Temporary*）都有一个关联的销毁作用域（*Drop Scope*），并会随着该作用域的结束而按照（变量）声明或（临时变量）创建顺序的相反顺序销毁。
+> 每个变量（*Variable*）或临时变量（*Temporary*）都有一个关联的销毁作用域（*Drop Scope*），会随着该作用域的结束而按照（变量）声明或（临时变量）创建顺序的相反顺序销毁。
 
-函数（*Function*）或闭包（*Closure*）的销毁作用域包括：
+**函数（Function）或闭包（Closure）的销毁作用域**：
   - 整个函数；
+  - 每个块（Block），包括函数体；
   - 每个[语句（Statement）](#语句statement)；
   - 每个[表达式（Expression）](#表达式expression)；
-  - 每个块（Block），包括函数体；
   - `match`的分支；
 
-函数参数（*Function Parameters*）的销毁顺序是：
+**临时变量（Temporary）的销毁作用域**：
+  - 函数体；
+  - [语句（Statement）](#语句statement)；
+  - `if`,`while`和`loop`表达式的主体（body）；
+  - `if`表达式的`else`代码块；
+  - `if`,`while`表达式的条件表达式；
+  - `match`的[守卫表达式（Guard）](#匹配守卫match-guard)、分支（条件）表达式，但~~审查条件（scrutinee）~~ 则不是；
+  - 惰性布尔表达式（`&&`, `||`）的第二操作数；
+
+### 销毁顺序（Drop In Order）
+
+**函数参数（Function Parameters）的销毁顺序**：
   1. 如果形参内部有模式绑定，则先销毁模式绑定的变量；
   2. 销毁实参；
 
@@ -2955,17 +2967,8 @@ patterns_in_parameters(
 );
 ```
 
-本地变量（*Local Variables*）的销毁顺序：
-  - 对于`match`分支而言，如果存在多个匹配模式（Pattern），则销毁顺序是不确定的。
-
-临时变量（*Temporary*）的销毁作用域包括：
-  - 函数体；
-  - [语句（Statement）](#语句statement)；
-  - `if`,`while`和`loop`表达式的主体（body）；
-  - `if`表达式的`else`代码块；
-  - `if`,`while`表达式的条件表达式；
-  - `match`的[匹配守卫（Guard）](#匹配守卫match-guard)的条件表达式、分支（条件）表达式，但~~审查条件（scrutinee）~~则不是；
-  - 惰性布尔表达式（`&&`, `||`）的第二操作数；
+**本地变量（Local Variables）的销毁顺序**：
+  - 对于`match`的同一分支而言，如果存在多个匹配模式（Pattern），则销毁顺序是不确定的。
 
 ### 临时变量生命周期扩展（Temporary Lifetime Extension）
 
@@ -4843,12 +4846,12 @@ greet("World!");
 
 ## 枚举
 
-- ✅ `std::option::Option`
-- ✅ `std::option::Option::Some`
-- ✅ `std::option::Option::None`
-- ✅ `std::result::Result`
-- ✅ `std::result::Result::Ok`
-- ✅ `std::result::Result::Err`
+- `std::option::Option` ✅
+- `std::option::Option::Some` ✅
+- `std::option::Option::None` ✅
+- `std::result::Result` ✅
+- `std::result::Result::Ok` ✅
+- `std::result::Result::Err` ✅
 - `std::io::ErrorKind`
 - `std::net::IpAddr`
 - `std::net::SocketAddr`
@@ -4857,27 +4860,27 @@ greet("World!");
 ## 特征
 
 - 数据访问
-  - ✅ `std::borrow::ToOwned`: 从借用数据创建自有数据
+  - `std::borrow::ToOwned` ✅: 从借用数据创建自有数据
   - `std::borrow::Borrow`
   - `std::borrow::BorrowMut`
-  - ✅ `std::clone::Clone`
+  - `std::clone::Clone` ✅
   - `std::default::Default`
 - 比较
-  - ✅ `std::cmp::Eq`
-  - ✅ `std::cmp::PartialEq`
-  - ✅ `std::cmp::Ord`
-  - ✅ `std::cmp::PartialOrd`
+  - `std::cmp::Eq` ✅
+  - `std::cmp::PartialEq` ✅
+  - `std::cmp::Ord` ✅
+  - `std::cmp::PartialOrd` ✅
 - 标记
-  - ✅ `std::marker::Copy`
-  - ✅ `std::marker::Sized`
-  - ✅ `std::marker::Send`
-  - ✅ `std::marker::Sync`
-  - ✅ `std::marker::Unpin`
+  - `std::marker::Copy` ✅
+  - `std::marker::Sized` ✅
+  - `std::marker::Send` ✅
+  - `std::marker::Sync` ✅
+  - `std::marker::Unpin` ✅
 - 转换
-  - ✅ `std::convert::AsRef`
-  - ✅ `std::convert::AsMut`
-  - ✅ `std::convert::From`
-  - ✅ `std::convert::Into`
+  - `std::convert::AsRef` ✅
+  - `std::convert::AsMut` ✅
+  - `std::convert::From` ✅
+  - `std::convert::Into` ✅
   - `std::convert::TryFrom`
   - `std::convert::TryInto`
 - 切片
@@ -4886,19 +4889,19 @@ greet("World!");
   - `std::slice::SliceIndex`
 - 字符串
   - `std::str::FromStr`
-  - ✅ `std::string::ToString`
+  - `std::string::ToString` ✅
 - 格式化
   - `std::fmt::Debug`
   - `std::fmt::Display`
   - `std::fmt::Error`
 - 迭代器
-  - ✅ `std::iter::Iterator`
+  - `std::iter::Iterator` ✅
   - `std::iter::FusedIterator`
   - `std::iter::FromIterator`
-  - ✅ `std::iter::IntoIterator`
-  - ✅ `std::iter::Extend`
-  - ✅ `std::iter::DoubleEndedIterator`
-  - ✅ `std::iter::ExactSizeIterator`
+  - `std::iter::IntoIterator` ✅
+  - `std::iter::Extend` ✅
+  - `std::iter::DoubleEndedIterator` ✅
+  - `std::iter::ExactSizeIterator` ✅
 - 运算符
   - `std::ops::Add`
   - `std::ops::AddAssign`
@@ -4914,10 +4917,10 @@ greet("World!");
   - `std::ops::DispatchFromDyn`
   - `std::ops::Div`
   - `std::ops::DivAssign`
-  - ✅ `std::ops::Drop`
-  - ✅ `std::ops::Fn`
-  - ✅ `std::ops::FnMut`
-  - ✅ `std::ops::FnOnce`
+  - `std::ops::Drop` ✅
+  - `std::ops::Fn` ✅
+  - `std::ops::FnMut` ✅
+  - `std::ops::FnOnce` ✅
   - `std::ops::FromResidual`
   - `std::ops::Generator`
   - `std::ops::Index`
