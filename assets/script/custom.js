@@ -202,6 +202,18 @@
     return modal
   }
 
+  function refineGithubStyleHeaderID() {
+    // https://github.com/yzhang-gh/vscode-markdown/blob/83f602638bf96f5249e3b9856baf9f31b933fad1/src/util/slugify.ts#L92
+    Array.from(document.body.querySelectorAll('h1,h2,h3,h4,h5,h6')).forEach(el => {
+      el.setAttribute('id', el.textContent.toLowerCase()
+        .replace(/[^\p{L}\p{M}\p{Nd}\p{Nl}\p{Pc}\- ]/gu, '')
+        .toLowerCase() // According to an inspection in 2020-09, GitHub performs full Unicode case conversion now.
+        .replace(/ /g, '-'))
+    })
+  }
+  // 将标题的ID（锚）设置成Github风格
+  refineGithubStyleHeaderID()
+
   // 导航菜单
   const menu = {
     get themes() {
@@ -807,6 +819,9 @@
   list-style: none;
   margin: 6px 0;
   padding: 0;
+}
+.${ident('menu')} a.effect-bg {
+  padding-right: 0.9rem;
 }
 .${ident('menu')} [data-lv="2"] li a {
   font-size: 0.9em;

@@ -13,10 +13,10 @@ date: 2021-04-19T11:13:31.973Z
 - [集中库注册源-crates.io](https://crates.io)
 - [集中库文档-docs.rs](https://docs.rs)
 - [语言服务器协议](https://github.com/rust-analyzer/rust-analyzer)（[*LSP*](https://microsoft.github.io/language-server-protocol/)）
-- 优秀的[官方文档](#查阅)
+- 优秀的[官方文档](#查阅reference)
 - 丰富的[标准库](https://doc.rust-lang.org/std/)
 - 活跃的[开源社区](https://www.rust-lang.org/community)
-- 强大的[原生工具链](#版本和工具链管理-Rustup)
+- 强大的[原生工具链](#工具链管理-Rustup)
   - 编译
   - 测试
   - 文档
@@ -71,7 +71,7 @@ date: 2021-04-19T11:13:31.973Z
 
 - [Rust Search Extension](https://rust.extension.sh/)：在浏览器中搜索*Rust*文档、库等的终极解决方案，强烈建议安装。
 
-## 查阅
+## 查阅（Reference）
 
 ### 官方文档
 
@@ -84,12 +84,12 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 语言参考：[The Rust Reference](https://doc.rust-lang.org/reference)，[中文翻译](https://rustwiki.org/zh-CN/reference)
 - Rust 标准库文档：[The Rust Standard Library](https://doc.rust-lang.org/std/)，[中文翻译](https://rustwiki.org/zh-CN/std)
 - Rust 异步编程：[Asynchronous Programming in Rust](https://rust-lang.github.io/async-book)
-- Rust 黑魔法：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
-- Rust 开发命令行工具：[Command line apps in Rust](https://rust-cli.github.io/book/)
-- Rust 开发[WebAssembly](https://webassembly.org/)：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/)
+- Rust `unsafe`深入：[Rustonomicon: the dark arts of unsafe Rust](https://doc.rust-lang.org/nomicon/)
+- Rust 命令行开发：[Command line apps in Rust](https://rust-cli.github.io/book/)
+- Rust [WebAssembly](https://webassembly.org/)开发：[Rust 🦀 and WebAssembly 🕸](https://rustwasm.github.io/docs/)
 - Rust 嵌入式开发：[Embedded Rust](https://doc.rust-lang.org/embedded-book)
-- Rust 编译器详解：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)，[中文翻译](https://rustwiki.org/zh-CN/rustc)
-- Rust 非稳定功能：[The Rust Unstable Book](https://doc.rust-lang.org/stable/unstable-book/)
+- Rust 编译器教程：[rustc: Compiler for the Rust](https://doc.rust-lang.org/rustc/)，[中文翻译](https://rustwiki.org/zh-CN/rustc)
+- Rust 预览版功能：[The Rust Unstable Book](https://doc.rust-lang.org/stable/unstable-book/)
 - Rust 语言版本：[What are Editions?](https://doc.rust-lang.org/edition-guide/editions/index.html#what-are-editions)，[中文翻译](https://rustwiki.org/zh-CN/edition-guide)
 - Rust 开发风格指引：[Rust Style Guidelines](https://doc.rust-lang.org/1.6.0/style/README.html)
 - Rust API风格指引：[Rust API Guidelines](https://rust-lang.github.io/api-guidelines)
@@ -99,49 +99,49 @@ date: 2021-04-19T11:13:31.973Z
 - Rust 工具链管理工具Rustup：[The Rustup Book](https://rust-lang.github.io/rustup/index.html#introduction)s
 - Rust 官方仓库文档库：[documentation host for crates](https://docs.rs/)
 
-### 其他文档或资源
+### 其他文档
 
-- Rust 官方社区仓库：[The Rust community’s crate registry](https://crates.io/)
-- Rust 受控的第三方仓库：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
-- Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
-- Rust 新手开发：[Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook)，[中文翻译](https://rustwiki.org/zh-CN/rust-cookbook)
-- Rust 中文翻译项目组：[Rust 官方文档中文教程](https://rustwiki.org/)
-  - [Rust 规范文档](https://rustwiki.org/wiki)
-  - [Rust 语言术语中英文对照表](https://rustwiki.org/wiki/translate/english-chinese-glossary-of-rust)
-- Rust 编写模糊测试：[Rust Fuzz Book](https://rust-fuzz.github.io/book/)
-- Rust 性能手册：[The Rust Performance Book](https://nnethercote.github.io/perf-book/title-page.html)
 - Rust 宏详解：[The Little Book of Rust Macros](https://danielkeep.github.io/tlborm/book/index.html)，[中文翻译](https://www.bookstack.cn/read/DaseinPhaos-tlborm-chinese/README.md)
-- Rust 课程：[Rust Course](https://course.rs)
 - Rust 设计模式：[Rust Design Pattern](https://rust-unofficial.github.io/patterns/)
-- [`awesome-rust` learning resources](https://github.com/rust-unofficial/awesome-rust#resources)
+- Rust 新手开发：[Rust Cookbook](https://rust-lang-nursery.github.io/rust-cookbook)，[中文翻译](https://rustwiki.org/zh-CN/rust-cookbook)
+- Rust 性能手册：[The Rust Performance Book](https://nnethercote.github.io/perf-book/title-page.html)
+- Rust 编写模糊测试：[Rust Fuzz Book](https://rust-fuzz.github.io/book/)
+- Rust 非官方中文教程：[Rust语言圣经（Rust Course）](https://course.rs)
+
+### 其他资源
+
+- Rust 官方社区仓库 crates.io：[The Rust community’s crate registry](https://crates.io/)
+- Rust 受控的第三方仓库 lib.rs：[Catalog of programs and libraries written in the Rust](https://lib.rs/)
+- Rust 中文翻译合集 rustwiki：[Rust 中文翻译项目组翻译合集](https://rustwiki.org/)
 
 ### 常用指南
 
-- 操作符和符号：[Operators and Symbols](https://doc.rust-lang.org/book/appendix-02-operators.html)
-- 关键词：[Keywords](https://doc.rust-lang.org/book/appendix-01-keywords.html)
-- 派生特征：[Derivable Traits](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html)
-- 交叉编译：[Cross-compilation](https://rust-lang.github.io/rustup/cross-compilation.html)
-- 命令参数：[Rustc command-line arguments](http://localhost/rust/rustc/command-line-arguments.html)
-- 引入依赖：[Specifying Dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html)
-- 工作空间：[Workspaces](https://doc.rust-lang.org/stable/cargo/reference/workspaces.html)
-- 链接库：[Linkage](https://doc.rust-lang.org/reference/linkage.html)
-- 开发工具：[Useful Development Tools](https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html)
-- 自动升级项目语言版本：[Transitioning an existing project to a new edition](https://doc.rust-lang.org/edition-guide/editions/transitioning-an-existing-project-to-a-new-edition.html#transitioning-an-existing-project-to-a-new-edition)，[Advanced migration strategies](https://doc.rust-lang.org/edition-guide/editions/advanced-migrations.html)
-- 替换crate源：[Crates Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html)
+- Rust 语言速查表：[Rust Language Cheat Sheet](https://cheats.rs/)
+- Rust 术语中英文对照：[Rust 语言术语中英文对照表](https://rustwiki.org/wiki/translate/english-chinese-glossary-of-rust)
+- Rust Awesome：[awesome-rust learning resources](https://github.com/rust-unofficial/awesome-rust#resources)
+- Rust 操作符和符号：[Operators and Symbols](https://doc.rust-lang.org/book/appendix-02-operators.html)
+- Rust 关键词：[Keywords](https://doc.rust-lang.org/book/appendix-01-keywords.html)
+- Rust 派生特征：[Derivable Traits](https://doc.rust-lang.org/book/appendix-03-derivable-traits.html)
+- Rust 交叉编译：[Cross-compilation](https://rust-lang.github.io/rustup/cross-compilation.html)
+- Rust 命令参数：[Rustc command-line arguments](http://localhost/rust/rustc/command-line-arguments.html)
+- Rust 引入依赖：[Specifying Dependencies](https://doc.rust-lang.org/cargo/reference/specifying-dependencies.html)
+- Rust 工作空间：[Workspaces](https://doc.rust-lang.org/stable/cargo/reference/workspaces.html)
+- Rust 链接库：[Linkage](https://doc.rust-lang.org/reference/linkage.html)
+- Rust 开发工具：[Useful Development Tools](https://doc.rust-lang.org/book/appendix-04-useful-development-tools.html)
+- Rust 自动升级项目语言版本：[Transitioning an existing project to a new edition](https://doc.rust-lang.org/edition-guide/editions/transitioning-an-existing-project-to-a-new-edition.html#transitioning-an-existing-project-to-a-new-edition)，[Advanced migration strategies](https://doc.rust-lang.org/edition-guide/editions/advanced-migrations.html)
+- Rust 替换crate源：[Crates Source Replacement](https://doc.rust-lang.org/cargo/reference/source-replacement.html)
 
-## 语言周边
-
-### 吉祥物
-
-| [Ferris](https://www.rustacean.net/) |
-| ------------------------------------ |
-| ![Ferris](ferris.svg#h200)           |
-
-### 语言习惯
+## 语言习惯（Convention）
 
 - 类型名用 *PascalCase* ；
 - 常量用 *UPPER_SNAKE_CASE* ；
 - 变量名、函数名、属性名等一般标识符使用 *lower_snake_case* ；
+
+## 语言周边（）
+
+| [社区吉祥物 Ferris](https://www.rustacean.net/) |
+| ----------------------------------------------- |
+| ![Ferris](ferris.svg#h200)                      |
 
 ### Rustacean
 
@@ -153,11 +153,11 @@ date: 2021-04-19T11:13:31.973Z
 > *Rustonomicon*：Rust 高级技巧。
 > *The Dark Arts of Advanced and Unsafe Rust Programming.*
 
-## 版本和工具链管理-Rustup
+## 工具链管理-Rustup
 
-> [Rustup](https://rust-lang.github.io/rustup/)：*Rust*语言和工具链的版本安装和管理器。对于开发者来说应当作为*Rust*语言安装和版本管理的首选工具。
+> [Rustup](https://rust-lang.github.io/rustup/)是Rust官方的工具链的版本安装和管理器。对于开发者来说应当作为Rust语言安装和版本管理的首选工具。
 
-*Rustup*的本地[配置文件](https://rust-lang.github.io/rustup/configuration.html#configuration) 位于：`${RUSTUP_HOME}/settings.toml`
+Rustup的本地[配置文件](https://rust-lang.github.io/rustup/configuration.html#configuration) 位于：`${RUSTUP_HOME}/settings.toml`
 
 ### 工具链
 
@@ -196,9 +196,9 @@ Rustup提供了交叉编译能力，你可以在本地安装不同平台的工�
 
 通过`rustup completions`给当前终端添加命令补全。
 
-## 包管理器-Cargo
+## 项目管理-Cargo
 
-> [Cargo](https://doc.rust-lang.org/cargo)：*Rust* 包（Crate）管理和构建工具。
+> [Cargo](https://doc.rust-lang.org/cargo)是Rust项目（或包，Crate）管理和构建工具。
 
 ### 配置
 
@@ -459,7 +459,7 @@ cargo clippy --no-deps
 
 #### 编译
 
-见[构建](#构建)
+见[项目构建](#项目构建build)
 
 `cargo build`：默认以开发模式编译代码（输出位于 *target/debug*），包含debug信息、代码未经编译器优化。
 
@@ -546,11 +546,11 @@ cargo yank --vers 1.1.0 --undo # 取消撤回操作
 
 - `cargo-cache`：查看和清理cargo缓存
 
-## 构建
+## 项目构建（Build）
 
 完整构建一个项目可能包括：组织项目结构、声明项目元信息、管理项目依赖、构建开发环境、功能测试、性能测试、编译代码、打包源文件、对外发布......，即使*Rustup*已经为我们提供了各环节的工具链，但无论单独配置每个环节还是整合这些工作依然是繁琐和杂乱的。
 
-不过，通过前面我们已经知道了官方提供了[包管理器-Cargo](#包管理器-Cargo)这一工具，没错，在*Rust*中最简单的项目构建方式就是通过创建*Cargo*来进行。通过编写*Cargo.toml*进行各环节的配置，如配置语言版本、工具链、依赖库、编译条件、环境变量......各种参数，然后执行少许命令就可以自动化地构建项目。
+不过，通过前面我们已经知道了官方提供了[包管理器-Cargo](#项目管理-Cargo)这一工具，没错，在*Rust*中最简单的项目构建方式就是通过创建*Cargo*来进行。通过编写*Cargo.toml*进行各环节的配置，如配置语言版本、工具链、依赖库、编译条件、环境变量......各种参数，然后执行少许命令就可以自动化地构建项目。
 
 这一章主要针对项目编译这一环节进行描述，其他主要环节可以在[开发流](#开发流)一章节中查阅。
 
@@ -1162,10 +1162,6 @@ let c = &a;
 assert_eq!("world", c);
 ```
 
-## 生命周期（Lifetime）
-
-### 生命周期省略规则（Lifetime Elision）
-
 # 变量（Variables）
 
 > [变量](https://doc.rust-lang.org/reference/variables.html)，是执行栈帧的一部分，在执行期间建立，用于指向内存数据。包括函数具名参数（*named function parameter*）、局部具名变量（*named local variable*，`let`声明）、[匿名临时变量](https://doc.rust-lang.org/reference/expressions.html#temporaries)（*annoymous temporary*，表达式中的字面量或中间值可能是在执行时临时分配的）。
@@ -1763,7 +1759,7 @@ fn calculate_length(s: &String) -> usize {
 
 #### 悬空引用（Dangling Reference）
 
-> 如果一个引用在被其引用的变量作用域结束后仍被调用，即引用的生命周期超过了原始变量的[生命周期](#生命周期lifetime)，这种引用就是**悬空引用（dangling reference）**。显然，这是一种不安全的调用方式，是被安全的Rust代码所禁止的。
+> 如果一个引用在被其引用的变量作用域结束后仍被调用，即引用的生命周期超过了原始变量的[生命周期](#生命周期标注a)，这种引用就是**悬空引用（dangling reference）**。显然，这是一种不安全的调用方式，是被安全的Rust代码所禁止的。
 
 ```rust
 fn demo() -> &str {
@@ -1990,8 +1986,7 @@ pub unsafe fn swap<T>(x: *mut T, y: *mut T)
 pub unsafe fn drop_in_place<T: ?Sized>(to_drop: *mut T)
 ```
 
-<details>
-<summary>指针运算示例：</summary>
+<details><summary>指针运算示例</summary>
 
 ```rust
 let a = [1, 2, 3];
@@ -2002,8 +1997,7 @@ assert_eq!(a[1], v1);
 ```
 </details>
 
-<details>
-<summary>指针操作示例：</summary>
+<details><summary>指针操作示例</summary>
 
 ```rust
 // 创建空指针
@@ -2052,6 +2046,7 @@ unsafe { core::ptr::swap(pi_mut, pv_mut) };
 // 析构指针指向的值（不会释放内存）
 unsafe { core::ptr::drop_in_place(pv_mut) }
 ```
+
 </details>
 
 ## 字符串`String`
@@ -2141,6 +2136,13 @@ assert_eq!(&Some(1), &v.pop());
 ## 结构`struct`
 
 > **结构（Struct）**（或结构体）是Rust部署的一个类似于面向对象语言中类的语法特性，用以封装一组相关的数据和行为，以描述通用功能。
+
+```rust
+struct QuitMessage; // unit struct
+struct MoveMessage { x: i32, y: i32, }
+struct WriteMessage(String); // tuple struct
+struct ChangeColorMessage(i32, i32, i32); // tuple struct
+```
 
 ```rust
 struct User {
@@ -2307,14 +2309,7 @@ impl Rectangle {
 
 ## 枚举`enum`
 
-> Rust枚举是一种特殊的[结构体](#%E7%BB%93%E6%9E%84struct)，不仅可以存储各种动态或静态值，还可以绑定方法等，具体见[面向对象编程-枚举](#%E6%9E%9A%E4%B8%BEenum)。
-
-```rust
-struct QuitMessage; // unit struct
-struct MoveMessage { x: i32, y: i32, }
-struct WriteMessage(String); // tuple struct
-struct ChangeColorMessage(i32, i32, i32); // tuple struct
-```
+> Rust枚举是一种特殊的[结构体](#%E7%BB%93%E6%9E%84struct)，不仅可以存储各种动态或静态值，还可以绑定方法等。
 
 ### 无值枚举
 
@@ -2380,9 +2375,306 @@ match home {
 }
 ```
 
+## 泛型`<T>`
+
+> 泛型会在编译时*单态化（monomorphization）*，所以在使用泛型时不会比使用具体类型时运行得更慢。
+
+```pseudo
+#GenericParams
+     `<` `>`
+   | `<` "("[GenericParam] `,`")""*" [GenericParam] `,`"?" `>`
+
+#GenericParam
+   [OuterAttribute]"*" "(" [LifetimeParam] | [TypeParam] | [ConstParam] ")"
+
+#LifetimeParam
+   [LIFETIME_OR_LABEL] "(" `:` [LifetimeBounds] ")""?"
+
+#TypeParam
+   [IDENTIFIER]"(" `:` [TypeParamBounds]"?" ")""?" "(" `=` [Type] ")""?"
+
+#ConstParam
+   `const` [IDENTIFIER] `:` [Type] "(" `=` [Block] | [IDENTIFIER] | -?[LITERAL] ")""?"
+```
+
+```rust
+fn print<T: std::fmt::Display>(value: T) {
+  println!("{value}");
+}
+```
+
+```rust
+struct Point<T> {
+  x: T, y: T
+}
+impl<T> Point<T> {
+  fn new(x: T, y: T) -> Self {
+    Self { x, y }
+  }
+}
+```
+
+### 值泛型（`const`）
+
+## 特征`trait`
+
+> **特征**是一种用于描述类型共有方法的*抽象类型*，形式上类似某些语言中的接口。Rust不是传统的面向对象语言，没有继承机制，其多态是通过部署**特征（Trait）** 来实现的。
+
+- 特征是一种抽象类型，不能直接用来~~构造实例~~;
+- 特征无法~~定义属性~~；
+- 特征可以提供方法的默认实现，但无法通过代码直接~~调用默认实现的方法~~；
+
+<details><summary>定义特征</summary>
+
+```rust
+trait Shape {
+  fn area(&self) -> f64;
+
+  // 提供默认实现
+  fn clear(&self) { println!("cleared!") }
+}
+```
+</details>
+
+<details><summary>部署特征</summary>
+
+```rust
+struct Rect { w: f64, h: f64 }
+
+impl Shape for Rect {
+  fn area(&self) -> f64 { self.w * self.h }
+}
+```
+</details>
+
+<details><summary>特征继承</summary>
+
+```rust
+trait Polygon : Shape { fn length(&self) -> f64; }
+// 或：
+trait Polygon where Self: Shape { fn length(&self) -> f64; }
+```
+</details>
+
+虽然特征不能直接用于构造实例对象，但可以用**特征[描述参数类型](#特征绑定trait-bound用特征描述参数)**。
+
+### 特征绑定（Trait Bound）：用特征描述参数
+
+> 见[（类型参数）绑定（Bound）](#类型参数绑定bounds)。
+
+```rust
+fn compare<T: Shape>(shape1: &T, shape2: &T) {}
+// 或
+fn describe(s: &impl Shape) {}
+```
+
+<details><summary>通过<code>+</code>可以组合多个绑定。</summary>
+
+```rust
+fn debug<T:Shape + Display>(shape: &T) {}
+```
+</details>
+
+<details><summary>通过<code>where</code>语句可以使复杂的绑定更直观。</summary>
+
+```rust
+fn debug<T>(shape: &T) where T: Shape + Display {}
+```
+</details>
+
+<details><summary>通过（对泛型参数的）特征绑定可以有条件地实现方法或特征。</summary>
+
+```rust
+// 为部署了Display和PartialOrd特征的类型参数部署方法
+impl<T: Display + PartialOrd> Pair<T> { }
+```
+
+通过特征绑定还可以直接为泛型部署方法，这在Rust中称为**公共部署（blanket implementation）**：
+
+```rust
+// 为部署了Display特征的类型部署ToString特征
+impl<T: Display> ToString for T { }
+```
+</details>
+
+我们知道，Rust是静态编译语言，无论变量还是函数的返回值，其类型（准确说是内存分配大小）应该都在编译的时候确定（展开），即所谓的*静态调度*。
+而特征是虚拟类型，不能直接构造实例对象，所以用特征是无法直接声明值的类型的：
+
+```rust error
+// flag值在运行时才提供，因而函数无法通过编译
+fn get_unit_shape(flag: bool) -> Shape {
+  if flag {
+    Rect { w: 1, h: 1 }
+  } else {
+    Circle { r: 1 }
+  }
+}
+```
+
+但上述需求在实际情况中确实存在，所以就有了[动态调度](#静态调度和动态调度)。
+
+### 静态调度和动态调度
+
+> 当代码涉及多态（如泛型）时，需要确定实际运行的是哪个类型，该确定过程即**调度（Dispatch）**。
+
+> 对于编译型语言而言，最普遍的就是**静态调度（Static Dispatch）**，即在编译时确定调用类型，这种调度方式使得运行时没有调度所占用的性能损耗。
+> 在Rust中，包括[泛型](#泛型t)和[特征绑定](#特征绑定trait-bound用特征描述参数)。
+
+相应地，由于在编译期进行了单态化，所以静态调度无法返回动态类型：
+
+```rust error
+fn get_unit_shape(flag: bool) -> impl Shape {
+    if flag {
+        Circle { r: 1 }
+//      ----------------------------------------- expected because of this
+    } else {
+        Rect { w: 1, h: 1 }
+//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Circle`, found `Rect`
+    }
+//  - `if` and `else` have incompatible types
+}
+// help: you could change the return type to be a boxed trait object
+```
+
+> **动态调度（Dynamic Dispatch）** 则是在运行期间确立调度类型。
+> 一般通过*虚函数表vtable*实现，即在编译时为类型添加一个隐藏指针，该指针存储虚函数（特征方法）的地址列表，在运行时就可以通过二级指针调用特征方法。
+> 在Rust语法层面是通过[特征对象](#特征对象trait-object用特征描述值)进行部署。
+
+### 特征对象（Trait Object）：用特征描述值
+
+> 特征是抽象类型，也就是不定类型（`Unsized`），无法用作直接值的类型，要想使用特征描述，就需要将特征通过指针代理，包装成确定大小类型（`Sized`）。
+> 在Rust中这个类型描述为一种特殊的[智能指针](#智能指针smart-pointers)：**特征对象（Trait Object）**。
+
+根据前面编译器的提示，通过特征对象，将`get_unit_shape`进行如下修改：
+
+```rust
+fn get_unit_shape(flag: bool) -> Box<dyn Shape> {
+    if flag {
+        Box::new(Circle { r: 1 })
+    } else {
+        Box::new(Rect { w: 1, h: 1 })
+    }
+}
+```
+
+当中`Box<dyn Draw>`即为**特征对象**。其中`Box<T>`为[智能指针](#智能指针smart-pointers)，通过指针指向实际类型`T`；`dyn`为特征对象的标识符，以与普通类型（如结构）进行区分。
+
+## 生命周期（标注）`'a`
+
+所谓数据的生命周期，对于程序的执行来说，就是变量的作用域。对于直接值来说，其生命周期由其直接变量（即所有者）决定。例如：
+
+```rust
+{
+  let a = 1; // a 的有效性随a的生命周期结束而结束
+}
+```
+
+但对于引用（间接值）来说，其并不拥有所指向的数据，所以其有效性不仅受直接变量的作用域影响，还受数据所有者的生命周期所影响。例如：
+
+```rust
+fn main() {
+  let r;
+  {
+    let a = 1;
+    r = &a; // r 的有效性不仅依赖于其自身生命周期，还依赖于 a 的生命周期。
+    // a 结束, r 实际结束
+  }
+  // 倘若a失效了，r还存在，则r就是一个悬垂引用：
+  println!("{r}");
+  // r 结束
+}
+```
+
+> 所以，我们讨论的生命周期，特指引用的**生命周期**，即追踪借用和所有权的关系。为了程序安全性，防止隐式的悬垂引用出现，Rust要求显式地为每个引用**标注生命周期**。
+
+> **生命周期标注**可以看做是一种抽象类型，在使用时紧跟在引用标识符（`&`, `ref`）后面：`&'a usize`, `&'a mut usize`。另外，静态生命周期即程序的生命周期，标记为`'static`。
+
+```rust
+let a = 1;
+let b = &'a a; // error: borrow expressions cannot be annotated with lifetimes
+//      ^--^^
+//      |
+//      annotated with lifetime here
+//      help: remove the lifetime annotation
+```
+
+但是，以上编译器又告诉我们借用表达式不能（无需）标注生命周期，这是因为Rust编译器根据上下文和借用规则自动推断。
+
+> 只有当定义函数、结构、枚举、特征等**包含*引用类型的输入（参数、字段等）*和*引用类型的返回值*的子程序（*创建上下文*）时，标注生命周期才是需要的**。
+
+```rust
+// 生命周期标注的含义是a、返回值的生命周期都不低于'a：
+fn fa<'a>(a: &'a str) -> &'a str {
+    println!("{a}");
+    a
+}
+
+// 没有同时符合以上三个条件的情况，无需标注生命周期：
+fn fb(a: &str) {
+    println!("{a}")
+}
+fn fc(a: u8)  -> u8 {
+    println!("{a}");
+    a
+}
+```
+
+不过，为了程序代码的简洁性，也并非所有符合上述条件的情况都需要显式地标注生命周期，Rust**编译器会通过一套[规则](#生命周期标注省略规则lifetime-elision)来自动赋予默认生命周期标注**。
+
+### 生命周期标注省略规则（Lifetime Elision）
+
+- 对于**函数**而言：
+  - 每个参数都默认具有一个单独的生命周期；
+  - 如果参数中只有一种生命周期（标注），则返回值默认具有此生命周期；基于此规则，前述`fa`的生命周期标注可以省略。
+- 对于**方法**而言，除了具有函数的规则，还具有：
+  - 如果参数中有`&Self`或`&mut Self`引用，则返回值中被省略的生命周期标注都将是`Self`的生命周期；
+- 对于**特征对象**（其生命周期称为默认对象生命周期绑定）：
+  - 如果特征对象用作泛型参数：
+    - 若特征对象包含的类型只有一种生命周期，则默认标注为该类型的生命周期；
+    - 若有多种，则必须显式指定；
+  - 除以上情况外，将使用特征的生命周期绑定：
+    - 如果特征只定义了一种生命周期，则为该生命周期；
+    - 如果特征的任何绑定中有使用了静态生命周期`'static`，则默认是`'static`；
+    - 如果特征没有定义生命周期：
+      - 若特征对象在表达式中，则自动推断；
+      - 若特征对象在表达式外，则生命周期为`'static`；
+
+### 静态生命周期`'static`
+
+> 静态生命周期即程序生命周期。
+
+除非显式声明，引用类型的常量（`const`）和静态量（`static`）都具有静态生命周期。
+
+```rust
+const STRING: &str = "bitstring";
+// 等于： const STRING: &'static str = "bitstring";
+```
+
+但如果常量或静态量引用函数或闭包，则会首先尝试函数的生命周期省略[规则](#生命周期标注省略规则lifetime-elision)
+
+```rust
+// Resolved as `fn<'a>(&'a str) -> &'a str`.
+const RESOLVED_SINGLE: fn(&str) -> &str = |x| x;
+
+// Resolved as `Fn<'a, 'b, 'c>(&'a Foo, &'b Bar, &'c Baz) -> usize`.
+const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
+
+```
+
+### 生命周期绑定（Lifetime Bound）
+
+> 与[特征绑定](#特征绑定trait-bound用特征描述参数)类似。
+
+```rust
+fn f<'a, 'b>(x: &'a i32, mut y: &'b i32) where 'a: 'b {
+    y = x;                      // &'a i32 is a subtype of &'b i32 because 'a: 'b
+    let r: &'b &'a i32 = &&0;   // &'b &'a i32 is well formed because 'a: 'b
+}
+```
+
 ## 智能指针（Smart Pointers）
 
-> 智能指针是相对于普通指针而言的，特指拥有一套自管理内存的二级指针，换句话说，**智能指针托管数据所有权，管理数据的生命周期**。
+> 智能指针是相对于普通指针而言的，特指拥有一套自管理内存的二级指针。换句话说，**智能指针托管数据所有权，管理数据的生命周期**。
 > 所以，除了在引用数据外，智能指针还可以对数据实现额外的 **“智能”**，比如`String`实际也是一个智能指针，其实现的过程中确保存储的是有效的UTF-8编码。
 
 根据社区的最佳实践：
@@ -2391,7 +2683,7 @@ match home {
   - `Deref`定义解引用方法让智能指针可以像普通指针一样通过`*`访问值、通过强制解引用（*Deref Coercion*）机制自适应调用。（比如，接受`&str`类型参数的函数可以传入`String`，将被编译器自动转换。）
   - `Drop`定义析构函数让智能指针保障所管理的数据遵循所有权规则（指针清理时能同步释放），避免内存泄漏。（比如在`drop`函数中释放文件句柄、断开连接等等。）
 
-⚠️显式调用`std::mem::drop`可以提前释放智能指针。
+⚠️ 显式调用`std::mem::drop`可以提前释放智能指针。
 
 ### 盒子`Box<T>`
 
@@ -2418,7 +2710,7 @@ classDiagram
 
 应用场景：
 
-- 由于指针是一个地址（或者胖地址），其类型大小是确定的，所以盒子类型通常用于在需要确定数据大小的上下文中**封装DST类型**，比如递归类型。
+- 由于指针是一个地址（或者胖地址），其类型大小是确定的，所以盒子类型通常用于在需要确定数据大小的上下文中**封装[DST类型](#动态大小类型dst)**，比如[特征对象](#特征对象trait-object用特征描述值)、递归类型。
 - 当面对大量数据需要转移所有权，但又不想复制数据时，可以通过数据装箱实现**免复制数据转移所有权**；
 - 有时我们需要的数据可能不是某个类型，而是一组实现了某些特征的类型数据，即[特征对象](#特征对象trait-object用特征描述值)，可以通过数据装箱**转移特征对象所有权**；
 
@@ -2601,295 +2893,31 @@ assert_eq!("hello!", msg);
 2. 作为具有`?Sized`绑定的[泛型](#%E6%B3%9B%E5%9E%8Bt)的参数，其中`?Sized`指示编译器其所绑定的类型无需确定大小；
 3. 作为[结构](#%E7%BB%93%E6%9E%84struct)的最后一个字段；
 
-## 抽象类型（Abstract）
+## 类型参数绑定（Bounds）
 
-> 抽象类型不直接作为值类型被使用，而是用于修饰值类型，以支持动态入参能力，从而提供更抽象的代码复用能力，如[特征](#%E7%89%B9%E5%BE%81trait)和[泛型](#%E6%B3%9B%E5%9E%8Bt)。
+> 用（抽象）类型描述类型参数的做法叫做 **（类型参数）绑定（Bound）**，包括 **（类型参数）特征绑定**、**（类型参数）生命周期绑定**等。
 
-### 泛型`<T>`
+```pseudo
+#TypeParamBounds :
+   [TypeParamBound] "(" `+` [TypeParamBound] ")""*" `+`"?"
 
-> 泛型会在编译时*单态化（monomorphization）*，所以在使用泛型时不会比使用具体类型时运行得更慢。
+#TypeParamBound :
+      [Lifetime] | [TraitBound]
 
-```rust
-fn print<T: std::fmt::Display>(value: T) {
-  println!("{value}");
-}
-```
+#TraitBound :
+      `?`"?" [ForLifetimes]"?" [TypePath]
+   | "(" `?`"?" [ForLifetimes]"?" [TypePath] ")"
 
-```rust
-struct Point<T> {
-  x: T, y: T
-}
-impl<T> Point<T> {
-  fn new(x: T, y: T) -> Self {
-    Self { x, y }
-  }
-}
-```
+#ForLifetimes :
+   `for` [GenericParams]
 
-#### 值泛型（`const`）
+#LifetimeBounds :
+   "(" [Lifetime] `+` ")""*" [Lifetime]"?"
 
-### 特征`trait`
-
-> **特征**即类型共性的集中描述，形式上类似某些语言中的接口。Rust不是传统的面向对象语言，没有继承机制，其多态是通过**特征（Trait）** 来实现的。
-
-- 特征用于描述类型，但不可以直接用来构造结构（对象）;
-- 特征无法定义属性；
-- 特征方法可以提供默认实现，但无法通过代码直接调用默认实现；
-
-定义特征：
-
-```rust
-trait Draw {
-    fn clear(&self);
-    fn draw_at(&mut self, at: Point);
-    // 提供默认实现
-    fn move_to(&mut self, to: Point) {
-      self.clear();
-      self.draw_at(to);
-    }
-}
-```
-
-部署特征：
-
-```rust
-struct Point { x: usize, y: usize }
-struct Circle { r: usize, at: Point }
-struct Rect { w: usize, h: usize, at: Point }
-
-impl Draw for Circle {
-  fn clear(&self) {
-    println!("clear circle.");
-  }
-  fn draw_at(&mut self, at: Point) {
-    println!("draw_at circle.");
-    self.at = at
-  }
-}
-impl Draw for Rect {
-  fn clear(&self) {
-    println!("clear rect.");
-  }
-  fn draw_at(&mut self, at: Point) {
-    println!("draw_at rect.");
-    self.at = at
-  }
-}
-```
-
-对于具备默认实现的特征，可以通过`#[derive()]`宏快速部署：
-
-```rust
-fn main() {
-  #[derive(Debug)]
-  struct Point { x: usize, y: usize } // x, y 属性（usize）均实现了 Debug 特征
-  let p = Point { x:1, y:1 };
-  println!("{:?}", p)
-}
-```
-
-尽管Rust是静态编译语言，类型需要在编译时确立，但是：
-
-- 得益于[虚拟方法表（*vtable*）](#特征绑定trait-bound用特征描述参数)的部署，特征可以用于直接描述参数类型；
-- 得益于[动态调度机制](#静态调度和动态调度)，特征可以通过[特征对象（Trait Object）](#特征对象trait-object用特征描述值)的方式描述值类型（静态化抽象类以实现动态类型）；
-
-#### 特征绑定（Trait Bound）：用特征描述参数
-
-> 通过特征描述参数可以更松散地约束参数类型。**特征绑定（Trait Bound）** 则是特征描述参数的基本写法。
-
-```rust
-fn notify<T: Summary>(item1: &T, item2: &T) {}
-```
-
-> 在简单情况下，特征绑定可以直接使用`impl <Trait>`语法糖。
-
-```rust
-fn notify(item: &impl Summary) {}
-```
-
-> 通过`+`可以对多个特征绑定进行组合。
-
-```rust
-fn notify<T:Summary + Display>(item1: &T, item2: &T) {}
-```
-
-> 通过`where`语句进行特征绑定可以简化复杂绑定下的签名。
-
-```rust
-fn notify<T>(item1: &T, item2: &T) where T: Summary + Display {}
-```
-
-通过特征绑定有条件地实现方法或特征：
-
-```rust
-struct Pair<T> { x: T, y: T }
-
-impl<T> Pair<T> {
-    fn new(x: T, y: T) -> Self { Self { x, y } }
-}
-
-// 只有当`T`同时部署了`PartialOrd`和`Copy`时，下列方法才存在
-impl<T: PartialOrd + Copy> Pair<T> {
-    fn largest(&self) -> T {
-        if self.x >= self.y { self.x } else { self.y }
-    }
-}
-
-assert_eq!(Pair::new(1, 2).largest(), 2);
-
-// error[E0599]: the method `largest` exists for struct `Pair<String>`, but its trait bounds were not satisfied.
-assert_eq!(Pair::new(String::from("a"), String::from("b")).largest(), String::form("b"));
-```
-
-#### 静态调度和动态调度
-
-> 当代码涉及多态时，需要有一种机制来确定实际运行的是哪个类型，这一过程就是所谓的**调度（Dispatch）**。
-
-> **静态调度（Static Dispatch）** 是指在编译期确定调度类型的调度，故也没有运行时的性能损耗。
-> 包括[泛型](#泛型t)和[特征绑定](#特征绑定trait-bound用特征描述参数)，它们都是在编译期进行单态化。
-
-```rust
-fn clear(shape: &impl Draw) {
-  shape.clear()
-}
-```
-
-相应地，由于在编译期进行了单态化，所以静态调度无法返回动态类型：
-
-```rust
-fn get_default_shape(is_circle: bool) -> impl Draw {
-    if is_circle {
-        Circle { r: 1, at: Point { x: 0, y: 0 } }
-//      ----------------------------------------- expected because of this
-    } else {
-        Rect { w: 1, h: 1, at: Point { x: 0, y: 0 } }
-//      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Circle`, found `Rect`
-    }
-//  - `if` and `else` have incompatible types
-}
-// help: you could change the return type to be a boxed trait object
-```
-
-> 相对地，**动态调度（Dynamic Dispatch）** 即在运行期间确立调度类型的调度，这一调度方式通过[特征对象](#特征对象trait-object用特征描述值)来实现。
-
-#### 特征对象（Trait Object）：用特征描述值
-
-> 特征代表的是不定类型，无法用作直接值的类型（如函数返回值），要想使用特征描述值的类型，就需要将特征包装成确定大小类型（如指针），在Rust中这个类型描述为一种特殊的智能指针：**特征对象（Trait Object）**。
-
-根据前面的编译器提示，`get_default_shape`修改为如下特征对象形式即可通过编译：
-
-```rust
-fn get_default_shape(is_circle: bool) -> Box<dyn Draw> {
-    if is_circle {
-        Box::new(Circle { r: 1, at: Point { x: 0, y: 0 } })
-    } else {
-        Box::new(Rect { w: 1, h: 1, at: Point { x: 0, y: 0 } })
-    }
-}
-```
-
-`Box<dyn Draw>`中的`dyn`为特征对象的标识符（以与特征进行区分），`Box<T>`为[智能指针](#智能指针smart-pointers)，其通过二级指针存储实际类型的指针。
-
-### 生命周期（标注）`'a`
-
-所谓数据的生命周期，对于程序的执行来说，就是变量的作用域。对于直接值来说，其生命周期由其直接变量（即所有者）决定。例如：
-
-```rust
-{
-  let a = 1; // a 的有效性随a的生命周期结束而结束
-}
-```
-
-但对于引用（间接值）来说，其并不拥有所指向的数据，所以其有效性不仅受直接变量的作用域影响，还受数据所有者的生命周期所影响。例如：
-
-```rust
-fn main() {
-  let r;
-  {
-    let a = 1;
-    r = &a; // r 的有效性不仅依赖于其自身生命周期，还依赖于 a 的生命周期。
-    // a 结束, r 实际结束
-  }
-  // 倘若a失效了，r还存在，则r就是一个悬垂引用：
-  println!("{r}");
-  // r 结束
-}
-```
-
-> 所以，一般我们讨论生命周期，特指引用的生命周期。为了程序安全性，防止隐式的悬垂引用出现，Rust要求显式地为每个引用**标注生命周期**。
-
-> **生命周期标注是一种特殊的抽象类型**，在使用时紧跟在引用标识符（`&`, `ref`）后面：`&'a usize`, `&'a mut usize`。另外，静态生命周期即程序的生命周期，标记为`'static`。
-
-```rust
-let a = 1;
-let b = &'a a; // error: borrow expressions cannot be annotated with lifetimes
-//      ^--^^
-//      |
-//      annotated with lifetime here
-//      help: remove the lifetime annotation
-```
-
-但是，以上编译器又告诉我们借用表达式不能（无需）标注生命周期，这是因为Rust编译器根据上下文和借用规则自动推断。
-
-> 只有当定义函数、结构、枚举、特征等**包含*引用类型的输入（参数、字段等）*和*引用类型的返回值*的子程序（*创建上下文*）时，标注生命周期才是需要的**。
-
-```rust
-// 生命周期标注的含义是a、返回值的生命周期都不低于'a：
-fn fa<'a>(a: &'a str) -> &'a str {
-    println!("{a}");
-    a
-}
-
-// 没有同时符合以上三个条件的情况，无需标注生命周期：
-fn fb(a: &str) {
-    println!("{a}")
-}
-fn fc(a: u8)  -> u8 {
-    println!("{a}");
-    a
-}
-```
-
-不过，为了程序代码的简洁性，也并非所有符合上述条件的情况都需要显式地标注生命周期，Rust**编译器会通过一套[规则](#生命周期标注省略规则lifetime-elision)来自动赋予默认生命周期标注**。
-
-#### 生命周期标注省略规则（Lifetime Elision）
-
-- 对于**函数**而言：
-  - 每个参数都默认具有一个单独的生命周期；
-  - 如果参数中只有一种生命周期（标注），则返回值默认具有此生命周期；基于此规则，前述`fa`的生命周期标注可以省略。
-- 对于**方法**而言，除了具有函数的规则，还具有：
-  - 如果参数中有`&Self`或`&mut Self`引用，则返回值中被省略的生命周期标注都将是`Self`的生命周期；
-- 对于**特征对象**（其生命周期称为默认对象生命周期绑定）：
-  - 如果特征对象用作泛型参数：
-    - 若特征对象包含的类型只有一种生命周期，则默认标注为该类型的生命周期；
-    - 若有多种，则必须显式指定；
-  - 除以上情况外，将使用特征的生命周期绑定：
-    - 如果特征只定义了一种生命周期，则为该生命周期；
-    - 如果特征的任何绑定中有使用了静态生命周期`'static`，则默认是`'static`；
-    - 如果特征没有定义生命周期：
-      - 若特征对象在表达式中，则自动推断；
-      - 若特征对象在表达式外，则生命周期为`'static`；
-
-#### 静态生命周期`'static`
-
-> 静态生命周期即程序生命周期。
-
-除非显式声明，引用类型的常量（`const`）和静态量（`static`）都具有静态生命周期。
-
-```rust
-const STRING: &str = "bitstring";
-// 等于： const STRING: &'static str = "bitstring";
-```
-
-但如果常量或静态量引用函数或闭包，则会首先尝试函数的生命周期省略[规则](#生命周期标注省略规则lifetime-elision)
-
-```rust
-// Resolved as `fn<'a>(&'a str) -> &'a str`.
-const RESOLVED_SINGLE: fn(&str) -> &str = |x| x;
-
-// Resolved as `Fn<'a, 'b, 'c>(&'a Foo, &'b Bar, &'c Baz) -> usize`.
-const RESOLVED_MULTIPLE: &dyn Fn(&Foo, &Bar, &Baz) -> usize = &somefunc;
-
+#Lifetime :
+      [LIFETIME_OR_LABEL]
+   | `'static`
+   | `'_`
 ```
 
 ## 类型析构（Destruction）
@@ -3023,9 +3051,213 @@ promoted[0] in main: &Option<usize> = {
      - `let x = (&mut 1, &2)`中的`1`和`2`被扩展；
    - 具有扩展存活的块表达式（*Extending Block Expression*）的最后一个表达式；
 
+## 子类型化和型变（Subtyping and Variance）
+
+通过[生命周期章节](#生命周期标注a)我们知道，Rust是通过生命周期来跟踪借用和所有权的，但是原始的生命周期实现[很严格](#生命周期标注省略规则lifetime-elision），而且可能导致未定义的行为。
+
+```rust
+// Note: debug expects two parameters with the *same* lifetime
+fn debug<'a>(a: &'a str, b: &'a str) {
+    println!("a = {a:?} b = {b:?}");
+}
+
+fn main() {
+    let hello: &'static str = "hello";
+    {
+        let world = String::from("world");
+        let world = &world; // 'world has a shorter lifetime than 'static
+        debug(hello, world);
+    }
+}
+```
+
+上述我们定义`debug`函数是为了打印两个参数，但如果严格遵循[生命周期的规则](#生命周期标注省略规则lifetime-elision)，则上述代码将会编译错误，因为传入`debug`的`hello`和`world`的生存期并不一样。
+但事实上，上述代码可以成功运行，原因就在于发生了子类型化。
+
+> **子类型化（Subtyping）** 是指在一定情况下可以（通过*型变*）用某个类型的子类型来替代该类型。
+
+1. 子类型化会发生在什么场景下？
+
+   正如上述例子所示，在Rust中，子类型化是隐式发生的，可能出现在**类型检查（Type Checking）** 或**类型推断（Type Inference）** 的任何阶段。
+
+2. 子类型化调用的条件是什么？
+
+   有两个，满足其一即可：
+
+     1. <details><summary><strong>生命周期之间有差异（Variance with respect to lifetimes）</strong>，即右值（或实参）的生命周期可以大于左值（或形参）的生命周期；</summary>
+         ```rust
+         // 'static生存期比'a长，即'static: 'a，可以协变为&'static str: &'a str
+         fn bar<'a>() {
+           let s: &'a str = "hi"; // "hi"的生命周期是'static
+         }
+         ```
+         ```rust
+         fn bar<'a'>(s: &'a str) {
+           // ...
+         }
+         bar("hi")
+         ```
+        </details>
+     2. <details><summary><strong>具有高阶生命周期的类型之间（Between types with higher ranked lifetimes）</strong>；</summary>
+         ```rust
+         // 这里 'a 被替换成了 'static
+         let subtype: &(for<'a> fn(&'a i32) -> &'a i32) = &((|x| x) as fn(&_) -> &_);
+         let supertype: &(fn(&'static i32) -> &'static i32) = subtype;
+
+         // 这对于 trait对象也是类似的
+         let subtype: &(for<'a> Fn(&'a i32) -> &'a i32) = &|x| x;
+         let supertype: &(Fn(&'static i32) -> &'static i32) = subtype;
+
+         // 我们也可以用一个高阶生存期来代替另一个
+         let subtype: &(for<'a, 'b> fn(&'a i32, &'b i32))= &((|x, y| {}) as fn(&_, &_));
+         let supertype: &for<'c> fn(&'c i32, &'c i32) = subtype;
+         ```
+        </details>
+
+3. 子类型化的实现方式是什么？
+
+   是型变（Variance），即通过特定的规则将泛型进行收缩。
+
+> **型变（Variance）** 是泛型（Generic）相对于其参数具有的属性，包括协变（Covariance）和逆变（Contravariance）。
+
+Rust中可型变的关系如下：
+
+| Type                          | Variance in `'a` | Variance in `T` |
+| ----------------------------- | ---------------- | --------------- |
+| `&'a T`                       | covariant        | covariant       |
+| `&'a mut T`                   | covariant        | invariant       |
+| `*const T`                    |                  | covariant       |
+| `*mut T`                      |                  | invariant       |
+| `[T]` and `[T; n]`            |                  | covariant       |
+| `fn() -> T`                   |                  | covariant       |
+| `fn(T) -> ()`                 |                  | contravariant   |
+| `std::cell::UnsafeCell<T>`    |                  | invariant       |
+| `std::marker::PhantomData<T>` |                  | covariant       |
+| `dyn Trait<T> + 'a`           | covariant        | invariant       |
+
+<details><summary>对于`struct`, `enum`和`union`来说，其某个泛型参数的型变与否取决于使用该参数的各字段是否型变，只有这些字段的形变关系都相同（均为协变或均为逆变）时才能型变。</summary>
+
+```rust
+// 'a 和 T 是可型变的。
+use std::cell::UnsafeCell;
+struct Variance<'a, 'b, 'c, T, U: 'a> {
+    x: &'a U,               // This makes `Variance` covariant in 'a, and would
+                            // make it covariant in U, but U is used later
+    y: *const T,            // Covariant in T
+    z: UnsafeCell<&'b f64>, // Invariant in 'b
+    w: *mut U,              // Invariant in U, makes the whole struct invariant
+
+    f: fn(&'c ()) -> &'c () // Both co- and contravariant, makes 'c invariant
+                            // in the struct.
+}
+```
+</details>
+
+<details><summary>除了 ~~`struct`, `enum`和`union`~~，其他位置参数的形变均是独立的。</summary>
+
+```rust
+fn generic_tuple<'short, 'long: 'short>(
+    // 'long is used inside of a tuple in both a co- and invariant position.
+    x: (&'long u32, UnsafeCell<&'long u32>),
+) {
+    // As the variance at these positions is computed separately,
+    // we can freely shrink 'long in the covariant position.
+    let _: (&'short u32, UnsafeCell<&'long u32>) = x;
+}
+
+fn takes_fn_ptr<'short, 'middle: 'short>(
+    // 'middle is used in both a co- and contravariant position.
+    f: fn(&'middle ()) -> &'middle (),
+) {
+    // As the variance at these positions is computed separately,
+    // we can freely shrink 'middle in the covariant position
+    // and extend it in the contravariant position.
+    let _: fn(&'static ()) -> &'short () = f;
+}
+```
+</details>
+
 ## 隐式转换（Coercion）
 
-> [类型隐式转换（Type Coercions）](https://doc.rust-lang.org/reference/type-coercions.html)
+> [隐式转换（Type Coercions）](https://doc.rust-lang.org/reference/type-coercions.html)，都可以通过显式转换（*Cast*）`as`实现。
+
+### 隐式转换场景
+
+- <details><summary><code>let</code>（<code>const</code>, <code>static</code>）声明指定类型时，操作数自动转换成声明类型；</summary>
+
+  ```rust
+  let _: &i8 = &mut 42;
+  ```
+  </details>
+
+- <details><summary>调用函数（Function）时，实参自动转换成形参类型；</summary>
+
+  ```rust
+  fn bar(_: &i8) { }
+
+  fn main() {
+      bar(&mut 42);
+  }
+  ```
+  </details>
+
+- <details><summary>结构体（Struct）、联合体（Union）或枚举（Enum）字段初始化时，操作数自动转换成声明类型；</summary>
+
+  ```rust
+  struct Foo<'a> { x: &'a i8 }
+
+  fn main() {
+      Foo { x: &mut 42 };
+  }
+  ```
+  </details>
+
+- <details><summary>函数返回值（Return Value）操作数自动转换成返回类型；</summary>
+
+  ```rust
+  use std::fmt::Display;
+  fn foo(x: &u32) -> &dyn Display {
+      x
+  }
+  ```
+  </details>
+
+- 当**隐式转换冒泡表达式（coercion-propagation expression）** 处于上述隐式转换场景中时，则其子表达式也具备隐式转换能力。隐式转换冒泡表达式包括：
+  1. <details><summary>数组字面量（<code>[U; n]</code>）；</summary>
+
+     ```rust
+     let a: [u8, 3] = [1, 2, 3];
+     let a = [1u8, 2, 3];
+     ```
+     </details>
+
+  3. <details><summary>元组；</summary>
+
+     ```rust
+     let a: [u8, 3] = [1, 2, 3];
+     let a = [1u8, 2, 3];
+     ```
+     </details>
+
+  4. <details><summary>括号表达式（<code>(e)</code>）；</summary>
+
+     ```rust
+     let a: [u8, 3] = [1, 2, 3];
+     let a = [1u8, 2, 3];
+     ```
+     </details>
+
+  5. <details><summary>块（Block），其最后一个表达式可被隐式转换；</summary>
+
+     ```rust
+     let a: [u8, 3] = [1, 2, 3];
+     let a = [1u8, 2, 3];
+     ```
+     </details>
+
+### 隐式转换类型
+
+-
 
 ## 内存操作（Memory Access）
 
@@ -3167,8 +3399,7 @@ impl<T: ?Sized> ManuallyDrop<T> {
 }
 ```
 
-<details>
-<summary><code>ManuallyDrop</code>示例：</summary>
+<details><summary><code>ManuallyDrop</code>示例</summary>
 
 ```rust
 use std::mem::ManuallyDrop;
@@ -3195,8 +3426,7 @@ pub const fn forget<T>(t: T) {
 }
 ```
 
-<details>
-<summary>比如，将文件描述符泄漏：</summary>
+<details><summary><code>std::mem::forget</code>示例</summary>
 
 ```rust
 use std::mem;
@@ -3824,52 +4054,51 @@ enum Result<T, E> {
 
 对于`Result<T,E>`的处理方式，通常有三种：
 
-<details>
-<summary>1. 通过<code>match</code>或<code>if let</code>模式匹配进行处理：</summary>
+1. <details><summary>通过<code>match</code>或<code>if let</code>模式匹配进行处理；</summary>
 
-```rust
-use std::fs::File;
-use std::io::ErrorKind;
+   ```rust
+   use std::fs::File;
+   use std::io::ErrorKind;
 
-fn main() {
-    let greeting_file_result = File::open("hello.txt");
+   fn main() {
+       let greeting_file_result = File::open("hello.txt");
 
-    let greeting_file = match greeting_file_result {
-        Ok(file) => file,
-        Err(error) => match error.kind() {
-            ErrorKind::NotFound => match File::create("hello.txt") {
-                Ok(fc) => fc,
-                Err(e) => panic!("Problem creating the file: {:?}", e),
-            },
-            other_error => {
-                panic!("Problem opening the file: {:?}", other_error);
-            }
-        },
-    };
-}
-```
-</details>
-<details>
-<summary>2. 通过<code>unwrap()</code>或<code>expect(errMsg:)</code>方法解包结果或将错误重新抛出：</summary>
+       let greeting_file = match greeting_file_result {
+           Ok(file) => file,
+           Err(error) => match error.kind() {
+               ErrorKind::NotFound => match File::create("hello.txt") {
+                   Ok(fc) => fc,
+                   Err(e) => panic!("Problem creating the file: {:?}", e),
+               },
+               other_error => {
+                   panic!("Problem opening the file: {:?}", other_error);
+               }
+           },
+       };
+   }
+   ```
+   </details>
 
-```rust
-use std::fs::File;
+2. <details><summary>通过<code>unwrap()</code>或<code>expect(errMsg:)</code>方法解包结果或将错误重新抛出；</summary>
 
-fn main() {
-    let greeting_file = File::open("hello.txt")
-        .expect("hello.txt should be included in this project");
-}
-```
-</details>
-<details>
-<summary>3. 通过<code>?</code>调用，解包结果或将错误冒泡：</summary>
+   ```rust
+   use std::fs::File;
 
-```rust
-fn last_char_of_first_line(text: &str) -> Option<char> {
-    text.lines().next()?.chars().last()
-}
-```
-</details>
+   fn main() {
+       let greeting_file = File::open("hello.txt")
+           .expect("hello.txt should be included in this project");
+   }
+   ```
+   </details>
+
+3. <details><summary>通过<code>?</code>调用，解包结果或将错误冒泡；</summary>
+
+   ```rust
+   fn last_char_of_first_line(text: &str) -> Option<char> {
+       text.lines().next()?.chars().last()
+   }
+   ```
+   </details>
 
 # 模块系统（Module System）
 
@@ -4056,8 +4285,7 @@ use self::A::B;
 B::demo();
 ```
 
-<details>
-<summary>模块暴露的举例说明：</summary>
+<details><summary>模块暴露举例</summary>
 
 ```rust
 mod back_of_house {
@@ -4221,8 +4449,7 @@ demo();
     Exclude<[Token], [DELIMITER] | [DelimTokenTree]>
 ```
 
-<details>
-<summary>定义一个名为<code>vec</code>的宏：</summary>
+<details><summary>定义一个名为<code>vec</code>的宏</summary>
 
 ```rust
 // 声明所定义的宏在当前包（crate）内可见。
@@ -4979,17 +5206,18 @@ greet("World!");
 
 # 第三方库
 
-## 工具库
+## 基础库
 
-| Crate        |                                                      |
-| ------------ | ---------------------------------------------------- |
-| `serde`      | 序列化库，[支持JSON/Toml/Yaml...](https://serde.rs/) |
-| `serde_json` | 通过`serde`实现的序列化和反序列化JSON                |
-| `serde_with` | 扩展`serde`更多类型                                  |
-| `chrono`     | 时间工具库                                           |
-| `rayon`      | 并行计算库                                           |
-| `slog`       | 日志库                                               |
-| `protest`    | 属性测试库                                           |
+| Crate         |                                                      |
+| ------------- | ---------------------------------------------------- |
+| `serde`       | 序列化库，[支持JSON/Toml/Yaml...](https://serde.rs/) |
+| `serde_json`  | 通过`serde`实现的序列化和反序列化JSON                |
+| `serde_with`  | 扩展`serde`更多类型                                  |
+| `chrono`      | 时间工具库                                           |
+| `rayon`       | 并行计算库                                           |
+| `slog`        | 日志库                                               |
+| `protest`     | 属性测试库                                           |
+| `tree-sitter` | 增量语法解析器                                       |
 
 ## WebAssembly
 
@@ -5004,7 +5232,7 @@ greet("World!");
 | `gloo`                                                         | `web_sys`和`js_sys` 的包装，以提升易用性                                                                                                                                                                           |
 | `gloo-net`                                                     | HTTP requests library for WASM Apps                                                                                                                                                                                |
 
-## 异步
+## 异步开发
 
 | Crate       |                                                                                                                                                 |
 | ----------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -5014,7 +5242,7 @@ greet("World!");
 | `smol`      | 一个轻量级的**异步运行时**（*reactor*），提供*executor*，基于协程实现异步编程                                                                   |
 | `actix`     | 基于`tokio`开发的**Actor**模型的异步高并发框架                                                                                                  |
 
-## Web
+## 网络开发
 
 | Crate       |                                                                                                                                      |
 | ----------- | ------------------------------------------------------------------------------------------------------------------------------------ |
@@ -5025,7 +5253,7 @@ greet("World!");
 | `axum`      | 基于`tokio`的**Web服务器框架**，由`tokio`官方开发                                                                                    |
 | `tide`      | 基于`async-std`的**Web服务器框架**，特色是[`Layer`]()系统                                                                            |
 
-## UI
+## 界面开发
 
 | Crate   |                                                             |
 | ------- | ----------------------------------------------------------- |
@@ -5040,6 +5268,13 @@ greet("World!");
 | Crate  |     |
 | ------ | --- |
 | `bevy` |     |
+
+## 软件
+
+|            |                                                                 |
+| ---------- | --------------------------------------------------------------- |
+| `ast-grep` | 基于AST的结构化搜索                                               |
+| `ripgrep`  | 行文本搜索，[grep替代品](https://beyondgrep.com/feature-comparison) |
 
 # 链接
 

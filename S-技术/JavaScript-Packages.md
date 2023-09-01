@@ -3,9 +3,7 @@ title: JavaScript库
 date: 2022-07-05T14:59:01+08:00
 ---
 
-# 体系类
-
-## ORM
+# ORM
 
 |             | MySQL | SQLite | PostgreSQL | MongoDB | ...                 |
 | ----------- | ----- | ------ | ---------- | ------- | ------------------- |
@@ -47,7 +45,7 @@ date: 2022-07-05T14:59:01+08:00
 
 > [rxdb](https://github.com/pubkey/rxdb): 🔄 A _client_ side, offline-first, reactive _database_ for JavaScript Applications.
 
-# 字符处理
+# 文本处理
 
 ## 比较
 
@@ -66,6 +64,29 @@ Matches strings against configurable strings, globs, regular expressions, and/or
 Slugifies even utf-8 chars!
 
 ### `github-slugger`
+
+## 结构化处理
+
+### `unified`
+
+[Unified](https://unifiedjs.com/): unified lets you inspect and transform content with plugins.
+
+Unified是一套基于AST结构化处理文本的生态系统。核心库[unified](https://github.com/unifiedjs/unified)本身提供规范和通用接口，通过生态插件实现具体功能。如：
+- [remark](https://github.com/remarkjs/remark)系列插件处理markdown
+- [rehype](https://github.com/rehypejs/rehype)系列插件处理HTML
+- [retext](https://github.com/retextjs/retext)系列插件处理自然语言（如拼写检查、错误修正）
+- [mdx](https://github.com/mdx-js/mdx)系列插件处理mdx（在markdown中编写jsx）
+
+## Markdown
+
+[markdown解析库比较](https://github.com/micromark/micromark#comparison)
+
+| Lib                                                       | Desc                                                       |
+| --------------------------------------------------------- | ---------------------------------------------------------- |
+| [micromark](https://github.com/micromark/micromark)       | 超小、速度非常快的markdown解析器，提供CST级别控制          |
+| [remarkjs](https://github.com/remarkjs/remark)            | 流行最广泛的markdown解析器，基于`micromark`，插件多。      |
+| [marked](https://github.com/markedjs/marked)              | 出现时间最长的markdown解析器，体积小、默认情况下是不安全的 |
+| [markdown-it](https://github.com/markdown-it/markdown-it) | 易于自定义扩展markdown语法                                 |
 
 # 路径处理
 
@@ -128,7 +149,7 @@ Get a random temporary file or directory path.
 
 Generate a cryptographically strong random string
 
-# 命令行
+# 命令行UI
 
 ## `inquirer`
 
@@ -149,21 +170,21 @@ Prompt for selecting index in array where add new element
 ![inquirer-select-line gif](https://camo.githubusercontent.com/4de5918c906a8b73d903ab481da343ddf2aac67422da4c88eb063049648acb77/68747470733a2f2f6d656469612e67697068792e636f6d2f6d656469612f7855413762314d78706e67646455766448572f67697068792e676966)
 - [**inquirer-fuzzy-path**](https://github.com/adelsz/inquirer-fuzzy-path)
 Prompt for fuzzy file/directory selection.
-[![inquirer-fuzzy-path](https://raw.githubusercontent.com/adelsz/inquirer-fuzzy-path/master/recording.gif)](https://raw.githubusercontent.com/adelsz/inquirer-fuzzy-path/master/recording.gif)
+![inquirer-fuzzy-path](https://raw.githubusercontent.com/adelsz/inquirer-fuzzy-path/master/recording.gif)
 - [**inquirer-emoji**](https://github.com/tannerntannern/inquirer-emoji)
 Prompt for inputting emojis.
-[![inquirer-emoji](https://github.com/tannerntannern/inquirer-emoji/raw/master/demo.gif)](https://github.com/tannerntannern/inquirer-emoji/raw/master/demo.gif)
+![inquirer-emoji](https://github.com/tannerntannern/inquirer-emoji/raw/master/demo.gif)
 - [**inquirer-chalk-pipe**](https://github.com/LitoMore/inquirer-chalk-pipe)
 Prompt for input chalk-pipe style strings
 - [**inquirer-file-tree-selection-prompt**](https://github.com/anc95/inquirer-file-tree-selection)
 Inquirer prompt for to select a file or directory in file tree
 
-[![inquirer-file-tree-selection-prompt](https://github.com/anc95/inquirer-file-tree-selection/raw/master/example/screenshot.gif)](https://github.com/anc95/inquirer-file-tree-selection/blob/master/example/screenshot.gif)
+![inquirer-file-tree-selection-prompt](https://github.com/anc95/inquirer-file-tree-selection/raw/master/example/screenshot.gif)
 
 - [**inquirer-table-prompt**](https://github.com/eduardoboucas/inquirer-table-prompt)
 A table-like prompt for Inquirer.
 
-[![inquirer-table-prompt](https://raw.githubusercontent.com/eduardoboucas/inquirer-table-prompt/master/screen-capture.gif)](https://raw.githubusercontent.com/eduardoboucas/inquirer-table-prompt/master/screen-capture.gif)
+![inquirer-table-prompt](https://raw.githubusercontent.com/eduardoboucas/inquirer-table-prompt/master/screen-capture.gif)
 - ...
 
 ## `enquirer`
@@ -193,13 +214,15 @@ Conquer the command-line. [Vorpal](http://vorpal.js.org/) is Node's first framew
 
 ## `commander`
 
+[commander](https://github.com/tj/commander.js): The complete solution for node.js command-line interfaces.
+
 ## `sade`
 
-Smooth (CLI) operator 🎶. It enables default commands, git-like subcommands, option flags with aliases, default option values with type-casting, required-vs-optional argument handling, command validation, and automated help text generation!
+[sade](https://github.com/lukeed/sade): Smooth (CLI) operator 🎶. It enables default commands, git-like subcommands, option flags with aliases, default option values with type-casting, required-vs-optional argument handling, command validation, and automated help text generation!
 
 ## `args`
 
-Git-style sub commands. Auto-generated usage information. Determines type of option by checking type of default value (e.g. ['hi'] => <list>). Automatically suggests a similar option, if the user entered an unknown one
+[args](https://www.npmjs.com/package/args): Git-style sub commands. Auto-generated usage information. Determines type of option by checking type of default value (e.g. ['hi'] => <list>). Automatically suggests a similar option, if the user entered an unknown one
 
 ## `shellwords`
 
@@ -232,6 +255,10 @@ Manipulate strings according to the word parsing rules of the UNIX Bourne shell.
 ## `reveal.js`
 
 The framework comes with a broad range of features including [nested slides](https://revealjs.com/vertical-slides/), [Markdown support](https://revealjs.com/markdown/), [Auto-Animate](https://revealjs.com/auto-animate/), [PDF export](https://revealjs.com/pdf-export/), [speaker notes](https://revealjs.com/speaker-view/), [LaTeX support](https://revealjs.com/math/), [syntax highlighted code](https://revealjs.com/code/) and much more.
+
+## remark
+
+[Remark](https://github.com/gnab/remark): A simple, in-browser, markdown-driven slideshow tool.
 
 # 动画和模型
 

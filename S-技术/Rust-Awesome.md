@@ -12,7 +12,7 @@ title: Rust Awesome
 [![GitHub stars](https://img.shields.io/github/stars/iced-rs/iced?style=flat-square)](https://github.com/iced-rs/iced/stargazers)
 [![GitHub license](https://img.shields.io/github/license/iced-rs/iced?style=flat-square)](https://github.com/iced-rs/iced/blob/master/LICENSE)
 [![GitHub last commit](https://img.shields.io/github/last-commit/iced-rs/iced?style=flat-square)](https://github.com/iced-rs/iced/commits)
-≤
+
 - Simple, easy-to-use, batteries-included API
 - Type-safe, reactive programming model
 - [Cross-platform support](https://github.com/hecrj/iced/blob/master/docs/images/todos_desktop.jpg?raw=true) (Windows, macOS, Linux, and [the Web](https://iced.rs/))

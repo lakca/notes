@@ -22,6 +22,25 @@ source: _posts
 
 markdown: GFM
 
+# https://github.com/gjtorikian/commonmarker#options
+commonmark:
+  options:
+    - UNSAFE
+    - SMART
+    - FOOTNOTES
+  extensions:
+    - strikethrough
+    - autolink
+    - table
+    - tagfilter
+    - tasklist
+    - superscript
+    - header_ids
+    - footnotes
+    - description_lists
+    - front_matter_delimiter
+    - shortcodes
+
 sass:
   sass_dir: assets/css
   style: compressed
