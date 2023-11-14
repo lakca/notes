@@ -602,23 +602,17 @@
   function previewImage(_img) {
     if (_img.hasAttribute(ident('previewing'))) return
     const modal = createModal()
+    const src = _img.getAttribute('src')
     const img = el('img')
-      .attr('src', _img.src)
+      .attr('src', src)
       .attr(ident('previewing'), true)
       .on('load', () => modal.loading(false))
-    if (_img.src.indexOf('.svg') > -1) {
-      img
-        .style('min-width', '100vw')
-        .style('min-height', '100vh')
-        .style('max-width', '100vw')
-        .style('max-height', '100vh')
-        .style('background', 'white')
-    } else {
-      img
-        .style('min-width', '100%')
-        .style('min-height', '100%')
-        .style('max-width', '100%')
-        .style('max-height', '100%')
+      .style('max-width', '100vw')
+      .style('max-height', '100vh')
+    if (src.indexOf('.svg') > -1) {
+        img.style('background', 'white')
+          .style('min-width', '100vw')
+          .style('min-height', '100vh')
     }
     modal.wrap.appendChild(img.el)
     modal.loading()
